@@ -640,6 +640,39 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
 
             break  # proceed to pricing
 
+    # ------- Stop-loss updates -------
+    if interactive:
+        print("\n--- Stop Loss Updates ---")
+        update_stops = input("Update stop losses? ('y' or press Enter to skip): ").strip().lower()
+        if update_stops == 'y':
+            while True:
+                if portfolio_df.empty:
+                    print("No holdings to update.")
+                    break
+                    
+                print("\nCurrent Holdings:")
+                display_df = portfolio_df[['ticker', 'shares', 'stop_loss', 'buy_price']].copy()
+                display_df.columns = ['Ticker', 'Shares', 'Stop Loss', 'Buy Price']
+                print(display_df.to_string(index=False))
+                
+                ticker = input("\nEnter ticker to update (or press Enter to finish): ").strip().upper()
+                if not ticker:
+                    break
+                
+                if ticker not in portfolio_df['ticker'].values:
+                    print(f"{ticker} not found in portfolio.")
+                    continue
+                
+                try:
+                    new_stop = float(input(f"Enter new stop loss for {ticker} (or 0 for no stop): "))
+                    if new_stop < 0:
+                        raise ValueError("Stop loss cannot be negative.")
+                    
+                    portfolio_df.loc[portfolio_df['ticker'] == ticker, 'stop_loss'] = new_stop
+                    print(f"✓ Updated {ticker} stop loss to ${new_stop:.2f}")
+                except ValueError as e:
+                    print(f"Invalid stop loss: {e}. Skipping update.")
+
     # ------- Daily pricing + stop-loss execution -------
     s, e = trading_day_window()
     for _, stock in portfolio_df.iterrows():
@@ -802,10 +835,9 @@ def log_manual_buy(
     if np.isnan(o):
         o = float(data["Close"].iloc[-1])
 
-    if o <= buy_price:
-        exec_price = o
-    elif l <= buy_price:
-        exec_price = buy_price
+    # Check if buy limit was triggered (low <= buy_price means price touched our limit)
+    if l <= buy_price:
+        exec_price = buy_price  # Fill at exact limit price
     else:
         print(f"Buy limit ${buy_price:.2f} for {ticker} not reached today (range {l:.2f}-{h:.2f}). Order not filled.")
         return cash, chatgpt_portfolio
@@ -918,10 +950,9 @@ If this is a mistake, enter 1, or hit Enter."""
     if np.isnan(o):
         o = float(data["Close"].iloc[-1])
 
-    if o >= sell_price:
-        exec_price = o
-    elif h >= sell_price:
-        exec_price = sell_price
+    # Check if sell limit was triggered (high >= sell_price means price touched our limit)
+    if h >= sell_price:
+        exec_price = sell_price  # Fill at exact limit price
     else:
         print(f"Sell limit ${sell_price:.2f} for {ticker} not reached today (range {l:.2f}-{h:.2f}). Order not filled.")
         return cash, chatgpt_portfolio
