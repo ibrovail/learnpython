@@ -836,7 +836,9 @@ def log_manual_buy(
         o = float(data["Close"].iloc[-1])
 
     # Check if buy limit was triggered (low <= buy_price means price touched our limit)
-    if l <= buy_price:
+    # Allow for floating-point precision tolerance
+    epsilon = 0.005  # Half a cent tolerance
+    if l <= (buy_price + epsilon):
         exec_price = buy_price  # Fill at exact limit price
     else:
         print(f"Buy limit ${buy_price:.2f} for {ticker} not reached today (range {l:.2f}-{h:.2f}). Order not filled.")
@@ -951,7 +953,9 @@ If this is a mistake, enter 1, or hit Enter."""
         o = float(data["Close"].iloc[-1])
 
     # Check if sell limit was triggered (high >= sell_price means price touched our limit)
-    if h >= sell_price:
+    # Allow for floating-point precision tolerance
+    epsilon = 0.005  # Half a cent tolerance
+    if h >= (sell_price - epsilon):
         exec_price = sell_price  # Fill at exact limit price
     else:
         print(f"Sell limit ${sell_price:.2f} for {ticker} not reached today (range {l:.2f}-{h:.2f}). Order not filled.")
