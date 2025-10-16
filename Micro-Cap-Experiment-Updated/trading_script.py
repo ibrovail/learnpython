@@ -1243,6 +1243,93 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
 
 
 # ------------------------------
+# Stop-loss update utility
+# ------------------------------
+
+def update_stops_only() -> None:
+    """Standalone utility to update stop losses for existing holdings."""
+    print("\n" + "=" * 64)
+    print("Stop Loss Update Mode")
+    print("=" * 64)
+    
+    # Load latest portfolio state
+    try:
+        portfolio_df, cash = load_latest_portfolio_state()
+    except Exception as e:
+        print(f"Error loading portfolio: {e}")
+        return
+    
+    if isinstance(portfolio_df, list):
+        portfolio_df = pd.DataFrame(portfolio_df)
+    
+    if portfolio_df.empty:
+        print("No holdings found. Nothing to update.")
+        return
+    
+    print("\nCurrent Holdings:")
+    display_df = portfolio_df[['ticker', 'shares', 'stop_loss', 'buy_price']].copy()
+    display_df.columns = ['Ticker', 'Shares', 'Stop Loss', 'Buy Price']
+    print(display_df.to_string(index=False))
+    
+    print("\n")
+    updates_made = False
+    
+    while True:
+        ticker = input("Enter ticker to update (or press Enter to finish): ").strip().upper()
+        if not ticker:
+            break
+        
+        if ticker not in portfolio_df['ticker'].values:
+            print(f"{ticker} not found in portfolio.")
+            continue
+        
+        try:
+            new_stop = float(input(f"Enter new stop loss for {ticker} (or 0 for no stop): "))
+            if new_stop < 0:
+                raise ValueError("Stop loss cannot be negative.")
+            
+            portfolio_df.loc[portfolio_df['ticker'] == ticker, 'stop_loss'] = new_stop
+            print(f"✓ Updated {ticker} stop loss to ${new_stop:.2f}\n")
+            updates_made = True
+        except ValueError as e:
+            print(f"Invalid stop loss: {e}. Skipping update.\n")
+    
+    if not updates_made:
+        print("No updates made. Exiting.")
+        return
+    
+    # Now update the CSV file with the new stop losses
+    today_iso = last_trading_date().date().isoformat()
+    
+    if not PORTFOLIO_CSV.exists():
+        print(f"Portfolio CSV not found: {PORTFOLIO_CSV}")
+        return
+    
+    logger.info("Reading CSV file: %s", PORTFOLIO_CSV)
+    df = pd.read_csv(PORTFOLIO_CSV)
+    logger.info("Successfully read CSV file: %s", PORTFOLIO_CSV)
+    
+    # Update today's rows with new stop losses
+    for _, stock in portfolio_df.iterrows():
+        ticker = str(stock['ticker']).upper()
+        new_stop = float(stock['stop_loss'])
+        
+        mask = (df['Date'] == today_iso) & (df['Ticker'] == ticker)
+        if mask.any():
+            df.loc[mask, 'Stop Loss'] = new_stop
+    
+    logger.info("Writing CSV file: %s", PORTFOLIO_CSV)
+    df.to_csv(PORTFOLIO_CSV, index=False)
+    logger.info("Successfully wrote CSV file: %s", PORTFOLIO_CSV)
+    
+    print("\n✓ Stop losses updated successfully in portfolio CSV.")
+    print("\nUpdated Holdings:")
+    display_df = portfolio_df[['ticker', 'shares', 'stop_loss', 'buy_price']].copy()
+    display_df.columns = ['Ticker', 'Shares', 'Stop Loss', 'Buy Price']
+    print(display_df.to_string(index=False))
+
+
+# ------------------------------
 # Orchestration
 # ------------------------------
 
@@ -1301,10 +1388,14 @@ def load_latest_portfolio_state() -> tuple[pd.DataFrame | list[dict[str, Any]], 
     return latest_tickers, cash
 
 
-def main(data_dir: Path | None = None) -> None:
+def main(data_dir: Path | None = None, update_stops: bool = False) -> None:
     """Check versions, then run the trading script."""
     if data_dir is not None:
         set_data_dir(data_dir)
+    
+    if update_stops:
+        update_stops_only()
+        return
     
     chatgpt_portfolio, cash = load_latest_portfolio_state()
     chatgpt_portfolio, cash = process_portfolio(chatgpt_portfolio, cash)
@@ -1317,6 +1408,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--data-dir", default=None, help="Optional data directory")
     parser.add_argument("--asof", default=None, help="Treat this YYYY-MM-DD as 'today' (e.g., 2025-08-27)")
+    parser.add_argument("--update-stops", action="store_true", help="Run in stop-loss update mode only")
     parser.add_argument("--log-level", default="INFO", 
                        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
                        help="Set the logging level (default: INFO)")
@@ -1336,4 +1428,4 @@ if __name__ == "__main__":
     if args.asof:
         set_asof(args.asof)
 
-    main(Path(args.data_dir) if args.data_dir else None)
+    main(Path(args.data_dir) if args.data_dir else None, update_stops=args.update_stops)
