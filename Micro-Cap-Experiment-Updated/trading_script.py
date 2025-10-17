@@ -1353,6 +1353,19 @@ def load_latest_portfolio_state() -> tuple[pd.DataFrame | list[dict[str, Any]], 
             )
         return portfolio, cash
 
+    # Get the latest TOTAL row to check current state
+    df_total = df[df["Ticker"] == "TOTAL"].copy()
+    df_total["Date"] = pd.to_datetime(df_total["Date"], format="mixed", errors="coerce")
+    latest_total = df_total.sort_values("Date").iloc[-1]
+    cash = float(latest_total["Cash Balance"])
+    
+    # Check if we have any holdings (Total Value ≈ 0 means all sold)
+    total_value = float(latest_total.get("Total Value", 0))
+    if abs(total_value) < 0.01:  # Essentially zero
+        portfolio = pd.DataFrame(columns=["ticker", "shares", "stop_loss", "buy_price", "cost_basis"])
+        return portfolio, cash
+
+    # We have holdings, load them
     non_total = df[df["Ticker"] != "TOTAL"].copy()
     non_total["Date"] = pd.to_datetime(non_total["Date"], format="mixed", errors="coerce")
 
@@ -1360,6 +1373,12 @@ def load_latest_portfolio_state() -> tuple[pd.DataFrame | list[dict[str, Any]], 
     latest_tickers = non_total[non_total["Date"] == latest_date].copy()
     sold_mask = latest_tickers["Action"].astype(str).str.startswith("SELL")
     latest_tickers = latest_tickers[~sold_mask].copy()
+    
+    if latest_tickers.empty:
+        # All positions on latest date were sold
+        portfolio = pd.DataFrame(columns=["ticker", "shares", "stop_loss", "buy_price", "cost_basis"])
+        return portfolio, cash
+    
     latest_tickers.drop(
         columns=[
             "Date",
@@ -1385,10 +1404,6 @@ def load_latest_portfolio_state() -> tuple[pd.DataFrame | list[dict[str, Any]], 
     )
     latest_tickers = latest_tickers.reset_index(drop=True).to_dict(orient="records")
 
-    df_total = df[df["Ticker"] == "TOTAL"].copy()
-    df_total["Date"] = pd.to_datetime(df_total["Date"], format="mixed", errors="coerce")
-    latest = df_total.sort_values("Date").iloc[-1]
-    cash = float(latest["Cash Balance"])
     return latest_tickers, cash
 
 
