@@ -1,4 +1,4 @@
-# Week 5 Portfolio Rebuild and Entry Strategy
+# Week 4 Summary, Week 5 Portfolio Rebuild and Entry Strategy
 
 ## Restated Rules
 We manage a micro-cap U.S. equities portfolio under strict constraints. No new capital beyond what’s allocated (**current cash ~\$186**), except a **~\$140 infusion** possible at month’s end if justified by performance. We trade **long-only, cash only** (no margin or leverage), **full shares only**. The focus is on **U.S.-listed common stocks under \$500M market cap** (NASDAQ, NYSE, NYSE American), avoiding any **defence-related or Israeli-affiliated** companies. **Prohibited**: OTC stocks, funds/ETFs, SPACs, preferreds, warrants, ADRs, bankrupt or halted stocks.
