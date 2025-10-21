@@ -640,39 +640,6 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
 
             break  # proceed to pricing
 
-    # ------- Stop-loss updates -------
-    if interactive:
-        print("\n--- Stop Loss Updates ---")
-        update_stops = input("Update stop losses? ('y' or press Enter to skip): ").strip().lower()
-        if update_stops == 'y':
-            while True:
-                if portfolio_df.empty:
-                    print("No holdings to update.")
-                    break
-                    
-                print("\nCurrent Holdings:")
-                display_df = portfolio_df[['ticker', 'shares', 'stop_loss', 'buy_price']].copy()
-                display_df.columns = ['Ticker', 'Shares', 'Stop Loss', 'Buy Price']
-                print(display_df.to_string(index=False))
-                
-                ticker = input("\nEnter ticker to update (or press Enter to finish): ").strip().upper()
-                if not ticker:
-                    break
-                
-                if ticker not in portfolio_df['ticker'].values:
-                    print(f"{ticker} not found in portfolio.")
-                    continue
-                
-                try:
-                    new_stop = float(input(f"Enter new stop loss for {ticker} (or 0 for no stop): "))
-                    if new_stop < 0:
-                        raise ValueError("Stop loss cannot be negative.")
-                    
-                    portfolio_df.loc[portfolio_df['ticker'] == ticker, 'stop_loss'] = new_stop
-                    print(f"✓ Updated {ticker} stop loss to ${new_stop:.2f}")
-                except ValueError as e:
-                    print(f"Invalid stop loss: {e}. Skipping update.")
-
     # ------- Daily pricing + stop-loss execution -------
     s, e = trading_day_window()
     for _, stock in portfolio_df.iterrows():
