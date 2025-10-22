@@ -68,13 +68,7 @@ PORTFOLIO_CSV = DATA_DIR / "chatgpt_portfolio_update.csv"
 TRADE_LOG_CSV = DATA_DIR / "chatgpt_trade_log.csv"
 CAPITAL_INJECTIONS_CSV = DATA_DIR / "capital_injections.csv"
 INITIAL_SNAPSHOT_CSV = DATA_DIR / "initial_portfolio_snapshot.csv"
-DEFAULT_BENCHMARKS = [
-    "VTI",     # Vanguard Total Stock Market ETF - covers all U.S. market caps in one index
-    "ACWI",    # MSCI ACWI (All Country World Index) - global stocks, all caps
-    "SPY",     # S&P 500 ETF - large-cap U.S. for comparison
-    "AGG",     # iShares Core U.S. Aggregate Bond ETF - broad U.S. bond market (optional if portfolio includes bonds)
-    "VXUS"     # Vanguard Total International Stock ETF - broad ex-US equity exposure (optional for global allocation)
-]
+DEFAULT_BENCHMARKS = ["IWO", "XBI", "SPY", "IWM"]
 
 logger = logging.getLogger(__name__)
 
@@ -401,6 +395,46 @@ def capture_initial_snapshot(portfolio_df: pd.DataFrame, cash: float, interactiv
     
     print(f"\n✓ Initial snapshot captured: {len(snapshot_rows)} positions, ${total_value:,.2f} total value")
     print(f"  Saved to: {INITIAL_SNAPSHOT_CSV}")
+    
+    # Also create initial portfolio CSV entry with these holdings
+    print("\nCreating initial portfolio tracking entries...")
+    portfolio_results = []
+    for row in snapshot_rows:
+        portfolio_results.append({
+            "Date": today,
+            "Ticker": row["Ticker"],
+            "Shares": row["Shares"],
+            "Buy Price": row["Price"],
+            "Cost Basis": row["Value"],
+            "Stop Loss": 0.0,
+            "Current Price": row["Price"],
+            "Total Value": row["Value"],
+            "PnL": 0.0,
+            "Action": "INITIAL HOLDINGS",
+            "Cash Balance": "",
+            "Total Equity": ""
+        })
+    
+    # Add TOTAL row
+    portfolio_results.append({
+        "Date": today,
+        "Ticker": "TOTAL",
+        "Shares": "",
+        "Buy Price": "",
+        "Cost Basis": "",
+        "Stop Loss": "",
+        "Current Price": "",
+        "Total Value": round(total_value - cash, 2),
+        "PnL": 0.0,
+        "Action": "",
+        "Cash Balance": round(cash, 2),
+        "Total Equity": round(total_value, 2)
+    })
+    
+    portfolio_df = pd.DataFrame(portfolio_results)
+    portfolio_df.to_csv(PORTFOLIO_CSV, index=False)
+    print(f"✓ Initial portfolio entries created in {PORTFOLIO_CSV}")
+
 
 # ------------------------------
 # Portfolio operations
