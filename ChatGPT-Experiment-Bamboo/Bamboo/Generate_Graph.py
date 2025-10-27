@@ -257,6 +257,9 @@ def build_buy_and_hold_series(
     
     For each date, calculate what the original holdings would be worth
     if no trades were executed (only market price changes).
+    
+    IMPORTANT: Uses initial_snapshot to determine which tickers to track,
+    NOT the current portfolio (which may have had positions sold).
     """
     portfolio_dates_norm = _date_only_series(portfolio_dates)
     if portfolio_dates_norm.empty or initial_snapshot.empty:
@@ -265,16 +268,18 @@ def build_buy_and_hold_series(
     result_dates = sorted(portfolio_dates_norm.unique())
     buy_hold_values = []
     
-    # Download price history for each ticker in initial snapshot
+    # Download price history for each ticker in INITIAL snapshot (not current portfolio)
     ticker_prices = {}
+    print("\nBuilding buy-and-hold baseline from initial snapshot...")
     for ticker in initial_snapshot["Ticker"].unique():
-        print(f"Downloading buy-and-hold price history for {ticker}...")
+        print(f"  Downloading price history for {ticker}...")
         ticker_prices[ticker] = download_ticker_history(ticker, portfolio_dates)
     
-    # For each date, calculate portfolio value
+    # For each date, calculate portfolio value based on ORIGINAL holdings
     for date in result_dates:
-        portfolio_value = initial_cash  # Start with cash (stays constant)
+        portfolio_value = initial_cash  # Cash stays constant in buy-and-hold
         
+        # Use INITIAL snapshot holdings (not current portfolio)
         for _, holding in initial_snapshot.iterrows():
             ticker = holding["Ticker"]
             shares = float(holding["Shares"])
@@ -456,8 +461,19 @@ def main(
     # Build buy-and-hold series
     print("\nBuilding buy-and-hold baseline...")
     buy_hold = build_buy_and_hold_series(norm_port["Date"], initial_snapshot, initial_cash)
-    # Normalize buy-and-hold to starting equity
-    buy_hold["Value"] = _normalize_to_start(buy_hold["Value"], starting_equity)
+    
+    # DON'T normalize buy-and-hold - it already starts at the correct initial total value
+    # The initial snapshot already accounts for the actual starting portfolio value
+    print(f"Buy-and-hold starts at: ${buy_hold['Value'].iloc[0]:,.2f}")
+    print(f"Active portfolio normalized to: ${starting_equity:,.2f}")
+    
+    # Only normalize if they don't match (for display consistency)
+    if abs(buy_hold['Value'].iloc[0] - starting_equity) > 1.0:
+        print(f"Normalizing buy-and-hold from ${buy_hold['Value'].iloc[0]:,.2f} to ${starting_equity:,.2f}")
+        buy_hold["Value"] = _normalize_to_start(buy_hold["Value"], starting_equity)
+    else:
+        print("Buy-and-hold already at correct starting value, no normalization needed.")
+
     
     # Build dollar-weighted S&P 500 benchmark
     if injections.empty:
