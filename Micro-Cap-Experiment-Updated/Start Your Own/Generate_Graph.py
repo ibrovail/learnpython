@@ -187,8 +187,9 @@ def build_dollar_weighted_benchmark(
     """
     Build a dollar-weighted S&P 500 benchmark.
     
-    For each capital injection, calculate what that tranche would be worth
-    in S&P 500 from injection date to each portfolio date, then sum all tranches.
+    Starting equity buys S&P at portfolio start date.
+    Each injection buys additional S&P at the injection date's price.
+    Returns the combined value of all tranches for each date.
     """
     portfolio_dates_norm = _date_only_series(portfolio_dates)
     if portfolio_dates_norm.empty or sp500_data.empty:
@@ -204,15 +205,17 @@ def build_dollar_weighted_benchmark(
     for date in result_dates:
         total_value = 0.0
         
-        # Handle initial capital (invested at portfolio start date)
+        # Tranche 1: Initial capital invested at portfolio start date
         sp_at_start = sp500_data[sp500_data["Date"] == portfolio_start]["Close"]
         sp_at_date = sp500_data[sp500_data["Date"] == date]["Close"]
         
         if not sp_at_start.empty and not sp_at_date.empty and date >= portfolio_start:
-            price_ratio = float(sp_at_date.iloc[0]) / float(sp_at_start.iloc[0])
-            total_value += starting_equity * price_ratio
+            # Calculate shares bought at start
+            shares_at_start = starting_equity / float(sp_at_start.iloc[0])
+            # Value of those shares today
+            total_value += shares_at_start * float(sp_at_date.iloc[0])
         
-        # Handle each capital injection
+        # Tranches 2+: Each capital injection buys S&P at injection date's price
         for _, inj in injections.iterrows():
             inj_date = inj["Date"]
             inj_amount = float(inj["Amount"])
@@ -222,8 +225,10 @@ def build_dollar_weighted_benchmark(
                 sp_at_date_inj = sp500_data[sp500_data["Date"] == date]["Close"]
                 
                 if not sp_at_inj.empty and not sp_at_date_inj.empty:
-                    price_ratio = float(sp_at_date_inj.iloc[0]) / float(sp_at_inj.iloc[0])
-                    total_value += inj_amount * price_ratio
+                    # Calculate shares bought at injection date
+                    shares_at_inj = inj_amount / float(sp_at_inj.iloc[0])
+                    # Value of those shares today
+                    total_value += shares_at_inj * float(sp_at_date_inj.iloc[0])
         
         benchmark_values.append(total_value)
     
@@ -236,6 +241,7 @@ def plot_comparison(
     portfolio: pd.DataFrame,
     benchmark: pd.DataFrame,
     starting_equity: float,
+    last_injection_date: Optional[pd.Timestamp],
     title: str = "Portfolio vs. Dollar-Weighted S&P 500",
 ) -> None:
     """Plot portfolio vs benchmark with clean formatting and strict daily ticks."""
@@ -251,15 +257,37 @@ def plot_comparison(
         b_values = benchmark["Value"]
         ax.plot(b_dates, b_values, label="Dollar-Weighted S&P 500", marker="s", linestyle="--")
 
-    # Add return % labels on the final points
+    # Calculate returns since last injection (or start if no injections)
+    if last_injection_date is not None:
+        # Find value right after last injection
+        p_baseline_idx = portfolio[portfolio["Date"] >= last_injection_date].index[0]
+        p_baseline = float(portfolio.loc[p_baseline_idx, "Value"])
+        
+        if not benchmark.empty:
+            b_baseline_idx = benchmark[benchmark["Date"] >= last_injection_date].index[0]
+            b_baseline = float(benchmark.loc[b_baseline_idx, "Value"])
+    else:
+        # No injections, use starting values
+        p_baseline = float(p_values.iloc[0])
+        b_baseline = float(b_values.iloc[0]) if not benchmark.empty else 0
+
+    # Calculate both return metrics
     p_last = float(p_values.iloc[-1])
-    p_return_pct = ((p_last / starting_equity) - 1) * 100
-    ax.text(p_dates.iloc[-1], p_last * 1.01, f"{p_return_pct:+.1f}%", fontsize=9)
+    p_start = float(p_values.iloc[0])
+    p_return_total = ((p_last - p_start) / p_start) * 100
+    p_return_since = ((p_last - p_baseline) / p_baseline) * 100
+    
+    # Add return % labels on the final points (both total and since injection)
+    label_text = f"+{p_return_total:.1f}%\n({p_return_since:+.1f}% period)"
+    ax.text(p_dates.iloc[-1], p_last * 1.02, label_text, fontsize=8, ha='left')
     
     if not benchmark.empty:
         b_last = float(b_values.iloc[-1])
-        b_return_pct = ((b_last / starting_equity) - 1) * 100
-        ax.text(b_dates.iloc[-1], b_last * 1.01, f"{b_return_pct:+.1f}%", fontsize=9)
+        b_start = float(b_values.iloc[0])
+        b_return_total = ((b_last - b_start) / b_start) * 100
+        b_return_since = ((b_last - b_baseline) / b_baseline) * 100
+        label_text = f"+{b_return_total:.1f}%\n({b_return_since:+.1f}% period)"
+        ax.text(b_dates.iloc[-1], b_last * 0.98, label_text, fontsize=8, ha='left')
 
     ax.set_title(title)
     ax.set_xlabel("Date")
@@ -291,32 +319,32 @@ def main(
     injections_csv: Path = CAPITAL_INJECTIONS_CSV,
 ) -> None:
     """Main execution: load data, build dollar-weighted benchmark, and plot."""
-    # Load portfolio
+    # Load portfolio - use actual values, no normalization
     totals = load_portfolio_details(start_date, end_date, portfolio_csv=portfolio_csv)
-    
-    # Normalize portfolio to starting equity
-    norm_port = totals.copy()
-    norm_port["Value"] = _normalize_to_start(norm_port["Total Equity"], starting_equity)
-    norm_port = norm_port[["Date", "Value"]]
+    portfolio_data = totals[["Date", "Total Equity"]].copy()
+    portfolio_data.rename(columns={"Total Equity": "Value"}, inplace=True)
     
     # Load S&P 500 data
-    spx = download_sp500(norm_port["Date"])
+    spx = download_sp500(portfolio_data["Date"])
     
     # Load capital injections
     injections = load_capital_injections(injections_csv=injections_csv)
     
-    # Build dollar-weighted benchmark
-    if injections.empty:
-        print("No capital injections found. Using starting equity as initial tranche.")
-    else:
+    # Find last injection date
+    last_injection_date = None
+    if not injections.empty:
+        last_injection_date = injections["Date"].max()
         print(f"Found {len(injections)} capital injection(s). Building dollar-weighted benchmark...")
         for _, row in injections.iterrows():
             print(f"  - {row['Date'].date()}: ${row['Amount']:.2f}")
+    else:
+        print("No capital injections found. Using starting equity as initial tranche.")
     
-    benchmark = build_dollar_weighted_benchmark(norm_port["Date"], injections, spx, starting_equity)
+    # Build dollar-weighted benchmark
+    benchmark = build_dollar_weighted_benchmark(portfolio_data["Date"], injections, spx, starting_equity)
     
     # Plot
-    plot_comparison(norm_port, benchmark, starting_equity, 
+    plot_comparison(portfolio_data, benchmark, starting_equity, last_injection_date,
                    title="Portfolio vs. Dollar-Weighted S&P 500 Benchmark")
     
     if output:
@@ -327,19 +355,47 @@ def main(
         plt.show()
     plt.close()
     
-    # Print summary stats
-    print("\nPerformance Summary")
-    p_start = float(norm_port["Value"].iloc[0])
-    p_end = float(norm_port["Value"].iloc[-1])
-    p_return = ((p_end - p_start) / p_start) * 100
-    print(f"Portfolio: ${p_start:.2f} → ${p_end:.2f} ({p_return:+.2f}%)")
+    # Calculate returns
+    p_start = float(portfolio_data["Value"].iloc[0])
+    p_end = float(portfolio_data["Value"].iloc[-1])
     
     if not benchmark.empty:
         b_start = float(benchmark["Value"].iloc[0])
         b_end = float(benchmark["Value"].iloc[-1])
-        b_return = ((b_end - b_start) / b_start) * 100
-        print(f"Benchmark: ${b_start:.2f} → ${b_end:.2f} ({b_return:+.2f}%)")
-        print(f"Outperformance: {(p_return - b_return):+.2f}%")
+    
+    # Total returns (from start)
+    p_total_return = ((p_end - p_start) / p_start) * 100
+    b_total_return = ((b_end - b_start) / b_start) * 100 if not benchmark.empty else 0
+    
+    # Returns since last injection
+    if last_injection_date is not None:
+        p_baseline_idx = portfolio_data[portfolio_data["Date"] >= last_injection_date].index[0]
+        p_baseline = float(portfolio_data.loc[p_baseline_idx, "Value"])
+        p_since_injection = ((p_end - p_baseline) / p_baseline) * 100
+        
+        if not benchmark.empty:
+            b_baseline_idx = benchmark[benchmark["Date"] >= last_injection_date].index[0]
+            b_baseline = float(benchmark.loc[b_baseline_idx, "Value"])
+            b_since_injection = ((b_end - b_baseline) / b_baseline) * 100
+    else:
+        p_since_injection = p_total_return
+        b_since_injection = b_total_return
+    
+    # Print summary stats
+    print("\nPerformance Summary")
+    print("-" * 60)
+    print("Total Returns (from start):")
+    print(f"  Portfolio: ${p_start:.2f} → ${p_end:.2f} ({p_total_return:+.2f}%)")
+    if not benchmark.empty:
+        print(f"  Benchmark: ${b_start:.2f} → ${b_end:.2f} ({b_total_return:+.2f}%)")
+        print(f"  Outperformance: {(p_total_return - b_total_return):+.2f}%")
+    
+    if last_injection_date is not None:
+        print(f"\nReturns Since Last Injection ({last_injection_date.date()}):")
+        print(f"  Portfolio: ${p_baseline:.2f} → ${p_end:.2f} ({p_since_injection:+.2f}%)")
+        if not benchmark.empty:
+            print(f"  Benchmark: ${b_baseline:.2f} → ${b_end:.2f} ({b_since_injection:+.2f}%)")
+            print(f"  Outperformance: {(p_since_injection - b_since_injection):+.2f}%")
 
 
 if __name__ == "__main__":
