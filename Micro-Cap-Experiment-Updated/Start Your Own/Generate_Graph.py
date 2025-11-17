@@ -242,6 +242,7 @@ def plot_comparison(
     benchmark: pd.DataFrame,
     starting_equity: float,
     last_injection_date: Optional[pd.Timestamp],
+    injections: pd.DataFrame,
     title: str = "Portfolio vs. Dollar-Weighted S&P 500",
 ) -> None:
     """Plot portfolio vs benchmark with clean formatting and strict daily ticks."""
@@ -257,6 +258,11 @@ def plot_comparison(
         b_values = benchmark["Value"]
         ax.plot(b_dates, b_values, label="Dollar-Weighted S&P 500", marker="s", linestyle="--")
 
+    # Calculate total capital invested
+    total_capital_invested = starting_equity
+    if not injections.empty:
+        total_capital_invested += injections["Amount"].sum()
+
     # Calculate returns since last injection (or start if no injections)
     if last_injection_date is not None:
         # Find value right after last injection
@@ -267,26 +273,24 @@ def plot_comparison(
             b_baseline_idx = benchmark[benchmark["Date"] >= last_injection_date].index[0]
             b_baseline = float(benchmark.loc[b_baseline_idx, "Value"])
     else:
-        # No injections, use starting values
-        p_baseline = float(p_values.iloc[0])
-        b_baseline = float(b_values.iloc[0]) if not benchmark.empty else 0
+        # No injections, use total capital as baseline
+        p_baseline = total_capital_invested
+        b_baseline = total_capital_invested if not benchmark.empty else 0
 
     # Calculate both return metrics
     p_last = float(p_values.iloc[-1])
-    p_start = float(p_values.iloc[0])
-    p_return_total = ((p_last - p_start) / p_start) * 100
+    p_return_total = ((p_last - total_capital_invested) / total_capital_invested) * 100
     p_return_since = ((p_last - p_baseline) / p_baseline) * 100
     
     # Add return % labels on the final points (both total and since injection)
-    label_text = f"+{p_return_total:.1f}%\n({p_return_since:+.1f}% period)"
+    label_text = f"(+{p_return_total:.1f})% all time\n({p_return_since:+.1f}%) since last inj."
     ax.text(p_dates.iloc[-1], p_last * 1.02, label_text, fontsize=8, ha='left')
     
     if not benchmark.empty:
         b_last = float(b_values.iloc[-1])
-        b_start = float(b_values.iloc[0])
-        b_return_total = ((b_last - b_start) / b_start) * 100
+        b_return_total = ((b_last - total_capital_invested) / total_capital_invested) * 100
         b_return_since = ((b_last - b_baseline) / b_baseline) * 100
-        label_text = f"+{b_return_total:.1f}%\n({b_return_since:+.1f}% period)"
+        label_text = f"({b_return_total:.1f})% all time\n({b_return_since:+.1f}%) since last inj."
         ax.text(b_dates.iloc[-1], b_last * 0.98, label_text, fontsize=8, ha='left')
 
     ax.set_title(title)
@@ -296,7 +300,7 @@ def plot_comparison(
     ax.grid(True)
 
     # Strict daily ticks with tz-naive YYYY-MM-DD labels
-    ax.xaxis.set_major_locator(mdates.DayLocator(interval=3)) # Major ticks every 3 days
+    ax.xaxis.set_major_locator(mdates.DayLocator(interval=7))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
     ax.xaxis.set_minor_locator(mticker.NullLocator())
 
@@ -344,7 +348,7 @@ def main(
     benchmark = build_dollar_weighted_benchmark(portfolio_data["Date"], injections, spx, starting_equity)
     
     # Plot
-    plot_comparison(portfolio_data, benchmark, starting_equity, last_injection_date,
+    plot_comparison(portfolio_data, benchmark, starting_equity, last_injection_date, injections,
                    title="Portfolio vs. Dollar-Weighted S&P 500 Benchmark")
     
     if output:
@@ -363,9 +367,14 @@ def main(
         b_start = float(benchmark["Value"].iloc[0])
         b_end = float(benchmark["Value"].iloc[-1])
     
-    # Total returns (from start)
-    p_total_return = ((p_end - p_start) / p_start) * 100
-    b_total_return = ((b_end - b_start) / b_start) * 100 if not benchmark.empty else 0
+    # Total capital invested (starting equity + all injections)
+    total_capital_invested = starting_equity
+    if not injections.empty:
+        total_capital_invested += injections["Amount"].sum()
+    
+    # Total returns (based on total capital invested, not starting value)
+    p_total_return = ((p_end - total_capital_invested) / total_capital_invested) * 100
+    b_total_return = ((b_end - total_capital_invested) / total_capital_invested) * 100 if not benchmark.empty else 0
     
     # Returns since last injection
     if last_injection_date is not None:
@@ -384,10 +393,10 @@ def main(
     # Print summary stats
     print("\nPerformance Summary")
     print("-" * 60)
-    print("Total Returns (from start):")
-    print(f"  Portfolio: ${p_start:.2f} → ${p_end:.2f} ({p_total_return:+.2f}%)")
+    print("Total Returns (vs total capital invested):")
+    print(f"  Portfolio: ${total_capital_invested:.2f} → ${p_end:.2f} ({p_total_return:+.2f}%)")
     if not benchmark.empty:
-        print(f"  Benchmark: ${b_start:.2f} → ${b_end:.2f} ({b_total_return:+.2f}%)")
+        print(f"  Benchmark: ${total_capital_invested:.2f} → ${b_end:.2f} ({b_total_return:+.2f}%)")
         print(f"  Outperformance: {(p_total_return - b_total_return):+.2f}%")
     
     if last_injection_date is not None:

@@ -1096,21 +1096,73 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
     sortino_period = (period_return - rf_period) / (downside_std * np.sqrt(n_days)) if downside_std and downside_std > 0 else np.nan
     sortino_annual = ((mean_daily - rf_daily) / downside_std) * np.sqrt(252) if downside_std and downside_std > 0 else np.nan
 
-    # -------- CAPM: Beta & Alpha (vs ^GSPC) --------
+    # -------- Dollar-Weighted S&P 500 Benchmark --------
+    # Calculate starting equity from first portfolio value
+    starting_equity = float(equity_series.iloc[0])
+    
+    # Load capital injections
+    injections = load_capital_injections()
+    total_capital_invested = starting_equity
+    if not injections.empty:
+        total_capital_invested += injections["Amount"].sum()
+    
+    # Download S&P 500 data for the full date range
     start_date = equity_series.index.min() - pd.Timedelta(days=1)
     end_date = equity_series.index.max() + pd.Timedelta(days=1)
-
+    
     spx_fetch = download_price_data("^GSPC", start=start_date, end=end_date, progress=False)
     spx = spx_fetch.df
+    
+    dollar_weighted_spx = np.nan
+    if not spx.empty and len(spx) >= 2:
+        spx = spx.reset_index()
+        if 'Date' not in spx.columns and spx.index.name == 'Date':
+            spx = spx.reset_index()
+        spx['Date'] = pd.to_datetime(spx['Date']).dt.normalize()
+        spx = spx.set_index("Date").sort_index()
+        
+        # Calculate dollar-weighted benchmark
+        portfolio_start = equity_series.index.min()
+        current_date = equity_series.index.max()
+        total_value = 0.0
+        
+        # Tranche 1: Initial capital
+        if portfolio_start in spx.index and current_date in spx.index:
+            sp_at_start = float(spx.loc[portfolio_start, "Close"])
+            sp_at_current = float(spx.loc[current_date, "Close"])
+            shares_at_start = starting_equity / sp_at_start
+            total_value += shares_at_start * sp_at_current
+        
+        # Tranches 2+: Each injection
+        for _, inj in injections.iterrows():
+            inj_date = pd.Timestamp(inj["Date"]).normalize()
+            inj_amount = float(inj["Amount"])
+            
+            if inj_date in spx.index and current_date in spx.index:
+                sp_at_inj = float(spx.loc[inj_date, "Close"])
+                sp_at_current = float(spx.loc[current_date, "Close"])
+                shares_at_inj = inj_amount / sp_at_inj
+                total_value += shares_at_inj * sp_at_current
+        
+        if total_value > 0:
+            dollar_weighted_spx = total_value
 
+    # -------- Pretty Printing --------
+    # -------- CAPM: Beta & Alpha (vs ^GSPC) --------
     beta = np.nan
     alpha_annual = np.nan
     r2 = np.nan
     n_obs = 0
 
     if not spx.empty and len(spx) >= 2:
-        spx = spx.reset_index().set_index("Date").sort_index()
-        mkt_ret = spx["Close"].astype(float).pct_change().dropna()
+        if 'Date' not in spx.columns and spx.index.name == 'Date':
+            spx_capm = spx.reset_index()
+        else:
+            spx_capm = spx.copy()
+        if 'Date' in spx_capm.columns:
+            spx_capm = spx_capm.set_index("Date")
+        spx_capm = spx_capm.sort_index()
+        mkt_ret = spx_capm["Close"].astype(float).pct_change().dropna()
 
         # Align portfolio & market returns
         common_idx = r.index.intersection(list(mkt_ret.index))
@@ -1129,25 +1181,6 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
 
                 corr = np.corrcoef(x, y)[0, 1]
                 r2 = float(corr ** 2)
-
-    # $X normalized S&P 500 over same window (asks user for initial equity)
-    spx_norm_fetch = download_price_data(
-        "^GSPC",
-        start=equity_series.index.min(),
-        end=equity_series.index.max() + pd.Timedelta(days=1),
-        progress=False,
-    )
-    spx_norm = spx_norm_fetch.df
-    spx_value = np.nan
-    starting_equity = np.nan  # Ensure starting_equity is always defined
-    if not spx_norm.empty:
-        initial_price = float(spx_norm["Close"].iloc[0])
-        price_now = float(spx_norm["Close"].iloc[-1])
-        try:
-            starting_equity = float(input("what was your starting equity? "))
-        except Exception:
-            print("Invalid input for starting equity. Defaulting to NaN.")
-        spx_value = (starting_equity / initial_price) * price_now if not np.isnan(starting_equity) else np.nan
 
     # -------- Pretty Printing --------
     print("\n" + "=" * 64)
@@ -1190,16 +1223,19 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
         print("Beta/Alpha: insufficient overlapping data.")
 
     print("\n[ Snapshot ]")
-    print(f"{'Latest ChatGPT Equity:':32} ${final_equity:>14,.2f}")
-    if not np.isnan(spx_value):
-        try:
-            print(f"{f'${starting_equity} in S&P 500 (same window):':32} ${spx_value:>14,.2f}")
-        except Exception:
-            pass
-    print(f"{'Cash Balance:':32} ${cash:>14,.2f}")
+    equity_label = "Latest ChatGPT Equity:"
+    print(f"{equity_label:32} ${final_equity:>14,.2f}")
+    
+    # Display dollar-weighted S&P 500 benchmark
+    if not np.isnan(dollar_weighted_spx):
+        spx_label = f"${total_capital_invested:.2f} in S&P 500:"
+        print(f"{spx_label:32} ${dollar_weighted_spx:>14,.2f}")
+    
+    cash_label = "Cash Balance:"
+    print(f"{cash_label:32} ${cash:>14,.2f}")
 
     print("\n[ Holdings ]")
-    print(chatgpt_portfolio)
+    print(chatgpt_portfolio)    
 
     print("\n[ Your Instructions ]")
     print(
@@ -1207,11 +1243,10 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
         "Deep research is not permitted. Act at your discretion to achieve the best outcome.\n"
         "If you do not make a clear indication to change positions IMMEDIATELY after this message, the portfolio remains unchanged for tomorrow.\n"
         "Use the internet to check current prices (and related up-to-date info such as the catalyst calendar) for potential buys.\n"
-        "Do not ask questions, just provide FINAL decisions and state rationale for them.\n"
+        "Provide FINAL decisions and state rationale for them.\n"
         "\n"
         "*Paste everything above into ChatGPT*"
     )
-
 
 # ------------------------------
 # Stop-loss update utility
@@ -1415,3 +1450,5 @@ if __name__ == "__main__":
         set_asof(args.asof)
 
     main(Path(args.data_dir) if args.data_dir else None, update_stops=args.update_stops)
+
+    
