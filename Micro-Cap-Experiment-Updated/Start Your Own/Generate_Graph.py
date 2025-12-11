@@ -197,23 +197,36 @@ def build_dollar_weighted_benchmark(
     
     portfolio_start = portfolio_dates_norm.min()
     sp500_data = sp500_data.sort_values("Date").reset_index(drop=True)
+    sp500_data.set_index("Date", inplace=True)
     injections = injections.sort_values("Date").reset_index(drop=True)
     
     result_dates = sorted(portfolio_dates_norm.unique())
     benchmark_values = []
     
+    # Helper function to get nearest S&P price (forward-fill if needed)
+    def get_sp_price(target_date):
+        if target_date in sp500_data.index:
+            return float(sp500_data.loc[target_date, "Close"])
+        # Find nearest date on or after target (forward-fill)
+        future_dates = sp500_data.index[sp500_data.index >= target_date]
+        if len(future_dates) > 0:
+            return float(sp500_data.loc[future_dates[0], "Close"])
+        # If no future dates, use last available
+        return float(sp500_data["Close"].iloc[-1])
+    
     for date in result_dates:
         total_value = 0.0
         
         # Tranche 1: Initial capital invested at portfolio start date
-        sp_at_start = sp500_data[sp500_data["Date"] == portfolio_start]["Close"]
-        sp_at_date = sp500_data[sp500_data["Date"] == date]["Close"]
-        
-        if not sp_at_start.empty and not sp_at_date.empty and date >= portfolio_start:
-            # Calculate shares bought at start
-            shares_at_start = starting_equity / float(sp_at_start.iloc[0])
-            # Value of those shares today
-            total_value += shares_at_start * float(sp_at_date.iloc[0])
+        try:
+            sp_at_start = get_sp_price(portfolio_start)
+            sp_at_date = get_sp_price(date)
+            
+            if date >= portfolio_start:
+                shares_at_start = starting_equity / sp_at_start
+                total_value += shares_at_start * sp_at_date
+        except Exception:
+            pass
         
         # Tranches 2+: Each capital injection buys S&P at injection date's price
         for _, inj in injections.iterrows():
@@ -221,14 +234,14 @@ def build_dollar_weighted_benchmark(
             inj_amount = float(inj["Amount"])
             
             if date >= inj_date:
-                sp_at_inj = sp500_data[sp500_data["Date"] == inj_date]["Close"]
-                sp_at_date_inj = sp500_data[sp500_data["Date"] == date]["Close"]
-                
-                if not sp_at_inj.empty and not sp_at_date_inj.empty:
-                    # Calculate shares bought at injection date
-                    shares_at_inj = inj_amount / float(sp_at_inj.iloc[0])
-                    # Value of those shares today
-                    total_value += shares_at_inj * float(sp_at_date_inj.iloc[0])
+                try:
+                    sp_at_inj = get_sp_price(inj_date)
+                    sp_at_date_inj = get_sp_price(date)
+                    
+                    shares_at_inj = inj_amount / sp_at_inj
+                    total_value += shares_at_inj * sp_at_date_inj
+                except Exception:
+                    pass
         
         benchmark_values.append(total_value)
     
@@ -283,14 +296,14 @@ def plot_comparison(
     p_return_since = ((p_last - p_baseline) / p_baseline) * 100
     
     # Add return % labels on the final points (both total and since injection)
-    label_text = f"(+{p_return_total:.1f})% all time\n({p_return_since:+.1f}%) since last inj."
+    label_text = f"+{p_return_total:.1f}%\n({p_return_since:+.1f}% period)"
     ax.text(p_dates.iloc[-1], p_last * 1.02, label_text, fontsize=8, ha='left')
     
     if not benchmark.empty:
         b_last = float(b_values.iloc[-1])
         b_return_total = ((b_last - total_capital_invested) / total_capital_invested) * 100
         b_return_since = ((b_last - b_baseline) / b_baseline) * 100
-        label_text = f"({b_return_total:.1f})% all time\n({b_return_since:+.1f}%) since last inj."
+        label_text = f"+{b_return_total:.1f}%\n({b_return_since:+.1f}% period)"
         ax.text(b_dates.iloc[-1], b_last * 0.98, label_text, fontsize=8, ha='left')
 
     ax.set_title(title)

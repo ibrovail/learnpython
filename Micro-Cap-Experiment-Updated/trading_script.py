@@ -1235,8 +1235,40 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
     print(f"{cash_label:32} ${cash:>14,.2f}")
 
     print("\n[ Holdings ]")
-    print(chatgpt_portfolio)    
 
+    # Add all-time return column to holdings display
+    if not chatgpt_portfolio.empty:
+        holdings_display = chatgpt_portfolio.copy()
+        all_time_returns = []
+        
+        s, e = trading_day_window()
+        for _, stock in holdings_display.iterrows():
+            ticker = str(stock["ticker"]).upper()
+            shares = float(stock["shares"]) if not pd.isna(stock["shares"]) else 0
+            buy_price = float(stock["buy_price"]) if not pd.isna(stock["buy_price"]) else 0.0
+            
+            # Fetch current price
+            fetch = download_price_data(ticker, start=s, end=e, auto_adjust=False, progress=False)
+            data = fetch.df
+            
+            if not data.empty:
+                current_price = float(data["Close"].iloc[-1])
+                pnl_dollars = (current_price - buy_price) * shares
+                pnl_percent = ((current_price - buy_price) / buy_price) * 100 if buy_price > 0 else 0
+                all_time_returns.append(f"{pnl_dollars:+.2f} ({pnl_percent:+.1f}%)")
+            else:
+                all_time_returns.append("N/A")
+        
+        holdings_display["all_time_return"] = all_time_returns
+        
+        # Reorder columns to show all_time_return after cost_basis
+        cols = ["ticker", "shares", "buy_price", "cost_basis", "all_time_return", "stop_loss"]
+        holdings_display = holdings_display[cols]
+        
+        print(holdings_display.to_string(index=False))
+    else:
+        print(chatgpt_portfolio)
+        
     print("\n[ Your Instructions ]")
     print(
         "Use this info to make decisions regarding your portfolio. You have complete control over every decision. Make any changes you believe are beneficial—no approval required.\n"
