@@ -69,7 +69,7 @@ DATA_DIR = SCRIPT_DIR  # Save files alongside this script by default
 PORTFOLIO_CSV = DATA_DIR / "chatgpt_portfolio_update.csv"
 TRADE_LOG_CSV = DATA_DIR / "chatgpt_trade_log.csv"
 CAPITAL_INJECTIONS_CSV = DATA_DIR / "capital_injections.csv"
-DEFAULT_BENCHMARKS = ["IWO", "XBI", "SPY", "IWM"]
+DEFAULT_BENCHMARKS = ["IWO", "XBI", "SPY", "IWM", "RUT"]
 
 # Set up logger for this module
 logger = logging.getLogger(__name__)
@@ -177,11 +177,11 @@ def last_trading_date(today: datetime | None = None) -> pd.Timestamp:
     dt = pd.Timestamp(today or _effective_now())
     if dt.weekday() == 5:  # Sat -> Fri
         friday_date = (dt - pd.Timedelta(days=1)).normalize()
-        logger.info("Script running on Saturday - using Friday's data (%s) instead of today's date", friday_date.date())
+        ## logger.info("Script running on Saturday - using Friday's data (%s) instead of today's date", friday_date.date())
         return friday_date
     if dt.weekday() == 6:  # Sun -> Fri
         friday_date = (dt - pd.Timedelta(days=2)).normalize()
-        logger.info("Script running on Sunday - using Friday's data (%s) instead of today's date", friday_date.date())
+        ## logger.info("Script running on Sunday - using Friday's data (%s) instead of today's date", friday_date.date())
         return friday_date
     return dt.normalize()
 

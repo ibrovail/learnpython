@@ -264,12 +264,12 @@ def plot_comparison(
 
     p_dates = _date_only_series(portfolio["Date"])
     p_values = portfolio["Value"]
-    ax.plot(p_dates, p_values, label="Your Portfolio", marker="o")
+    ax.plot(p_dates, p_values, label="ChatGPT", marker="o")
 
     if not benchmark.empty:
         b_dates = _date_only_series(benchmark["Date"])
         b_values = benchmark["Value"]
-        ax.plot(b_dates, b_values, label="Dollar-Weighted S&P 500", marker="s", linestyle="--")
+        ax.plot(b_dates, b_values, label="S&P 500", marker="s", linestyle="--")
 
     # Calculate total capital invested
     total_capital_invested = starting_equity
@@ -313,7 +313,7 @@ def plot_comparison(
     ax.grid(True)
 
     # Strict daily ticks with tz-naive YYYY-MM-DD labels
-    ax.xaxis.set_major_locator(mdates.DayLocator(interval=7))
+    ax.xaxis.set_major_locator(mdates.DayLocator(interval=14))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
     ax.xaxis.set_minor_locator(mticker.NullLocator())
 
