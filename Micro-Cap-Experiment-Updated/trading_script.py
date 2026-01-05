@@ -69,7 +69,7 @@ DATA_DIR = SCRIPT_DIR  # Save files alongside this script by default
 PORTFOLIO_CSV = DATA_DIR / "chatgpt_portfolio_update.csv"
 TRADE_LOG_CSV = DATA_DIR / "chatgpt_trade_log.csv"
 CAPITAL_INJECTIONS_CSV = DATA_DIR / "capital_injections.csv"
-DEFAULT_BENCHMARKS = ["IWO", "XBI", "SPY", "IWM", "RUT"]
+DEFAULT_BENCHMARKS = ["IWO", "XBI", "SPY", "IWM", "QQQ"]
 
 # Set up logger for this module
 logger = logging.getLogger(__name__)
