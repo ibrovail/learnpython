@@ -69,7 +69,7 @@ DATA_DIR = SCRIPT_DIR  # Save files alongside this script by default
 PORTFOLIO_CSV = DATA_DIR / "chatgpt_portfolio_update.csv"
 TRADE_LOG_CSV = DATA_DIR / "chatgpt_trade_log.csv"
 CAPITAL_INJECTIONS_CSV = DATA_DIR / "capital_injections.csv"
-DEFAULT_BENCHMARKS = ["IWO", "XBI", "SPY", "IWM", "QQQ"]
+DEFAULT_BENCHMARKS = ["IWO", "XBI", "SPY", "IWM", "QQQ", "VIX", "TLT", "HYG"]
 
 # Set up logger for this module
 logger = logging.getLogger(__name__)
@@ -1274,7 +1274,7 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
         "Use this info to make decisions regarding your portfolio. You have complete control over every decision. Make any changes you believe are beneficial—no approval required.\n"
         "Deep research is not permitted. Act at your discretion to achieve the best outcome.\n"
         "If you do not make a clear indication to change positions IMMEDIATELY after this message, the portfolio remains unchanged for tomorrow.\n"
-        "Use the internet to check current prices (and related up-to-date info such as the catalyst calendar) for potential buys.\n"
+        "Use the internet to check current prices (and related up-to-date info such as the catalyst calendar) for existing holdings and potential buys.\n"
         "Provide FINAL decisions and state rationale for them.\n"
         "\n"
         "*Paste everything above into ChatGPT*"
