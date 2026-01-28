@@ -670,8 +670,19 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
         if np.isnan(o):
             o = c
 
-        if stop and l <= stop:
-            exec_price = round(o if o <= stop else stop, 2)
+        # FIXED: Stop-loss only triggers during regular trading hours
+        stop_triggered = False
+        if stop and stop > 0:
+            if o >= stop and l <= stop:
+                # Stock opened at/above stop, fell during trading hours
+                stop_triggered = True
+                exec_price = round(stop, 2)
+            elif o < stop:
+                # Stock gapped below stop in pre-market - stop didn't execute
+                print(f"⚠️  WARNING: {ticker} gapped below stop-loss ${stop:.2f} (opened at ${o:.2f}). Stop not executed - position still held.")
+                stop_triggered = False
+
+        if stop_triggered:
             value = round(exec_price * shares, 2)
             pnl = round((exec_price - cost) * shares, 2)
             action = "SELL - Stop Loss Triggered"
@@ -1268,7 +1279,40 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
         print(holdings_display.to_string(index=False))
     else:
         print(chatgpt_portfolio)
-        
+
+    # -------- Trade Log for Today --------
+    try:
+        trade_log_df = pd.read_csv(TRADE_LOG_CSV)
+        # Rename columns to lowercase with underscores
+        trade_log_df.columns = [c.lower().replace(" ", "_") for c in trade_log_df.columns]
+        trade_log_df["date"] = pd.to_datetime(trade_log_df["date"], format="mixed", errors="coerce")
+        today_trades = trade_log_df[trade_log_df["date"].dt.normalize() == pd.Timestamp(today).normalize()]
+
+        if not today_trades.empty:
+            print("\n[ Trade Log ]")
+            # Format for display with lowercase underscore columns
+            display_cols = ["ticker", "shares_bought", "buy_price", "cost_basis", "pnl", "reason", "shares_sold", "sell_price"]
+            available_cols = [c for c in display_cols if c in today_trades.columns]
+            trades_display = today_trades[available_cols].copy()
+
+            # Format numeric columns
+            for col in ["buy_price", "sell_price", "cost_basis", "pnl"]:
+                if col in trades_display.columns:
+                    trades_display[col] = trades_display[col].apply(
+                        lambda x: f"${x:.2f}" if pd.notna(x) and x != "" else ""
+                    )
+            for col in ["shares_bought", "shares_sold"]:
+                if col in trades_display.columns:
+                    trades_display[col] = trades_display[col].apply(
+                        lambda x: f"{x:.0f}" if pd.notna(x) and x != "" else ""
+                    )
+
+            print(trades_display.to_string(index=False))
+    except FileNotFoundError:
+        pass  # No trade log file yet
+    except Exception as e:
+        logger.warning("Could not load trade log: %s", e)
+
     print("\n[ Your Instructions ]")
     print(
         "Use this info to make decisions regarding your portfolio. You have complete control over every decision. Make any changes you believe are beneficial—no approval required.\n"
