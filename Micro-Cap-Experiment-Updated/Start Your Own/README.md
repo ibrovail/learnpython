@@ -5,6 +5,13 @@ This folder lets you run the trading experiment on your own computer. It contain
 Run the commands below from the repository root. The scripts automatically
 save their CSV data inside this folder.
 
+## Git Workflow
+
+- Do not commit directly to `main`.
+- All changes should be made in `feature/*` or `fix/*` branches.
+- Generated CSV files are intentionally committed after each run to track portfolio state over time.
+- Code changes and generated outputs should be committed separately where possible.
+
 ## Overview
 
  **Install dependencies:**
