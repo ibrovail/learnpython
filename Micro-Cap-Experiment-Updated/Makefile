@@ -1,6 +1,7 @@
-# Virtual environment setup
+# Virtual environment setup (uses .nosync to prevent iCloud sync issues)
 venv:
-	python3 -m venv venv
+	python3 -m venv venv.nosync
+	ln -sf venv.nosync venv
 	@echo "Virtual environment created. Activate with: source venv/bin/activate"
 
 # Install dependencies
@@ -30,7 +31,7 @@ graph: activate
 
 # Clean up virtual environment
 clean:
-	rm -rf venv
+	rm -rf venv venv.nosync
 	@echo "Virtual environment removed"
 
 .PHONY: venv install setup activate trade clean
