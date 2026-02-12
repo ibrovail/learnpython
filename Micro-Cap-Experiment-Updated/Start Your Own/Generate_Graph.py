@@ -346,7 +346,16 @@ def main(
     
     # Load capital injections
     injections = load_capital_injections(injections_csv=injections_csv)
-    
+
+    # Filter injections to portfolio date range (prevents IndexError when --end-date
+    # precedes the last injection date in the CSV)
+    portfolio_end = portfolio_data["Date"].max()
+    portfolio_start = portfolio_data["Date"].min()
+    injections = injections[
+        (injections["Date"] >= portfolio_start) &
+        (injections["Date"] <= portfolio_end)
+    ].reset_index(drop=True)
+
     # Find last injection date
     last_injection_date = None
     if not injections.empty:

@@ -984,17 +984,297 @@ If this is a mistake, enter 1, or hit Enter."""
 # Reporting / Metrics
 # ------------------------------
 
+# Role classification for tickers in daily summary
+TICKER_ROLES: Dict[str, str] = {
+    "SPY": "Benchmark",
+    "IWM": "Benchmark",
+    "QQQ": "Benchmark",
+    "IWO": "Benchmark",
+    "XBI": "Benchmark",
+    "TLT": "Macro",
+    "HYG": "Macro",
+}
+
+def _get_ticker_role(ticker: str, holdings_set: set[str]) -> str:
+    """Determine the role of a ticker for display purposes."""
+    ticker_upper = ticker.upper()
+    if ticker_upper in holdings_set:
+        return "Holding"
+    return TICKER_ROLES.get(ticker_upper, "Benchmark")
+
+
+def _fmt_pct(val: float) -> str:
+    """Format a percentage value as +X.XX% or -X.XX%."""
+    if val is None or (isinstance(val, float) and np.isnan(val)):
+        return "N/A"
+    return f"{val:+.2f}%"
+
+
+def _fmt_currency(val: float) -> str:
+    """Format a currency value as $X.XX."""
+    if val is None or (isinstance(val, float) and np.isnan(val)):
+        return "N/A"
+    return f"${val:,.2f}"
+
+
+def _fmt_num(val: float, decimals: int = 2) -> str:
+    """Format a numeric value with specified decimal places."""
+    if val is None or (isinstance(val, float) and np.isnan(val)):
+        return "N/A"
+    return f"{val:.{decimals}f}"
+
+
+def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]], cash: float) -> None:
+    """Print weekend summary in XML format for deep research sessions.
+
+    Output includes:
+    - Portfolio snapshot with holdings as XML attributes
+    - Cash balance
+    - Placeholder for analyst thesis notes
+    - Recent trades (Monday through Friday of current week)
+    """
+    friday_date = last_trading_date()
+    friday_iso = friday_date.date().isoformat()
+
+    # Calculate Monday of the same week (Friday - 4 days)
+    monday_date = friday_date - pd.Timedelta(days=4)
+
+    # Convert list to DataFrame if needed
+    if isinstance(chatgpt_portfolio, list):
+        portfolio_df = pd.DataFrame(chatgpt_portfolio) if chatgpt_portfolio else pd.DataFrame()
+    else:
+        portfolio_df = chatgpt_portfolio
+
+    # -------- Portfolio Snapshot --------
+    print(f'\n<portfolio_snapshot date="{friday_iso}">')
+
+    if not portfolio_df.empty:
+        s, e = trading_day_window()
+        for _, stock in portfolio_df.iterrows():
+            ticker = str(stock["ticker"]).upper()
+            shares = int(stock["shares"]) if not pd.isna(stock["shares"]) else 0
+            avg_cost = float(stock["buy_price"]) if not pd.isna(stock["buy_price"]) else 0.0
+            stop_loss = float(stock["stop_loss"]) if not pd.isna(stock["stop_loss"]) else 0.0
+
+            # Fetch current price
+            fetch = download_price_data(ticker, start=s, end=e, auto_adjust=False, progress=False)
+            data = fetch.df
+
+            if not data.empty:
+                current_price = float(data["Close"].iloc[-1])
+            else:
+                current_price = 0.0
+
+            print(f'<holding ticker="{ticker}" shares="{shares}" avg_cost="{avg_cost:.2f}" '
+                  f'current_price="{current_price:.2f}" stop_loss="{stop_loss:.2f}" />')
+
+    print("</portfolio_snapshot>")
+    print()
+
+    # -------- Cash Balance --------
+    print("<cash_balance>")
+    print(f"${cash:,.2f}")
+    print("</cash_balance>")
+    print()
+
+    # -------- Last Analyst Thesis (placeholder) --------
+    print("<last_analyst_thesis>")
+    print("<!-- UPDATE: Paste the most recent thesis notes for each holding -->")
+    print("</last_analyst_thesis>")
+    print()
+
+    # -------- Recent Trades (Mon-Fri of current week) --------
+    print("<recent_trades>")
+    print("<!-- Trades from Monday through Friday of current week -->")
+
+    try:
+        trade_log = pd.read_csv(TRADE_LOG_CSV)
+        trade_log["Date"] = pd.to_datetime(trade_log["Date"])
+
+        # Filter to Monday-Friday of current week
+        mask = (trade_log["Date"] >= monday_date) & (trade_log["Date"] <= friday_date)
+        recent = trade_log[mask]
+
+        if not recent.empty:
+            # Print CSV header
+            print("Date,Ticker,Shares Bought,Buy Price,Cost Basis,PnL,Reason,Shares Sold,Sell Price")
+            for _, row in recent.iterrows():
+                date_str = row["Date"].strftime("%Y-%m-%d")
+                ticker = row.get("Ticker", "")
+                shares_bought = row.get("Shares Bought", "")
+                buy_price = row.get("Buy Price", "")
+                cost_basis = row.get("Cost Basis", "")
+                pnl = row.get("PnL", "")
+                reason = row.get("Reason", "")
+                shares_sold = row.get("Shares Sold", "")
+                sell_price = row.get("Sell Price", "")
+
+                # Format numeric values, leave empty if NaN
+                shares_bought = f"{shares_bought}" if not pd.isna(shares_bought) else ""
+                buy_price = f"{buy_price}" if not pd.isna(buy_price) else ""
+                cost_basis = f"{cost_basis}" if not pd.isna(cost_basis) else ""
+                pnl = f"{pnl}" if not pd.isna(pnl) else ""
+                shares_sold = f"{shares_sold}" if not pd.isna(shares_sold) else ""
+                sell_price = f"{sell_price}" if not pd.isna(sell_price) else ""
+
+                print(f"{date_str},{ticker},{shares_bought},{buy_price},{cost_basis},{pnl},{reason},{shares_sold},{sell_price}")
+        else:
+            print("<!-- No trades this week -->")
+    except FileNotFoundError:
+        print("<!-- Trade log not found -->")
+
+    print("</recent_trades>")
+
+
+def _print_xml_summary(
+    today: str,
+    price_volume_rows: list[tuple[str, float, float, int, str]],
+    max_drawdown: float,
+    mdd_date: str,
+    sharpe_annual: float,
+    sortino_annual: float,
+    beta: float,
+    alpha_annual: float,
+    r2: float,
+    final_equity: float,
+    dollar_weighted_spx: float,
+    cash: float,
+    chatgpt_portfolio: pd.DataFrame,
+) -> None:
+    """Print the daily summary in XML-structured format."""
+
+    print(f'\n<daily_summary date="{today}">')
+    print()
+
+    # -------- Market Data --------
+    print("<market_data>")
+
+    # Price & Volume table
+    print("<price_volume>")
+    print("| Ticker | Close   | % Chg  | Volume      | Role       |")
+    print("|--------|---------|--------|-------------|------------|")
+    for ticker, close_price, pct_chg, volume, role in price_volume_rows:
+        close_str = f"{close_price:,.2f}"
+        pct_str = f"{pct_chg:+.2f}%"
+        vol_str = f"{volume:,}"
+        print(f"| {ticker:<6} | {close_str:>7} | {pct_str:>6} | {vol_str:>11} | {role:<10} |")
+    print("</price_volume>")
+    print()
+
+    # Risk Metrics table
+    print("<risk_metrics>")
+    print("| Metric                        | Value     | Note                    |")
+    print("|-------------------------------|-----------|-------------------------|")
+
+    # Max Drawdown
+    mdd_val = _fmt_pct(max_drawdown * 100) if not (max_drawdown is None or (isinstance(max_drawdown, float) and np.isnan(max_drawdown))) else "N/A"
+    mdd_note = f"on {mdd_date}" if mdd_date and mdd_date != "N/A" else ""
+    print(f"| {'Max Drawdown':<29} | {mdd_val:>9} | {mdd_note:<23} |")
+
+    # Sharpe Ratio (annualized)
+    sharpe_val = _fmt_num(sharpe_annual, 4) if not (sharpe_annual is None or (isinstance(sharpe_annual, float) and np.isnan(sharpe_annual))) else "N/A"
+    print(f"| {'Sharpe Ratio (annualized)':<29} | {sharpe_val:>9} | {'':<23} |")
+
+    # Sortino Ratio (annualized)
+    sortino_val = _fmt_num(sortino_annual, 4) if not (sortino_annual is None or (isinstance(sortino_annual, float) and np.isnan(sortino_annual))) else "N/A"
+    print(f"| {'Sortino Ratio (annualized)':<29} | {sortino_val:>9} | {'':<23} |")
+
+    # Beta (daily) vs ^GSPC
+    beta_val = _fmt_num(beta, 4) if not (beta is None or (isinstance(beta, float) and np.isnan(beta))) else "N/A"
+    print(f"| {'Beta (daily) vs ^GSPC':<29} | {beta_val:>9} | {'':<23} |")
+
+    # Alpha (annualized) vs ^GSPC
+    alpha_val = _fmt_pct(alpha_annual * 100) if not (alpha_annual is None or (isinstance(alpha_annual, float) and np.isnan(alpha_annual))) else "N/A"
+    print(f"| {'Alpha (annualized) vs ^GSPC':<29} | {alpha_val:>9} | {'':<23} |")
+
+    # R²
+    r2_val = _fmt_num(r2, 3) if not (r2 is None or (isinstance(r2, float) and np.isnan(r2))) else "N/A"
+    r2_note = "Low — alpha/beta unstable" if not (r2 is None or (isinstance(r2, float) and np.isnan(r2))) and r2 < 0.15 else ""
+    print(f"| {'R²':<29} | {r2_val:>9} | {r2_note:<23} |")
+
+    print("</risk_metrics>")
+    print("</market_data>")
+    print()
+
+    # -------- Portfolio Snapshot --------
+    print("<portfolio_snapshot>")
+    print("| Metric              | Value     |")
+    print("|---------------------|-----------|")
+    print(f"| {'Portfolio Equity':<19} | {_fmt_currency(final_equity):>9} |")
+    spx_val = _fmt_currency(dollar_weighted_spx) if not (dollar_weighted_spx is None or (isinstance(dollar_weighted_spx, float) and np.isnan(dollar_weighted_spx))) else "N/A"
+    print(f"| {'S&P Equivalent':<19} | {spx_val:>9} |")
+    print(f"| {'Cash Balance':<19} | {_fmt_currency(cash):>9} |")
+    print("</portfolio_snapshot>")
+    print()
+
+    # -------- Holdings --------
+    print("<holdings>")
+    print("| Ticker | Shares | Avg Cost | Cost Basis | Unrealized P&L      | Stop Loss |")
+    print("|--------|--------|----------|------------|---------------------|-----------|")
+
+    if not chatgpt_portfolio.empty:
+        s, e = trading_day_window()
+        for _, stock in chatgpt_portfolio.iterrows():
+            ticker = str(stock["ticker"]).upper()
+            shares = int(stock["shares"]) if not pd.isna(stock["shares"]) else 0
+            buy_price = float(stock["buy_price"]) if not pd.isna(stock["buy_price"]) else 0.0
+            cost_basis = float(stock["cost_basis"]) if not pd.isna(stock["cost_basis"]) else 0.0
+            stop_loss = float(stock["stop_loss"]) if not pd.isna(stock["stop_loss"]) else 0.0
+
+            # Fetch current price for P&L calculation
+            fetch = download_price_data(ticker, start=s, end=e, auto_adjust=False, progress=False)
+            data = fetch.df
+
+            if not data.empty:
+                current_price = float(data["Close"].iloc[-1])
+                pnl_dollars = (current_price - buy_price) * shares
+                pnl_percent = ((current_price - buy_price) / buy_price) * 100 if buy_price > 0 else 0
+                pnl_str = f"${pnl_dollars:+,.2f} ({pnl_percent:+.1f}%)"
+            else:
+                pnl_str = "N/A"
+
+            stop_str = f"${stop_loss:.2f}" if stop_loss > 0 else "—"
+
+            print(f"| {ticker:<6} | {shares:>6} | ${buy_price:>7.2f} | ${cost_basis:>9.2f} | {pnl_str:>19} | {stop_str:>9} |")
+
+    print("</holdings>")
+    print()
+
+    # -------- Instructions (static) --------
+    print("<instructions>")
+    print("<authority>You have complete control. No approval required. Make any changes you believe are beneficial.</authority>")
+    print("<constraints>")
+    print("- This is a DAILY check, not the weekly deep research window.")
+    print("- You may: adjust stop-losses, exit positions, trim positions, add to existing positions using available cash.")
+    print("- You may initiate brand-new positions if you believe it is necessary to meet the experiment's alpha goal. If doing so, apply the same liquidity filters and verification standards from the weekly rules. Provide full rationale and catalyst confirmation.")
+    print("- If you make no changes, the portfolio carries forward unchanged to the next session.")
+    print("</constraints>")
+    print("<required_actions>")
+    print("1. Search for current prices and any breaking news/catalysts for all holdings.")
+    print("2. Check each stop-loss against current price action — flag any at risk.")
+    print("3. Review the catalyst calendar from the weekly plan — flag anything imminent.")
+    print("4. State your FINAL decisions clearly. Use the order format from the weekly plan if placing trades.")
+    print("5. If no changes, explicitly state \"NO CHANGES\" with brief reasoning.")
+    print("</required_actions>")
+    print("</instructions>")
+    print()
+    print("</daily_summary>")
+    print()
+
 def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
-    """Print daily price updates and performance metrics (incl. CAPM)."""
+    """Print daily price updates and performance metrics in XML format."""
     portfolio_dict: list[dict[Any, Any]] = chatgpt_portfolio.to_dict(orient="records")
     today = check_weekend()
 
-    rows: list[list[str]] = []
-    header = ["Ticker", "Close", "% Chg", "Volume"]
+    # Build set of holding tickers for role classification
+    holdings_set = {str(stock["ticker"]).upper() for stock in portfolio_dict}
+
+    # Collect price/volume data: (ticker, close, pct_chg, volume, role)
+    price_volume_rows: list[tuple[str, float, float, int, str]] = []
 
     end_d = last_trading_date()                           # Fri on weekends
     start_d = (end_d - pd.Timedelta(days=4)).normalize()  # go back enough to capture 2 sessions even around holidays
-    
+
     benchmarks = load_benchmarks()  # reads tickers.json or returns defaults
     benchmark_entries = [{"ticker": t} for t in benchmarks]
 
@@ -1004,15 +1284,16 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
             fetch = download_price_data(ticker, start=start_d, end=(end_d + pd.Timedelta(days=1)), progress=False)
             data = fetch.df
             if data.empty or len(data) < 2:
-                rows.append([ticker, "—", "—", "—"])
+                # Skip tickers with no data
                 continue
 
             price = float(data["Close"].iloc[-1])
             last_price = float(data["Close"].iloc[-2])
-            volume = float(data["Volume"].iloc[-1])
+            volume = int(data["Volume"].iloc[-1])
 
             percent_change = ((price - last_price) / last_price) * 100
-            rows.append([ticker, f"{price:,.2f}", f"{percent_change:+.2f}%", f"{int(volume):,}"])
+            role = _get_ticker_role(ticker, holdings_set)
+            price_volume_rows.append((ticker, price, percent_change, volume, role))
         except Exception as e:
             raise Exception(f"Download for {ticker} failed. {e} Try checking internet connection.")
 
@@ -1024,18 +1305,22 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
     # Use only TOTAL rows, sorted by date
     totals = chatgpt_df[chatgpt_df["Ticker"] == "TOTAL"].copy()
     if totals.empty:
-        print("\n" + "=" * 64)
-        print(f"Daily Results – {today}")
-        print("=" * 64)
-        print("\n[ Price & Volume ]")
-        colw = [10, 12, 9, 15]
-        print(f"{header[0]:<{colw[0]}} {header[1]:>{colw[1]}} {header[2]:>{colw[2]}} {header[3]:>{colw[3]}}")
-        print("-" * sum(colw) + "-" * 3)
-        for r in rows:
-            print(f"{str(r[0]):<{colw[0]}} {str(r[1]):>{colw[1]}} {str(r[2]):>{colw[2]}} {str(r[3]):>{colw[3]}}")
-        print("\n[ Portfolio Snapshot ]")
-        print(chatgpt_portfolio)
-        print(f"Cash balance: ${cash:,.2f}")
+        # Early return with minimal XML output
+        _print_xml_summary(
+            today=today,
+            price_volume_rows=price_volume_rows,
+            max_drawdown=np.nan,
+            mdd_date="N/A",
+            sharpe_annual=np.nan,
+            sortino_annual=np.nan,
+            beta=np.nan,
+            alpha_annual=np.nan,
+            r2=np.nan,
+            final_equity=cash,
+            dollar_weighted_spx=np.nan,
+            cash=cash,
+            chatgpt_portfolio=chatgpt_portfolio,
+        )
         return
 
     totals["Date"] = pd.to_datetime(totals["Date"], format="mixed", errors="coerce")  # tolerate ISO strings
@@ -1054,26 +1339,27 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
     r = equity_series.pct_change().dropna()
     n_days = len(r)
     if n_days < 2:
-        print("\n" + "=" * 64)
-        print(f"Daily Results – {today}")
-        print("=" * 64)
-        print("\n[ Price & Volume ]")
-        colw = [10, 12, 9, 15]
-        print(f"{header[0]:<{colw[0]}} {header[1]:>{colw[1]}} {header[2]:>{colw[2]}} {header[3]:>{colw[3]}}")
-        print("-" * sum(colw) + "-" * 3)
-        for rrow in rows:
-            print(f"{str(rrow[0]):<{colw[0]}} {str(rrow[1]):>{colw[1]}} {str(rrow[2]):>{colw[2]}} {str(rrow[3]):>{colw[3]}}")
-        print("\n[ Portfolio Snapshot ]")
-        print(chatgpt_portfolio)
-        print(f"Cash balance: ${cash:,.2f}")
-        print(f"Latest ChatGPT Equity: ${final_equity:,.2f}")
         if hasattr(mdd_date, "date") and not isinstance(mdd_date, (str, int)):
-            mdd_date_str = mdd_date.date()
+            mdd_date_str = str(mdd_date.date())
         elif hasattr(mdd_date, "strftime") and not isinstance(mdd_date, (str, int)):
             mdd_date_str = mdd_date.strftime("%Y-%m-%d")
         else:
             mdd_date_str = str(mdd_date)
-        print(f"Maximum Drawdown: {max_drawdown:.2%} (on {mdd_date_str})")
+        _print_xml_summary(
+            today=today,
+            price_volume_rows=price_volume_rows,
+            max_drawdown=max_drawdown,
+            mdd_date=mdd_date_str,
+            sharpe_annual=np.nan,
+            sortino_annual=np.nan,
+            beta=np.nan,
+            alpha_annual=np.nan,
+            r2=np.nan,
+            final_equity=final_equity,
+            dollar_weighted_spx=np.nan,
+            cash=cash,
+            chatgpt_portfolio=chatgpt_portfolio,
+        )
         return
 
     # Risk-free config
@@ -1193,135 +1479,29 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
                 corr = np.corrcoef(x, y)[0, 1]
                 r2 = float(corr ** 2)
 
-    # -------- Pretty Printing --------
-    print("\n" + "=" * 64)
-    print(f"Daily Results – {today}")
-    print("=" * 64)
-
-    # Price & Volume table
-    print("\n[ Price & Volume ]")
-    colw = [10, 12, 9, 15]
-    print(f"{header[0]:<{colw[0]}} {header[1]:>{colw[1]}} {header[2]:>{colw[2]}} {header[3]:>{colw[3]}}")
-    print("-" * sum(colw) + "-" * 3)
-    for rrow in rows:
-        print(f"{str(rrow[0]):<{colw[0]}} {str(rrow[1]):>{colw[1]}} {str(rrow[2]):>{colw[2]}} {str(rrow[3]):>{colw[3]}}")
-
-    # Performance metrics
-    def fmt_or_na(x: float | int | None, fmt: str) -> str:
-        return (fmt.format(x) if not (x is None or (isinstance(x, float) and np.isnan(x))) else "N/A")
-
-    print("\n[ Risk & Return ]")
+    # -------- Format mdd_date for output --------
     if hasattr(mdd_date, "date") and not isinstance(mdd_date, (str, int)):
-        mdd_date_str = mdd_date.date()
+        mdd_date_str = str(mdd_date.date())
     elif hasattr(mdd_date, "strftime") and not isinstance(mdd_date, (str, int)):
         mdd_date_str = mdd_date.strftime("%Y-%m-%d")
     else:
         mdd_date_str = str(mdd_date)
-    print(f"{'Max Drawdown:':32} {fmt_or_na(max_drawdown, '{:.2%}'):>15}   on {mdd_date_str}")
-    print(f"{'Sharpe Ratio (period):':32} {fmt_or_na(sharpe_period, '{:.4f}'):>15}")
-    print(f"{'Sharpe Ratio (annualized):':32} {fmt_or_na(sharpe_annual, '{:.4f}'):>15}")
-    print(f"{'Sortino Ratio (period):':32} {fmt_or_na(sortino_period, '{:.4f}'):>15}")
-    print(f"{'Sortino Ratio (annualized):':32} {fmt_or_na(sortino_annual, '{:.4f}'):>15}")
 
-    print("\n[ CAPM vs Benchmarks ]")
-    if not np.isnan(beta):
-        print(f"{'Beta (daily) vs ^GSPC:':32} {beta:>15.4f}")
-        print(f"{'Alpha (annualized) vs ^GSPC:':32} {alpha_annual:>15.2%}")
-        print(f"{'R² (fit quality):':32} {r2:>15.3f}   {'Obs:':>6} {n_obs}")
-        if n_obs < 60 or (not np.isnan(r2) and r2 < 0.20):
-            print("  Note: Short sample and/or low R² – alpha/beta may be unstable.")
-    else:
-        print("Beta/Alpha: insufficient overlapping data.")
-
-    print("\n[ Snapshot ]")
-    equity_label = "Latest ChatGPT Equity:"
-    print(f"{equity_label:32} ${final_equity:>14,.2f}")
-    
-    # Display dollar-weighted S&P 500 benchmark
-    if not np.isnan(dollar_weighted_spx):
-        spx_label = f"${total_capital_invested:.2f} in S&P 500:"
-        print(f"{spx_label:32} ${dollar_weighted_spx:>14,.2f}")
-    
-    cash_label = "Cash Balance:"
-    print(f"{cash_label:32} ${cash:>14,.2f}")
-
-    print("\n[ Holdings ]")
-
-    # Add all-time return column to holdings display
-    if not chatgpt_portfolio.empty:
-        holdings_display = chatgpt_portfolio.copy()
-        all_time_returns = []
-        
-        s, e = trading_day_window()
-        for _, stock in holdings_display.iterrows():
-            ticker = str(stock["ticker"]).upper()
-            shares = float(stock["shares"]) if not pd.isna(stock["shares"]) else 0
-            buy_price = float(stock["buy_price"]) if not pd.isna(stock["buy_price"]) else 0.0
-            
-            # Fetch current price
-            fetch = download_price_data(ticker, start=s, end=e, auto_adjust=False, progress=False)
-            data = fetch.df
-            
-            if not data.empty:
-                current_price = float(data["Close"].iloc[-1])
-                pnl_dollars = (current_price - buy_price) * shares
-                pnl_percent = ((current_price - buy_price) / buy_price) * 100 if buy_price > 0 else 0
-                all_time_returns.append(f"{pnl_dollars:+.2f} ({pnl_percent:+.1f}%)")
-            else:
-                all_time_returns.append("N/A")
-        
-        holdings_display["all_time_return"] = all_time_returns
-        
-        # Reorder columns to show all_time_return after cost_basis
-        cols = ["ticker", "shares", "buy_price", "cost_basis", "all_time_return", "stop_loss"]
-        holdings_display = holdings_display[cols]
-        
-        print(holdings_display.to_string(index=False))
-    else:
-        print(chatgpt_portfolio)
-
-    # -------- Trade Log for Today --------
-    try:
-        trade_log_df = pd.read_csv(TRADE_LOG_CSV)
-        # Rename columns to lowercase with underscores
-        trade_log_df.columns = [c.lower().replace(" ", "_") for c in trade_log_df.columns]
-        trade_log_df["date"] = pd.to_datetime(trade_log_df["date"], format="mixed", errors="coerce")
-        today_trades = trade_log_df[trade_log_df["date"].dt.normalize() == pd.Timestamp(today).normalize()]
-
-        if not today_trades.empty:
-            print("\n[ Trade Log ]")
-            # Format for display with lowercase underscore columns
-            display_cols = ["ticker", "shares_bought", "buy_price", "cost_basis", "pnl", "reason", "shares_sold", "sell_price"]
-            available_cols = [c for c in display_cols if c in today_trades.columns]
-            trades_display = today_trades[available_cols].copy()
-
-            # Format numeric columns
-            for col in ["buy_price", "sell_price", "cost_basis", "pnl"]:
-                if col in trades_display.columns:
-                    trades_display[col] = trades_display[col].apply(
-                        lambda x: f"${x:.2f}" if pd.notna(x) and x != "" else ""
-                    )
-            for col in ["shares_bought", "shares_sold"]:
-                if col in trades_display.columns:
-                    trades_display[col] = trades_display[col].apply(
-                        lambda x: f"{x:.0f}" if pd.notna(x) and x != "" else ""
-                    )
-
-            print(trades_display.to_string(index=False))
-    except FileNotFoundError:
-        pass  # No trade log file yet
-    except Exception as e:
-        logger.warning("Could not load trade log: %s", e)
-
-    print("\n[ Your Instructions ]")
-    print(
-        "Use this info to make decisions regarding your portfolio. You have complete control over every decision. Make any changes you believe are beneficial—no approval required.\n"
-        "Deep research is not permitted. Act at your discretion to achieve the best outcome.\n"
-        "If you do not make a clear indication to change positions IMMEDIATELY after this message, the portfolio remains unchanged for tomorrow.\n"
-        "Use the internet to check current prices (and related up-to-date info such as the catalyst calendar) for existing holdings and potential buys.\n"
-        "Provide FINAL decisions and state rationale for them.\n"
-        "\n"
-        "*Paste everything above into ChatGPT*"
+    # -------- Print XML Summary --------
+    _print_xml_summary(
+        today=today,
+        price_volume_rows=price_volume_rows,
+        max_drawdown=max_drawdown,
+        mdd_date=mdd_date_str,
+        sharpe_annual=sharpe_annual,
+        sortino_annual=sortino_annual,
+        beta=beta,
+        alpha_annual=alpha_annual,
+        r2=r2,
+        final_equity=final_equity,
+        dollar_weighted_spx=dollar_weighted_spx,
+        cash=cash,
+        chatgpt_portfolio=chatgpt_portfolio,
     )
 
 # ------------------------------
@@ -1381,22 +1561,25 @@ def update_stops_only() -> None:
         return
     
     # Now update the CSV file with the new stop losses
-    today_iso = last_trading_date().date().isoformat()
-    
     if not PORTFOLIO_CSV.exists():
         print(f"Portfolio CSV not found: {PORTFOLIO_CSV}")
         return
-    
+
     logger.info("Reading CSV file: %s", PORTFOLIO_CSV)
     df = pd.read_csv(PORTFOLIO_CSV)
     logger.info("Successfully read CSV file: %s", PORTFOLIO_CSV)
-    
-    # Update today's rows with new stop losses
+
+    # Find the latest date in the CSV (where portfolio rows actually exist)
+    non_total = df[df["Ticker"] != "TOTAL"].copy()
+    non_total["Date"] = pd.to_datetime(non_total["Date"], format="mixed", errors="coerce")
+    latest_date = non_total["Date"].max().strftime("%Y-%m-%d")
+
+    # Update the latest date's rows with new stop losses
     for _, stock in portfolio_df.iterrows():
         ticker = str(stock['ticker']).upper()
         new_stop = float(stock['stop_loss'])
-        
-        mask = (df['Date'] == today_iso) & (df['Ticker'] == ticker)
+
+        mask = (df['Date'] == latest_date) & (df['Ticker'] == ticker)
         if mask.any():
             df.loc[mask, 'Stop Loss'] = new_stop
     
@@ -1485,15 +1668,20 @@ def load_latest_portfolio_state() -> tuple[pd.DataFrame | list[dict[str, Any]], 
     return latest_tickers, cash
 
 
-def main(data_dir: Path | None = None, update_stops: bool = False) -> None:
+def main(data_dir: Path | None = None, update_stops: bool = False, weekend_summary: bool = False) -> None:
     """Check versions, then run the trading script."""
     if data_dir is not None:
         set_data_dir(data_dir)
-    
+
     if update_stops:
         update_stops_only()
         return
-    
+
+    if weekend_summary:
+        chatgpt_portfolio, cash = load_latest_portfolio_state()
+        print_weekend_summary(chatgpt_portfolio, cash)
+        return
+
     chatgpt_portfolio, cash = load_latest_portfolio_state()
     chatgpt_portfolio, cash = process_portfolio(chatgpt_portfolio, cash)
     daily_results(chatgpt_portfolio, cash)
@@ -1506,7 +1694,9 @@ if __name__ == "__main__":
     parser.add_argument("--data-dir", default=None, help="Optional data directory")
     parser.add_argument("--asof", default=None, help="Treat this YYYY-MM-DD as 'today' (e.g., 2025-08-27)")
     parser.add_argument("--update-stops", action="store_true", help="Run in stop-loss update mode only")
-    parser.add_argument("--log-level", default="INFO", 
+    parser.add_argument("--weekend-summary", action="store_true",
+                       help="Output weekend summary in XML format for deep research")
+    parser.add_argument("--log-level", default="INFO",
                        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
                        help="Set the logging level (default: INFO)")
     args = parser.parse_args()
@@ -1525,6 +1715,8 @@ if __name__ == "__main__":
     if args.asof:
         set_asof(args.asof)
 
-    main(Path(args.data_dir) if args.data_dir else None, update_stops=args.update_stops)
+    main(Path(args.data_dir) if args.data_dir else None,
+         update_stops=args.update_stops,
+         weekend_summary=args.weekend_summary)
 
     

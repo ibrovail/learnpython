@@ -19,9 +19,18 @@ save their CSV data inside this folder.
    # Recommended: Use a virtual environment
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
-   
+
    pip install -r requirements.txt
    ```
+
+   > **macOS + iCloud Desktop:** If your project is on an iCloud-synced folder
+   > (Desktop or Documents), the virtual environment will freeze on import due
+   > to iCloud sync overhead. Use `.nosync` to exclude it:
+   > ```bash
+   > python3 -m venv venv.nosync
+   > ln -s venv.nosync venv
+   > source venv/bin/activate
+   > ```
 
 ### trading_script.py
 
@@ -33,7 +42,8 @@ save their CSV data inside this folder.
 | `--asof`            |       | None    |                                       | Treat this YYYY-MM-DD as "today"              |
 | `--log-level`       |       | None    | DEBUG, INFO, WARNING, ERROR, CRITICAL | Set the logging level (default: none)         |
 | `--starting-equity` | `-s`  | None    |                                       | Optional starting equity (cash amount)        |
-| `--update-stops`    | str    | —       | To update stops after running making post script run decisions                   |
+| `--update-stops`    |        | —       |                                       | Update stops after making post-script decisions |
+| `--weekend-summary` |        | —       |                                       | Output weekend summary XML for deep research  |
 
 
 ### Examples
