@@ -995,6 +995,23 @@ TICKER_ROLES: Dict[str, str] = {
     "HYG": "Macro",
 }
 
+
+@dataclass
+class PortfolioMetrics:
+    """Computed portfolio analytics used by both daily and weekend summaries."""
+    price_volume_rows: list[tuple[str, float, float, int, str]]
+    max_drawdown: float
+    mdd_date_str: str
+    sharpe_annual: float
+    sortino_annual: float
+    beta: float
+    alpha_annual: float
+    r2: float
+    final_equity: float
+    dollar_weighted_spx: float
+    experiment_start_date: str
+
+
 def _get_ticker_role(ticker: str, holdings_set: set[str]) -> str:
     """Determine the role of a ticker for display purposes."""
     ticker_upper = ticker.upper()
@@ -1024,20 +1041,292 @@ def _fmt_num(val: float, decimals: int = 2) -> str:
     return f"{val:.{decimals}f}"
 
 
+def _print_price_volume(price_volume_rows: list[tuple[str, float, float, int, str]]) -> None:
+    """Print the <price_volume> table."""
+    print("<price_volume>")
+    print("| Ticker | Close   | % Chg  | Volume      | Role       |")
+    print("|--------|---------|--------|-------------|------------|")
+    for ticker, close_price, pct_chg, volume, role in price_volume_rows:
+        close_str = f"{close_price:,.2f}"
+        pct_str = f"{pct_chg:+.2f}%"
+        vol_str = f"{volume:,}"
+        print(f"| {ticker:<6} | {close_str:>7} | {pct_str:>6} | {vol_str:>11} | {role:<10} |")
+    print("</price_volume>")
+
+
+def _print_risk_metrics(
+    max_drawdown: float, mdd_date: str,
+    sharpe_annual: float, sortino_annual: float,
+    beta: float, alpha_annual: float, r2: float,
+) -> None:
+    """Print the <risk_metrics> table."""
+    print("<risk_metrics>")
+    print("| Metric                        | Value     | Note                    |")
+    print("|-------------------------------|-----------|-------------------------|")
+
+    mdd_val = _fmt_pct(max_drawdown * 100) if not (max_drawdown is None or (isinstance(max_drawdown, float) and np.isnan(max_drawdown))) else "N/A"
+    mdd_note = f"on {mdd_date}" if mdd_date and mdd_date != "N/A" else ""
+    print(f"| {'Max Drawdown':<29} | {mdd_val:>9} | {mdd_note:<23} |")
+
+    sharpe_val = _fmt_num(sharpe_annual, 4) if not (sharpe_annual is None or (isinstance(sharpe_annual, float) and np.isnan(sharpe_annual))) else "N/A"
+    print(f"| {'Sharpe Ratio (annualized)':<29} | {sharpe_val:>9} | {'':<23} |")
+
+    sortino_val = _fmt_num(sortino_annual, 4) if not (sortino_annual is None or (isinstance(sortino_annual, float) and np.isnan(sortino_annual))) else "N/A"
+    print(f"| {'Sortino Ratio (annualized)':<29} | {sortino_val:>9} | {'':<23} |")
+
+    beta_val = _fmt_num(beta, 4) if not (beta is None or (isinstance(beta, float) and np.isnan(beta))) else "N/A"
+    print(f"| {'Beta (daily) vs ^GSPC':<29} | {beta_val:>9} | {'':<23} |")
+
+    alpha_val = _fmt_pct(alpha_annual * 100) if not (alpha_annual is None or (isinstance(alpha_annual, float) and np.isnan(alpha_annual))) else "N/A"
+    print(f"| {'Alpha (annualized) vs ^GSPC':<29} | {alpha_val:>9} | {'':<23} |")
+
+    r2_val = _fmt_num(r2, 3) if not (r2 is None or (isinstance(r2, float) and np.isnan(r2))) else "N/A"
+    r2_note = "Low — alpha/beta unstable" if not (r2 is None or (isinstance(r2, float) and np.isnan(r2))) and r2 < 0.15 else ""
+    print(f"| {'R²':<29} | {r2_val:>9} | {r2_note:<23} |")
+
+    print("</risk_metrics>")
+
+
+def _print_portfolio_snapshot_table(final_equity: float, dollar_weighted_spx: float, cash: float) -> None:
+    """Print the <portfolio_snapshot> table (equity/S&P/cash)."""
+    print("<portfolio_snapshot>")
+    print("| Metric              | Value     |")
+    print("|---------------------|-----------|")
+    print(f"| {'Portfolio Equity':<19} | {_fmt_currency(final_equity):>9} |")
+    spx_val = _fmt_currency(dollar_weighted_spx) if not (dollar_weighted_spx is None or (isinstance(dollar_weighted_spx, float) and np.isnan(dollar_weighted_spx))) else "N/A"
+    print(f"| {'S&P Equivalent':<19} | {spx_val:>9} |")
+    print(f"| {'Cash Balance':<19} | {_fmt_currency(cash):>9} |")
+    print("</portfolio_snapshot>")
+
+
+def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> PortfolioMetrics:
+    """Compute price/volume, risk metrics, and portfolio snapshot data.
+
+    Shared by both daily_results() and print_weekend_summary().
+    """
+    portfolio_dict: list[dict[Any, Any]] = chatgpt_portfolio.to_dict(orient="records")
+
+    # Build set of holding tickers for role classification
+    holdings_set = {str(stock["ticker"]).upper() for stock in portfolio_dict}
+
+    # Collect price/volume data: (ticker, close, pct_chg, volume, role)
+    price_volume_rows: list[tuple[str, float, float, int, str]] = []
+
+    end_d = last_trading_date()                           # Fri on weekends
+    start_d = (end_d - pd.Timedelta(days=4)).normalize()  # go back enough to capture 2 sessions even around holidays
+
+    benchmarks = load_benchmarks()  # reads tickers.json or returns defaults
+    benchmark_entries = [{"ticker": t} for t in benchmarks]
+
+    for stock in portfolio_dict + benchmark_entries:
+        ticker = str(stock["ticker"]).upper()
+        try:
+            fetch = download_price_data(ticker, start=start_d, end=(end_d + pd.Timedelta(days=1)), progress=False)
+            data = fetch.df
+            if data.empty or len(data) < 2:
+                continue
+
+            price = float(data["Close"].iloc[-1])
+            last_price = float(data["Close"].iloc[-2])
+            volume = int(data["Volume"].iloc[-1])
+
+            percent_change = ((price - last_price) / last_price) * 100
+            role = _get_ticker_role(ticker, holdings_set)
+            price_volume_rows.append((ticker, price, percent_change, volume, role))
+        except Exception as e:
+            raise Exception(f"Download for {ticker} failed. {e} Try checking internet connection.")
+
+    # Read portfolio history
+    logger.info("Reading CSV file: %s", PORTFOLIO_CSV)
+    chatgpt_df = pd.read_csv(PORTFOLIO_CSV)
+    logger.info("Successfully read CSV file: %s", PORTFOLIO_CSV)
+
+    # Use only TOTAL rows, sorted by date
+    totals = chatgpt_df[chatgpt_df["Ticker"] == "TOTAL"].copy()
+    if totals.empty:
+        return PortfolioMetrics(
+            price_volume_rows=price_volume_rows,
+            max_drawdown=np.nan, mdd_date_str="N/A",
+            sharpe_annual=np.nan, sortino_annual=np.nan,
+            beta=np.nan, alpha_annual=np.nan, r2=np.nan,
+            final_equity=cash, dollar_weighted_spx=np.nan,
+            experiment_start_date="",
+        )
+
+    totals["Date"] = pd.to_datetime(totals["Date"], format="mixed", errors="coerce")
+    totals = totals.sort_values("Date")
+
+    final_equity = float(totals.iloc[-1]["Total Equity"])
+    equity_series = totals.set_index("Date")["Total Equity"].astype(float).sort_index()
+    experiment_start_date = str(equity_series.index.min().date())
+
+    # --- Max Drawdown ---
+    running_max = equity_series.cummax()
+    drawdowns = (equity_series / running_max) - 1.0
+    max_drawdown = float(drawdowns.min())
+    mdd_date = drawdowns.idxmin()
+
+    # Daily simple returns (portfolio)
+    r = equity_series.pct_change().dropna()
+    n_days = len(r)
+
+    # Format mdd_date for output
+    if hasattr(mdd_date, "date") and not isinstance(mdd_date, (str, int)):
+        mdd_date_str = str(mdd_date.date())
+    elif hasattr(mdd_date, "strftime") and not isinstance(mdd_date, (str, int)):
+        mdd_date_str = mdd_date.strftime("%Y-%m-%d")
+    else:
+        mdd_date_str = str(mdd_date)
+
+    if n_days < 2:
+        return PortfolioMetrics(
+            price_volume_rows=price_volume_rows,
+            max_drawdown=max_drawdown, mdd_date_str=mdd_date_str,
+            sharpe_annual=np.nan, sortino_annual=np.nan,
+            beta=np.nan, alpha_annual=np.nan, r2=np.nan,
+            final_equity=final_equity, dollar_weighted_spx=np.nan,
+            experiment_start_date=experiment_start_date,
+        )
+
+    # Risk-free config
+    rf_annual = 0.045
+    rf_daily = (1 + rf_annual) ** (1 / 252) - 1
+    rf_period = (1 + rf_daily) ** n_days - 1
+
+    # Stats
+    mean_daily = float(r.mean())
+    std_daily = float(r.std(ddof=1))
+
+    # Downside deviation (MAR = rf_daily)
+    downside = (r - rf_daily).clip(upper=0)
+    downside_std = float((downside.pow(2).mean()) ** 0.5) if not downside.empty else np.nan
+
+    # Total return over the window
+    r_numeric = pd.to_numeric(r, errors="coerce")
+    r_numeric = r_numeric[~r_numeric.isna()].astype(float)
+    r_numeric = r_numeric[np.isfinite(r_numeric)]
+    if len(r_numeric) > 0:
+        arr = np.asarray(r_numeric.values, dtype=float)
+        period_return = float(np.prod(1 + arr) - 1) if arr.size > 0 else float('nan')
+    else:
+        period_return = float('nan')
+
+    # Sharpe / Sortino
+    sharpe_annual = ((mean_daily - rf_daily) / std_daily) * np.sqrt(252) if std_daily > 0 else np.nan
+    sortino_annual = ((mean_daily - rf_daily) / downside_std) * np.sqrt(252) if downside_std and downside_std > 0 else np.nan
+
+    # -------- Dollar-Weighted S&P 500 Benchmark --------
+    starting_equity = float(equity_series.iloc[0])
+
+    injections = load_capital_injections()
+    total_capital_invested = starting_equity
+    if not injections.empty:
+        total_capital_invested += injections["Amount"].sum()
+
+    start_date = equity_series.index.min() - pd.Timedelta(days=1)
+    end_date = equity_series.index.max() + pd.Timedelta(days=1)
+
+    spx_fetch = download_price_data("^GSPC", start=start_date, end=end_date, progress=False)
+    spx = spx_fetch.df
+
+    dollar_weighted_spx = np.nan
+    if not spx.empty and len(spx) >= 2:
+        spx = spx.reset_index()
+        if 'Date' not in spx.columns and spx.index.name == 'Date':
+            spx = spx.reset_index()
+        spx['Date'] = pd.to_datetime(spx['Date']).dt.normalize()
+        spx = spx.set_index("Date").sort_index()
+
+        portfolio_start = equity_series.index.min()
+        current_date = equity_series.index.max()
+        total_value = 0.0
+
+        # Tranche 1: Initial capital
+        if portfolio_start in spx.index and current_date in spx.index:
+            sp_at_start = float(spx.loc[portfolio_start, "Close"])
+            sp_at_current = float(spx.loc[current_date, "Close"])
+            shares_at_start = starting_equity / sp_at_start
+            total_value += shares_at_start * sp_at_current
+
+        # Tranches 2+: Each injection
+        for _, inj in injections.iterrows():
+            inj_date = pd.Timestamp(inj["Date"]).normalize()
+            inj_amount = float(inj["Amount"])
+
+            if inj_date in spx.index and current_date in spx.index:
+                sp_at_inj = float(spx.loc[inj_date, "Close"])
+                sp_at_current = float(spx.loc[current_date, "Close"])
+                shares_at_inj = inj_amount / sp_at_inj
+                total_value += shares_at_inj * sp_at_current
+
+        if total_value > 0:
+            dollar_weighted_spx = total_value
+
+    # -------- CAPM: Beta & Alpha (vs ^GSPC) --------
+    beta = np.nan
+    alpha_annual = np.nan
+    r2 = np.nan
+
+    if not spx.empty and len(spx) >= 2:
+        if 'Date' not in spx.columns and spx.index.name == 'Date':
+            spx_capm = spx.reset_index()
+        else:
+            spx_capm = spx.copy()
+        if 'Date' in spx_capm.columns:
+            spx_capm = spx_capm.set_index("Date")
+        spx_capm = spx_capm.sort_index()
+        mkt_ret = spx_capm["Close"].astype(float).pct_change().dropna()
+
+        common_idx = r.index.intersection(list(mkt_ret.index))
+        if len(common_idx) >= 2:
+            rp = (r.reindex(common_idx).astype(float) - rf_daily)
+            rm = (mkt_ret.reindex(common_idx).astype(float) - rf_daily)
+
+            x = np.asarray(rm.values, dtype=float).ravel()
+            y = np.asarray(rp.values, dtype=float).ravel()
+
+            n_obs = x.size
+            rm_std = float(np.std(x, ddof=1)) if n_obs > 1 else 0.0
+            if rm_std > 0:
+                beta, alpha_daily = np.polyfit(x, y, 1)
+                alpha_annual = (1 + float(alpha_daily)) ** 252 - 1
+
+                corr = np.corrcoef(x, y)[0, 1]
+                r2 = float(corr ** 2)
+
+    return PortfolioMetrics(
+        price_volume_rows=price_volume_rows,
+        max_drawdown=max_drawdown, mdd_date_str=mdd_date_str,
+        sharpe_annual=sharpe_annual, sortino_annual=sortino_annual,
+        beta=beta, alpha_annual=alpha_annual, r2=r2,
+        final_equity=final_equity, dollar_weighted_spx=dollar_weighted_spx,
+        experiment_start_date=experiment_start_date,
+    )
+
+
 def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]], cash: float) -> None:
     """Print weekend summary in XML format for deep research sessions.
 
     Output includes:
-    - Portfolio snapshot with holdings as XML attributes
-    - Cash balance
+    - Market data (price/volume table and risk metrics)
+    - Portfolio snapshot (equity, S&P equivalent, cash)
+    - Holdings with current prices
     - Placeholder for analyst thesis notes
     - Recent trades (Monday through Friday of current week)
     """
-    friday_date = last_trading_date()
+    # Resolve the actual last trading day from market data (handles holidays)
+    now = pd.Timestamp(_effective_now()).normalize()
+    lookback_start = now - pd.Timedelta(days=10)
+    spy_fetch = download_price_data("SPY", start=lookback_start, end=(now + pd.Timedelta(days=1)), progress=False)
+    if not spy_fetch.df.empty:
+        last_open = pd.Timestamp(spy_fetch.df.index[-1]).normalize()
+    else:
+        last_open = last_trading_date()  # fallback
+    friday_date = last_open
     friday_iso = friday_date.date().isoformat()
 
-    # Calculate Monday of the same week (Friday - 4 days)
-    monday_date = friday_date - pd.Timedelta(days=4)
+    # Calculate Monday of the same week
+    monday_date = friday_date - pd.Timedelta(days=friday_date.weekday())
 
     # Convert list to DataFrame if needed
     if isinstance(chatgpt_portfolio, list):
@@ -1045,36 +1334,60 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
     else:
         portfolio_df = chatgpt_portfolio
 
-    # -------- Portfolio Snapshot --------
-    print(f'\n<portfolio_snapshot date="{friday_iso}">')
+    # Compute all analytics (shared with daily_results)
+    metrics = _compute_portfolio_metrics(portfolio_df, cash)
+
+    # Build price lookup from metrics to avoid duplicate downloads
+    price_lookup = {ticker: close for ticker, close, _, _, _ in metrics.price_volume_rows}
+
+    # -------- Weekly Summary Header --------
+    today_dt = _effective_now()
+    today_formatted = today_dt.strftime("%A, %B %d, %Y")
+
+    if metrics.experiment_start_date:
+        start = pd.Timestamp(metrics.experiment_start_date)
+        week_num = (friday_date - start).days // 7 + 1
+    else:
+        week_num = 0
+    total_weeks = 26
+
+    print("\n<weekly_summary>")
+    print(f"<date>{today_formatted}</date>")
+    print(f"<week_number>{week_num} of {total_weeks} (six-month live experiment)</week_number>")
+    print()
+
+    # -------- Market Data --------
+    print("<market_data>")
+    _print_price_volume(metrics.price_volume_rows)
+    print()
+    _print_risk_metrics(
+        metrics.max_drawdown, metrics.mdd_date_str,
+        metrics.sharpe_annual, metrics.sortino_annual,
+        metrics.beta, metrics.alpha_annual, metrics.r2,
+    )
+    print("</market_data>")
+    print()
+
+    # -------- Portfolio Snapshot (replaces <cash_balance>) --------
+    _print_portfolio_snapshot_table(metrics.final_equity, metrics.dollar_weighted_spx, cash)
+    print()
+
+    # -------- Holdings --------
+    print(f'<holdings date="{friday_iso}">')
 
     if not portfolio_df.empty:
-        s, e = trading_day_window()
         for _, stock in portfolio_df.iterrows():
             ticker = str(stock["ticker"]).upper()
             shares = int(stock["shares"]) if not pd.isna(stock["shares"]) else 0
             avg_cost = float(stock["buy_price"]) if not pd.isna(stock["buy_price"]) else 0.0
             stop_loss = float(stock["stop_loss"]) if not pd.isna(stock["stop_loss"]) else 0.0
 
-            # Fetch current price
-            fetch = download_price_data(ticker, start=s, end=e, auto_adjust=False, progress=False)
-            data = fetch.df
-
-            if not data.empty:
-                current_price = float(data["Close"].iloc[-1])
-            else:
-                current_price = 0.0
+            current_price = price_lookup.get(ticker, 0.0)
 
             print(f'<holding ticker="{ticker}" shares="{shares}" avg_cost="{avg_cost:.2f}" '
                   f'current_price="{current_price:.2f}" stop_loss="{stop_loss:.2f}" />')
 
-    print("</portfolio_snapshot>")
-    print()
-
-    # -------- Cash Balance --------
-    print("<cash_balance>")
-    print(f"${cash:,.2f}")
-    print("</cash_balance>")
+    print("</holdings>")
     print()
 
     # -------- Last Analyst Thesis (placeholder) --------
@@ -1124,20 +1437,13 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
         print("<!-- Trade log not found -->")
 
     print("</recent_trades>")
+    print()
+    print("</weekly_summary>")
 
 
 def _print_xml_summary(
     today: str,
-    price_volume_rows: list[tuple[str, float, float, int, str]],
-    max_drawdown: float,
-    mdd_date: str,
-    sharpe_annual: float,
-    sortino_annual: float,
-    beta: float,
-    alpha_annual: float,
-    r2: float,
-    final_equity: float,
-    dollar_weighted_spx: float,
+    metrics: PortfolioMetrics,
     cash: float,
     chatgpt_portfolio: pd.DataFrame,
 ) -> None:
@@ -1148,63 +1454,18 @@ def _print_xml_summary(
 
     # -------- Market Data --------
     print("<market_data>")
-
-    # Price & Volume table
-    print("<price_volume>")
-    print("| Ticker | Close   | % Chg  | Volume      | Role       |")
-    print("|--------|---------|--------|-------------|------------|")
-    for ticker, close_price, pct_chg, volume, role in price_volume_rows:
-        close_str = f"{close_price:,.2f}"
-        pct_str = f"{pct_chg:+.2f}%"
-        vol_str = f"{volume:,}"
-        print(f"| {ticker:<6} | {close_str:>7} | {pct_str:>6} | {vol_str:>11} | {role:<10} |")
-    print("</price_volume>")
+    _print_price_volume(metrics.price_volume_rows)
     print()
-
-    # Risk Metrics table
-    print("<risk_metrics>")
-    print("| Metric                        | Value     | Note                    |")
-    print("|-------------------------------|-----------|-------------------------|")
-
-    # Max Drawdown
-    mdd_val = _fmt_pct(max_drawdown * 100) if not (max_drawdown is None or (isinstance(max_drawdown, float) and np.isnan(max_drawdown))) else "N/A"
-    mdd_note = f"on {mdd_date}" if mdd_date and mdd_date != "N/A" else ""
-    print(f"| {'Max Drawdown':<29} | {mdd_val:>9} | {mdd_note:<23} |")
-
-    # Sharpe Ratio (annualized)
-    sharpe_val = _fmt_num(sharpe_annual, 4) if not (sharpe_annual is None or (isinstance(sharpe_annual, float) and np.isnan(sharpe_annual))) else "N/A"
-    print(f"| {'Sharpe Ratio (annualized)':<29} | {sharpe_val:>9} | {'':<23} |")
-
-    # Sortino Ratio (annualized)
-    sortino_val = _fmt_num(sortino_annual, 4) if not (sortino_annual is None or (isinstance(sortino_annual, float) and np.isnan(sortino_annual))) else "N/A"
-    print(f"| {'Sortino Ratio (annualized)':<29} | {sortino_val:>9} | {'':<23} |")
-
-    # Beta (daily) vs ^GSPC
-    beta_val = _fmt_num(beta, 4) if not (beta is None or (isinstance(beta, float) and np.isnan(beta))) else "N/A"
-    print(f"| {'Beta (daily) vs ^GSPC':<29} | {beta_val:>9} | {'':<23} |")
-
-    # Alpha (annualized) vs ^GSPC
-    alpha_val = _fmt_pct(alpha_annual * 100) if not (alpha_annual is None or (isinstance(alpha_annual, float) and np.isnan(alpha_annual))) else "N/A"
-    print(f"| {'Alpha (annualized) vs ^GSPC':<29} | {alpha_val:>9} | {'':<23} |")
-
-    # R²
-    r2_val = _fmt_num(r2, 3) if not (r2 is None or (isinstance(r2, float) and np.isnan(r2))) else "N/A"
-    r2_note = "Low — alpha/beta unstable" if not (r2 is None or (isinstance(r2, float) and np.isnan(r2))) and r2 < 0.15 else ""
-    print(f"| {'R²':<29} | {r2_val:>9} | {r2_note:<23} |")
-
-    print("</risk_metrics>")
+    _print_risk_metrics(
+        metrics.max_drawdown, metrics.mdd_date_str,
+        metrics.sharpe_annual, metrics.sortino_annual,
+        metrics.beta, metrics.alpha_annual, metrics.r2,
+    )
     print("</market_data>")
     print()
 
     # -------- Portfolio Snapshot --------
-    print("<portfolio_snapshot>")
-    print("| Metric              | Value     |")
-    print("|---------------------|-----------|")
-    print(f"| {'Portfolio Equity':<19} | {_fmt_currency(final_equity):>9} |")
-    spx_val = _fmt_currency(dollar_weighted_spx) if not (dollar_weighted_spx is None or (isinstance(dollar_weighted_spx, float) and np.isnan(dollar_weighted_spx))) else "N/A"
-    print(f"| {'S&P Equivalent':<19} | {spx_val:>9} |")
-    print(f"| {'Cash Balance':<19} | {_fmt_currency(cash):>9} |")
-    print("</portfolio_snapshot>")
+    _print_portfolio_snapshot_table(metrics.final_equity, metrics.dollar_weighted_spx, cash)
     print()
 
     # -------- Holdings --------
@@ -1263,246 +1524,9 @@ def _print_xml_summary(
 
 def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
     """Print daily price updates and performance metrics in XML format."""
-    portfolio_dict: list[dict[Any, Any]] = chatgpt_portfolio.to_dict(orient="records")
     today = check_weekend()
-
-    # Build set of holding tickers for role classification
-    holdings_set = {str(stock["ticker"]).upper() for stock in portfolio_dict}
-
-    # Collect price/volume data: (ticker, close, pct_chg, volume, role)
-    price_volume_rows: list[tuple[str, float, float, int, str]] = []
-
-    end_d = last_trading_date()                           # Fri on weekends
-    start_d = (end_d - pd.Timedelta(days=4)).normalize()  # go back enough to capture 2 sessions even around holidays
-
-    benchmarks = load_benchmarks()  # reads tickers.json or returns defaults
-    benchmark_entries = [{"ticker": t} for t in benchmarks]
-
-    for stock in portfolio_dict + benchmark_entries:
-        ticker = str(stock["ticker"]).upper()
-        try:
-            fetch = download_price_data(ticker, start=start_d, end=(end_d + pd.Timedelta(days=1)), progress=False)
-            data = fetch.df
-            if data.empty or len(data) < 2:
-                # Skip tickers with no data
-                continue
-
-            price = float(data["Close"].iloc[-1])
-            last_price = float(data["Close"].iloc[-2])
-            volume = int(data["Volume"].iloc[-1])
-
-            percent_change = ((price - last_price) / last_price) * 100
-            role = _get_ticker_role(ticker, holdings_set)
-            price_volume_rows.append((ticker, price, percent_change, volume, role))
-        except Exception as e:
-            raise Exception(f"Download for {ticker} failed. {e} Try checking internet connection.")
-
-    # Read portfolio history
-    logger.info("Reading CSV file: %s", PORTFOLIO_CSV)
-    chatgpt_df = pd.read_csv(PORTFOLIO_CSV)
-    logger.info("Successfully read CSV file: %s", PORTFOLIO_CSV)
-
-    # Use only TOTAL rows, sorted by date
-    totals = chatgpt_df[chatgpt_df["Ticker"] == "TOTAL"].copy()
-    if totals.empty:
-        # Early return with minimal XML output
-        _print_xml_summary(
-            today=today,
-            price_volume_rows=price_volume_rows,
-            max_drawdown=np.nan,
-            mdd_date="N/A",
-            sharpe_annual=np.nan,
-            sortino_annual=np.nan,
-            beta=np.nan,
-            alpha_annual=np.nan,
-            r2=np.nan,
-            final_equity=cash,
-            dollar_weighted_spx=np.nan,
-            cash=cash,
-            chatgpt_portfolio=chatgpt_portfolio,
-        )
-        return
-
-    totals["Date"] = pd.to_datetime(totals["Date"], format="mixed", errors="coerce")  # tolerate ISO strings
-    totals = totals.sort_values("Date")
-
-    final_equity = float(totals.iloc[-1]["Total Equity"])
-    equity_series = totals.set_index("Date")["Total Equity"].astype(float).sort_index()
-
-    # --- Max Drawdown ---
-    running_max = equity_series.cummax()
-    drawdowns = (equity_series / running_max) - 1.0
-    max_drawdown = float(drawdowns.min())  # most negative value
-    mdd_date = drawdowns.idxmin()
-
-    # Daily simple returns (portfolio)
-    r = equity_series.pct_change().dropna()
-    n_days = len(r)
-    if n_days < 2:
-        if hasattr(mdd_date, "date") and not isinstance(mdd_date, (str, int)):
-            mdd_date_str = str(mdd_date.date())
-        elif hasattr(mdd_date, "strftime") and not isinstance(mdd_date, (str, int)):
-            mdd_date_str = mdd_date.strftime("%Y-%m-%d")
-        else:
-            mdd_date_str = str(mdd_date)
-        _print_xml_summary(
-            today=today,
-            price_volume_rows=price_volume_rows,
-            max_drawdown=max_drawdown,
-            mdd_date=mdd_date_str,
-            sharpe_annual=np.nan,
-            sortino_annual=np.nan,
-            beta=np.nan,
-            alpha_annual=np.nan,
-            r2=np.nan,
-            final_equity=final_equity,
-            dollar_weighted_spx=np.nan,
-            cash=cash,
-            chatgpt_portfolio=chatgpt_portfolio,
-        )
-        return
-
-    # Risk-free config
-    rf_annual = 0.045
-    rf_daily = (1 + rf_annual) ** (1 / 252) - 1
-    rf_period = (1 + rf_daily) ** n_days - 1
-
-    # Stats
-    mean_daily = float(r.mean())
-    std_daily = float(r.std(ddof=1))
-
-    # Downside deviation (MAR = rf_daily)
-    downside = (r - rf_daily).clip(upper=0)
-    downside_std = float((downside.pow(2).mean()) ** 0.5) if not downside.empty else np.nan
-
-    # Total return over the window
-    r_numeric = pd.to_numeric(r, errors="coerce")
-    r_numeric = r_numeric[~r_numeric.isna()].astype(float)
-    # Filter out any non-finite values to ensure only valid floats are used
-    r_numeric = r_numeric[np.isfinite(r_numeric)]
-    # Only use numeric values for the calculation
-    if len(r_numeric) > 0:
-        arr = np.asarray(r_numeric.values, dtype=float)
-        period_return = float(np.prod(1 + arr) - 1) if arr.size > 0 else float('nan')
-    else:
-        period_return = float('nan')
-
-    # Sharpe / Sortino
-    sharpe_period = (period_return - rf_period) / (std_daily * np.sqrt(n_days)) if std_daily > 0 else np.nan
-    sharpe_annual = ((mean_daily - rf_daily) / std_daily) * np.sqrt(252) if std_daily > 0 else np.nan
-    sortino_period = (period_return - rf_period) / (downside_std * np.sqrt(n_days)) if downside_std and downside_std > 0 else np.nan
-    sortino_annual = ((mean_daily - rf_daily) / downside_std) * np.sqrt(252) if downside_std and downside_std > 0 else np.nan
-
-    # -------- Dollar-Weighted S&P 500 Benchmark --------
-    # Calculate starting equity from first portfolio value
-    starting_equity = float(equity_series.iloc[0])
-    
-    # Load capital injections
-    injections = load_capital_injections()
-    total_capital_invested = starting_equity
-    if not injections.empty:
-        total_capital_invested += injections["Amount"].sum()
-    
-    # Download S&P 500 data for the full date range
-    start_date = equity_series.index.min() - pd.Timedelta(days=1)
-    end_date = equity_series.index.max() + pd.Timedelta(days=1)
-    
-    spx_fetch = download_price_data("^GSPC", start=start_date, end=end_date, progress=False)
-    spx = spx_fetch.df
-    
-    dollar_weighted_spx = np.nan
-    if not spx.empty and len(spx) >= 2:
-        spx = spx.reset_index()
-        if 'Date' not in spx.columns and spx.index.name == 'Date':
-            spx = spx.reset_index()
-        spx['Date'] = pd.to_datetime(spx['Date']).dt.normalize()
-        spx = spx.set_index("Date").sort_index()
-        
-        # Calculate dollar-weighted benchmark
-        portfolio_start = equity_series.index.min()
-        current_date = equity_series.index.max()
-        total_value = 0.0
-        
-        # Tranche 1: Initial capital
-        if portfolio_start in spx.index and current_date in spx.index:
-            sp_at_start = float(spx.loc[portfolio_start, "Close"])
-            sp_at_current = float(spx.loc[current_date, "Close"])
-            shares_at_start = starting_equity / sp_at_start
-            total_value += shares_at_start * sp_at_current
-        
-        # Tranches 2+: Each injection
-        for _, inj in injections.iterrows():
-            inj_date = pd.Timestamp(inj["Date"]).normalize()
-            inj_amount = float(inj["Amount"])
-            
-            if inj_date in spx.index and current_date in spx.index:
-                sp_at_inj = float(spx.loc[inj_date, "Close"])
-                sp_at_current = float(spx.loc[current_date, "Close"])
-                shares_at_inj = inj_amount / sp_at_inj
-                total_value += shares_at_inj * sp_at_current
-        
-        if total_value > 0:
-            dollar_weighted_spx = total_value
-
-    # -------- Pretty Printing --------
-    # -------- CAPM: Beta & Alpha (vs ^GSPC) --------
-    beta = np.nan
-    alpha_annual = np.nan
-    r2 = np.nan
-    n_obs = 0
-
-    if not spx.empty and len(spx) >= 2:
-        if 'Date' not in spx.columns and spx.index.name == 'Date':
-            spx_capm = spx.reset_index()
-        else:
-            spx_capm = spx.copy()
-        if 'Date' in spx_capm.columns:
-            spx_capm = spx_capm.set_index("Date")
-        spx_capm = spx_capm.sort_index()
-        mkt_ret = spx_capm["Close"].astype(float).pct_change().dropna()
-
-        # Align portfolio & market returns
-        common_idx = r.index.intersection(list(mkt_ret.index))
-        if len(common_idx) >= 2:
-            rp = (r.reindex(common_idx).astype(float) - rf_daily)   # portfolio excess
-            rm = (mkt_ret.reindex(common_idx).astype(float) - rf_daily)  # market excess
-
-            x = np.asarray(rm.values, dtype=float).ravel()
-            y = np.asarray(rp.values, dtype=float).ravel()
-
-            n_obs = x.size
-            rm_std = float(np.std(x, ddof=1)) if n_obs > 1 else 0.0
-            if rm_std > 0:
-                beta, alpha_daily = np.polyfit(x, y, 1)
-                alpha_annual = (1 + float(alpha_daily)) ** 252 - 1
-
-                corr = np.corrcoef(x, y)[0, 1]
-                r2 = float(corr ** 2)
-
-    # -------- Format mdd_date for output --------
-    if hasattr(mdd_date, "date") and not isinstance(mdd_date, (str, int)):
-        mdd_date_str = str(mdd_date.date())
-    elif hasattr(mdd_date, "strftime") and not isinstance(mdd_date, (str, int)):
-        mdd_date_str = mdd_date.strftime("%Y-%m-%d")
-    else:
-        mdd_date_str = str(mdd_date)
-
-    # -------- Print XML Summary --------
-    _print_xml_summary(
-        today=today,
-        price_volume_rows=price_volume_rows,
-        max_drawdown=max_drawdown,
-        mdd_date=mdd_date_str,
-        sharpe_annual=sharpe_annual,
-        sortino_annual=sortino_annual,
-        beta=beta,
-        alpha_annual=alpha_annual,
-        r2=r2,
-        final_equity=final_equity,
-        dollar_weighted_spx=dollar_weighted_spx,
-        cash=cash,
-        chatgpt_portfolio=chatgpt_portfolio,
-    )
+    metrics = _compute_portfolio_metrics(chatgpt_portfolio, cash)
+    _print_xml_summary(today=today, metrics=metrics, cash=cash, chatgpt_portfolio=chatgpt_portfolio)
 
 # ------------------------------
 # Stop-loss update utility
