@@ -264,7 +264,7 @@ def plot_comparison(
 
     p_dates = _date_only_series(portfolio["Date"])
     p_values = portfolio["Value"]
-    ax.plot(p_dates, p_values, label="ChatGPT", marker="o")
+    ax.plot(p_dates, p_values, label="GPT/Claude", marker="o")
 
     if not benchmark.empty:
         b_dates = _date_only_series(benchmark["Date"])
@@ -296,15 +296,15 @@ def plot_comparison(
     p_return_since = ((p_last - p_baseline) / p_baseline) * 100
     
     # Add return % labels on the final points (both total and since injection)
-    label_text = f"+{p_return_total:.1f}%\n({p_return_since:+.1f}% period)"
-    ax.text(p_dates.iloc[-1], p_last * 1.02, label_text, fontsize=8, ha='right')
+    label_text = f"{p_return_total:.1f}%\n({p_return_since:+.1f}% period)"
+    ax.text(p_dates.iloc[-1], p_last * 0.96, label_text, fontsize=8, ha='left')
     
     if not benchmark.empty:
         b_last = float(b_values.iloc[-1])
         b_return_total = ((b_last - total_capital_invested) / total_capital_invested) * 100
         b_return_since = ((b_last - b_baseline) / b_baseline) * 100
-        label_text = f"+{b_return_total:.1f}%\n({b_return_since:+.1f}% period)"
-        ax.text(b_dates.iloc[-1], b_last * 0.98, label_text, fontsize=8, ha='left')
+        label_text = f"{b_return_total:.1f}%\n({b_return_since:+.1f}% period)"
+        ax.text(b_dates.iloc[-1], b_last * 1.02, label_text, fontsize=8, ha='left')
 
     ax.set_title(title)
     ax.set_xlabel("Date")
