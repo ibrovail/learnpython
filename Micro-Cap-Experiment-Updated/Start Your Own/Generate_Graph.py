@@ -297,7 +297,7 @@ def plot_comparison(
     
     # Add return % labels on the final points (both total and since injection)
     label_text = f"+{p_return_total:.1f}%\n({p_return_since:+.1f}% period)"
-    ax.text(p_dates.iloc[-1], p_last * 1.02, label_text, fontsize=8, ha='left')
+    ax.text(p_dates.iloc[-1], p_last * 1.02, label_text, fontsize=8, ha='right')
     
     if not benchmark.empty:
         b_last = float(b_values.iloc[-1])
@@ -330,7 +330,7 @@ def plot_comparison(
 def main(
     start_date: Optional[pd.Timestamp],
     end_date: Optional[pd.Timestamp],
-    starting_equity: float,
+    starting_equity: Optional[float],
     output: Optional[Path],
     portfolio_csv: Path = PORTFOLIO_CSV,
     injections_csv: Path = CAPITAL_INJECTIONS_CSV,
@@ -340,7 +340,11 @@ def main(
     totals = load_portfolio_details(start_date, end_date, portfolio_csv=portfolio_csv)
     portfolio_data = totals[["Date", "Total Equity"]].copy()
     portfolio_data.rename(columns={"Total Equity": "Value"}, inplace=True)
-    
+
+    # Auto-detect starting equity from first portfolio value if not provided
+    if starting_equity is None:
+        starting_equity = float(portfolio_data["Value"].iloc[0])
+
     # Load S&P 500 data
     spx = download_sp500(portfolio_data["Date"])
     
@@ -433,8 +437,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Plot portfolio vs dollar-weighted S&P 500")
     parser.add_argument("--start-date", type=str, help="YYYY-MM-DD")
     parser.add_argument("--end-date", type=str, help="YYYY-MM-DD")
-    parser.add_argument("--start-equity", type=float, default=100.0, 
-                       help="Initial capital baseline (default 100)")
+    parser.add_argument("--start-equity", type=float, default=None,
+                       help="Initial capital baseline (auto-detected from CSV if omitted)")
     parser.add_argument("--baseline-file", type=str, 
                        help="Path to a text file containing a single number for baseline")
     parser.add_argument("--output", type=str, help="Optional path to save the chart (.png/.jpg/.pdf)")
