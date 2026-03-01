@@ -475,7 +475,7 @@ def _ensure_df(portfolio: pd.DataFrame | dict[str, list[object]] | list[dict[str
         # Ensure proper columns exist even for empty DataFrames
         if df.empty:
             logger.debug("Creating empty portfolio DataFrame with proper column structure")
-            df = pd.DataFrame(columns=["ticker", "shares", "stop_loss", "buy_price", "cost_basis"])
+            df = pd.DataFrame(columns=["ticker", "shares", "stop_loss", "stop_limit", "buy_price", "cost_basis"])
         return df
     raise TypeError("portfolio must be a DataFrame, dict, or list[dict]")
 
@@ -530,11 +530,24 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
 
                 if order_type == "m":
                     try:
-                        stop_loss = float(input("Enter stop loss (or 0 to skip): "))
+                        stop_loss = float(input("Enter stop loss trigger price (or 0 to skip): "))
                         if stop_loss < 0:
                             raise ValueError
                     except ValueError:
                         print("Invalid stop loss. Buy cancelled.")
+                        continue
+
+                    try:
+                        stop_limit_input = input(
+                            f"Enter stop-limit price (limit once stop triggers; or 0 to match stop ${stop_loss:.2f}): "
+                        ).strip()
+                        stop_limit = float(stop_limit_input) if stop_limit_input else 0.0
+                        if stop_limit < 0:
+                            raise ValueError
+                        if stop_limit == 0:
+                            stop_limit = stop_loss
+                    except ValueError:
+                        print("Invalid stop-limit price. Buy cancelled.")
                         continue
 
                     s, e = trading_day_window()
@@ -581,6 +594,7 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
                             "ticker": ticker,
                             "shares": float(shares),
                             "stop_loss": float(stop_loss),
+                            "stop_limit": float(stop_limit),
                             "buy_price": float(exec_price),
                             "cost_basis": float(notional),
                         }
@@ -599,6 +613,7 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
                         portfolio_df.at[idx, "cost_basis"] = new_cost
                         portfolio_df.at[idx, "buy_price"] = avg_price
                         portfolio_df.at[idx, "stop_loss"] = float(stop_loss)
+                        portfolio_df.at[idx, "stop_limit"] = float(stop_limit)
 
                     cash -= notional
                     print(f"Manual BUY MOO for {ticker} filled at ${exec_price:.2f} ({fetch.source}).")
@@ -607,15 +622,24 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
                 elif order_type == "l":
                     try:
                         buy_price = float(input("Enter buy LIMIT price: "))
-                        stop_loss = float(input("Enter stop loss (or 0 to skip): "))
+                        stop_loss = float(input("Enter stop loss trigger price (or 0 to skip): "))
                         if buy_price <= 0 or stop_loss < 0:
                             raise ValueError
+                        stop_limit_input = input(
+                            f"Enter stop-limit price (or 0 to match stop ${stop_loss:.2f}): "
+                        ).strip()
+                        stop_limit = float(stop_limit_input) if stop_limit_input else 0.0
+                        if stop_limit < 0:
+                            raise ValueError
+                        if stop_limit == 0:
+                            stop_limit = stop_loss
                     except ValueError:
                         print("Invalid input. Limit buy cancelled.")
                         continue
 
                     cash, portfolio_df = log_manual_buy(
-                        buy_price, shares, ticker, stop_loss, cash, portfolio_df
+                        buy_price, shares, ticker, stop_loss, cash, portfolio_df,
+                        stop_limit=stop_limit,
                     )
                     continue
                 else:
@@ -648,6 +672,10 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
         cost = float(stock["buy_price"]) if not pd.isna(stock["buy_price"]) else 0.0
         cost_basis = float(stock["cost_basis"]) if not pd.isna(stock["cost_basis"]) else cost * shares
         stop = float(stock["stop_loss"]) if not pd.isna(stock["stop_loss"]) else 0.0
+        _sl_raw = stock.get("stop_limit", None) if "stop_limit" in stock.index else None
+        stop_lim = float(_sl_raw) if _sl_raw is not None and not pd.isna(_sl_raw) else stop
+        if stop_lim == 0:
+            stop_lim = stop
 
         fetch = download_price_data(ticker, start=s, end=e, auto_adjust=False, progress=False)
         data = fetch.df
@@ -657,6 +685,7 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
             row = {
                 "Date": today_iso, "Ticker": ticker, "Shares": shares,
                 "Buy Price": cost, "Cost Basis": cost_basis, "Stop Loss": stop,
+                "Stop Limit": stop_lim,
                 "Current Price": "", "Total Value": "", "PnL": "",
                 "Action": "NO DATA", "Cash Balance": "", "Total Equity": "",
             }
@@ -670,27 +699,50 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
         if np.isnan(o):
             o = c
 
-        # FIXED: Stop-loss only triggers during regular trading hours
+        # Stop-loss only triggers during regular trading hours
         stop_triggered = False
         if stop and stop > 0:
             if o >= stop and l <= stop:
                 # Stock opened at/above stop, fell during trading hours
                 stop_triggered = True
-                exec_price = round(stop, 2)
             elif o < stop:
                 # Stock gapped below stop in pre-market - stop didn't execute
                 print(f"⚠️  WARNING: {ticker} gapped below stop-loss ${stop:.2f} (opened at ${o:.2f}). Stop not executed - position still held.")
                 stop_triggered = False
 
         if stop_triggered:
+            default_exec = stop_lim if stop_lim and stop_lim > 0 else stop
+            print(f"\n--- STOP TRIGGERED: {ticker} ---")
+            print(f"  Stop trigger   : ${stop:.2f}")
+            if stop_lim != stop:
+                print(f"  Stop-limit     : ${stop_lim:.2f}")
+            else:
+                print(f"  Stop-limit     : not set (defaulting to stop ${stop:.2f})")
+            print(f"  Today's range  : ${l:.2f} - ${h:.2f}  |  Open: ${o:.2f}")
+            while True:
+                confirm = input(
+                    f"Did {ticker} fill at the stop-limit ${default_exec:.2f}? "
+                    f"Enter 'y' to confirm, or type the actual fill price: "
+                ).strip().lower()
+                if confirm == "y":
+                    exec_price = round(default_exec, 2)
+                    break
+                try:
+                    exec_price = round(float(confirm), 2)
+                    break
+                except ValueError:
+                    print(f"Invalid input '{confirm}'. Enter 'y' to use ${default_exec:.2f}, or enter a valid price (e.g. 1.76).")
+
             value = round(exec_price * shares, 2)
             pnl = round((exec_price - cost) * shares, 2)
-            action = "SELL - Stop Loss Triggered"
+            action = "SELL - Stop Limit Triggered"
             cash += value
-            portfolio_df = log_sell(ticker, shares, exec_price, cost, pnl, portfolio_df)
+            portfolio_df = log_sell(ticker, shares, exec_price, cost, pnl, portfolio_df,
+                                    reason="AUTOMATED SELL - STOP LIMIT TRIGGERED")
             row = {
                 "Date": today_iso, "Ticker": ticker, "Shares": shares,
                 "Buy Price": cost, "Cost Basis": cost_basis, "Stop Loss": stop,
+                "Stop Limit": stop_lim,
                 "Current Price": exec_price, "Total Value": value, "PnL": pnl,
                 "Action": action, "Cash Balance": "", "Total Equity": "",
             }
@@ -704,6 +756,7 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
             row = {
                 "Date": today_iso, "Ticker": ticker, "Shares": shares,
                 "Buy Price": cost, "Cost Basis": cost_basis, "Stop Loss": stop,
+                "Stop Limit": stop_lim,
                 "Current Price": price, "Total Value": value, "PnL": pnl,
                 "Action": action, "Cash Balance": "", "Total Equity": "",
             }
@@ -712,7 +765,7 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
 
     total_row = {
         "Date": today_iso, "Ticker": "TOTAL", "Shares": "", "Buy Price": "",
-        "Cost Basis": "", "Stop Loss": "", "Current Price": "",
+        "Cost Basis": "", "Stop Loss": "", "Stop Limit": "", "Current Price": "",
         "Total Value": round(total_value, 2), "PnL": round(total_pnl, 2),
         "Action": "", "Cash Balance": round(cash, 2),
         "Total Equity": round(total_value + cash, 2),
@@ -746,6 +799,7 @@ def log_sell(
     cost: float,
     pnl: float,
     portfolio: pd.DataFrame,
+    reason: str = "AUTOMATED SELL - STOPLOSS TRIGGERED",
 ) -> pd.DataFrame:
     today = check_weekend()
     log = {
@@ -755,7 +809,7 @@ def log_sell(
         "Sell Price": price,
         "Cost Basis": cost,
         "PnL": pnl,
-        "Reason": "AUTOMATED SELL - STOPLOSS TRIGGERED",
+        "Reason": reason,
     }
     print(f"{ticker} stop loss was met. Selling all shares.")
     portfolio = portfolio[portfolio["ticker"] != ticker]
@@ -783,6 +837,7 @@ def log_manual_buy(
     cash: float,
     chatgpt_portfolio: pd.DataFrame,
     interactive: bool = True,
+    stop_limit: float = 0.0,
 ) -> tuple[float, pd.DataFrame]:
     today = check_weekend()
 
@@ -797,7 +852,7 @@ def log_manual_buy(
 
     if not isinstance(chatgpt_portfolio, pd.DataFrame) or chatgpt_portfolio.empty:
         chatgpt_portfolio = pd.DataFrame(
-            columns=["ticker", "shares", "stop_loss", "buy_price", "cost_basis"]
+            columns=["ticker", "shares", "stop_loss", "stop_limit", "buy_price", "cost_basis"]
         )
 
     s, e = trading_day_window()
@@ -857,6 +912,7 @@ def log_manual_buy(
                 "ticker": ticker,
                 "shares": float(shares),
                 "stop_loss": float(stoploss),
+                "stop_limit": float(stop_limit),
                 "buy_price": float(exec_price),
                 "cost_basis": float(cost_amt),
             }])
@@ -866,6 +922,7 @@ def log_manual_buy(
                     "ticker": ticker,
                     "shares": float(shares),
                     "stop_loss": float(stoploss),
+                    "stop_limit": float(stop_limit),
                     "buy_price": float(exec_price),
                     "cost_basis": float(cost_amt),
                 }])],
@@ -881,6 +938,7 @@ def log_manual_buy(
         chatgpt_portfolio.at[idx, "cost_basis"] = new_cost
         chatgpt_portfolio.at[idx, "buy_price"] = new_cost / new_shares if new_shares else 0.0
         chatgpt_portfolio.at[idx, "stop_loss"] = float(stoploss)
+        chatgpt_portfolio.at[idx, "stop_limit"] = float(stop_limit)
 
     cash -= cost_amt
     print(f"Manual BUY LIMIT for {ticker} filled at ${exec_price:.2f} ({fetch.source}).")
@@ -1351,7 +1409,7 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
         week_num = 0
     total_weeks = 26
 
-    print("\n<weekly_summary>")
+    print("\n<weekly_context>")
     print(f"<date>{today_formatted}</date>")
     print(f"<week_number>{week_num} of {total_weeks} (six-month live experiment)</week_number>")
     print()
@@ -1381,11 +1439,14 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
             shares = int(stock["shares"]) if not pd.isna(stock["shares"]) else 0
             avg_cost = float(stock["buy_price"]) if not pd.isna(stock["buy_price"]) else 0.0
             stop_loss = float(stock["stop_loss"]) if not pd.isna(stock["stop_loss"]) else 0.0
+            _sl = stock.get("stop_limit", None) if "stop_limit" in stock.index else None
+            stop_limit_val = float(_sl) if _sl is not None and not pd.isna(_sl) else 0.0
 
             current_price = price_lookup.get(ticker, 0.0)
 
             print(f'<holding ticker="{ticker}" shares="{shares}" avg_cost="{avg_cost:.2f}" '
-                  f'current_price="{current_price:.2f}" stop_loss="{stop_loss:.2f}" />')
+                  f'current_price="{current_price:.2f}" stop_loss="{stop_loss:.2f}" '
+                  f'stop_limit="{stop_limit_val:.2f}" />')
 
     print("</holdings>")
     print()
@@ -1438,7 +1499,20 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
 
     print("</recent_trades>")
     print()
-    print("</weekly_summary>")
+
+    # -------- Execution Request --------
+    print("<execution_requests>")
+    print("<session_directives>")
+    print("<!-- UPDATE: Paste the directives for the weekly execution requests -->")
+    print("</session_directives>")
+    print()
+    print("Using the rules, safeguards, and portfolio context above, execute the deep research window now.")
+    print("\nSearch for live pricing, volume, catalysts, and filings for all current holdings and any new candidates. Produce the complete output per the required format. Do not skip sections. Confirm cash and constraints at the end.")
+    print("\n**IMPORTANT:** Before writing your report, read the weekly-portfolio-report skill for the exact output template and file creation instructions. Your final deliverable MUST be a downloadable .md file — do not just print the report in chat.")
+    print()
+    print("</execution_requests>")
+    print()
+    print("</weekly_context>")
 
 
 def _print_xml_summary(
@@ -1470,8 +1544,8 @@ def _print_xml_summary(
 
     # -------- Holdings --------
     print("<holdings>")
-    print("| Ticker | Shares | Avg Cost | Cost Basis | Unrealized P&L      | Stop Loss |")
-    print("|--------|--------|----------|------------|---------------------|-----------|")
+    print("| Ticker | Shares | Avg Cost | Cost Basis | Unrealized P&L      | Stop Loss | Stop Limit |")
+    print("|--------|--------|----------|------------|---------------------|-----------|------------|")
 
     if not chatgpt_portfolio.empty:
         s, e = trading_day_window()
@@ -1494,9 +1568,12 @@ def _print_xml_summary(
             else:
                 pnl_str = "N/A"
 
+            _sl = stock.get("stop_limit", None) if "stop_limit" in stock.index else None
+            stop_limit_val = float(_sl) if _sl is not None and not pd.isna(_sl) else 0.0
             stop_str = f"${stop_loss:.2f}" if stop_loss > 0 else "—"
+            slimit_str = f"${stop_limit_val:.2f}" if stop_limit_val > 0 else "—"
 
-            print(f"| {ticker:<6} | {shares:>6} | ${buy_price:>7.2f} | ${cost_basis:>9.2f} | {pnl_str:>19} | {stop_str:>9} |")
+            print(f"| {ticker:<6} | {shares:>6} | ${buy_price:>7.2f} | ${cost_basis:>9.2f} | {pnl_str:>19} | {stop_str:>9} | {slimit_str:>10} |")
 
     print("</holdings>")
     print()
@@ -1684,9 +1761,12 @@ def load_latest_portfolio_state() -> tuple[pd.DataFrame | list[dict[str, Any]], 
             "Shares": "shares",
             "Ticker": "ticker",
             "Stop Loss": "stop_loss",
+            "Stop Limit": "stop_limit",
         },
         inplace=True,
     )
+    if "stop_limit" not in latest_tickers.columns:
+        latest_tickers["stop_limit"] = 0.0
     latest_tickers = latest_tickers.reset_index(drop=True).to_dict(orient="records")
 
     return latest_tickers, cash
