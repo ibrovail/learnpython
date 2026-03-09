@@ -1633,8 +1633,11 @@ def update_stops_only() -> None:
         return
     
     print("\nCurrent Holdings:")
-    display_df = portfolio_df[['ticker', 'shares', 'stop_loss', 'buy_price']].copy()
-    display_df.columns = ['Ticker', 'Shares', 'Stop Loss', 'Buy Price']
+    for c in ['ticker', 'shares', 'buy_price', 'stop_loss', 'stop_limit']:
+        if c not in portfolio_df.columns:
+            portfolio_df[c] = 0.0
+    display_df = portfolio_df[['ticker', 'shares', 'buy_price', 'stop_loss', 'stop_limit']].copy()
+    display_df.columns = ['Ticker', 'Shares', 'Buy Price', 'Stop Loss', 'Stop Limit']
     print(display_df.to_string(index=False))
     
     print("\n")
@@ -1653,12 +1656,23 @@ def update_stops_only() -> None:
             new_stop = float(input(f"Enter new stop loss for {ticker} (or 0 for no stop): "))
             if new_stop < 0:
                 raise ValueError("Stop loss cannot be negative.")
-            
+
+            sl_input = input(
+                f"Enter new stop-limit price (limit once stop triggers; "
+                f"or 0 / Enter to match stop ${new_stop:.2f}): "
+            ).strip()
+            new_stop_limit = float(sl_input) if sl_input else 0.0
+            if new_stop_limit < 0:
+                raise ValueError("Stop-limit cannot be negative.")
+            if new_stop_limit == 0:
+                new_stop_limit = new_stop
+
             portfolio_df.loc[portfolio_df['ticker'] == ticker, 'stop_loss'] = new_stop
-            print(f"✓ Updated {ticker} stop loss to ${new_stop:.2f}\n")
+            portfolio_df.loc[portfolio_df['ticker'] == ticker, 'stop_limit'] = new_stop_limit
+            print(f"✓ Updated {ticker} — stop loss: ${new_stop:.2f}, stop limit: ${new_stop_limit:.2f}\n")
             updates_made = True
         except ValueError as e:
-            print(f"Invalid stop loss: {e}. Skipping update.\n")
+            print(f"Invalid input: {e}. Skipping update.\n")
     
     if not updates_made:
         print("No updates made. Exiting.")
@@ -1678,23 +1692,24 @@ def update_stops_only() -> None:
     non_total["Date"] = pd.to_datetime(non_total["Date"], format="mixed", errors="coerce")
     latest_date = non_total["Date"].max().strftime("%Y-%m-%d")
 
-    # Update the latest date's rows with new stop losses
+    # Update the latest date's rows with new stop losses and stop limits
     for _, stock in portfolio_df.iterrows():
         ticker = str(stock['ticker']).upper()
-        new_stop = float(stock['stop_loss'])
 
         mask = (df['Date'] == latest_date) & (df['Ticker'] == ticker)
         if mask.any():
-            df.loc[mask, 'Stop Loss'] = new_stop
+            df.loc[mask, 'Stop Loss'] = float(stock['stop_loss'])
+            if 'Stop Limit' in df.columns:
+                df.loc[mask, 'Stop Limit'] = float(stock['stop_limit'])
     
     logger.info("Writing CSV file: %s", PORTFOLIO_CSV)
     df.to_csv(PORTFOLIO_CSV, index=False)
     logger.info("Successfully wrote CSV file: %s", PORTFOLIO_CSV)
     
-    print("\n✓ Stop losses updated successfully in portfolio CSV.")
+    print("\n✓ Stop losses and stop limits updated successfully in portfolio CSV.")
     print("\nUpdated Holdings:")
-    display_df = portfolio_df[['ticker', 'shares', 'stop_loss', 'buy_price']].copy()
-    display_df.columns = ['Ticker', 'Shares', 'Stop Loss', 'Buy Price']
+    display_df = portfolio_df[['ticker', 'shares', 'buy_price', 'stop_loss', 'stop_limit']].copy()
+    display_df.columns = ['Ticker', 'Shares', 'Buy Price', 'Stop Loss', 'Stop Limit']
     print(display_df.to_string(index=False))
 
 
