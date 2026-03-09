@@ -22,7 +22,10 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, cast,Dict, List, Optional
+import contextlib
+import io
 import os
+import re
 import warnings
 
 import numpy as np # type: ignore
@@ -1407,11 +1410,11 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
         week_num = (friday_date - start).days // 7 + 1
     else:
         week_num = 0
-    total_weeks = 26
+    total_weeks = 52
 
     print("\n<weekly_context>")
     print(f"<date>{today_formatted}</date>")
-    print(f"<week_number>{week_num} of {total_weeks} (six-month live experiment)</week_number>")
+    print(f"<week_number>{week_num} of {total_weeks} (twelve-month live experiment)</week_number>")
     print()
 
     # -------- Market Data --------
@@ -1783,7 +1786,24 @@ def main(data_dir: Path | None = None, update_stops: bool = False, weekend_summa
 
     if weekend_summary:
         chatgpt_portfolio, cash = load_latest_portfolio_state()
-        print_weekend_summary(chatgpt_portfolio, cash)
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            print_weekend_summary(chatgpt_portfolio, cash)
+        weekly_output = buffer.getvalue().strip()
+        md_path = DATA_DIR / "weekend_summary.md"
+        if md_path.exists():
+            content = md_path.read_text(encoding="utf-8")
+            updated = re.sub(
+                r'<weekly_context>.*?</weekly_context>',
+                weekly_output,
+                content,
+                flags=re.DOTALL,
+            )
+            md_path.write_text(updated, encoding="utf-8")
+            print("\nweekend_summary.md has been updated with this week's activity.")
+        else:
+            print(weekly_output)
+            print(f"\nNote: weekend_summary.md not found at {md_path}. Output printed above.")
         return
 
     chatgpt_portfolio, cash = load_latest_portfolio_state()
