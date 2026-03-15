@@ -297,14 +297,14 @@ def plot_comparison(
     
     # Add return % labels on the final points (both total and since injection)
     label_text = f"{p_return_total:.1f}%\n({p_return_since:+.1f}% period)"
-    ax.text(p_dates.iloc[-1], p_last * 0.96, label_text, fontsize=8, ha='left')
+    ax.text(p_dates.iloc[-1], p_last * 1.02, label_text, fontsize=8, ha='left')
     
     if not benchmark.empty:
         b_last = float(b_values.iloc[-1])
         b_return_total = ((b_last - total_capital_invested) / total_capital_invested) * 100
         b_return_since = ((b_last - b_baseline) / b_baseline) * 100
         label_text = f"{b_return_total:.1f}%\n({b_return_since:+.1f}% period)"
-        ax.text(b_dates.iloc[-1], b_last * 1.02, label_text, fontsize=8, ha='left')
+        ax.text(b_dates.iloc[-1], b_last * 0.96, label_text, fontsize=8, ha='left')
 
     ax.set_title(title)
     ax.set_xlabel("Date")
@@ -423,14 +423,14 @@ def main(
     print(f"  Portfolio: ${total_capital_invested:.2f} → ${p_end:.2f} ({p_total_return:+.2f}%)")
     if not benchmark.empty:
         print(f"  Benchmark: ${total_capital_invested:.2f} → ${b_end:.2f} ({b_total_return:+.2f}%)")
-        print(f"  Outperformance: {(p_total_return - b_total_return):+.2f}%")
+        print(f"  Performance: {(p_total_return - b_total_return):+.2f}%")
     
     if last_injection_date is not None:
         print(f"\nReturns Since Last Injection ({last_injection_date.date()}):")
         print(f"  Portfolio: ${p_baseline:.2f} → ${p_end:.2f} ({p_since_injection:+.2f}%)")
         if not benchmark.empty:
             print(f"  Benchmark: ${b_baseline:.2f} → ${b_end:.2f} ({b_since_injection:+.2f}%)")
-            print(f"  Outperformance: {(p_since_injection - b_since_injection):+.2f}%")
+            print(f"  Performance: {(p_since_injection - b_since_injection):+.2f}%")
 
 
 if __name__ == "__main__":
