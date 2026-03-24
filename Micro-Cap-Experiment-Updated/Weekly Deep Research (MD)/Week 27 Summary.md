@@ -1,0 +1,29 @@
+Thesis Review Summary
+ 
+### Per-Position Thesis
+ 
+**RCKT — Conviction: 4/5 (maintained, approaching resolution)**
+ 
+This is the portfolio's defining position entering the decision window. The Kresladi BLA for LAD-I is the most favorable regulatory setup in the current holding period: CMC-only CRL with no efficacy or safety concerns, 100% overall survival across all 9 patients at 12–42 months, first-in-class gene therapy for a fatal pediatric disease with zero approved alternatives, RMAT + Rare Pediatric + Fast Track + Orphan Drug designation stack, FDA acceptance of resubmission without an AdCom request, and ODIN AI scoring ~85% approval probability. The PRV alone ($100–150M based on recent comps) approaches the company's $449M market cap, creating substantial embedded value. Cash of $188.9M provides runway into Q2 2027 regardless of outcome.
+ 
+The widened stop ($3.50/$3.40) accepts more downside risk on a per-share basis but is the correct tactical decision: the $4.10 stop would have triggered on routine pre-PDUFA volatility (the stock moved 5.7% in a single session last Friday), ejecting the position before the binary event that justifies holding it. The new stop sits below the 200-day support zone and would only trigger on a genuine thesis-breaking move — a level consistent with the $188.9M cash floor (~$1.74/share) plus pipeline residual value.
+ 
+The addition of 10 shares to reach 25 total is sized to maximize the payoff on the highest-probability positive outcome while keeping total position risk at 2.6% of equity (blended avg $3.96 vs. $3.50 stop). If approved, the 22.18% short interest creates significant squeeze potential toward $6–10+ (analyst targets range $8–16). If rejected, the stop limits the damage to a manageable ~$11.50 loss on the position. The after-hours close at $4.29 (+3.6% from $4.14 RTH) is a constructive signal — possibly early accumulation by informed buyers who have visibility into the decision timeline. This is the correct risk/reward calibration for a week that could define the experiment's trajectory.
+ 
+**REPL — Conviction: 3/5 (new initiation, high-risk binary)**
+ 
+REPL represents a calculated bet on asymmetric binary dynamics in a hostile market. The April 10 PDUFA for RP1+nivolumab in anti-PD-1-refractory advanced melanoma has a more complex regulatory history than RCKT — the July 2025 CRL cited fundamental concerns about trial design and contribution of components, not just manufacturing issues. However, the BLA resubmission was accepted and classified as a "complete response" to the CRL, a positive procedural signal. The clinical data is genuinely compelling: 32.9% ORR with 15% complete responses and 33.7-month median DOR in a population that has failed checkpoint inhibitors, where the standard of care (Iovance's Amtagvi) requires complex TIL manufacturing.
+ 
+The short interest setup is extreme: 25.96% of float shorted with 13.34 days to cover. On approval, this creates forced buying pressure that could drive the stock from $7 toward $12–15+ (analyst targets $10–$19). On rejection, the stock likely revisits its $2.68 52-week low, representing ~60% downside. The position is sized for total loss tolerance at the stop ($5.90): 17 shares × $1.15 risk = $19.55 (4.5% of equity). Even in a worst-case gap-through-stop scenario, the maximum loss on the full position ($119.85) would not breach the portfolio's ability to recover over the remaining 25 weeks.
+ 
+The conditional entry (above 20-day SMA, no RCKT negative decision first) adds a layer of discipline that prevents chasing into a broken tape.
+ 
+### Overall Portfolio Thesis — The Deployment Pivot (Week 27 of 52)
+ 
+The portfolio enters the second half of the experiment at an inflection point. The ALDX disaster (-$22.87 realized loss) and VNDA stop-out (fortunately a +$19.60 gain) have reduced the portfolio from three holdings to one, while pushing it $22.30 behind the S&P benchmark. With 25 weeks of runway, the strategic imperative is clear: deploy the elevated cash position ($375.40, 85.8% of pre-trade equity) into high-conviction catalyst plays that can generate the alpha needed to close the gap.
+ 
+This week's actions are calibrated to that objective. RCKT's PDUFA this week is the single highest-expected-value event in the portfolio's history — a ~85% probability of approval that could add $50–150 in position value against a defined ~$11.50 downside. Adding 10 shares and widening the stop to survive the volatility is the correct posture. REPL's initiation deploys another $120 into an asymmetric binary with 19 trading days of lead time and the most extreme short interest setup in the biotech sector.
+ 
+The macro environment remains hostile — IWM 7% below its 50-day SMA, VIX near 27, PCE inflation report on the RCKT decision day — but the regime filter is working as designed by restricting activity to catalyst-driven plays where the idiosyncratic event dominates the market beta. The 47% post-trade cash position provides reserves for the VNDA re-entry evaluation after April 3, the ORN watchlist initiation if its 20-day SMA is recaptured, and any post-RCKT opportunistic redeployment.
+ 
+The path to closing the benchmark gap runs through successful PDUFA outcomes. If RCKT approves this week (+$50–150 portfolio impact), the portfolio vaults ahead of the S&P equivalent. If REPL approves April 10 (+$90–180), the gap widens further in the portfolio's favor. Even one positive outcome out of two, combined with prudent stop management, keeps the experiment competitive. The worst case — both positions stopped or both CRLs — costs ~$31 combined at the stops, a setback but not catastrophic with 25 weeks and $212 in cash to recover.

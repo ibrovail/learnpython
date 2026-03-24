@@ -1365,7 +1365,7 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
     )
 
 
-def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]], cash: float) -> None:
+def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]], cash: float, planned_injection: float | None = None) -> None:
     """Print weekend summary in XML format for deep research sessions.
 
     Output includes:
@@ -1431,6 +1431,19 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
 
     # -------- Portfolio Snapshot (replaces <cash_balance>) --------
     _print_portfolio_snapshot_table(metrics.final_equity, metrics.dollar_weighted_spx, cash)
+    print()
+
+    # -------- Capital Injection (planned for coming week) --------
+    if planned_injection is not None and planned_injection > 0:
+        print("<capital_injection>")
+        print("  <planned>true</planned>")
+        print(f"  <amount>{planned_injection:.2f}</amount>")
+        print("  <note>Out-of-cycle injection. Add this amount to the Cash Balance shown above when calculating available capital for position sizing this week.</note>")
+        print("</capital_injection>")
+    else:
+        print("<capital_injection>")
+        print("  <planned>false</planned>")
+        print("</capital_injection>")
     print()
 
     # -------- Holdings --------
@@ -1801,9 +1814,24 @@ def main(data_dir: Path | None = None, update_stops: bool = False, weekend_summa
 
     if weekend_summary:
         chatgpt_portfolio, cash = load_latest_portfolio_state()
+
+        print("\n--- Capital Injection for Coming Week ---")
+        inject_choice = input("Do you plan to inject additional capital this week? (y / Enter to skip): ").strip().lower()
+        planned_injection: float | None = None
+        if inject_choice == "y":
+            while True:
+                try:
+                    amount = float(input("Enter amount to inject (e.g., 50.00): "))
+                    if amount > 0:
+                        planned_injection = amount
+                        break
+                    print("Amount must be greater than 0. Try again.")
+                except ValueError:
+                    print("Invalid input. Enter a number (e.g., 50.00).")
+
         buffer = io.StringIO()
         with contextlib.redirect_stdout(buffer):
-            print_weekend_summary(chatgpt_portfolio, cash)
+            print_weekend_summary(chatgpt_portfolio, cash, planned_injection=planned_injection)
         weekly_output = buffer.getvalue().strip()
         md_path = DATA_DIR / "weekend_summary.md"
         if md_path.exists():

@@ -1,1 +1,0 @@
-**Note: I unfortunately only started documenting chats on (8-1).**
