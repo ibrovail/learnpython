@@ -27,11 +27,39 @@ except ImportError:
 # ── Markdown parsing helpers ─────────────────────────────────────────────────
 
 def strip_inline(text: str) -> str:
-    """Remove inline markdown: bold, italic, inline code, links."""
+    """Remove inline markdown: bold, italic, inline code, links.
+    Also replace Unicode characters unsupported by Helvetica/latin-1."""
     text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)        # **bold**
     text = re.sub(r"\*(.+?)\*", r"\1", text)             # *italic*
     text = re.sub(r"`(.+?)`", r"\1", text)               # `code`
     text = re.sub(r"\[(.+?)\]\(.+?\)", r"\1", text)      # [text](url)
+    # Replace common Unicode chars unsupported by Helvetica
+    replacements = {
+        "\u2014": "--",    # em dash
+        "\u2013": "-",     # en dash
+        "\u2018": "'",     # left single quote
+        "\u2019": "'",     # right single quote
+        "\u201c": '"',     # left double quote
+        "\u201d": '"',     # right double quote
+        "\u2022": "-",     # bullet
+        "\u2264": "<=",    # ≤
+        "\u2265": ">=",    # ≥
+        "\u00d7": "x",     # ×
+        "\u2192": "->",    # →
+        "\u2713": "[OK]",  # ✓
+        "\u2717": "[X]",   # ✗
+        "\u2705": "[OK]",  # ✅
+        "\u274c": "[X]",   # ❌
+        "\u26a0\ufe0f": "[!]",  # ⚠️
+        "\u26a0": "[!]",   # ⚠
+        "\u2122": "(TM)",  # ™
+        "\u00ae": "(R)",   # ®
+        "\u00a9": "(C)",   # ©
+    }
+    for char, replacement in replacements.items():
+        text = text.replace(char, replacement)
+    # Fallback: replace any remaining non-latin-1 chars
+    text = text.encode("latin-1", errors="replace").decode("latin-1")
     return text
 
 
@@ -66,8 +94,24 @@ class ReportPDF(FPDF):
         self.set_text_color(0, 0, 0)
 
 
+def sanitize_latin1(text: str) -> str:
+    """Replace Unicode characters unsupported by Helvetica/latin-1."""
+    replacements = {
+        "\u2014": "--", "\u2013": "-", "\u2018": "'", "\u2019": "'",
+        "\u201c": '"', "\u201d": '"', "\u2022": "-", "\u2264": "<=",
+        "\u2265": ">=", "\u00d7": "x", "\u2192": "->", "\u2713": "[OK]",
+        "\u2717": "[X]", "\u2705": "[OK]", "\u274c": "[X]",
+        "\u26a0\ufe0f": "[!]", "\u26a0": "[!]", "\u2122": "(TM)",
+        "\u00ae": "(R)", "\u00a9": "(C)",
+    }
+    for char, replacement in replacements.items():
+        text = text.replace(char, replacement)
+    return text.encode("latin-1", errors="replace").decode("latin-1")
+
+
 def build_pdf(md_path: Path, pdf_path: Path) -> None:
-    lines = md_path.read_text(encoding="utf-8").splitlines()
+    raw = md_path.read_text(encoding="utf-8")
+    lines = sanitize_latin1(raw).splitlines()
 
     pdf = ReportPDF(orientation="P", unit="mm", format="A4")
     pdf.set_margins(ReportPDF.MARGIN, ReportPDF.MARGIN, ReportPDF.MARGIN)
@@ -150,7 +194,7 @@ def build_pdf(md_path: Path, pdf_path: Path) -> None:
             pdf.set_font(ReportPDF.BODY_FONT, "", 9)
             x_offset = ReportPDF.MARGIN + indent * 2
             pdf.set_x(x_offset)
-            bullet = "\u2022 " if indent == 0 else "\u2013 "
+            bullet = "- " if indent == 0 else "  - "
             pdf.multi_cell(usable_width - indent * 2, 5, bullet + text)
             i += 1
             continue

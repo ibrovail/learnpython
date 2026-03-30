@@ -41,6 +41,13 @@ try:
 except Exception:
     _HAS_PDR = False
 
+# Optional exchange-calendars import for NYSE holiday-aware end-of-week detection
+try:
+    import exchange_calendars as xcals # type: ignore
+    _HAS_XCALS = True
+except Exception:
+    _HAS_XCALS = False
+
 # -------- AS-OF override --------
 ASOF_DATE: pd.Timestamp | None = None
 
@@ -1539,7 +1546,20 @@ def _print_xml_summary(
 ) -> None:
     """Print the daily summary in XML-structured format."""
 
-    print(f'\n<daily_summary date="{today}">')
+    _today_ts = pd.Timestamp(today)
+    try:
+        if _HAS_XCALS:
+            _xnys = xcals.get_calendar("XNYS")
+            _this_mon = _today_ts - pd.Timedelta(days=_today_ts.weekday())
+            _this_fri = _this_mon + pd.Timedelta(days=4)
+            _week_sessions = _xnys.sessions_in_range(_this_mon, _this_fri)
+            _is_eow = len(_week_sessions) > 0 and _today_ts.normalize() >= _week_sessions[-1]
+        else:
+            _is_eow = _today_ts.weekday() == 4  # fallback: Friday-only
+    except Exception:
+        _is_eow = _today_ts.weekday() == 4  # fallback: Friday-only
+    _eow_attr = "true" if _is_eow else "false"
+    print(f'\n<daily_summary date="{today}" is_end_of_week="{_eow_attr}">')
     print()
 
     # -------- Market Data --------

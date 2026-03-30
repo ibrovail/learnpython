@@ -6,9 +6,14 @@ Read `Start Your Own/portfolio_rules.md` before any analysis session.
 
 ## Daily Analysis (Auto-trigger)
 
-When `<daily_summary>` XML appears in the conversation, **immediately run the daily portfolio analysis without waiting for a prompt** — UNLESS you previously instructed the user to run `! make daily` as a weekend prep step (stale portfolio check). In that case, skip the 6-section analysis and say: "Daily data updated — please re-run `! make weekend`."
+When `<daily_summary>` XML appears in the conversation, check for skip conditions before running analysis:
 
-Use WebSearch for live IWM data, catalyst updates, and ATR. Follow the 6-section format in `Start Your Own/daily_analysis_prompt.md`.
+**Skip condition 1 — Stale-data prereq:** If you previously instructed the user to run `! make daily` as a stale-portfolio prereq step before `make weekend`, skip the 6-section analysis and say: "Daily data updated — please re-run `! make weekend`."
+
+**Skip condition 2 — End-of-week run:** If `<daily_summary>` contains `is_end_of_week="true"`, skip the 6-section analysis and say:
+> End-of-week daily complete. Portfolio data is current as of [date]. Run `! make weekend` to begin the deep research session.
+
+If neither skip condition applies, **immediately run the daily portfolio analysis without waiting for a prompt.** Use WebSearch for live IWM data, catalyst updates, and ATR. Follow the 6-section format in `Start Your Own/daily_analysis_prompt.md`.
 
 ---
 

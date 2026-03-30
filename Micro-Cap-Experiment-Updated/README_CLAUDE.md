@@ -6,10 +6,11 @@ This document describes the Claude Code CLI workflow that replaces the manual co
 
 ## Overview
 
-Instead of copying trading script output to ChatGPT, Claude Code acts as the analysis layer directly in the CLI. The trading script runs as normal (you handle all interactive prompts); the XML output lands in the conversation and Claude auto-analyzes it with live web search.
+Instead of copying trading script output to ChatGPT, Claude Code acts as the analysis layer directly in the CLI. Claude pipes inputs to the trading script automatically; the XML output lands in the conversation and Claude auto-analyzes it with live web search.
 
 **Key benefits:**
 - No copy-paste between tools
+- No separate terminal needed — everything runs inside Claude Code
 - Persistent conversation context across the session
 - Live web search for prices, catalysts, and ATR data
 - Automated weekend report file creation (MD + PDF)
@@ -20,13 +21,17 @@ Instead of copying trading script output to ChatGPT, Claude Code acts as the ana
 
 **After 4 PM EST on trading days:**
 
-1. Run the script in the Claude Code CLI:
+1. Tell Claude what to do using the `Run daily:` pattern:
    ```
-   ! make daily
+   Run daily: no changes
+   Run daily: inject $143.08, buy 17 REPL limit $7.05 stop $5.90/$5.80
+   Run daily: sell 8 RCKT at $5.11
    ```
-2. Handle all interactive prompts as normal (stop triggers, buy/sell entries, CSV confirmation)
+2. Claude constructs the input sequence and pipes it to the trading script automatically
 3. Claude **automatically** detects the `<daily_summary>` XML output and runs the daily analysis — no additional prompt needed
-4. Review Claude's recommendations and enter any recommended trades in the next interactive run
+4. Review Claude's recommendations and specify any trades in the next `Run daily:` command
+
+**Why not `! make daily`?** Claude Code's `!` prefix does not support interactive stdin (`input()` calls fail with EOFError). The `Run daily:` pattern works around this by piping pre-constructed answers to the script via the Bash tool.
 
 **Daily analysis output (6 sections):**
 1. Market Regime Check — IWM vs 50-day SMA (live web search)
@@ -66,7 +71,9 @@ Instead of copying trading script output to ChatGPT, Claude Code acts as the ana
 ```
 ⚠️  Portfolio data is not current. Run '! make daily' first, then re-run '! make weekend'.
 ```
-Run `! make daily`, handle the prompts, then re-run `! make weekend`. Claude will skip the daily analysis during this prerequisite run and wait for the weekend context.
+Run `Run daily: no changes` (or with any needed trades), then re-run `! make weekend`. Claude will skip the daily analysis during this prerequisite run and wait for the weekend context.
+
+**If you ran `trading_script.py` manually** (outside of `make daily`), always pass `--data-dir "Start Your Own"` — otherwise the portfolio CSV is written to a different path and `make weekend` will report stale data even though the script ran successfully.
 
 ---
 

@@ -42,13 +42,16 @@ These rules govern all analysis — daily and weekend. Read this file before beg
 ## Risk Control
 
 - Maintain or set stop-losses on ALL long positions (default: max(1.5×ATR(14), 10% below entry)).
+- **Binary event stop override:** for positions held through a date-certain binary catalyst (see definition in Entry Requirements), the stop-loss may be set at the nearest major technical support level (200-day SMA, prior selloff floor, key horizontal support) rather than the standard ATR/percentage formula, provided: (a) the wider stop still results in ≤5% portfolio risk (or ≤3.75% if the SMA waiver was used for entry), (b) the override rationale is documented in the weekly report, and (c) the override automatically expires when the event resolves — see post-catalyst reassessment.
 - **Position sizing (risk-per-trade):** size so that hitting the stop costs no more than 5% of portfolio equity:
   ```
   shares = (portfolio_equity × 0.05) / (entry_price − stop_price)
   ```
   Absolute ceiling: no single name may exceed 30% of portfolio equity.
 - **No averaging down:** once a position falls >5% from entry, do not add shares unless a material new positive catalyst is confirmed with ≥2 independent sources.
-- **Partial profit-taking:** sell ~1/3 at +30% gain, ~1/3 at +60% gain; let the remaining third run with a trailing stop at max(1.5×ATR(14), 15% below rolling high).
+- **Partial profit-taking:** sell ~1/3 at +30% gain, ~1/3 at +60% gain; let the remaining third run with a trailing stop at max(1.5×ATR(14), 15% below 20-day rolling high).
+- **Pre-catalyst exit orders:** for any position held through a date-certain binary catalyst, place a GTC limit sell order for ~1/3 of the position at +30% from entry, at least 2 trading days before the event date. This captures spike-and-reverse profit and reduces gap risk — if the event outcome is negative and the stock gaps through the stop, the position is already 1/3 smaller, limiting gap-through loss. If the sell order fills before the event, do NOT replace the sold shares.
+- **Post-catalyst reassessment:** within 1 trading day of any date-certain binary catalyst resolving (approval/rejection, beat/miss, awarded/denied): (1) remove any binary event stop override and recalculate the stop using normal trailing stop rules, (2) re-evaluate conviction with documented rationale, (3) if the stock is trading below where the normal trailing stop would be, either document a specific time-bound reason to hold or exit at market, (4) log the assessment in the daily analysis.
 - **Market regime filter:** if IWM is below its 50-day SMA, restrict new initiations to high-conviction catalyst-driven plays only. Flag the regime status in every report.
 - Flag any stop breach or position sizing violation immediately.
 
@@ -77,10 +80,11 @@ These rules govern all analysis — daily and weekend. Read this file before beg
 - 3-month average daily dollar volume ≥ $500,000
 - Bid-ask spread ≤ 2% (or ≤ $0.05 if price < $5)
 - Float ≥ 5M shares (unless justified with reasoning)
-- Relative strength: stock price must be above its 20-day SMA at the time of initiation
+- Relative strength: stock price must be above its 20-day SMA at the time of initiation, **UNLESS** all of the following are true: (1) the stock has a date-certain binary catalyst within 15 trading days, (2) the stock is within 5% of its 20-day SMA, and (3) the catalyst is confirmed by ≥2 independent sources. When this waiver is applied, reduce the risk budget from 5% to 3.75% of equity.
 
 ### Entry Requirements
 - **Catalyst within 60 days:** new initiations must have a confirmed near-term catalyst (earnings, FDA decision, contract award, etc.) within 60 days. No story stocks without an upcoming event.
+- **Date-certain binary catalyst (definition):** an event with a publicly announced date or regulatory deadline and a pass/fail outcome expected to move the stock ≥20% in either direction. Examples across sectors: FDA PDUFA date, earnings report date, government contract award deadline, permit ruling date, drill/assay result release date, patent ruling date, M&A close/termination date. Excluded: vague timelines ("H1 2026 data readout"), analyst day presentations, conference appearances.
 - **No re-entry ban:** once a ticker is stopped out, it is banned from re-entry for 10 trading days. Flag any proposed re-entry that falls within the blackout window.
 
 ### No Candidates Rule
