@@ -19,7 +19,7 @@ setup: venv
 	@echo "Setup complete! Activate with: source venv/bin/activate"
 
 # Activate virtual environment (shows activation command)
-activate: 
+activate:
 	@echo "To activate the virtual environment, run:"
 	@echo "source venv/bin/activate"
 	@echo ""
@@ -39,18 +39,12 @@ daily:
 # Weekend workflow: check portfolio is current, update weekend_summary.md, inject last thesis, print for Claude
 weekend:
 	@venv/bin/python -c "\
-import pandas as pd, sys; \
-from datetime import date, timedelta; \
-df = pd.read_csv('Start Your Own/chatgpt_portfolio_update.csv'); \
-last = pd.to_datetime(df['Date']).max().date(); \
-today = date.today(); \
-d = (today - timedelta(days=max(0, today.weekday() - 4))) if today.weekday() >= 5 else today; \
-try: \
-    import exchange_calendars as xcals; \
-    xnys = xcals.get_calendar('XNYS'); \
-    sessions = xnys.sessions_in_range(d - timedelta(days=6), d + timedelta(days=1)); \
-    d = max(s.date() for s in sessions if s.date() <= d) if len(sessions) > 0 else d; \
-except Exception: pass; \
+import pandas as pd, sys;\
+from datetime import date, timedelta;\
+df = pd.read_csv('Start Your Own/chatgpt_portfolio_update.csv');\
+last = pd.to_datetime(df['Date']).max().date();\
+today = date.today();\
+exec('try:\n import exchange_calendars as xcals\n xnys = xcals.get_calendar(\"XNYS\")\n d = xnys.previous_session(pd.Timestamp(today)).date()\nexcept Exception:\n wd = today.weekday()\n d = today - timedelta(days=(wd - 4) if wd >= 5 else 1)\n while d.weekday() >= 5: d -= timedelta(days=1)');\
 sys.exit(0 if last >= d else 1)" || \
 	(echo "⚠️  Portfolio data is not current for the last trading day. Run '! make daily' first, then re-run '! make weekend'." && exit 1)
 	printf '\n' | venv/bin/python trading_script.py --data-dir "Start Your Own" --weekend-summary
@@ -63,4 +57,3 @@ clean:
 	@echo "Virtual environment removed"
 
 .PHONY: venv install setup activate trade graph daily weekend clean
-

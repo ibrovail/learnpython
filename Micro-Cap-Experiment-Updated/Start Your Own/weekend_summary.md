@@ -66,49 +66,41 @@ Before producing your output, work through these steps internally:
 </thinking_approach>
 
 <weekly_context>
-<date>Sunday, March 29, 2026</date>
+<date>Monday, April 06, 2026</date>
 <week_number>28 of 52 (twelve-month live experiment)</week_number>
 
 <market_data>
 <price_volume>
 | Ticker | Close   | % Chg  | Volume      | Role       |
 |--------|---------|--------|-------------|------------|
-| RCKT   |    3.77 | -19.62% |  23,133,600 | Holding    |
-| IWO    |  307.37 | -2.01% |     455,800 | Benchmark  |
-| XBI    |  119.59 | -3.48% |  10,705,400 | Benchmark  |
-| SPY    |  634.09 | -1.71% | 102,725,900 | Benchmark  |
-| IWM    |  243.10 | -1.75% |  48,062,000 | Benchmark  |
-| QQQ    |  562.58 | -1.95% |  82,497,000 | Benchmark  |
-| TLT    |   85.64 | -0.55% |  39,913,000 | Macro      |
-| HYG    |   78.72 | -0.25% |  68,171,100 | Macro      |
 </price_volume>
 
 <risk_metrics>
 | Metric                        | Value     | Note                    |
 |-------------------------------|-----------|-------------------------|
 | Max Drawdown                  |   -24.99% | on 2026-03-20           |
-| Sharpe Ratio (annualized)     |    2.2361 |                         |
-| Sortino Ratio (annualized)    |    6.8199 |                         |
-| Beta (daily) vs ^GSPC         |    2.7758 |                         |
-| Alpha (annualized) vs ^GSPC   | +2337.74% |                         |
-| R²                            |     0.077 | Low — alpha/beta unstable |
+| Sharpe Ratio (annualized)     |    2.2107 |                         |
+| Sortino Ratio (annualized)    |    6.7289 |                         |
+| Beta (daily) vs ^GSPC         |    2.4809 |                         |
+| Alpha (annualized) vs ^GSPC   | +1740.43% |                         |
+| R²                            |     0.068 | Low — alpha/beta unstable |
 </risk_metrics>
 </market_data>
 
 <portfolio_snapshot>
 | Metric              | Value     |
 |---------------------|-----------|
-| Portfolio Equity    |   $426.95 |
-| S&P Equivalent      |   $448.49 |
-| Cash Balance        |   $332.70 |
+| Portfolio Equity    |   $430.00 |
+| S&P Equivalent      |   $463.55 |
+| Cash Balance        |   $345.90 |
 </portfolio_snapshot>
 
 <capital_injection>
   <planned>false</planned>
 </capital_injection>
 
-<holdings date="2026-03-27">
-<holding ticker="RCKT" shares="25" avg_cost="3.93" current_price="3.77" stop_loss="3.50" stop_limit="3.40" />
+<holdings date="2026-04-02">
+<holding ticker="REPL" shares="10" avg_cost="7.43" current_price="0.00" stop_loss="5.90" stop_limit="5.80" />
 </holdings>
 
 <last_analyst_thesis>
@@ -146,16 +138,16 @@ The path to closing the benchmark gap runs through successful PDUFA outcomes. If
 <recent_trades>
 <!-- Trades from Monday through Friday of current week -->
 Date,Ticker,Shares Bought,Buy Price,Cost Basis,PnL,Reason,Shares Sold,Sell Price
-2026-03-23,RCKT,10.0,4.27,42.7,0.0,MANUAL BUY LIMIT - Filled,,
+2026-03-30,RCKT,,,3.927999999999999,-10.7,AUTOMATED SELL - STOP LIMIT TRIGGERED,25.0,3.5
+2026-03-30,REPL,10.0,7.43,74.3,0.0,MANUAL BUY LIMIT - Filled,,
 </recent_trades>
 
 <execution_requests>
 <session_directives>
-- Sector focus: Wide net — all sectors (no restrictions)
-- Catalyst timing: Analyst discretion — optimize for alpha. Mix of near-term (5-10 day) and medium-term (30-60 day) catalysts as conviction warrants.
-- Risk posture: Aggressive — trailing benchmark by 5%. Prioritize alpha generation while maintaining core risk rules. Deploy cash into high-conviction plays.
-- Max concurrent positions: 6
-- REPL: Analyst discretion — evaluate on merit against current opportunity set.
+- Sector focus: Wide net across all sectors
+- Catalyst timing: Within 10 trading days
+- Risk posture: Aggressive — trailing benchmark by $33.55 with 24 weeks remaining
+- Max concurrent positions: 5
 </session_directives>
 
 Using the rules, safeguards, and portfolio context above, execute the deep research window now.
