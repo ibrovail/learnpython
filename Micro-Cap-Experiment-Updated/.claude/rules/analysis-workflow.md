@@ -17,13 +17,33 @@ If neither skip condition applies, **immediately run the daily portfolio analysi
 
 ---
 
-## Weekend Analysis (Auto-trigger after `make weekend`)
+## Weekend Analysis (Two-step flow)
 
-When `<weekly_context>` XML appears in the conversation (output of `make weekend`), immediately begin the weekend workflow **without waiting for a prompt**:
+When the user asks to run the weekend analysis (e.g., "make weekend", "run weekend", "weekend summary"):
 
-1. **Session config**: ask the 4 session directive questions (defined in `Start Your Own/daily_analysis_prompt.md`)
-2. **Update directives**: edit the `<session_directives>` block in `Start Your Own/weekend_summary.md` with the user's answers
-3. **Run analysis**: produce the full 10-section deep research report (format defined in `Start Your Own/weekend_summary.md`) using WebSearch extensively for all holdings and new candidates
+### Step 1 — Session Config (ask BEFORE running make weekend)
+
+Ask the 4 session directive questions (defined in `Start Your Own/daily_analysis_prompt.md`):
+
+**Q1 — Sector focus:** Wide net (default) | Biotech | Energy | Tech | Industrials
+**Q2 — Catalyst timing:** Within 5 days | Within 10 days (default) | 30-60 days
+**Q3 — Risk posture:** Neutral | Aggressive | Defensive | Tighten stops
+**Q4 — Max concurrent positions:** 5 (default) | 6
+
+Then run:
+```bash
+make weekend SECTOR="<answer>" TIMING="<answer>" RISK="<answer>" POSITIONS="<answer>"
+```
+
+The `make weekend` target automatically runs the screener first. If the screener fails (Finviz down, network issue), the weekend workflow continues — use WebSearch as a fallback for candidate sourcing.
+
+### Step 2 — Analysis (auto-trigger when `<weekly_context>` XML appears)
+
+When `<weekly_context>` XML appears in the conversation output, **immediately begin the deep research** — do NOT ask for further input:
+
+1. **Screener candidate evaluation**: If a `<screener_watchlist>` block is present, evaluate AT LEAST the top 5 candidates via WebSearch for catalyst/fundamental info. For each screener candidate NOT selected, state why in one line. Include at least 2 candidates from different GICS sectors in the evaluation table. Screener candidates get priority over web-search-only finds.
+2. **Run analysis**: produce the full 10-section deep research report (format defined in `Start Your Own/weekend_summary.md`) using WebSearch extensively for all holdings and new candidates
+3. **Sector cap check**: Before finalizing positions, verify no more than 2 of 5 positions are in the same GICS sector (per `portfolio_rules.md` Allocation Framework).
 4. **Save outputs** immediately after the report completes:
    - Full report → `Weekly Deep Research (MD)/Week X Full.md`
    - Section 9 (Thesis Review Summary) only → `Weekly Deep Research (MD)/Week X Summary.md`

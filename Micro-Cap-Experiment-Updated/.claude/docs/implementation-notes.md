@@ -4,6 +4,49 @@ Reference documentation for key implementation decisions and change history.
 
 ---
 
+### 2026-04-13 — Week 30 Deep Research Report + README Weekend Flow Fix
+
+Completed the first weekly deep research report using the hybrid quant screener (Path B). The screener surfaced 15 candidates across all sectors; 3 parallel research agents evaluated the top 10 screener picks plus additional non-screener candidates via web search. The report proposes 4 positions across 3 GICS sectors: MRAM and RBBN (Technology), ORN (Industrials), ECVT (Basic Materials) — compliant with the 2-per-sector cap. This marks the strategic pivot from PDUFA-dependent binary bets (4 consecutive stop-outs: RCKT, REPL x2, GRCE) to diversified momentum/technical plays. Also corrected `README_CLAUDE.md` weekend workflow: users must say "run weekend" to Claude (so it asks session directive questions first) instead of running `! make weekend` directly (which bypasses Claude and outputs raw markdown).
+
+| File | Change |
+|------|--------|
+| `Weekly Deep Research (MD)/Week 30 Full.md` | **CREATED** — full 10-section report with 4 proposed positions |
+| `Weekly Deep Research (MD)/Week 30 Summary.md` | **CREATED** — Section 9 thesis review summary |
+| `Weekly Deep Research (PDF)/Week 30.pdf` | **CREATED** — PDF version of full report |
+| `README_CLAUDE.md` | Rewrote Weekend Workflow section: "run weekend" flow with session directives before `make weekend` |
+| `CLAUDE.md` | Updated Current State for Week 30 deployment plan |
+
+---
+
+### 2026-04-12 — Hybrid Quant Screener (Path B) and Allocation Framework
+
+Built a quantitative screener (`screener.py`) that scans the full micro/small-cap universe across all sectors to eliminate the structural biotech bias caused by the catalyst-within-60-days rule funneling analysis toward PDUFA plays. The screener pulls ~1,000 stocks from Finviz (market cap ≤$2B, price ≥$1, ADV ≥$500K), enriches with yfinance price/volume history, and ranks by a composite score (40% momentum + 30% volume breakout + 30% volatility squeeze). Output is a 15-candidate CSV watchlist injected as a `<screener_watchlist>` XML block into the weekend summary. The `make weekend` target now auto-runs the screener first. Updated `portfolio_rules.md` with an Allocation Framework (catalyst plays capped at 1 position/15% equity for binary bets, momentum/technical plays allowed without catalyst date, 5-day minimum hold), Sector Diversification (max 2 of 5 positions per GICS sector), slippage guard (order ≤10% ADV), and momentum regime freeze (no new momentum initiations if IWM below 50-day SMA mid-week). Updated `analysis-workflow.md` to require evaluating at least the top 5 screener candidates before selecting, with sector cap enforcement.
+
+| File | Change |
+|------|--------|
+| `screener.py` | **CREATED** — quantitative screener: Finviz universe → yfinance signals → composite ranking → watchlist CSV |
+| `requirements.txt` | Added `finvizfinance>=0.16`, `tabulate>=0.9` |
+| `trading_script.py` | `print_weekend_summary()` reads `watchlist.csv` and injects `<screener_watchlist>` XML block |
+| `Start Your Own/portfolio_rules.md` | Added Allocation Framework, Sector Diversification, slippage guard, momentum regime freeze; relaxed catalyst requirement for momentum plays |
+| `.claude/rules/analysis-workflow.md` | Weekend Step 2 now requires screener candidate evaluation and sector cap check |
+| `Start Your Own/weekend_summary.md` | Added screener-first directive to research approach comments |
+| `Makefile` | Added `screen` target; `weekend` target auto-runs screener before staleness check |
+| `CLAUDE.md` | Updated Current State, Key Files, Commands |
+
+---
+
+### 2026-04-12 — Weekend Session Directives via CLI Args
+
+Added CLI arguments (`--sector-focus`, `--catalyst-timing`, `--risk-posture`, `--max-positions`) to `trading_script.py --weekend-summary` so session directives are populated in the generated `<session_directives>` block instead of being left as a placeholder. The Makefile `weekend` target now accepts `SECTOR`, `TIMING`, `RISK`, `POSITIONS` variables and passes them through. The analysis-workflow rule was updated: Claude asks the 4 session directive questions in chat before running `make weekend`, then pipes answers as CLI args.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | Added `session_directives` param to `print_weekend_summary()` and `main()`; added 4 CLI args |
+| `Makefile` | Added SECTOR/TIMING/RISK/POSITIONS vars; builds `--*` flags dynamically |
+| `.claude/rules/analysis-workflow.md` | Rewritten weekend flow: Step 1 ask questions, Step 2 run + analyze |
+
+---
+
 ## Key Implementation Patterns
 
 - **All orders are limit orders** — prevents slippage from lookahead bias (`trading_script.py:816-823`)

@@ -37,7 +37,20 @@ daily:
 	venv/bin/python trading_script.py --data-dir "Start Your Own"
 
 # Weekend workflow: check portfolio is current, update weekend_summary.md, inject last thesis, print for Claude
+# Session directives are passed via CLI args (Claude asks questions, then runs with answers):
+#   make weekend SECTOR="Biotech" TIMING="Within 10 trading days" RISK="Aggressive" POSITIONS="5"
+SECTOR ?=
+TIMING ?=
+RISK ?=
+POSITIONS ?=
+
+screen:
+	venv/bin/python screener.py --data-dir "Start Your Own" --top-n 15
+
 weekend:
+	@echo "Running screener..."
+	@venv/bin/python screener.py --data-dir "Start Your Own" --top-n 15 || \
+	echo "⚠️  Screener failed — proceeding with cached watchlist (if available)."
 	@venv/bin/python -c "\
 import pandas as pd, sys;\
 from datetime import date, timedelta;\
@@ -47,7 +60,12 @@ today = date.today();\
 exec('try:\n import exchange_calendars as xcals\n xnys = xcals.get_calendar(\"XNYS\")\n d = xnys.previous_session(pd.Timestamp(today)).date()\nexcept Exception:\n wd = today.weekday()\n d = today - timedelta(days=(wd - 4) if wd >= 5 else 1)\n while d.weekday() >= 5: d -= timedelta(days=1)');\
 sys.exit(0 if last >= d else 1)" || \
 	(echo "⚠️  Portfolio data is not current for the last trading day. Run '! make daily' first, then re-run '! make weekend'." && exit 1)
-	printf '\n' | venv/bin/python trading_script.py --data-dir "Start Your Own" --weekend-summary
+	@SD_ARGS=""; \
+	if [ -n "$(SECTOR)" ]; then SD_ARGS="$$SD_ARGS --sector-focus \"$(SECTOR)\""; fi; \
+	if [ -n "$(TIMING)" ]; then SD_ARGS="$$SD_ARGS --catalyst-timing \"$(TIMING)\""; fi; \
+	if [ -n "$(RISK)" ]; then SD_ARGS="$$SD_ARGS --risk-posture \"$(RISK)\""; fi; \
+	if [ -n "$(POSITIONS)" ]; then SD_ARGS="$$SD_ARGS --max-positions \"$(POSITIONS)\""; fi; \
+	printf '\n' | eval venv/bin/python trading_script.py --data-dir \"Start Your Own\" --weekend-summary $$SD_ARGS
 	@venv/bin/python inject_last_thesis.py
 	@cat "Start Your Own/weekend_summary.md"
 
@@ -56,4 +74,4 @@ clean:
 	rm -rf venv venv.nosync
 	@echo "Virtual environment removed"
 
-.PHONY: venv install setup activate trade graph daily weekend clean
+.PHONY: venv install setup activate trade graph daily screen weekend clean

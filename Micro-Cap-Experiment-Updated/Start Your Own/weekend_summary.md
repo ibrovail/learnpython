@@ -66,88 +66,131 @@ Before producing your output, work through these steps internally:
 </thinking_approach>
 
 <weekly_context>
-<date>Monday, April 06, 2026</date>
-<week_number>28 of 52 (twelve-month live experiment)</week_number>
+<date>Sunday, April 12, 2026</date>
+<week_number>30 of 52 (twelve-month live experiment)</week_number>
 
 <market_data>
 <price_volume>
 | Ticker | Close   | % Chg  | Volume      | Role       |
 |--------|---------|--------|-------------|------------|
+| IWO    |  331.87 | -0.26% |     248,300 | Benchmark  |
+| XBI    |  129.44 | -1.81% |  10,033,200 | Benchmark  |
+| SPY    |  679.46 | -0.07% |  41,916,700 | Benchmark  |
+| IWM    |  261.30 | -0.25% |  22,329,700 | Benchmark  |
+| QQQ    |  611.07 | +0.14% |  33,831,300 | Benchmark  |
+| TLT    |   86.49 | -0.24% |  13,237,300 | Macro      |
+| HYG    |   79.96 | -0.40% |  33,005,600 | Macro      |
 </price_volume>
 
 <risk_metrics>
 | Metric                        | Value     | Note                    |
 |-------------------------------|-----------|-------------------------|
 | Max Drawdown                  |   -24.99% | on 2026-03-20           |
-| Sharpe Ratio (annualized)     |    2.2107 |                         |
-| Sortino Ratio (annualized)    |    6.7289 |                         |
-| Beta (daily) vs ^GSPC         |    2.4809 |                         |
-| Alpha (annualized) vs ^GSPC   | +1740.43% |                         |
-| R²                            |     0.068 | Low — alpha/beta unstable |
+| Sharpe Ratio (annualized)     |    1.9667 |                         |
+| Sortino Ratio (annualized)    |    5.8291 |                         |
+| Beta (daily) vs ^GSPC         |    2.1379 |                         |
+| Alpha (annualized) vs ^GSPC   | +1016.19% |                         |
+| R²                            |     0.054 | Low — alpha/beta unstable |
 </risk_metrics>
 </market_data>
 
 <portfolio_snapshot>
 | Metric              | Value     |
 |---------------------|-----------|
-| Portfolio Equity    |   $430.00 |
-| S&P Equivalent      |   $463.55 |
-| Cash Balance        |   $345.90 |
+| Portfolio Equity    |   $378.80 |
+| S&P Equivalent      |   $480.04 |
+| Cash Balance        |   $378.80 |
 </portfolio_snapshot>
 
 <capital_injection>
   <planned>false</planned>
 </capital_injection>
 
-<holdings date="2026-04-02">
-<holding ticker="REPL" shares="10" avg_cost="7.43" current_price="0.00" stop_loss="5.90" stop_limit="5.80" />
+<screener_watchlist generated="2026-04-12" candidates="15">
+|   rank | ticker   | sector                 |   latest_price | market_cap   |   momentum_20d |   momentum_5d |   volume_ratio |   rs_vs_iwm |   bb_width | above_sma20   | data_confidence   |   composite_score |
+|-------:|:---------|:-----------------------|---------------:|:-------------|---------------:|--------------:|---------------:|------------:|-----------:|:--------------|:------------------|------------------:|
+|      1 | RBBN     | Technology             |           2.47 | $434M        |          17.62 |         10.27 |           4.07 |       11.65 |     0.1519 | True          | HIGH              |            0.8663 |
+|      2 | SHO      | Real Estate            |           9.55 | $1.8B        |           6.94 |          5.76 |           1.47 |        0.97 |     0.0749 | True          | HIGH              |            0.8497 |
+|      3 | UMH      | Real Estate            |          15.65 | $1.3B        |           6.83 |          6.9  |           2.11 |        0.86 |     0.1021 | True          | HIGH              |            0.8438 |
+|      4 | PDM      | Real Estate            |           7.12 | $890M        |           7.39 |          7.72 |           1.24 |        1.42 |     0.0996 | True          | HIGH              |            0.8239 |
+|      5 | XHR      | Real Estate            |          15.86 | $1.5B        |          12.01 |          7.74 |           0.96 |        6.04 |     0.1097 | True          | HIGH              |            0.8162 |
+|      6 | TV       | Communication Services |           2.98 | $1.3B        |           4.56 |          2.05 |           1.16 |       -1.41 |     0.0567 | True          | HIGH              |            0.8145 |
+|      7 | DHY      | Financial              |           1.88 | $195M        |           1.08 |         -0.53 |           3.75 |       -4.89 |     0.044  | True          | HIGH              |            0.813  |
+|      8 | HTBK     | Financial              |          13.37 | $824M        |          10.22 |          4.45 |           1.21 |        4.25 |     0.136  | True          | HIGH              |            0.8065 |
+|      9 | ECVT     | Basic Materials        |          13.93 | $1.5B        |          21.34 |          5.37 |           1.57 |       15.37 |     0.2147 | True          | HIGH              |            0.806  |
+|     10 | SPWH     | Consumer Cyclical      |           1.48 | $57M         |          12.12 |         13.85 |           1.5  |        6.15 |     0.1638 | True          | HIGH              |            0.8059 |
+|     11 | OCSL     | Financial              |          11.97 | $1.1B        |           7.84 |          3.01 |           1.08 |        1.87 |     0.1142 | True          | HIGH              |            0.8038 |
+|     12 | SEMR     | Technology             |          11.94 | $1.8B        |           0.17 |         -0.08 |           1.81 |       -5.8  |     0.0042 | True          | HIGH              |            0.795  |
+|     13 | PEB      | Real Estate            |          13.62 | $1.5B        |          17.72 |          7.16 |           1.01 |       11.75 |     0.1678 | True          | HIGH              |            0.7937 |
+|     14 | MRAM     | Technology             |          10.26 | $237M        |          16.33 |          8    |           1.57 |       10.36 |     0.2119 | True          | HIGH              |            0.7907 |
+|     15 | SWBI     | Industrials            |          14.34 | $638M        |           3.91 |         -2.85 |           1.26 |       -2.06 |     0.1026 | False         | HIGH              |            0.7903 |
+</screener_watchlist>
+
+**Screener Integration:**
+- Evaluate AT LEAST the top 5 screener candidates via WebSearch before selecting.
+- For each screener candidate not selected, state why in one line.
+- Respect the sector cap: max 2 positions in the same GICS sector.
+
+<holdings date="2026-04-10">
 </holdings>
 
 <last_analyst_thesis>
-Thesis Review Summary
- 
-### Per-Position Thesis
- 
-**RCKT — Conviction: 4/5 (maintained, approaching resolution)**
- 
-This is the portfolio's defining position entering the decision window. The Kresladi BLA for LAD-I is the most favorable regulatory setup in the current holding period: CMC-only CRL with no efficacy or safety concerns, 100% overall survival across all 9 patients at 12–42 months, first-in-class gene therapy for a fatal pediatric disease with zero approved alternatives, RMAT + Rare Pediatric + Fast Track + Orphan Drug designation stack, FDA acceptance of resubmission without an AdCom request, and ODIN AI scoring ~85% approval probability. The PRV alone ($100–150M based on recent comps) approaches the company's $449M market cap, creating substantial embedded value. Cash of $188.9M provides runway into Q2 2027 regardless of outcome.
- 
-The widened stop ($3.50/$3.40) accepts more downside risk on a per-share basis but is the correct tactical decision: the $4.10 stop would have triggered on routine pre-PDUFA volatility (the stock moved 5.7% in a single session last Friday), ejecting the position before the binary event that justifies holding it. The new stop sits below the 200-day support zone and would only trigger on a genuine thesis-breaking move — a level consistent with the $188.9M cash floor (~$1.74/share) plus pipeline residual value.
- 
-The addition of 10 shares to reach 25 total is sized to maximize the payoff on the highest-probability positive outcome while keeping total position risk at 2.6% of equity (blended avg $3.96 vs. $3.50 stop). If approved, the 22.18% short interest creates significant squeeze potential toward $6–10+ (analyst targets range $8–16). If rejected, the stop limits the damage to a manageable ~$11.50 loss on the position. The after-hours close at $4.29 (+3.6% from $4.14 RTH) is a constructive signal — possibly early accumulation by informed buyers who have visibility into the decision timeline. This is the correct risk/reward calibration for a week that could define the experiment's trajectory.
- 
-**REPL — Conviction: 3/5 (new initiation, high-risk binary)**
- 
-REPL represents a calculated bet on asymmetric binary dynamics in a hostile market. The April 10 PDUFA for RP1+nivolumab in anti-PD-1-refractory advanced melanoma has a more complex regulatory history than RCKT — the July 2025 CRL cited fundamental concerns about trial design and contribution of components, not just manufacturing issues. However, the BLA resubmission was accepted and classified as a "complete response" to the CRL, a positive procedural signal. The clinical data is genuinely compelling: 32.9% ORR with 15% complete responses and 33.7-month median DOR in a population that has failed checkpoint inhibitors, where the standard of care (Iovance's Amtagvi) requires complex TIL manufacturing.
- 
-The short interest setup is extreme: 25.96% of float shorted with 13.34 days to cover. On approval, this creates forced buying pressure that could drive the stock from $7 toward $12–15+ (analyst targets $10–$19). On rejection, the stock likely revisits its $2.68 52-week low, representing ~60% downside. The position is sized for total loss tolerance at the stop ($5.90): 17 shares × $1.15 risk = $19.55 (4.5% of equity). Even in a worst-case gap-through-stop scenario, the maximum loss on the full position ($119.85) would not breach the portfolio's ability to recover over the remaining 25 weeks.
- 
-The conditional entry (above 20-day SMA, no RCKT negative decision first) adds a layer of discipline that prevents chasing into a broken tape.
- 
-### Overall Portfolio Thesis — The Deployment Pivot (Week 27 of 52)
- 
-The portfolio enters the second half of the experiment at an inflection point. The ALDX disaster (-$22.87 realized loss) and VNDA stop-out (fortunately a +$19.60 gain) have reduced the portfolio from three holdings to one, while pushing it $22.30 behind the S&P benchmark. With 25 weeks of runway, the strategic imperative is clear: deploy the elevated cash position ($375.40, 85.8% of pre-trade equity) into high-conviction catalyst plays that can generate the alpha needed to close the gap.
- 
-This week's actions are calibrated to that objective. RCKT's PDUFA this week is the single highest-expected-value event in the portfolio's history — a ~85% probability of approval that could add $50–150 in position value against a defined ~$11.50 downside. Adding 10 shares and widening the stop to survive the volatility is the correct posture. REPL's initiation deploys another $120 into an asymmetric binary with 19 trading days of lead time and the most extreme short interest setup in the biotech sector.
- 
-The macro environment remains hostile — IWM 7% below its 50-day SMA, VIX near 27, PCE inflation report on the RCKT decision day — but the regime filter is working as designed by restricting activity to catalyst-driven plays where the idiosyncratic event dominates the market beta. The 47% post-trade cash position provides reserves for the VNDA re-entry evaluation after April 3, the ORN watchlist initiation if its 20-day SMA is recaptured, and any post-RCKT opportunistic redeployment.
- 
-The path to closing the benchmark gap runs through successful PDUFA outcomes. If RCKT approves this week (+$50–150 portfolio impact), the portfolio vaults ahead of the S&P equivalent. If REPL approves April 10 (+$90–180), the gap widens further in the portfolio's favor. Even one positive outcome out of two, combined with prudent stop management, keeps the experiment competitive. The worst case — both positions stopped or both CRLs — costs ~$31 combined at the stops, a setback but not catastrophic with 25 weeks and $212 in cash to recover.
+# Week 29 — Thesis Review Summary
+
+## Per-Position Thesis
+
+**REPL — Conviction: 4/5 (upgraded from 3, approaching binary resolution)**
+
+The portfolio's lead position enters its defining week. The April 10 PDUFA for RP1+nivolumab in anti-PD-1-refractory advanced melanoma is the highest-stakes event in the experiment's second half. REPL closed at $8.54 on April 6, continuing the rally (+1.55%) after the +10.51% surge on April 2. The stock is now +14.9% from the $7.43 entry, validating the SMA waiver entry that was justified by the date-certain binary catalyst.
+
+Conviction is upgraded to 4/5 based on: (1) the BLA resubmission classified as a "complete response to the CRL" — meaning the FDA found the additional data adequate for re-review, (2) the original CRL cited trial design concerns, not efficacy or safety failures, which is more resolvable, (3) the clinical data is genuinely compelling (32.9% ORR, 15% CR, 33.7-month median DOR in a population with no good options), (4) the competitive landscape favors RP1 as a simpler, safer alternative to Iovance's Amtagvi (which carries 7.5% treatment-related mortality), and (5) the short interest at ~11.4% with 9.8 days to cover creates meaningful squeeze potential on approval.
+
+The pre-catalyst GTC sell order (3 shares at $9.69) must be placed by April 8. If the stock spikes to $9.69+ before or on the PDUFA, this captures $6.78 in profit and reduces the remaining position to 7 shares — cutting gap-through risk by ~47%.
+
+**GRCE — Conviction: 3/5 (new initiation, binary PDUFA play)**
+
+GRCE represents the strongest available binary catalyst outside of REPL. The April 23 PDUFA for GTx-104 (IV nimodipine for aSAH) is a well-constructed regulatory setup: the NDA is supported by positive Phase 3 STRIVE-ON data showing 19% reduction in hypotension, 29% more patients with favorable functional outcomes, and dramatically better dose compliance (54% vs 8% at >=95% RDI) compared to oral nimodipine. There is no competing IV nimodipine product, and oral nimodipine — the only current treatment — has been unchanged for decades.
+
+The risk/reward is highly asymmetric at the ~$63M market cap. On approval, the analyst target of $12 implies 186%+ upside from the $4.20 entry — significantly better than the originally planned $5.15 entry. The 11.4% short interest (surging 496.7% recently) with 3.3 days to cover creates significant squeeze potential. On CRL, the stop at $3.63/$3.53 limits the loss to $13.68 (3.2% of equity).
+
+Conviction is capped at 3/5 because: (1) cash is thin at $18.7M — a CRL would create financing pressure, (2) the stock has already run significantly from its $1.75 52-week low, pricing in some approval probability, (3) rising short interest suggests some institutional skepticism, and (4) the company has no other revenue-generating assets — single-product binary risk. The April 4 selloff (-20.66%) appears to be profit-taking/liquidity-driven rather than thesis-breaking, which provided the favorable $4.20 entry.
+
+The pre-catalyst GTC sell order (8 shares at $5.46, +30% from $4.20 entry) must be placed by April 21, at least 2 trading days before the April 23 PDUFA.
+
+## Overall Portfolio Thesis — The Dual-Catalyst Deployment (Week 29 of 52)
+
+The portfolio enters Week 29 at $428.18, trailing the S&P benchmark by ~$37 (-8%) with 24 weeks remaining. The user directive to bypass the RISK-OFF regime and push harder for alpha is the correct call at this juncture — 80% cash with a benchmark deficit and 24 weeks of runway was too passive for the experiment's objectives.
+
+The updated strategy deploys into two independent binary PDUFA events in April:
+
+**REPL (April 10):** RP1 melanoma BLA resubmission. 3 trading days to decision. Conviction 4/5. Position: 10 shares ($85.40, 19.9% of equity).
+
+**GRCE (April 23):** GTx-104 IV nimodipine NDA. 12 trading days to decision. Conviction 3/5. Position: 24 shares at $4.20 ($100.80, 23.5% of equity). Filled in 24-hour market on April 6 — lower entry than planned ($5.15) improves risk/reward materially.
+
+**Why two concurrent PDUFAs:** The events are independent — REPL's RP1 (oncolytic immunotherapy for melanoma) and GRCE's GTx-104 (IV nimodipine for brain hemorrhage) have zero regulatory overlap. This means the portfolio's probability of at least one positive outcome is substantially higher than either alone. At conservative 50/50 odds per PDUFA, the probability of at least one approval is 75%.
+
+**Combined scenarios:**
+- Both approve: portfolio surges to $602-681, **crushing the benchmark by $137-216**
+- One approves, one CRLs: portfolio reaches $449-590, **closing or exceeding the benchmark**
+- Both CRL (25% probability): portfolio drops to ~$389, a setback but survivable with $245+ cash and 24 weeks
+
+The 57.2% post-trade cash position maintains the buffer needed for: (1) absorbing potential stop-outs on either position, (2) deploying into VNDA (earnings May 6) or RCKT (PRV, ban expires April 15) after the April PDUFAs resolve, and (3) maintaining the 15% minimum cash reserve even in worst-case scenarios.
+
+The path to closing the benchmark gap no longer depends on a single coin flip. With two independent catalysts, the expected value of the portfolio has improved materially. The lower GRCE fill price ($4.20 vs $5.15) provides better risk/reward — more upside per share, less capital at risk, and higher cash reserve. This is the aggressive, calculated deployment the experiment requires at this stage.
 </last_analyst_thesis>
 
 <recent_trades>
 <!-- Trades from Monday through Friday of current week -->
 Date,Ticker,Shares Bought,Buy Price,Cost Basis,PnL,Reason,Shares Sold,Sell Price
-2026-03-30,RCKT,,,3.927999999999999,-10.7,AUTOMATED SELL - STOP LIMIT TRIGGERED,25.0,3.5
-2026-03-30,REPL,10.0,7.43,74.3,0.0,MANUAL BUY LIMIT - Filled,,
+2026-04-07,GRCE,24.0,4.2,100.8,0.0,MANUAL BUY LIMIT - Filled,,
+2026-04-07,GRCE,,,4.2,-13.92,AUTOMATED SELL - STOP LIMIT TRIGGERED,24.0,3.62
+2026-04-08,REPL,,,52.01,-10.71,AUTOMATED SELL - STOP LIMIT TRIGGERED,7.0,5.9
+2026-04-10,REPL,,,22.29,-16.77,MANUAL SELL LIMIT - ,3.0,1.84
 </recent_trades>
 
 <execution_requests>
 <session_directives>
-- Sector focus: Wide net across all sectors
-- Catalyst timing: Within 10 trading days
-- Risk posture: Aggressive — trailing benchmark by $33.55 with 24 weeks remaining
-- Max concurrent positions: 5
+<!-- UPDATE: Paste the directives for the weekly execution requests -->
 </session_directives>
 
 Using the rules, safeguards, and portfolio context above, execute the deep research window now.
@@ -163,6 +206,7 @@ Search for live pricing, volume, catalysts, and filings for all current holdings
 <!-- RESEARCH APPROACH -->
 - Ask clarifying questions before beginning research.
 - Do not ask questions — proceed directly with your best judgment.
+- Start with the screener watchlist candidates before searching for additional plays.
 - Do not limit your scan to any single industry or sector.
 - Focus this week's scan on [biotech / energy / tech / industrials].
 - Emphasise deep-value plays trading below book value.
