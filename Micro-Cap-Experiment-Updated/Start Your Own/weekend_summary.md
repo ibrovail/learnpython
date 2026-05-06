@@ -66,64 +66,68 @@ Before producing your output, work through these steps internally:
 </thinking_approach>
 
 <weekly_context>
-<date>Sunday, April 12, 2026</date>
-<week_number>30 of 52 (twelve-month live experiment)</week_number>
+<date>Sunday, May 03, 2026</date>
+<week_number>33 of 52 (twelve-month live experiment)</week_number>
 
 <market_data>
 <price_volume>
 | Ticker | Close   | % Chg  | Volume      | Role       |
 |--------|---------|--------|-------------|------------|
-| IWO    |  331.87 | -0.26% |     248,300 | Benchmark  |
-| XBI    |  129.44 | -1.81% |  10,033,200 | Benchmark  |
-| SPY    |  679.46 | -0.07% |  41,916,700 | Benchmark  |
-| IWM    |  261.30 | -0.25% |  22,329,700 | Benchmark  |
-| QQQ    |  611.07 | +0.14% |  33,831,300 | Benchmark  |
-| TLT    |   86.49 | -0.24% |  13,237,300 | Macro      |
-| HYG    |   79.96 | -0.40% |  33,005,600 | Macro      |
+| MRAM   |   21.49 | +17.56% |   4,676,300 | Holding    |
+| ECVT   |   14.36 | +1.27% |   1,508,400 | Holding    |
+| ORN    |   14.57 | +6.98% |     581,000 | Holding    |
+| WKC    |   27.10 | +0.48% |     757,900 | Holding    |
+| IWO    |  362.46 | +0.72% |     256,300 | Benchmark  |
+| XBI    |  130.42 | -0.69% |   8,257,900 | Benchmark  |
+| SPY    |  720.65 | +0.28% |  42,888,700 | Benchmark  |
+| IWM    |  279.28 | +0.47% |  28,910,200 | Benchmark  |
+| QQQ    |  674.15 | +0.96% |  39,055,400 | Benchmark  |
+| TLT    |   85.61 | +0.36% |  21,272,100 | Macro      |
+| HYG    |   80.06 | +0.12% |  43,739,300 | Macro      |
 </price_volume>
 
 <risk_metrics>
 | Metric                        | Value     | Note                    |
 |-------------------------------|-----------|-------------------------|
 | Max Drawdown                  |   -24.99% | on 2026-03-20           |
-| Sharpe Ratio (annualized)     |    1.9667 |                         |
-| Sortino Ratio (annualized)    |    5.8291 |                         |
-| Beta (daily) vs ^GSPC         |    2.1379 |                         |
-| Alpha (annualized) vs ^GSPC   | +1016.19% |                         |
-| R²                            |     0.054 | Low — alpha/beta unstable |
+| Sharpe Ratio (annualized)     |    2.4951 |                         |
+| Sortino Ratio (annualized)    |    8.5962 |                         |
+| Beta (daily) vs ^GSPC         |    2.2287 |                         |
+| Alpha (annualized) vs ^GSPC   | +2270.63% |                         |
+| R²                            |     0.047 | Low — alpha/beta unstable |
 </risk_metrics>
 </market_data>
 
 <portfolio_snapshot>
 | Metric              | Value     |
 |---------------------|-----------|
-| Portfolio Equity    |   $378.80 |
-| S&P Equivalent      |   $480.04 |
-| Cash Balance        |   $378.80 |
+| Portfolio Equity    |   $696.91 |
+| S&P Equivalent      |   $725.68 |
+| Cash Balance        |   $339.98 |
 </portfolio_snapshot>
 
 <capital_injection>
   <planned>false</planned>
 </capital_injection>
 
-<screener_watchlist generated="2026-04-12" candidates="15">
-|   rank | ticker   | sector                 |   latest_price | market_cap   |   momentum_20d |   momentum_5d |   volume_ratio |   rs_vs_iwm |   bb_width | above_sma20   | data_confidence   |   composite_score |
-|-------:|:---------|:-----------------------|---------------:|:-------------|---------------:|--------------:|---------------:|------------:|-----------:|:--------------|:------------------|------------------:|
-|      1 | RBBN     | Technology             |           2.47 | $434M        |          17.62 |         10.27 |           4.07 |       11.65 |     0.1519 | True          | HIGH              |            0.8663 |
-|      2 | SHO      | Real Estate            |           9.55 | $1.8B        |           6.94 |          5.76 |           1.47 |        0.97 |     0.0749 | True          | HIGH              |            0.8497 |
-|      3 | UMH      | Real Estate            |          15.65 | $1.3B        |           6.83 |          6.9  |           2.11 |        0.86 |     0.1021 | True          | HIGH              |            0.8438 |
-|      4 | PDM      | Real Estate            |           7.12 | $890M        |           7.39 |          7.72 |           1.24 |        1.42 |     0.0996 | True          | HIGH              |            0.8239 |
-|      5 | XHR      | Real Estate            |          15.86 | $1.5B        |          12.01 |          7.74 |           0.96 |        6.04 |     0.1097 | True          | HIGH              |            0.8162 |
-|      6 | TV       | Communication Services |           2.98 | $1.3B        |           4.56 |          2.05 |           1.16 |       -1.41 |     0.0567 | True          | HIGH              |            0.8145 |
-|      7 | DHY      | Financial              |           1.88 | $195M        |           1.08 |         -0.53 |           3.75 |       -4.89 |     0.044  | True          | HIGH              |            0.813  |
-|      8 | HTBK     | Financial              |          13.37 | $824M        |          10.22 |          4.45 |           1.21 |        4.25 |     0.136  | True          | HIGH              |            0.8065 |
-|      9 | ECVT     | Basic Materials        |          13.93 | $1.5B        |          21.34 |          5.37 |           1.57 |       15.37 |     0.2147 | True          | HIGH              |            0.806  |
-|     10 | SPWH     | Consumer Cyclical      |           1.48 | $57M         |          12.12 |         13.85 |           1.5  |        6.15 |     0.1638 | True          | HIGH              |            0.8059 |
-|     11 | OCSL     | Financial              |          11.97 | $1.1B        |           7.84 |          3.01 |           1.08 |        1.87 |     0.1142 | True          | HIGH              |            0.8038 |
-|     12 | SEMR     | Technology             |          11.94 | $1.8B        |           0.17 |         -0.08 |           1.81 |       -5.8  |     0.0042 | True          | HIGH              |            0.795  |
-|     13 | PEB      | Real Estate            |          13.62 | $1.5B        |          17.72 |          7.16 |           1.01 |       11.75 |     0.1678 | True          | HIGH              |            0.7937 |
-|     14 | MRAM     | Technology             |          10.26 | $237M        |          16.33 |          8    |           1.57 |       10.36 |     0.2119 | True          | HIGH              |            0.7907 |
-|     15 | SWBI     | Industrials            |          14.34 | $638M        |           3.91 |         -2.85 |           1.26 |       -2.06 |     0.1026 | False         | HIGH              |            0.7903 |
+<screener_watchlist generated="2026-04-27" candidates="15">
+|   rank | ticker   | sector          |   latest_price | market_cap   |   momentum_20d |   momentum_5d |   volume_ratio |   rs_vs_iwm |   bb_width | above_sma20   | data_confidence   |   composite_score |
+|-------:|:---------|:----------------|---------------:|:-------------|---------------:|--------------:|---------------:|------------:|-----------:|:--------------|:------------------|------------------:|
+|      1 | WKC      | Energy          |          26.11 | $1.3B        |          11.77 |         10.59 |           4.17 |       -2.03 |     0.1113 | True          | HIGH              |            0.7796 |
+|      2 | PD       | Technology      |           7.13 | $606M        |          18.64 |          9.36 |           2.25 |        4.84 |     0.2004 | True          | HIGH              |            0.7593 |
+|      3 | ONMD     | Healthcare      |           1.1  | $57M         |          24.01 |         17.65 |          13.45 |       10.21 |     0.2826 | True          | HIGH              |            0.7469 |
+|      4 | ERII     | Industrials     |          11.28 | $596M        |          14.29 |          7.84 |           1.98 |        0.49 |     0.1781 | True          | HIGH              |            0.7461 |
+|      5 | TROX     | Basic Materials |          10.12 | $1.6B        |          10.96 |          8.47 |           1.44 |       -2.84 |     0.1228 | True          | HIGH              |            0.7422 |
+|      6 | OCFC     | Financial       |          19.08 | $1.1B        |           9.53 |         -1.55 |           2.32 |       -4.27 |     0.1146 | True          | HIGH              |            0.741  |
+|      7 | OSTX     | Healthcare      |           1.77 | $74M         |          25.53 |         28.26 |           4.48 |       11.73 |     0.3176 | True          | HIGH              |            0.7365 |
+|      8 | MRTN     | Industrials     |          14.8  | $1.2B        |          14.82 |         -0.4  |           1.69 |        1.02 |     0.1867 | True          | HIGH              |            0.7361 |
+|      9 | IVR      | Real Estate     |           8.36 | $727M        |           8.43 |          0.6  |           2.13 |       -5.37 |     0.0981 | True          | HIGH              |            0.7344 |
+|     10 | ABCL     | Healthcare      |           4.15 | $1.3B        |          26.91 |          6.14 |           2.47 |       13.11 |     0.3183 | True          | HIGH              |            0.7338 |
+|     11 | THM      | Basic Materials |           2.63 | $687M        |          24.64 |          1.94 |           1.39 |       10.84 |     0.2699 | True          | HIGH              |            0.7337 |
+|     12 | PMT      | Real Estate     |          12.12 | $1.1B        |           8.21 |          1.17 |           1.45 |       -5.59 |     0.082  | True          | HIGH              |            0.7274 |
+|     13 | NBHC     | Financial       |          42.58 | $1.9B        |          12.23 |          1    |           1.23 |       -1.57 |     0.1426 | True          | HIGH              |            0.7269 |
+|     14 | HRTX     | Healthcare      |           1.19 | $224M        |          52.56 |         13.33 |           3.25 |       38.76 |     0.5212 | True          | HIGH              |            0.7212 |
+|     15 | LGO      | Basic Materials |           1.29 | $108M        |          16.22 |         -3.01 |           2.23 |        2.42 |     0.225  | True          | HIGH              |            0.7211 |
 </screener_watchlist>
 
 **Screener Integration:**
@@ -131,66 +135,30 @@ Before producing your output, work through these steps internally:
 - For each screener candidate not selected, state why in one line.
 - Respect the sector cap: max 2 positions in the same GICS sector.
 
-<holdings date="2026-04-10">
+<holdings date="2026-05-01">
+<holding ticker="MRAM" shares="6" avg_cost="10.26" current_price="21.49" stop_loss="15.50" stop_limit="15.40" />
+<holding ticker="ECVT" shares="5" avg_cost="13.99" current_price="14.36" stop_loss="13.24" stop_limit="13.14" />
+<holding ticker="ORN" shares="7" avg_cost="11.88" current_price="14.57" stop_loss="11.12" stop_limit="11.02" />
+<holding ticker="WKC" shares="2" avg_cost="26.00" current_price="27.10" stop_loss="23.40" stop_limit="23.30" />
 </holdings>
 
 <last_analyst_thesis>
-# Week 29 — Thesis Review Summary
-
-## Per-Position Thesis
-
-**REPL — Conviction: 4/5 (upgraded from 3, approaching binary resolution)**
-
-The portfolio's lead position enters its defining week. The April 10 PDUFA for RP1+nivolumab in anti-PD-1-refractory advanced melanoma is the highest-stakes event in the experiment's second half. REPL closed at $8.54 on April 6, continuing the rally (+1.55%) after the +10.51% surge on April 2. The stock is now +14.9% from the $7.43 entry, validating the SMA waiver entry that was justified by the date-certain binary catalyst.
-
-Conviction is upgraded to 4/5 based on: (1) the BLA resubmission classified as a "complete response to the CRL" — meaning the FDA found the additional data adequate for re-review, (2) the original CRL cited trial design concerns, not efficacy or safety failures, which is more resolvable, (3) the clinical data is genuinely compelling (32.9% ORR, 15% CR, 33.7-month median DOR in a population with no good options), (4) the competitive landscape favors RP1 as a simpler, safer alternative to Iovance's Amtagvi (which carries 7.5% treatment-related mortality), and (5) the short interest at ~11.4% with 9.8 days to cover creates meaningful squeeze potential on approval.
-
-The pre-catalyst GTC sell order (3 shares at $9.69) must be placed by April 8. If the stock spikes to $9.69+ before or on the PDUFA, this captures $6.78 in profit and reduces the remaining position to 7 shares — cutting gap-through risk by ~47%.
-
-**GRCE — Conviction: 3/5 (new initiation, binary PDUFA play)**
-
-GRCE represents the strongest available binary catalyst outside of REPL. The April 23 PDUFA for GTx-104 (IV nimodipine for aSAH) is a well-constructed regulatory setup: the NDA is supported by positive Phase 3 STRIVE-ON data showing 19% reduction in hypotension, 29% more patients with favorable functional outcomes, and dramatically better dose compliance (54% vs 8% at >=95% RDI) compared to oral nimodipine. There is no competing IV nimodipine product, and oral nimodipine — the only current treatment — has been unchanged for decades.
-
-The risk/reward is highly asymmetric at the ~$63M market cap. On approval, the analyst target of $12 implies 186%+ upside from the $4.20 entry — significantly better than the originally planned $5.15 entry. The 11.4% short interest (surging 496.7% recently) with 3.3 days to cover creates significant squeeze potential. On CRL, the stop at $3.63/$3.53 limits the loss to $13.68 (3.2% of equity).
-
-Conviction is capped at 3/5 because: (1) cash is thin at $18.7M — a CRL would create financing pressure, (2) the stock has already run significantly from its $1.75 52-week low, pricing in some approval probability, (3) rising short interest suggests some institutional skepticism, and (4) the company has no other revenue-generating assets — single-product binary risk. The April 4 selloff (-20.66%) appears to be profit-taking/liquidity-driven rather than thesis-breaking, which provided the favorable $4.20 entry.
-
-The pre-catalyst GTC sell order (8 shares at $5.46, +30% from $4.20 entry) must be placed by April 21, at least 2 trading days before the April 23 PDUFA.
-
-## Overall Portfolio Thesis — The Dual-Catalyst Deployment (Week 29 of 52)
-
-The portfolio enters Week 29 at $428.18, trailing the S&P benchmark by ~$37 (-8%) with 24 weeks remaining. The user directive to bypass the RISK-OFF regime and push harder for alpha is the correct call at this juncture — 80% cash with a benchmark deficit and 24 weeks of runway was too passive for the experiment's objectives.
-
-The updated strategy deploys into two independent binary PDUFA events in April:
-
-**REPL (April 10):** RP1 melanoma BLA resubmission. 3 trading days to decision. Conviction 4/5. Position: 10 shares ($85.40, 19.9% of equity).
-
-**GRCE (April 23):** GTx-104 IV nimodipine NDA. 12 trading days to decision. Conviction 3/5. Position: 24 shares at $4.20 ($100.80, 23.5% of equity). Filled in 24-hour market on April 6 — lower entry than planned ($5.15) improves risk/reward materially.
-
-**Why two concurrent PDUFAs:** The events are independent — REPL's RP1 (oncolytic immunotherapy for melanoma) and GRCE's GTx-104 (IV nimodipine for brain hemorrhage) have zero regulatory overlap. This means the portfolio's probability of at least one positive outcome is substantially higher than either alone. At conservative 50/50 odds per PDUFA, the probability of at least one approval is 75%.
-
-**Combined scenarios:**
-- Both approve: portfolio surges to $602-681, **crushing the benchmark by $137-216**
-- One approves, one CRLs: portfolio reaches $449-590, **closing or exceeding the benchmark**
-- Both CRL (25% probability): portfolio drops to ~$389, a setback but survivable with $245+ cash and 24 weeks
-
-The 57.2% post-trade cash position maintains the buffer needed for: (1) absorbing potential stop-outs on either position, (2) deploying into VNDA (earnings May 6) or RCKT (PRV, ban expires April 15) after the April PDUFAs resolve, and (3) maintaining the 15% minimum cash reserve even in worst-case scenarios.
-
-The path to closing the benchmark gap no longer depends on a single coin flip. With two independent catalysts, the expected value of the portfolio has improved materially. The lower GRCE fill price ($4.20 vs $5.15) provides better risk/reward — more upside per share, less capital at risk, and higher cash reserve. This is the aggressive, calculated deployment the experiment requires at this stage.
+<!-- UPDATE: Paste the most recent thesis notes for each holding -->
 </last_analyst_thesis>
 
 <recent_trades>
 <!-- Trades from Monday through Friday of current week -->
 Date,Ticker,Shares Bought,Buy Price,Cost Basis,PnL,Reason,Shares Sold,Sell Price
-2026-04-07,GRCE,24.0,4.2,100.8,0.0,MANUAL BUY LIMIT - Filled,,
-2026-04-07,GRCE,,,4.2,-13.92,AUTOMATED SELL - STOP LIMIT TRIGGERED,24.0,3.62
-2026-04-08,REPL,,,52.01,-10.71,AUTOMATED SELL - STOP LIMIT TRIGGERED,7.0,5.9
-2026-04-10,REPL,,,22.29,-16.77,MANUAL SELL LIMIT - ,3.0,1.84
+2026-04-27,WKC,2.0,26.0,52.0,0.0,MANUAL BUY LIMIT - Filled,,
+2026-04-29,RBBN,,,37.05,-0.6000000000000014,MANUAL SELL LIMIT - ,15.0,2.43
 </recent_trades>
 
 <execution_requests>
 <session_directives>
-<!-- UPDATE: Paste the directives for the weekly execution requests -->
+- Sector focus: Wide net
+- Catalyst timing: Within 10 days
+- Risk posture: Neutral
+- Max concurrent positions: 6
 </session_directives>
 
 Using the rules, safeguards, and portfolio context above, execute the deep research window now.

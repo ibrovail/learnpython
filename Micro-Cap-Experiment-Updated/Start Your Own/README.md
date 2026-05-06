@@ -17,7 +17,7 @@ save their CSV data inside this folder.
  **Install dependencies:**
    ```bash
    # Recommended: Use a virtual environment
-   python -m venv venv
+   python3 -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
 
    pip install -r requirements.txt
