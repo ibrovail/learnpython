@@ -4,6 +4,49 @@ Reference documentation for key implementation decisions and change history.
 
 ---
 
+### 2026-05-12 — Double Exit: ARLO + ARDX
+
+Two positions closed on 2026-05-12. (1) **ARLO** manual SELL LIMIT 8 @ $13.70 per `entry-discipline.md` day-1 drawdown rule, realized -$12.40 / -10.2%. (2) **ARDX** manual SELL LIMIT 17 @ $6.48 — stop level — that user flagged should have auto-executed. The script's auto-stop check did not trigger because the close ($6.61) sat above the $6.48 stop even though the intraday low touched it. Likely a close-vs-low logic gap in `trading_script.py:482-741` (process_portfolio) worth auditing before the next stop-eligible position. Final state: 4 holdings (ECVT, ORN, WKC, ACCO), cash $342.18, equity $657.64, 52% cash.
+
+Process learning: the manual-sell flow asks "log another trade?" after each fill. Feeding the inputs as `"\ns\nTICKER\nSHARES\nPRICE\n\n\n"` (extra trailing newlines) makes the second prompt cleanly return Enter so the script proceeds to the analytics + CSV-save block without an EOF crash. Without the extra newline the portfolio CSV write is skipped and snapshot must be hand-patched.
+
+| File | Change |
+|------|--------|
+| `Start Your Own/chatgpt_trade_log.csv` | 2026-05-12: appended ARLO sell (-$12.40) and ARDX sell (-$12.24) rows |
+| `Start Your Own/chatgpt_portfolio_update.csv` | 2026-05-12 snapshot: 4 holdings, cash $342.18, equity $657.64 |
+| `CLAUDE.md` | Current State: 4 holdings, both stops fired, auto-stop bug logged for next-step |
+
+---
+
+### 2026-05-11 — Entry Discipline Rules (Post-ARLO Failure)
+
+ARLO was entered Monday 5/11 at $15.25 per the Week 34 deep research recommendation and closed -10.9% same-day (low $13.30, close $13.59) without negative news. Root causes: (1) bought 3 trading days after a +11.6% earnings pop at the post-print high; (2) entry ~60% above 50-day SMA, mean-reversion risk dominated; (3) stop $13.85 sat only ~1.5× ATR below entry — too tight for ARLO's normal daily range; (4) no pre-open verification; (5) screener score 0.802 HIGH was over-weighted as conviction; (6) broker stop not surfaced — recommendation didn't include explicit "place stop before open" reminder, so entry was naked. User instruction: exit at Tuesday open. New `entry-discipline.md` rules file codifies: post-earnings 3-day cooldown above +5%, ≤40% above 50-SMA limit, 1.75× ATR minimum stop sizing, pre-open verification, screener score = sourcing not conviction, day-1 drawdown auto-exit at -8%, broker-stop surfacing.
+
+| File | Change |
+|------|--------|
+| `.claude/rules/entry-discipline.md` | **CREATED** — hard rules for new-position selection |
+| `CLAUDE.md` | Current State updated to reflect ARLO failure and exit decision |
+| `Start Your Own/chatgpt_portfolio_update.csv` | Patched: 2026-05-08 backfilled with closes; ARLO row added for 2026-05-11 (8sh @ $15.25, cur $13.59, PnL -$13.28); cash $122.42; total equity $659.40 |
+| `Start Your Own/chatgpt_trade_log.csv` | ARLO BUY LIMIT 8 @ $15.25 logged 2026-05-11 |
+
+---
+
+### 2026-05-11 — Week 34 Deep Research + Stale `! make` References Purged
+
+Ran Week 34 deep research: 5 holdings (ECVT/ORN/WKC/ACCO/ARDX) all post-Q1 earnings, ARLO selected as 6th position from the screener watchlist (Q1 +26% revenue, services 60% of mix at 85% GM, +318k paid accts vs 190–230k target; FY26 guide $550–580M). ECVT conviction upgraded 2/5 → 4/5 on a Q1 beat (+50% sales, +87% EBITDA) and raised FY guide; WKC downgraded 4/5 → 3/5 on marine softness and MS PT cut to $25. Recommended buy ARLO 8 sh @ $15.25 stop $13.85/$13.75. Also purged stale `! make daily` / `! make weekend` instructions from live docs — the correct invocations are `Run daily:` (Claude pipes inputs) and `run weekend` (Claude asks session directives, then runs `make weekend` with CLI args). The `!` shell prefix cannot drive interactive stdin or session directives.
+
+| File | Change |
+|------|--------|
+| `Weekly Deep Research (MD)/Week 34 Full.md` | **CREATED** — 10-section report |
+| `Weekly Deep Research (MD)/Week 34 Summary.md` | **CREATED** — thesis review |
+| `Weekly Deep Research (PDF)/Week 34.pdf` | **CREATED** — PDF version |
+| `Makefile` | Stale-data error message now points to `run daily` / `run weekend` |
+| `.claude/rules/analysis-workflow.md` | Skip-condition wording updated to `run daily` / `run weekend` |
+| `README_CLAUDE.md` | Replaced `! make daily` / `! make weekend` warnings with correct phrasing |
+| `CLAUDE.md` | Workflow note clarified; Current State updated to Week 34 |
+
+---
+
 ### 2026-04-13 — Week 30 Deep Research Report + README Weekend Flow Fix
 
 Completed the first weekly deep research report using the hybrid quant screener (Path B). The screener surfaced 15 candidates across all sectors; 3 parallel research agents evaluated the top 10 screener picks plus additional non-screener candidates via web search. The report proposes 4 positions across 3 GICS sectors: MRAM and RBBN (Technology), ORN (Industrials), ECVT (Basic Materials) — compliant with the 2-per-sector cap. This marks the strategic pivot from PDUFA-dependent binary bets (4 consecutive stop-outs: RCKT, REPL x2, GRCE) to diversified momentum/technical plays. Also corrected `README_CLAUDE.md` weekend workflow: users must say "run weekend" to Claude (so it asks session directive questions first) instead of running `! make weekend` directly (which bypasses Claude and outputs raw markdown).

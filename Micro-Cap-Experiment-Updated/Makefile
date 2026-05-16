@@ -59,7 +59,7 @@ last = pd.to_datetime(df['Date']).max().date();\
 today = date.today();\
 exec('try:\n import exchange_calendars as xcals\n xnys = xcals.get_calendar(\"XNYS\")\n d = xnys.previous_session(pd.Timestamp(today)).date()\nexcept Exception:\n wd = today.weekday()\n d = today - timedelta(days=(wd - 4) if wd >= 5 else 1)\n while d.weekday() >= 5: d -= timedelta(days=1)');\
 sys.exit(0 if last >= d else 1)" || \
-	(echo "⚠️  Portfolio data is not current for the last trading day. Run '! make daily' first, then re-run '! make weekend'." && exit 1)
+	(echo "⚠️  Portfolio data is not current for the last trading day. Ask Claude to 'run daily' first, then 'run weekend'." && exit 1)
 	@SD_ARGS=""; \
 	if [ -n "$(SECTOR)" ]; then SD_ARGS="$$SD_ARGS --sector-focus \"$(SECTOR)\""; fi; \
 	if [ -n "$(TIMING)" ]; then SD_ARGS="$$SD_ARGS --catalyst-timing \"$(TIMING)\""; fi; \

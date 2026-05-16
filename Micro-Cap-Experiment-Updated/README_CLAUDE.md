@@ -32,7 +32,7 @@ Instead of copying trading script output to ChatGPT, Claude Code acts as the ana
 3. Claude **automatically** detects the `<daily_summary>` XML output and runs the daily analysis — no additional prompt needed
 4. Review Claude's recommendations and specify any trades in the next `Run daily:` command
 
-**Why not `! make daily`?** Claude Code's `!` prefix does not support interactive stdin (`input()` calls fail with EOFError). The `Run daily:` pattern works around this by piping pre-constructed answers to the script via the Bash tool.
+**Why not run `make daily` via the `!` shell prefix?** Claude Code's `!` prefix does not support interactive stdin (`input()` calls fail with EOFError). The `Run daily:` pattern works around this by piping pre-constructed answers to the script via the Bash tool.
 
 **Daily analysis output (6 sections):**
 1. Market Regime Check — IWM vs 50-day SMA (live web search)
@@ -52,7 +52,7 @@ Instead of copying trading script output to ChatGPT, Claude Code acts as the ana
    ```
    run weekend
    ```
-   **Do NOT use `! make weekend`** — the `!` prefix sends the command directly to the shell, bypassing Claude. Claude needs to ask the session directive questions first, then run `make weekend` with your answers as CLI arguments.
+   **Do NOT invoke `make weekend` directly via the `!` shell prefix** — that bypasses Claude. Claude needs to ask the session directive questions first, then run `make weekend` with your answers as CLI arguments.
 
 2. Claude asks the 4 session directive questions:
    - Sector focus (wide net, biotech, energy, tech, industrials)
@@ -78,11 +78,11 @@ Instead of copying trading script output to ChatGPT, Claude Code acts as the ana
 
 **If `make weekend` reports the portfolio is not current:**
 ```
-⚠️  Portfolio data is not current. Run '! make daily' first, then re-run weekend.
+⚠️  Portfolio data is not current for the last trading day. Ask Claude to 'run daily' first, then 'run weekend'.
 ```
-Run `Run daily: no changes` (or with any needed trades), then say `run weekend` again. Claude will skip the daily analysis during this prerequisite run and wait for the weekend context.
+Say `Run daily: no changes` (or with any needed trades), then say `run weekend` again. Claude will skip the daily analysis during this prerequisite run and wait for the weekend context.
 
-**If you ran `trading_script.py` manually** (outside of `make daily`), always pass `--data-dir "Start Your Own"` — otherwise the portfolio CSV is written to a different path and `make weekend` will report stale data even though the script ran successfully.
+**If you ran `trading_script.py` manually**, always pass `--data-dir "Start Your Own"` — otherwise the portfolio CSV is written to a different path and `make weekend` will report stale data even though the script ran successfully.
 
 ---
 
