@@ -1,1067 +1,1100 @@
 ticker,sector,industry,price,avg_volume,market_cap
-ABAT,Industrials,Waste Management,3.17,6495299.0,417520000.0
-ABCL,Healthcare,Biotechnology,5.24,10843234.0,1590000000.0
-ABEO,Healthcare,Biotechnology,5.9,853821.0,336590000.0
-ABOS,Healthcare,Biotechnology,2.56,163270.0,184900000.0
-ABR,Real Estate,REIT - Mortgage,7.21,11954113.0,1390000000.0
-ABSI,Healthcare,Biotechnology,5.9,7338983.0,919840000.0
-ABTC,Financial,Capital Markets,1.19,9134709.0,1260000000.0
-ABTS,Financial,Capital Markets,1.09,176202.0,3230000.0
-ABUS,Healthcare,Biotechnology,4.34,752853.0,854720000.0
-ABX,Financial,Insurance - Life,9.08,990340.0,868200000.0
-ACB,Healthcare,Drug Manufacturers - Specialty & Generic,3.41,601560.0,193380000.0
-ACCO,Industrials,Business Equipment & Supplies,4.04,612670.0,372720000.0
-ACDC,Energy,Oil & Gas Equipment & Services,6.66,1123030.0,1200000000.0
-ACH,Healthcare,Medical Distribution,3.58,877370.0,273650000.0
-ACHV,Healthcare,Biotechnology,5.21,1759691.0,534850000.0
-ACP,Financial,Closed-End Fund - Debt,5.36,293941.0,672520000.0
-ACRS,Healthcare,Biotechnology,4.93,1205870.0,688540000.0
-ACRV,Healthcare,Biotechnology,1.98,541909.0,76710000.0
-ACVA,Consumer Cyclical,Auto & Truck Dealerships,6.41,5670092.0,1120000000.0
-ACXP,Healthcare,Biotechnology,2.09,60370.0,7670000.0
-ADAM,Real Estate,REIT - Mortgage,8.83,459015.0,793470000.0
-ADCT,Healthcare,Biotechnology,3.5,1632490.0,445170000.0
-ADMA,Healthcare,Biotechnology,8.17,10208408.0,1890000000.0
-ADNT,Consumer Cyclical,Auto Parts,22.78,1337123.0,1790000000.0
-ADTN,Technology,Communication Equipment,14.94,1531754.0,1210000000.0
-ADVB,Healthcare,Diagnostics & Research,6.19,38731.0,8450000.0
-AEHL,Industrials,Building Products & Equipment,1.2,322292736.0,5820000.0
-AEVA,Technology,Software - Infrastructure,13.57,1962002.0,854200000.0
-AGBK,Financial,Banks - Regional,7.01,717250.0,1120000000.0
-AGEN,Healthcare,Biotechnology,3.82,621821.0,146680000.0
-AGH,Consumer Cyclical,Leisure,4.44,548437.0,89930000.0
-AGIG,Utilities,Utilities - Renewable,1.13,198732.0,49400000.0
-AGIO,Healthcare,Biotechnology,27.79,582937.0,1650000000.0
-AGNT,Real Estate,Real Estate Services,6.6,1325965.0,1050000000.0
-AGPU,Technology,Software - Infrastructure,5.67,245062.0,31410000.0
-AGRO,Consumer Defensive,Farm Products,13.13,571999.0,1890000000.0
-AHCO,Healthcare,Medical Devices,11.3,1483902.0,1540000000.0
-AHMA,Consumer Cyclical,Travel Services,1.41,752634.0,41590000.0
-AHRT,Real Estate,REIT - Diversified,6.37,646359.0,619070000.0
-AI,Technology,Software - Infrastructure,9.87,4339054.0,1430000000.0
-AIB,Technology,Software - Application,1.18,251585.0,44400000.0
-AIFF,Technology,Software - Application,1.89,210704.0,27960000.0
-AIOT,Technology,Software - Infrastructure,3.41,1096206.0,457440000.0
-AIP,Technology,Semiconductors,31.86,1131169.0,1470000000.0
-AIRO,Industrials,Aerospace & Defense,7.34,241271.0,230760000.0
-AIRS,Healthcare,Medical Care Facilities,3.86,2418805.0,272310000.0
-AIV,Real Estate,REIT - Residential,4.24,1476554.0,610010000.0
-AIXI,Technology,Software - Application,12.2,390700.0,8210000.000000001
-AKAN,Healthcare,Drug Manufacturers - Specialty & Generic,27.0,406479.0,14430000.0
-AKBA,Healthcare,Drug Manufacturers - Specialty & Generic,1.16,4397994.0,311180000.0
-ALDX,Healthcare,Biotechnology,1.73,827589.0,104360000.0
-ALEC,Healthcare,Biotechnology,2.1,720453.0,233150000.0
-ALGT,Industrials,Airlines,83.03,458928.0,1530000000.0
-ALKT,Technology,Software - Application,17.97,1503678.0,1920000000.0
-ALLO,Healthcare,Biotechnology,2.28,4476440.0,755310000.0
-ALMR,Healthcare,Medical Devices,23.96,304576.0,1610000000.0
-ALMU,Technology,Semiconductors,24.41,1226028.0,439450000.0
-ALOY,Basic Materials,Other Industrial Metals & Mining,9.89,1252639.0,591730000.0
-ALT,Healthcare,Biotechnology,3.09,2858248.0,600560000.0
-ALTO,Basic Materials,Specialty Chemicals,4.46,2553852.0,344730000.0
-ALVO,Healthcare,Drug Manufacturers - Specialty & Generic,3.26,469973.0,1020000000.0
-ALXO,Healthcare,Biotechnology,2.08,998512.0,273750000.0
-AMC,Communication Services,Entertainment,1.5,18666658.0,918100000.0
-AMLX,Healthcare,Drug Manufacturers - Specialty & Generic,14.73,1891518.0,1640000000.0
-AMN,Healthcare,Medical Care Facilities,28.97,3823841.0,1120000000.0
-AMPG,Technology,Communication Equipment,2.2,643918.0,55730000.0
-AMPH,Healthcare,Drug Manufacturers - Specialty & Generic,19.0,1983804.0,837770000.0
-AMPL,Technology,Software - Application,6.39,4384016.0,847180000.0
-AMPY,Energy,Oil & Gas E&P,5.29,722487.0,218410000.0
-AMRC,Industrials,Engineering & Construction,29.96,406164.0,1590000000.0
-AMTX,Basic Materials,Specialty Chemicals,2.59,2563079.0,182250000.0
-ANGI,Communication Services,Internet Content & Information,5.83,3489276.0,235810000.0
-ANGX,Communication Services,Entertainment,3.35,2116825.0,624480000.0
-ANNA,Energy,Oil & Gas E&P,3.22,757531.0,214630000.0
-ANNX,Healthcare,Biotechnology,5.69,2011679.0,924670000.0
-ANTX,Healthcare,Biotechnology,4.46,241951.0,160540000.0
-ANVS,Healthcare,Biotechnology,2.28,739646.0,78730000.0
-ANY,Financial,Capital Markets,1.82,149994.0,6860000.0
-AOD,Financial,Closed-End Fund - Foreign,10.52,329363.0,1110000000.0
-AORT,Healthcare,Medical Devices,25.41,5137004.0,1230000000.0
-AOSL,Technology,Semiconductors,37.9,1093342.0,1130000000.0
-APPN,Technology,Software - Infrastructure,21.92,1113246.0,1630000000.0
-APPS,Technology,Software - Application,4.04,1507613.0,484400000.0
-AQST,Healthcare,Drug Manufacturers - Specialty & Generic,4.32,1893103.0,536910000.0
-ARCO,Consumer Cyclical,Restaurants,9.02,1247751.0,1900000000.0
-ARDX,Healthcare,Biotechnology,6.78,5861818.0,1670000000.0
-AREC,Basic Materials,Coking Coal,2.24,1486071.0,227120000.0
-ARHS,Consumer Cyclical,Specialty Retail,6.51,1953925.0,919020000.0
-ARI,Real Estate,REIT - Mortgage,11.0,760131.0,1460000000.0
-ARKO,Consumer Cyclical,Specialty Retail,6.87,1538310.0,770720000.0
-ARLO,Industrials,Building Products & Equipment,15.25,4022418.0,1660000000.0
-ARQ,Industrials,Pollution & Treatment Controls,2.64,384261.0,113330000.0
-ARRY,Technology,Solar,8.57,5110095.0,1320000000.0
-ARTL,Healthcare,Biotechnology,2.54,91091.0,2380000.0
-ARVN,Healthcare,Biotechnology,10.11,594924.0,646650000.0
-ASAN,Technology,Software - Application,6.63,7506040.0,1580000000.0
-ASC,Industrials,Marine Shipping,19.53,610633.0,796880000.0
-ASM,Basic Materials,Other Precious Metals & Mining,6.9,4201694.0,1160000000.0
-ASPI,Basic Materials,Chemicals,5.38,2427438.0,677360000.0
-ASPN,Industrials,Building Products & Equipment,5.04,2013053.0,417440000.0
-ASST,Financial,Asset Management,15.92,2442596.0,1100000000.0
-ASTC,Technology,Scientific & Technical Instruments,2.77,13369.0,4870000.0
-ASTH,Healthcare,Medical Care Facilities,39.3,929947.0,1950000000.0
-ASTI,Technology,Solar,4.32,989960.0,40880000.0
-ASTL,Basic Materials,Steel,5.14,782268.0,539340000.0
-ATAI,Healthcare,Biotechnology,4.03,3859858.0,1480000000.0
-ATEC,Healthcare,Medical Devices,7.52,5094231.0,1160000000.0
-ATER,Consumer Cyclical,"Furnishings, Fixtures & Appliances",1.1,505842.0,11910000.0
-ATLX,Basic Materials,Other Industrial Metals & Mining,6.46,1216122.0,190510000.0
-ATOM,Technology,Semiconductor Equipment & Materials,8.41,1404054.0,325610000.0
-ATPC,Consumer Defensive,Packaged Foods,2.37,48243.0,2370000.0
-ATRA,Healthcare,Biotechnology,8.34,3002822.0,70990000.0
-ATRC,Healthcare,Medical Instruments & Supplies,26.28,954269.0,1330000000.0
-AUPH,Healthcare,Biotechnology,15.23,1541876.0,1960000000.0
-AUTL,Healthcare,Biotechnology,1.57,1204349.0,417840000.0
-AUUD,Technology,Software - Application,1.46,361197.0,730000.0
-AVAH,Healthcare,Medical Care Facilities,6.74,927412.0,1470000000.0
-AVLN,Healthcare,Biotechnology,27.33,290423.0,1140000000.0
-AVNS,Healthcare,Medical Devices,24.8,965890.0,1160000000.0
-AVO,Consumer Defensive,Food Distribution,13.08,851494.0,926670000.0
-AVR,Healthcare,Medical Instruments & Supplies,6.58,603620.0,639790000.0
-AVTX,Healthcare,Biotechnology,21.57,1780218.0,576230000.0
-AVXL,Healthcare,Biotechnology,3.22,735529.0,298400000.0
-AZI,Consumer Cyclical,Auto & Truck Dealerships,1.27,18852.0,5780000.0
-AZTA,Healthcare,Medical Instruments & Supplies,19.22,1021309.0,885300000.0
-BAER,Industrials,Security & Protection Services,1.69,640767.0,94510000.0
-BAK,Basic Materials,Chemicals,3.69,1474373.0,636640000.0
-BAND,Technology,Software - Infrastructure,49.89,871958.0,1600000000.0
-BATL,Energy,Oil & Gas E&P,2.89,4754219.0,62040000.0
-BBBY,Consumer Cyclical,Internet Retail,5.3,1655745.0,391870000.0
-BBDC,Financial,Asset Management,8.87,1433347.0,928750000.0
-BBGI,Communication Services,Broadcasting,17.13,23428.0,30940000.0
-BBNX,Healthcare,Medical Devices,9.65,755535.0,430020000.0
-BCAT,Financial,Closed-End Fund - Equity,15.52,610641.0,1630000000.0
-BCAX,Healthcare,Biotechnology,22.58,377318.0,1480000000.0
-BCG,Financial,Asset Management,2.14,110299.0,35770000.0
-BCSF,Financial,Asset Management,13.66,309434.0,886100000.0
-BDMD,Healthcare,Medical Devices,1.75,266713.0,71710000.0
-BDN,Real Estate,REIT - Office,3.11,1509122.0,541850000.0
-BDRX,Healthcare,Biotechnology,4.25,80949.0,1910000.0
-BDTX,Healthcare,Biotechnology,2.99,1663363.0,171330000.0
-BENF,Financial,Asset Management,3.44,20396.0,48900000.0
-BETR,Financial,Mortgage Finance,30.07,1136400.0,567950000.0
-BFLY,Healthcare,Medical Devices,4.16,4957515.0,1090000000.0
-BGDE,Financial,Capital Markets,6.21,171584.0,34070000.0
-BGL,Basic Materials,Gold,1.11,148048.0,42200000.0
-BGS,Consumer Defensive,Packaged Foods,5.35,1508447.0,430200000.0
-BHVN,Healthcare,Biotechnology,9.86,1978618.0,1480000000.0
-BIAF,Healthcare,Diagnostics & Research,2.03,185174.0,9130000.0
-BIOA,Healthcare,Drug Manufacturers - Specialty & Generic,17.99,177457.0,798720000.0
-BIRD,Consumer Cyclical,Apparel Retail,5.6,495200.0,49070000.0
-BIYA,Technology,Software - Application,1.04,656704.0,2620000.0
-BKKT,Technology,Software - Infrastructure,9.85,2527692.0,301040000.0
-BKSY,Industrials,Specialty Business Services,39.45,3265936.0,1460000000.0
-BL,Technology,Software - Application,30.63,857009.0,1800000000.0
-BLDP,Industrials,Electrical Equipment & Parts,4.13,12144115.0,1240000000.0
-BLKB,Technology,Software - Application,37.5,518179.0,1720000000.0
-BLMN,Consumer Cyclical,Restaurants,8.12,6772605.0,695190000.0
-BLND,Technology,Software - Application,1.38,4123393.0,354820000.0
-BLNE,Financial,Mortgage Finance,1.92,298300.0,58840000.0
-BLZE,Technology,Software - Infrastructure,7.48,2513274.0,448800000.0
-BMBL,Communication Services,Internet Content & Information,3.62,4198869.0,469930000.0
-BMEA,Healthcare,Biotechnology,1.54,1089301.0,111340000.0
-BNAI,Technology,Software - Infrastructure,22.26,261675.0,130400000.0
-BOBS,Consumer Cyclical,Specialty Retail,13.64,2268243.0,1780000000.0
-BORR,Energy,Oil & Gas Drilling,5.85,5637589.0,1800000000.0
-BRBR,Consumer Defensive,Packaged Foods,10.31,6097822.0,1200000000.0
-BRCC,Consumer Defensive,Packaged Foods,1.3,759760.0,324350000.0
-BRLS,Consumer Defensive,Packaged Foods,1.46,32727.0,31340000.0
-BRN,Energy,Oil & Gas E&P,1.1,298565.0,15660000.0
-BRR,Financial,Capital Markets,1.94,697755.0,161840000.0
-BRSP,Real Estate,REIT - Mortgage,5.97,647927.0,777760000.0
-BTAI,Healthcare,Drug Manufacturers - Specialty & Generic,1.22,565031.0,33030000.0
-BTBD,Consumer Cyclical,Restaurants,1.14,914508.0,6770000.0
-BTBT,Financial,Capital Markets,1.8,26476292.0,587840000.0
-BTCS,Financial,Capital Markets,2.12,2178651.0,105520000.0
-BTGO,Financial,Capital Markets,12.57,676494.0,1450000000.0
-BTOG,Financial,Financial Data & Stock Exchanges,1.92,130795.0,2860000.0
-BTQ,Technology,Software - Infrastructure,3.11,1249315.0,436640000.0
-BUR,Financial,Asset Management,5.14,5043165.0,1130000000.0
-BV,Industrials,Specialty Business Services,12.97,1130895.0,1210000000.0
-BW,Industrials,Specialty Industrial Machinery,14.54,2546058.0,1970000000.0
-BYRN,Industrials,Aerospace & Defense,5.33,389179.0,120910000.0
-BZAI,Technology,Software - Application,1.87,8929071.0,229630000.0
-CABA,Healthcare,Biotechnology,3.88,4663127.0,632630000.0
-CADL,Healthcare,Biotechnology,8.35,2533636.0,611610000.0
-CAIIU,Financial,Shell Companies,9.96,261416.0,219120000.0
-CAL,Consumer Cyclical,Apparel Retail,13.5,444452.0,455500000.0
-CANF,Healthcare,Biotechnology,3.51,29677.0,7510000.0
-CAPR,Healthcare,Biotechnology,30.38,3708612.0,1760000000.0
-CARS,Communication Services,Internet Content & Information,11.68,1098515.0,652950000.0
-CAST,Communication Services,Broadcasting,1.5,270720.0,61290000.0
-CATX,Healthcare,Medical Devices,3.76,794951.0,428710000.0
-CBRL,Consumer Cyclical,Restaurants,31.49,1027716.0,703830000.0
-CBUS,Healthcare,Biotechnology,1.44,251205.0,109940000.0
-CBZ,Industrials,Specialty Business Services,30.92,560373.0,1660000000.0
-CCCC,Healthcare,Biotechnology,2.95,1345554.0,287860000.0
-CCLD,Healthcare,Health Information Services,2.36,1871569.0,100280000.0
-CCO,Communication Services,Advertising Agencies,2.39,7360527.0,1220000000.0
-CCOI,Communication Services,Telecom Services,16.65,1184473.0,833790000.0
-CCRN,Healthcare,Medical Care Facilities,13.18,1809683.0,425960000.0
-CDIO,Healthcare,Biotechnology,1.83,48014.0,5420000.0
-CDNA,Healthcare,Diagnostics & Research,21.82,691249.0,1130000000.0
-CDXS,Healthcare,Biotechnology,2.85,1826223.0,259060000.0
-CDZI,Utilities,Utilities - Regulated Water,4.75,843159.0,396270000.0
-CERS,Healthcare,Medical Devices,2.61,2201174.0,522960000.00000006
-CERT,Healthcare,Health Information Services,6.31,4852995.0,967480000.0
-CEVA,Technology,Semiconductors,36.97,1051165.0,1030000000.0
-CFFN,Financial,Banks - Regional,7.85,691436.0,1020000000.0
-CGBD,Financial,Asset Management,11.52,787105.0,807850000.0
-CGC,Healthcare,Drug Manufacturers - Specialty & Generic,1.11,4533408.0,472680000.0
-CGEM,Healthcare,Biotechnology,14.55,625193.0,894210000.0
-CGNT,Technology,Software - Infrastructure,11.11,634639.0,811900000.0
-CGTX,Healthcare,Biotechnology,1.21,694269.0,108120000.0
-CHGG,Consumer Defensive,Education & Training Services,1.16,4233678.0,129870000.0
-CHNR,Basic Materials,Other Industrial Metals & Mining,4.3,9881.0,5300000.0
-CHRS,Healthcare,Biotechnology,1.75,674280.0,269880000.0
-CIIT,Industrials,Integrated Freight & Logistics,1.42,11587.0,5140000.0
-CIM,Real Estate,REIT - Mortgage,13.64,778603.0,1140000000.0
-CING,Healthcare,Biotechnology,5.27,261645.0,64560000.0
-CION,Financial,Asset Management,7.29,825254.0,362960000.0
-CLIK,Consumer Cyclical,Personal Services,2.23,30972.0,7280000.0
-CLNE,Energy,Oil & Gas Refining & Marketing,2.21,2310656.0,486700000.0
-CLOV,Healthcare,Healthcare Plans,3.12,10383693.0,1640000000.0
-CLPT,Healthcare,Medical Devices,12.82,1236484.0,384420000.0
-CLRB,Healthcare,Biotechnology,3.1,687282.0,13140000.0
-CLVT,Technology,Information Technology Services,2.78,4117365.0,1780000000.0
-CLYM,Healthcare,Biotechnology,11.37,1139467.0,651050000.0
-CMP,Basic Materials,Other Industrial Metals & Mining,27.93,721924.0,1170000000.0
-CMPS,Healthcare,Medical Care Facilities,9.91,3537150.0,952250000.0
-CMPX,Healthcare,Biotechnology,1.83,6520978.0,329560000.0
-CMRC,Technology,Software - Application,3.1,1827877.0,255790000.0
-CMTG,Real Estate,REIT - Mortgage,2.42,795731.0,339330000.0
-CNDT,Technology,Information Technology Services,1.76,1088829.0,272970000.0
-CNNE,Consumer Cyclical,Restaurants,14.19,527625.0,627490000.0
-CNSP,Healthcare,Biotechnology,7.29,212533.0,5920000.0
-CNTN,Healthcare,Biotechnology,3.02,355236.0,171100000.0
-CNTX,Healthcare,Biotechnology,2.38,537690.0,218670000.0
-CNXC,Technology,Information Technology Services,24.27,2215517.0,1480000000.0
-COAG,Healthcare,Biotechnology,25.12,207219.0,1170000000.0
-COCP,Healthcare,Biotechnology,1.44,191362.0,19850000.0
-CODI,Industrials,Conglomerates,12.48,1117961.0,938940000.0
-CODX,Healthcare,Medical Devices,2.53,10334112.0,9110000.0
-COLL,Healthcare,Drug Manufacturers - Specialty & Generic,37.8,697569.0,1230000000.0
-COUR,Consumer Defensive,Education & Training Services,5.78,6623724.0,978550000.0
-CPIX,Healthcare,Drug Manufacturers - Specialty & Generic,4.68,222149.0,70000000.0
-CRBU,Healthcare,Biotechnology,1.94,892097.0,192410000.0
-CRCT,Technology,Computer Hardware,4.3,734782.0,902560000.0
-CRDF,Healthcare,Biotechnology,1.64,451313.0,112120000.0
-CRDL,Healthcare,Drug Manufacturers - Specialty & Generic,1.32,578841.0,147670000.0
-CRE,Industrials,Specialty Business Services,2.81,11443.0,5660000.0
-CRF,Financial,Closed-End Fund - Equity,7.33,946501.0,1190000000.0
-CRI,Consumer Cyclical,Apparel Retail,35.33,917515.0,1300000000.0
-CRMD,Healthcare,Biotechnology,7.92,858922.0,621150000.0
-CRML,Basic Materials,Other Industrial Metals & Mining,12.53,10623514.0,1530000000.0
-CRNC,Technology,Software - Application,9.87,1772382.0,446000000.0
-CRON,Healthcare,Drug Manufacturers - Specialty & Generic,2.54,1215809.0,962790000.0
-CRSR,Technology,Computer Hardware,7.88,3993627.0,842230000.0
-CRVS,Healthcare,Biotechnology,15.55,980205.0,1310000000.0
-CSIQ,Technology,Solar,20.06,5713701.0,1360000000.0
-CSTE,Industrials,Building Products & Equipment,1.38,54129.0,47720000.0
-CSWC,Financial,Asset Management,23.88,550473.0,1440000000.0
-CTKB,Healthcare,Medical Devices,4.61,1361763.0,595350000.0
-CTLP,Technology,Software - Infrastructure,11.2,3431524.0,825820000.0
-CTMX,Healthcare,Biotechnology,3.98,5057019.0,866460000.0
-CTNT,Industrials,Integrated Freight & Logistics,2.92,7593639.0,5720000.0
-CUE,Healthcare,Biotechnology,35.0,244601.0,113940000.0
-CURV,Consumer Cyclical,Apparel Retail,1.56,283635.0,154930000.0
-CVGI,Consumer Cyclical,Auto Parts,5.1,582054.0,184920000.0
-CWH,Consumer Cyclical,Auto & Truck Dealerships,7.49,1873026.0,771360000.0
-CXIIU,Financial,Shell Companies,10.11,54295.0,367860000.0
-CXM,Technology,Software - Application,5.33,3414532.0,1330000000.0
-CYCN,Healthcare,Biotechnology,3.1,55333.0,13420000.0
-CYH,Healthcare,Medical Care Facilities,2.79,2280340.0,393160000.0
-CYN,Technology,Software - Application,1.63,279112.0,22180000.0
-CYPH,Healthcare,Biotechnology,1.19,4991887.0,107080000.0
-DAKT,Technology,Electronic Components,20.53,267984.0,991560000.0
-DBGI,Consumer Cyclical,Apparel Retail,1.7,571197.0,28270000.0
-DBI,Consumer Cyclical,Footwear & Accessories,6.97,224853.0,345690000.0
-DC,Basic Materials,Gold,6.01,692605.0,802440000.0
-DCH,Consumer Cyclical,Auto Parts,6.64,10758397.0,1570000000.0
-DDD,Technology,Computer Hardware,2.47,2807713.0,360770000.0
-DDL,Consumer Defensive,Grocery Stores,2.55,256305.0,464840000.0
-DEC,Energy,Oil & Gas Integrated,15.65,659985.0,1120000000.0
-DFDV,Financial,Asset Management,4.46,648636.0,131560000.0
-DFH,Consumer Cyclical,Residential Construction,14.32,568273.0,1310000000.0
-DGNX,Industrials,Consulting Services,1.37,419387.0,39870000.0
-DGXX,Utilities,Utilities - Independent Power Producers,6.63,16460763.0,487240000.0
-DHY,Financial,Closed-End Fund - Debt,1.78,769007.0,184430000.0
-DNA,Healthcare,Biotechnology,8.93,2212978.0,547930000.0
-DNUT,Consumer Defensive,Grocery Stores,3.6,2830721.0,619920000.0
-DOLE,Consumer Defensive,Farm Products,14.88,1248973.0,1420000000.0
-DOMO,Technology,Software - Application,3.84,497211.0,173360000.0
-DOUG,Real Estate,Real Estate Services,2.09,807348.0,184370000.0
-DPRO,Technology,Computer Hardware,5.48,2023830.0,200020000.0
-DQ,Technology,Solar,18.64,790059.0,1260000000.0
-DRMA,Healthcare,Biotechnology,1.26,38691.0,5070000.0
-DSL,Financial,Closed-End Fund - Debt,11.13,447611.0,1280000000.0
-DSX,Industrials,Marine Shipping,2.71,643251.0,334790000.0
-DUOT,Technology,Software - Application,8.34,538017.0,244330000.0
-DV,Communication Services,Advertising Agencies,11.06,2747918.0,1700000000.0
-DXC,Technology,Information Technology Services,9.43,16632610.0,1600000000.0
-DXST,Industrials,Waste Management,1.92,34661.0,3480000.0
-DXYZ,Financial,Asset Management,54.6,6841959.0,787880000.0
-EBS,Healthcare,Drug Manufacturers - Specialty & Generic,9.5,982476.0,490160000.0
-ECAT,Financial,Closed-End Fund - Equity,15.11,415582.0,1500000000.0
-ECC,Financial,Closed-End Fund - Debt,4.26,1117048.0,563210000.0
-ECVT,Basic Materials,Specialty Chemicals,14.14,2475650.0,1550000000.0
-ECX,Consumer Cyclical,Auto Parts,1.14,995946.0,406690000.0
-EDIT,Healthcare,Biotechnology,3.11,1115128.0,304490000.0
-EDSA,Healthcare,Biotechnology,16.3,292122.0,144840000.0
-EEIQ,Consumer Defensive,Education & Training Services,3.55,99216.0,5250000.0
-EFC,Real Estate,REIT - Mortgage,13.62,2184624.0,1700000000.0
-EFOI,Consumer Cyclical,"Furnishings, Fixtures & Appliances",3.93,79178.0,24780000.0
-EFOR,Technology,Information Technology Services,20.32,818905.0,833120000.0
-EGHT,Technology,Software - Application,2.74,2062959.0,381730000.0
-EGY,Energy,Oil & Gas E&P,5.6,2732542.0,583850000.0
-EH,Industrials,Aerospace & Defense,10.3,267768.0,538280000.0
-EHAB,Healthcare,Medical Care Facilities,13.79,584868.0,706400000.0
-EHTH,Financial,Insurance Brokers,1.89,431696.0,59990000.0
-ELAB,Healthcare,Biotechnology,1.98,306548.0,8810000.0
-ELDN,Healthcare,Biotechnology,3.88,1112089.0,294300000.0
-ELME,Real Estate,REIT - Residential,2.1,701217.0,186600000.0
-ELMT,Industrials,Aerospace & Defense,15.71,546191.0,439410000.0
-ELPW,Industrials,Electrical Equipment & Parts,6.43,565753.0,9080000.0
-EMBC,Healthcare,Medical Instruments & Supplies,3.64,6509258.0,215950000.0
-EMPD,Consumer Cyclical,Auto Manufacturers,5.04,197911.0,139440000.0
-ENGN,Healthcare,Biotechnology,1.5,17386930.0,100480000.0
-ENOV,Healthcare,Medical Devices,26.52,1537851.0,1530000000.0
-ENR,Industrials,Electrical Equipment & Parts,18.86,1088717.0,1290000000.0
-ENVB,Healthcare,Biotechnology,2.85,286879.0,5660000.0
-ENVX,Industrials,Electrical Equipment & Parts,6.61,4728687.0,1440000000.0
-EOLS,Healthcare,Drug Manufacturers - Specialty & Generic,6.36,844929.0,418840000.0
-EPC,Consumer Defensive,Household & Personal Products,21.25,920414.0,979230000.0
-ERII,Industrials,Pollution & Treatment Controls,9.13,1548704.0,470610000.0
-ERNA,Healthcare,Biotechnology,7.53,1460680.0,8780000.0
-ESPR,Healthcare,Drug Manufacturers - Specialty & Generic,3.14,7427985.0,808250000.0
-ESRT,Real Estate,REIT - Diversified,5.71,914656.0,976730000.0
-EU,Energy,Uranium,1.65,7747544.0,321430000.0
-EVC,Communication Services,Advertising Agencies,7.16,3814221.0,659000000.0
-EVER,Communication Services,Internet Content & Information,20.5,865827.0,725150000.0
-EVEX,Industrials,Aerospace & Defense,3.23,1100601.0,1130000000.0
-EVGO,Consumer Cyclical,Specialty Retail,1.97,4195896.0,618300000.0
-EVH,Healthcare,Health Information Services,4.18,2959853.0,470170000.0
-EVLV,Industrials,Security & Protection Services,7.05,3019212.0,1260000000.0
-EVMN,Healthcare,Biotechnology,22.92,413508.0,825540000.0
-EVTL,Industrials,Aerospace & Defense,2.81,3273633.0,357790000.0
-EVTV,Consumer Cyclical,Auto Manufacturers,2.05,2278285.0,26510000.0
-EWCZ,Consumer Defensive,Household & Personal Products,5.82,5669099.0,319140000.0
-EXFY,Technology,Software - Application,1.02,551571.0,103380000.0
-EYE,Consumer Cyclical,Specialty Retail,22.96,1064634.0,1820000000.0
-EYPT,Healthcare,Biotechnology,13.66,661335.0,1150000000.0
-FABC,Consumer Cyclical,Auto Manufacturers,4.57,1187934.0,6650000.0
-FATE,Healthcare,Biotechnology,2.39,2848835.0,277870000.0
-FATN,Technology,Software - Infrastructure,3.15,230655.0,43860000.0
-FBIO,Healthcare,Biotechnology,2.39,97289.0,76960000.0
-FBRT,Real Estate,REIT - Mortgage,9.09,910324.0,699590000.0
-FCEL,Industrials,Electrical Equipment & Parts,13.7,9610383.0,725800000.0
-FCF,Financial,Banks - Regional,18.56,519248.0,1900000000.0
-FCHL,Consumer Defensive,Education & Training Services,1.73,309459.0,2130000.0
-FCUV,Technology,Scientific & Technical Instruments,1.0,68620.0,1030000.0
-FDMT,Healthcare,Biotechnology,10.14,832112.0,530070000.00000006
-FEED,Healthcare,Medical Devices,1.19,937870.0,4400000.0
-FF,Basic Materials,Specialty Chemicals,4.9,214460.0,214930000.0
-FIGS,Consumer Cyclical,Apparel Manufacturing,11.63,11615451.0,1930000000.0
-FINV,Financial,Credit Services,5.17,892761.0,671840000.0
-FIP,Industrials,Conglomerates,4.86,2783514.0,574270000.0
-FIVN,Technology,Software - Infrastructure,22.1,2941889.0,1690000000.0
-FJET,Industrials,Aerospace & Defense,5.68,1380027.0,250910000.0
-FLGT,Healthcare,Diagnostics & Research,15.96,757800.0,453270000.0
-FLNA,Healthcare,Biotechnology,1.3,420496.0,62800000.0
-FLNG,Energy,Oil & Gas Midstream,32.72,414838.0,1740000000.0
-FLO,Consumer Defensive,Packaged Foods,8.44,4702017.0,1790000000.0
-FLWS,Consumer Cyclical,Specialty Retail,4.82,1665020.0,308800000.0
-FLYX,Industrials,Airlines,2.35,167262.0,221730000.0
-FMC,Basic Materials,Agricultural Inputs,13.4,3858672.0,1680000000.0
-FNKO,Consumer Cyclical,Leisure,5.26,4328924.0,294170000.0
-FOSL,Consumer Cyclical,Footwear & Accessories,4.43,388938.0,261709999.99999997
-FOXF,Consumer Cyclical,Auto Parts,17.8,1273701.0,746400000.0
-FPI,Real Estate,REIT - Specialty,10.58,276586.0,461470000.0
-FRMM,Technology,Software - Application,4.61,370415.0,93640000.0
-FSCO,Financial,Closed-End Fund - Debt,5.15,907194.0,1040000000.0
-FTHAU,Financial,Shell Companies,9.97,287244.0,103340000.0
-FTRE,Healthcare,Biotechnology,15.43,1390653.0,1460000000.0
-FUBO,Communication Services,Broadcasting,10.28,1786673.0,1110000000.0
-FULC,Healthcare,Biotechnology,7.01,645540.0,467100000.0
-FUSE,Technology,Software - Application,1.51,74039.0,43700000.0
-FVRR,Communication Services,Internet Content & Information,11.45,1060612.0,411640000.0
-FWDI,Consumer Cyclical,Footwear & Accessories,4.79,1227569.0,398240000.0
-FWRD,Industrials,Integrated Freight & Logistics,9.87,9887866.0,311440000.0
-FWRG,Consumer Cyclical,Restaurants,12.1,990780.0,745900000.0
-GAB,Financial,Closed-End Fund - Equity,5.67,869156.0,1760000000.0
-GAMB,Consumer Cyclical,Gambling,4.51,725520.0,158290000.0
-GANX,Healthcare,Biotechnology,1.82,337981.0,77630000.0
-GAU,Basic Materials,Gold,2.58,1685111.0,673430000.0
-GCGRU,Financial,Shell Companies,10.1,978328.0,415670000.0
-GCT,Technology,Software - Infrastructure,40.18,1564180.0,1470000000.0
-GCTS,Technology,Semiconductors,1.7,12337066.0,123240000.0
-GDOT,Financial,Credit Services,12.62,292621.0,715070000.0
-GDRX,Healthcare,Health Information Services,2.92,2923264.0,1000000000.0
-GDYN,Technology,Information Technology Services,6.97,3021522.0,583290000.0
-GEMI,Financial,Capital Markets,5.0,1985006.0,599930000.0
-GENB,Healthcare,Biotechnology,13.66,291652.0,1740000000.0
-GENI,Communication Services,Internet Content & Information,4.4,6056232.0,1130000000.0
-GERN,Healthcare,Biotechnology,1.39,12745303.0,891710000.0
-GEVO,Basic Materials,Specialty Chemicals,1.83,6127222.0,445440000.0
-GGN,Financial,Closed-End Fund - Equity,5.36,372161.0,837360000.0
-GIII,Consumer Cyclical,Apparel Manufacturing,31.77,255350.0,1340000000.0
-GILT,Technology,Communication Equipment,19.39,738970.0,1470000000.0
-GLDG,Basic Materials,Gold,1.2,1241316.0,256800000.0
-GLND,Energy,Oil & Gas E&P,3.06,1301127.0,129759999.99999999
-GLOB,Technology,Information Technology Services,39.23,1472356.0,1690000000.0
-GLUE,Healthcare,Biotechnology,19.39,547049.0,1640000000.0
-GMEX,Technology,Consumer Electronics,2.02,2317263.0,2140000.0
-GNL,Real Estate,REIT - Diversified,9.23,2090720.0,1960000000.0
-GO,Consumer Defensive,Grocery Stores,8.19,2130185.0,803870000.0
-GOGO,Communication Services,Telecom Services,4.4,1877422.0,595050000.0
-GOLD,Financial,Capital Markets,45.39,934794.0,1150000000.0
-GORO,Basic Materials,Other Precious Metals & Mining,1.31,2722240.0,212070000.0
-GP,Industrials,Farm & Heavy Construction Machinery,1.1,1241553.0,5530000.0
-GPRE,Basic Materials,Chemicals,18.19,2407504.0,1270000000.0
-GPRK,Energy,Oil & Gas E&P,9.33,490920.0,603450000.0
-GPRO,Technology,Consumer Electronics,1.37,4566211.0,227740000.0
-GRCE,Healthcare,Biotechnology,2.34,302936.0,36210000.0
-GRNT,Energy,Oil & Gas E&P,5.0,1814306.0,659480000.0
-GRO,Basic Materials,Other Industrial Metals & Mining,2.64,711108.0,143210000.0
-GROY,Basic Materials,Gold,3.61,1747245.0,833160000.0
-GRPN,Communication Services,Internet Content & Information,17.78,6212671.0,675360000.0
-GRRR,Technology,Software - Infrastructure,15.1,1475709.0,417570000.0
-GSBD,Financial,Asset Management,9.28,2838420.0,1040000000.0
-GSHD,Financial,Insurance Brokers,40.86,261789.0,1450000000.0
-GSIT,Technology,Semiconductors,8.45,1450464.0,305770000.0
-GSM,Basic Materials,Other Industrial Metals & Mining,4.07,1382563.0,761460000.0
-GT,Consumer Cyclical,Auto Parts,6.51,8333249.0,1870000000.0
-GTE,Energy,Oil & Gas E&P,9.15,472487.0,322980000.0
-GTM,Technology,Software - Application,6.38,19864132.0,1900000000.0
-GTN,Communication Services,Broadcasting,4.33,2093127.0,515809999.99999994
-GTY,Real Estate,REIT - Retail,33.02,250465.0,2000000000.0
-GVH,Industrials,Integrated Freight & Logistics,4.37,34575.0,9250000.0
-GXAI,Communication Services,Electronic Gaming & Multimedia,1.26,512959.0,12880000.0
-HCAI,Industrials,Farm & Heavy Construction Machinery,12.0,46130.0,13950000.0
-HCAT,Healthcare,Health Information Services,1.52,413895.0,111850000.0
-HCSG,Healthcare,Medical Care Facilities,23.06,451888.0,1580000000.0
-HCTI,Healthcare,Health Information Services,2.26,59036.0,4450000.0
-HELE,Consumer Defensive,Household & Personal Products,24.71,637938.0,574700000.0
-HELP,Healthcare,Biotechnology,5.31,619729.0,265709999.99999997
-HIVE,Financial,Capital Markets,2.82,11610497.0,716250000.0
-HKD,Technology,Software - Application,1.65,294614.0,325080000.0
-HLF,Consumer Defensive,Packaged Foods,14.31,2344977.0,1480000000.0
-HLIT,Technology,Communication Equipment,12.81,2390291.0,1410000000.0
-HLLY,Consumer Cyclical,Auto Parts,2.82,1326446.0,337970000.0
-HLMN,Industrials,Tools & Accessories,7.86,1032818.0,1540000000.0
-HLX,Energy,Oil & Gas Equipment & Services,9.66,1453011.0,1420000000.0
-HMH,Energy,Oil & Gas Equipment & Services,21.5,128569.0,926650000.0
-HNRG,Energy,Thermal Coal,18.81,1036872.0,886520000.0
-HNST,Consumer Defensive,Household & Personal Products,3.64,2601494.0,400690000.0
-HOLO,Technology,Electronic Components,1.75,246123.0,40100000.0
-HOPE,Financial,Banks - Regional,12.41,693723.0,1590000000.0
-HOVR,Industrials,Aerospace & Defense,2.39,3076126.0,108180000.0
-HPK,Energy,Oil & Gas E&P,5.82,879959.0,735400000.0
-HPP,Real Estate,REIT - Office,10.95,1422210.0,601680000.0
-HRMY,Healthcare,Biotechnology,30.99,750529.0,1790000000.0
-HROW,Healthcare,Drug Manufacturers - Specialty & Generic,38.23,460148.0,1420000000.0
-HRTX,Healthcare,Biotechnology,1.21,1794647.0,228250000.0
-HRZN,Financial,Asset Management,4.54,761475.0,309910000.0
-HTCO,Industrials,Marine Shipping,5.84,284267.0,43130000.0
-HTZ,Industrials,Rental & Leasing Services,6.05,6854777.0,1890000000.0
-HUMA,Healthcare,Biotechnology,1.06,5588500.0,235340000.0
-HURA,Healthcare,Biotechnology,2.38,490494.0,151560000.0
-HUYA,Communication Services,Entertainment,3.1,828698.0,226760000.0
-HYLN,Consumer Cyclical,Auto Parts,2.46,1714482.0,438660000.0
-HYPR,Healthcare,Medical Devices,1.69,354183.0,166500000.0
-HYT,Financial,Closed-End Fund - Debt,8.66,819521.0,1410000000.0
-IACQU,Financial,Shell Companies,10.02,465812.0,226850000.0
-IART,Healthcare,Medical Devices,13.92,1295016.0,1080000000.0
-IAUX,Basic Materials,Gold,1.58,8452311.0,1330000000.0
-IBIO,Healthcare,Biotechnology,1.71,1835398.0,61810000.0
-IFRX,Healthcare,Biotechnology,2.58,7487347.0,186520000.0
-IGR,Financial,Closed-End Fund - Foreign,4.83,1079306.0,731260000.0
-IHRT,Communication Services,Broadcasting,5.68,1055896.0,770210000.0
-IKT,Healthcare,Biotechnology,2.06,955805.0,271990000.0
-IMAX,Communication Services,Entertainment,35.3,1270304.0,1940000000.0
-IMMR,Technology,Software - Application,6.68,544888.0,221110000.0
-IMMX,Healthcare,Biotechnology,9.75,661212.0,530510000.0
-IMPP,Energy,Oil & Gas Midstream,5.01,445350.0,223690000.0
-IMRX,Healthcare,Biotechnology,5.22,497108.0,337490000.0
-IMSR,Utilities,Utilities - Regulated Electric,7.38,2597845.0,781800000.0
-INDI,Technology,Semiconductors,4.3,5827750.0,976970000.0
-INDO,Energy,Oil & Gas E&P,3.09,482920.0,47550000.0
-INHD,Basic Materials,Steel,1.64,419199.0,4130000.0
-INMD,Healthcare,Medical Devices,13.96,1384398.0,884490000.0
-INN,Real Estate,REIT - Hotel & Motel,5.53,475156.0,670600000.0
-INO,Healthcare,Biotechnology,1.46,21007954.0,119630000.0
-INSP,Healthcare,Medical Devices,44.26,971774.0,1280000000.0
-INTA,Technology,Software - Application,24.84,943824.0,1910000000.0
-INV,Financial,Asset Management,7.0,3802278.0,560490000.0
-INVA,Healthcare,Biotechnology,22.89,539241.0,1690000000.0
-INVX,Energy,Oil & Gas Equipment & Services,26.6,272650.0,1830000000.0
-IOVA,Healthcare,Biotechnology,3.62,20688566.0,1620000000.0
-IPSC,Healthcare,Biotechnology,2.29,472790.0,412330000.0
-IQ,Communication Services,Entertainment,1.2,4338777.0,636560000.0
-IRD,Healthcare,Biotechnology,4.99,1304093.0,356300000.0
-IRWD,Healthcare,Drug Manufacturers - Specialty & Generic,4.22,2552675.0,694670000.0
-ISPC,Healthcare,Diagnostics & Research,5.12,175855.0,6740000.0
-ISSC,Industrials,Aerospace & Defense,21.36,233874.0,379750000.0
-ITRG,Basic Materials,Other Precious Metals & Mining,2.89,1436114.0,584240000.0
-IVR,Real Estate,REIT - Mortgage,8.23,2103190.0,763940000.0
-IVVD,Healthcare,Biotechnology,1.5,1467748.0,424210000.0
-IXHL,Healthcare,Drug Manufacturers - Specialty & Generic,4.58,336765.0,1590000000.0
-JACK,Consumer Cyclical,Restaurants,13.79,615817.0,262510000.0
-JANX,Healthcare,Biotechnology,14.18,865870.0,864450000.0
-JBGS,Real Estate,REIT - Diversified,15.56,497454.0,1160000000.0
-JBI,Industrials,Building Products & Equipment,5.21,1005587.0,710600000.0
-JBIO,Healthcare,Biotechnology,25.81,697493.0,1270000000.0
-JBLU,Industrials,Airlines,5.11,20486786.0,1900000000.0
-JCSE,Industrials,Specialty Industrial Machinery,1.11,19770.0,5530000.0
-JDZG,Consumer Defensive,Education & Training Services,1.56,141392.0,2210000.0
-JELD,Industrials,Building Products & Equipment,1.7,1526006.0,146460000.0
-JFR,Financial,Closed-End Fund - Debt,7.53,404756.0,1210000000.0
-JKS,Technology,Solar,24.56,1042229.0,1230000000.0
-JMIA,Consumer Cyclical,Internet Retail,7.77,4664645.0,962310000.0
-JQC,Financial,Closed-End Fund - Debt,4.86,549857.0,718390000.0
-KALV,Healthcare,Biotechnology,26.73,2345168.0,1370000000.0
-KDK,Technology,Software - Infrastructure,7.24,8578919.0,1320000000.0
-KITT,Industrials,Aerospace & Defense,2.22,155739.0,9680000.0
-KLC,Consumer Defensive,Education & Training Services,3.92,862118.0,464240000.0
-KLTR,Technology,Software - Application,1.38,422611.0,205260000.0
-KMPR,Financial,Insurance - Property & Casualty,30.29,1157718.0,1780000000.0
-KODK,Industrials,Specialty Business Services,11.41,2954935.0,1110000000.0
-KOPN,Technology,Electronic Components,5.41,15304805.0,992000000.0
-KOS,Energy,Oil & Gas E&P,2.75,8092646.0,1630000000.0
-KPTI,Healthcare,Biotechnology,8.64,295536.0,194770000.0
-KREF,Real Estate,REIT - Mortgage,6.61,762785.0,427640000.0
-KRP,Energy,Oil & Gas E&P,14.55,748752.0,1700000000.0
-KSCP,Industrials,Security & Protection Services,2.99,478694.0,48690000.0
-KSS,Consumer Cyclical,Department Stores,14.5,3830114.0,1630000000.0
-KULR,Technology,Electronic Components,2.89,1197811.0,133630000.0
-KURA,Healthcare,Biotechnology,9.42,889208.0,836140000.0
-KW,Real Estate,Real Estate Services,11.02,461452.0,1540000000.0
-KYTX,Healthcare,Biotechnology,9.35,461289.0,565960000.0
-LAB,Healthcare,Medical Devices,1.02,1135677.0,398180000.0
-LABT,Healthcare,Biotechnology,3.1,152214.0,43460000.0
-LAC,Basic Materials,Other Industrial Metals & Mining,5.57,11117827.0,1750000000.0
-LADR,Real Estate,REIT - Mortgage,10.26,416232.0,1310000000.0
-LAES,Technology,Semiconductors,2.92,11124028.0,672400000.0
-LAND,Real Estate,REIT - Specialty,9.73,437036.0,408300000.0
-LAR,Basic Materials,Other Industrial Metals & Mining,11.68,3184178.0,1910000000.0
-LC,Financial,Banks - Regional,16.64,2003144.0,1920000000.0
-LCTX,Healthcare,Biotechnology,1.37,1166522.0,341250000.0
-LDI,Financial,Mortgage Finance,1.4,2634969.0,323140000.0
-LEG,Consumer Cyclical,"Furnishings, Fixtures & Appliances",10.06,2362928.0,1370000000.0
-LENZ,Healthcare,Biotechnology,10.06,640400.0,315430000.0
-LFMD,Healthcare,Health Information Services,4.78,840813.0,231170000.0
-LGO,Basic Materials,Other Industrial Metals & Mining,1.14,759086.0,95380000.0
-LIDR,Technology,Software - Infrastructure,1.99,1113066.0,90240000.0
-LILAK,Communication Services,Telecom Services,7.82,891018.0,1560000000.0
-LINC,Consumer Defensive,Education & Training Services,44.75,767329.0,1420000000.0
-LIND,Consumer Cyclical,Travel Services,21.1,772028.0,1380000000.0
-LMRI,Healthcare,Medical Devices,10.42,369855.0,1000000000.0
-LNKS,Industrials,Electrical Equipment & Parts,1.42,200806.0,2280000.0
-LOCL,Consumer Defensive,Farm Products,1.53,48287.0,34810000.0
-LODE,Basic Materials,Other Precious Metals & Mining,2.94,4043176.0,223180000.0
-LPG,Energy,Oil & Gas Midstream,40.29,457937.0,1720000000.0
-LPRO,Financial,Credit Services,1.9,2432482.0,224610000.0
-LPTH,Technology,Electronic Components,11.51,5773839.0,722710000.0
-LRHC,Real Estate,Real Estate Services,1.61,278557.0,1690000.0
-LRMR,Healthcare,Biotechnology,3.97,1496786.0,412420000.0
-LSPD,Technology,Software - Application,9.86,619182.0,1350000000.0
-LTBR,Industrials,Electrical Equipment & Parts,13.43,832196.0,472030000.0
-LTRN,Healthcare,Biotechnology,2.1,118011.0,23740000.0
-LTRX,Technology,Communication Equipment,6.16,808937.0,245270000.0
-LU,Financial,Credit Services,1.95,726079.0,1640000000.0
-LUCD,Healthcare,Medical Devices,1.03,761551.0,182570000.0
-LUNG,Healthcare,Medical Devices,1.26,605873.0,53220000.0
-LX,Financial,Credit Services,2.09,874391.0,275520000.0
-LXEO,Healthcare,Biotechnology,5.83,994001.0,431930000.0
-LXRX,Healthcare,Biotechnology,2.0,7018739.0,888390000.0
-LXU,Basic Materials,Chemicals,13.91,759262.0,1000000000.0
-LZ,Industrials,Specialty Business Services,6.13,3512644.0,1050000000.0
-LZM,Basic Materials,Other Industrial Metals & Mining,5.96,682381.0,535830000.00000006
-MAIA,Healthcare,Biotechnology,1.32,305480.0,80090000.0
-MAN,Industrials,Staffing & Employment Services,29.84,504557.0,1390000000.0
-MASK,Technology,Software - Application,3.18,24400160.0,3590000.0
-MAX,Communication Services,Internet Content & Information,9.11,428304.0,568010000.0
-MAZE,Healthcare,Biotechnology,26.03,534975.0,1440000000.0
-MBC,Consumer Cyclical,"Furnishings, Fixtures & Appliances",7.61,3893502.0,973960000.0
-MBOT,Healthcare,Medical Instruments & Supplies,2.13,962779.0,143050000.0
-MBX,Healthcare,Biotechnology,40.97,1882611.0,1950000000.0
-MCAHU,Financial,Shell Companies,10.03,364135.0,61080000.0
-MD,Healthcare,Medical Care Facilities,23.51,798764.0,1930000000.0
-MDAI,Healthcare,Medical Devices,2.31,504747.0,73510000.0
-MDXG,Healthcare,Biotechnology,3.6,1766533.0,536200000.00000006
-METC,Basic Materials,Coking Coal,14.81,944795.0,947970000.0
-MFA,Real Estate,REIT - Mortgage,9.9,1149203.0,1010000000.0
-MFIC,Financial,Asset Management,11.68,735325.0,1080000000.0
-MGNX,Healthcare,Biotechnology,3.0,814239.0,190680000.0
-MGTX,Healthcare,Biotechnology,9.82,380233.0,908910000.0
-MIMI,Industrials,Engineering & Construction,2.9,92599.0,7980000.0
-MIST,Healthcare,Biotechnology,1.92,602329.0,225920000.0
-MITK,Technology,Software - Application,15.61,2319847.0,704930000.0
-MLEC,Healthcare,Biotechnology,8.9,24330.0,6460000.0
-MLKN,Consumer Cyclical,"Furnishings, Fixtures & Appliances",16.32,415508.0,1120000000.0
-MLTX,Healthcare,Biotechnology,17.06,961898.0,1240000000.0
-MNDR,Healthcare,Health Information Services,1.06,234401.0,4480000.0
-MNKD,Healthcare,Biotechnology,3.52,9538114.0,1090000000.0
-MNRO,Consumer Cyclical,Auto Parts,17.72,652164.0,531950000.00000006
-MNTN,Technology,Software - Application,8.56,1140251.0,632350000.0
-MNTS,Industrials,Aerospace & Defense,5.46,4489115.0,31290000.0
-MOBI,Healthcare,Medical Devices,11.75,2507872.0,388810000.0
-MOBX,Technology,Semiconductors,2.0,682327.0,21290000.0
-MOMO,Communication Services,Internet Content & Information,6.23,372099.0,695270000.0
-MQ,Technology,Software - Infrastructure,4.17,3628321.0,1770000000.0
-MRAM,Technology,Semiconductors,26.99,6265717.0,632850000.0
-MRLN,Industrials,Aerospace & Defense,8.23,1286074.0,695800000.0
-MRTN,Industrials,Trucking,15.58,1027245.0,1270000000.0
-MRVI,Healthcare,Biotechnology,4.85,11242363.0,1250000000.0
-MSDL,Financial,Asset Management,15.48,793418.0,1310000000.0
-MTEK,Technology,Electronic Components,1.17,55833.0,11350000.0
-MTNE-U,Financial,Shell Companies,10.03,311493.0,202610000.0
-MUX,Basic Materials,Other Precious Metals & Mining,24.23,1663994.0,1450000000.0
-MVST,Consumer Cyclical,Auto Parts,2.13,7387044.0,707230000.0
-MX,Technology,Semiconductors,4.53,3494151.0,165080000.0
-MYGN,Healthcare,Diagnostics & Research,4.29,1983386.0,405180000.0
-MYSE,Technology,Software - Application,1.82,301254.0,7750000.0
-NABL,Technology,Information Technology Services,4.69,1711392.0,883490000.0
-NAC,Financial,Closed-End Fund - Debt,11.98,530487.0,1870000000.0
-NAGE,Healthcare,Biotechnology,4.17,1787470.0,332120000.0
-NAK,Basic Materials,Other Industrial Metals & Mining,2.15,5154378.0,1200000000.0
-NAMM,Basic Materials,Gold,1.59,664373.0,86630000.0
-NAT,Energy,Oil & Gas Midstream,5.92,2247435.0,1250000000.0
-NAVI,Financial,Credit Services,8.54,560852.0,802670000.0
-NB,Basic Materials,Other Industrial Metals & Mining,6.09,3340106.0,885000000.0
-NBHC,Financial,Banks - Regional,42.85,244521.0,1920000000.0
-NBP,Healthcare,Biotechnology,2.2,396099.0,253840000.0
-NCI,Consumer Cyclical,Apparel Manufacturing,1.12,1470860.0,4550000.0
-NEO,Healthcare,Diagnostics & Research,8.96,1746541.0,1170000000.0
-NEOG,Healthcare,Medical Devices,9.05,1596272.0,1970000000.0
-NEOV,Industrials,Electrical Equipment & Parts,2.64,477554.0,112760000.0
-NEWP,Basic Materials,Silver,5.71,800768.0,1050000000.0
-NEXA,Basic Materials,Other Industrial Metals & Mining,14.33,1207486.0,1900000000.0
-NEXR,Consumer Cyclical,Internet Retail,1.73,105993.0,1130000.0
-NFGC,Basic Materials,Gold,2.18,1128042.0,752560000.0
-NHP,Real Estate,REIT - Healthcare Facilities,14.12,624798.0,241500000.0
-NIVF,Healthcare,Medical Care Facilities,1.21,154001.0,690000.0
-NKLR,Utilities,Utilities - Regulated Electric,5.78,445260.0,638700000.0
-NKTX,Healthcare,Biotechnology,3.19,681507.0,227420000.0
-NMAX,Communication Services,Broadcasting,6.34,1163449.0,818740000.0
-NMFC,Financial,Asset Management,8.28,622349.0,782070000.0
-NMG,Basic Materials,Other Industrial Metals & Mining,2.04,840595.0,328090000.0
-NMRA,Healthcare,Biotechnology,1.83,2129663.0,339070000.0
-NNBR,Industrials,Conglomerates,2.8,2033083.0,147770000.0
-NNDM,Technology,Computer Hardware,1.58,5133116.0,326760000.0
-NNE,Industrials,Specialty Industrial Machinery,27.45,2279035.0,1430000000.0
-NNOX,Healthcare,Medical Devices,1.73,1228300.0,120390000.0
-NOMD,Consumer Defensive,Packaged Foods,9.44,2481586.0,1340000000.0
-NPKI,Energy,Oil & Gas Equipment & Services,14.95,630226.0,1260000000.0
-NPT,Consumer Cyclical,Specialty Retail,1.38,64402.0,30620000.0
-NPWR,Industrials,Specialty Industrial Machinery,2.0,739392.0,448830000.0
-NRDS,Communication Services,Internet Content & Information,9.14,1191993.0,610090000.0
-NRGV,Utilities,Utilities - Renewable,4.53,4497933.0,783580000.0
-NRIX,Healthcare,Biotechnology,16.52,1292954.0,1710000000.0
-NRXP,Healthcare,Biotechnology,3.08,984395.0,101850000.0
-NSP,Industrials,Staffing & Employment Services,32.59,606807.0,1240000000.0
-NSSC,Industrials,Security & Protection Services,40.82,343554.0,1460000000.0
-NTGR,Technology,Communication Equipment,27.47,661282.0,737290000.0
-NTIP,Industrials,Specialty Business Services,1.47,109219.0,33509999.999999996
-NTLA,Healthcare,Biotechnology,14.09,5803742.0,1660000000.0
-NUAI,Technology,Software - Infrastructure,4.99,5930156.0,494010000.0
-NUS,Consumer Defensive,Household & Personal Products,7.16,784396.0,352110000.0
-NUVB,Healthcare,Biotechnology,4.79,2918421.0,1670000000.0
-NVA,Basic Materials,Other Industrial Metals & Mining,6.6,540270.0,250870000.0
-NVAX,Healthcare,Biotechnology,10.11,13353902.0,1660000000.0
-NVRI,Industrials,Waste Management,19.26,735536.0,1590000000.0
-NWL,Consumer Defensive,Household & Personal Products,4.54,5841325.0,1930000000.0
-NXDR,Communication Services,Internet Content & Information,2.02,6930644.0,762820000.0
-NXTT,Technology,Software - Application,1.48,63385.0,112870000.0
-OBE,Energy,Oil & Gas E&P,12.43,800269.0,836660000.0
-OCFC,Financial,Banks - Regional,18.8,400052.0,1080000000.0
-OCG,Consumer Cyclical,Internet Retail,2.0,147609.0,3880000.0
-OCGN,Healthcare,Biotechnology,1.51,10152432.0,511160000.0
-OCSL,Financial,Asset Management,12.15,1067595.0,1070000000.0000001
-ODD,Consumer Defensive,Household & Personal Products,14.79,871519.0,837950000.0
-ODV,Basic Materials,Gold,3.28,1438714.0,999090000.0
-OEC,Basic Materials,Specialty Chemicals,7.61,497257.0,429120000.0
-OFRM,Consumer Defensive,Packaged Foods,16.33,1294741.0,683900000.0
-OGI,Healthcare,Drug Manufacturers - Specialty & Generic,1.36,617806.0,185420000.0
-OI,Consumer Cyclical,Packaging & Containers,9.29,1924839.0,1420000000.0
-OIS,Energy,Oil & Gas Equipment & Services,8.66,670089.0,521270000.0
-OLMA,Healthcare,Biotechnology,14.9,592327.0,1300000000.0
-OLPX,Consumer Cyclical,Specialty Retail,2.04,1977814.0,1370000000.0
-OMCL,Healthcare,Health Information Services,43.82,320993.0,1990000000.0
-OMDA,Healthcare,Health Information Services,14.82,3233551.0,873270000.0
-OMER,Healthcare,Biotechnology,14.13,863194.0,1020000000.0
-OMEX,Basic Materials,Other Industrial Metals & Mining,1.22,1495075.0,71210000.0
-ONEG,Industrials,Engineering & Construction,1.4,3740783.0,22400000.0
-ONFO,Communication Services,Internet Content & Information,1.14,157443.0,6680000.0
-ONMD,Healthcare,Health Information Services,1.02,201539.0,56030000.0
-OPK,Healthcare,Diagnostics & Research,1.14,1942294.0,860810000.0
-OPRA,Communication Services,Internet Content & Information,18.74,326539.0,1680000000.0
-OPRT,Financial,Credit Services,5.74,479743.0,262769999.99999997
-OPTU,Communication Services,Telecom Services,1.13,4994498.0,531590000.00000006
-OPTX,Technology,Electronic Components,7.32,591640.0,291710000.0
-ORC,Real Estate,REIT - Mortgage,7.05,5877537.0,1410000000.0
-ORGO,Healthcare,Drug Manufacturers - Specialty & Generic,2.37,2965273.0,304960000.0
-ORIC,Healthcare,Biotechnology,8.85,1258157.0,916130000.0
-OSG,Financial,Insurance - Specialty,5.37,1650161.0,241720000.0
-OSPN,Technology,Software - Infrastructure,12.23,753894.0,453400000.0
-OSS,Technology,Computer Hardware,15.68,2652433.0,388380000.0
-OSTX,Healthcare,Biotechnology,1.66,299976.0,69780000.0
-OTAI-U,Financial,Shell Companies,9.99,2847379.0,99900000.0
-OUST,Technology,Electronic Components,25.2,3848575.0,1600000000.0
-OVID,Healthcare,Biotechnology,2.8,1516148.0,484500000.0
-OXLC,Financial,Closed-End Fund - Debt,10.18,544574.0,993570000.0
-OXSQ,Financial,Asset Management,1.82,2001441.0,170220000.0
-PACB,Healthcare,Medical Devices,1.41,9870271.0,425820000.0
-PACK,Consumer Cyclical,Packaging & Containers,6.51,839571.0,556900000.0
-PALI,Healthcare,Biotechnology,1.8,3037699.0,301360000.0
-PANL,Industrials,Marine Shipping,7.84,397509.0,512100000.0
-PAPL,Financial,Mortgage Finance,1.13,334025.0,29480000.0
-PAR,Technology,Software - Application,14.4,2266703.0,593950000.0
-PAVS,Consumer Defensive,Packaged Foods,1.24,37797.0,1300000.0
-PAX,Financial,Asset Management,12.37,1956088.0,1970000000.0
-PAYO,Technology,Software - Infrastructure,5.16,8382271.0,1730000000.0
-PAYS,Technology,Software - Infrastructure,6.22,1033488.0,343250000.0
-PBM,Healthcare,Biotechnology,5.59,134639.0,1680000.0
-PCRX,Healthcare,Drug Manufacturers - Specialty & Generic,23.15,513960.0,910600000.0
-PCT,Industrials,Pollution & Treatment Controls,9.53,5057511.0,1720000000.0
-PD,Technology,Software - Application,7.29,1912939.0,619500000.0
-PDM,Real Estate,REIT - Office,8.48,712524.0,1060000000.0
-PDO,Financial,Closed-End Fund - Debt,13.29,843702.0,1890000000.0
-PDSB,Healthcare,Biotechnology,1.25,912920.0,69770000.0
-PDYN,Technology,Software - Infrastructure,6.11,1139873.0,288660000.0
-PEB,Real Estate,REIT - Hotel & Motel,14.72,1324850.0,1670000000.0
-PEPG,Healthcare,Biotechnology,1.76,698752.0,121640000.0
-PFLT,Financial,Asset Management,8.92,1798149.0,885020000.0
-PFN,Financial,Closed-End Fund - Debt,7.09,806978.0,692230000.0
-PGEN,Healthcare,Biotechnology,4.21,4870137.0,1490000000.0
-PGNY,Healthcare,Healthcare Plans,23.72,4411386.0,1860000000.0
-PGY,Technology,Software - Infrastructure,15.19,6044177.0,1250000000.0
-PHAT,Healthcare,Biotechnology,12.16,628337.0,969830000.0
-PHIO,Healthcare,Biotechnology,1.07,324303.0,12430000.0
-PHK,Financial,Closed-End Fund - Debt,4.64,806747.0,841100000.0
-PHR,Healthcare,Health Information Services,10.17,1274433.0,617960000.0
-PICS,Technology,Software - Infrastructure,12.25,312389.0,1590000000.0
-PLAY,Communication Services,Entertainment,10.31,1506489.0,358160000.0
-PLBY,Consumer Cyclical,Leisure,1.8,1197622.0,206750000.0
-PLG,Basic Materials,Other Precious Metals & Mining,1.78,895950.0,225760000.0
-PLRX,Healthcare,Biotechnology,1.22,208195.0,75540000.0
-PLTK,Communication Services,Electronic Gaming & Multimedia,3.63,2249954.0,1380000000.0
-PLUN-U,Financial,Shell Companies,10.02,37867.0,102300000.0
-PLX,Healthcare,Biotechnology,1.94,621179.0,156310000.0
-PLYX,Healthcare,Biotechnology,3.66,144630.0,173260000.0
-PMAX,Industrials,Specialty Business Services,3.98,6783480.0,4130000.0
-PMT,Real Estate,REIT - Mortgage,11.0,1240399.0,959230000.0
-PMVP,Healthcare,Biotechnology,1.41,274968.0,75190000.0
-PN,Technology,Solar,5.81,529963.0,83150000.0
-PNNT,Financial,Asset Management,4.57,1267342.0,298400000.0
-POAS,Healthcare,Medical Devices,2.39,973684.0,68900000.0
-POET,Technology,Semiconductors,10.95,72052600.0,1670000000.0
-POLA,Industrials,Electrical Equipment & Parts,1.89,153575.0,6880000.0
-POWW,Industrials,Aerospace & Defense,2.02,376850.0,236920000.0
-PRA,Financial,Insurance - Property & Casualty,24.7,864957.0,1270000000.0
-PRAA,Financial,Credit Services,19.18,1314416.0,737540000.0
-PRCH,Financial,Insurance - Property & Casualty,10.97,2138366.0,1200000000.0
-PRCT,Healthcare,Medical Devices,25.4,1370264.0,1450000000.0
-PRFX,Healthcare,Drug Manufacturers - Specialty & Generic,1.94,23753.0,1640000.0
-PRG,Industrials,Rental & Leasing Services,36.34,328829.0,1460000000.0
-PRGO,Healthcare,Drug Manufacturers - Specialty & Generic,11.71,2450626.0,1620000000.0
-PRGS,Technology,Software - Infrastructure,29.87,421443.0,1260000000.0
-PRKS,Consumer Cyclical,Leisure,39.22,2195034.0,1910000000.0
-PRME,Healthcare,Biotechnology,3.21,2446467.0,579780000.0
-PROK,Healthcare,Biotechnology,1.86,719118.0,561650000.0
-PRQR,Healthcare,Biotechnology,1.58,663962.0,166470000.0
-PSEC,Financial,Asset Management,2.47,19276438.0,1200000000.0
-PSIX,Industrials,Specialty Industrial Machinery,75.91,575669.0,1750000000.0
-PSNL,Healthcare,Diagnostics & Research,5.98,2726677.0,626230000.0
-PTLO,Consumer Cyclical,Restaurants,4.3,2243005.0,325960000.0
-PUBM,Technology,Software - Application,10.74,1625410.0,501290000.0
-PUMP,Energy,Oil & Gas Equipment & Services,15.68,3773715.0,1920000000.0
-PURR,Financial,Capital Markets,6.71,6675870.0,831820000.0
-PWP,Financial,Capital Markets,18.38,1575125.0,1710000000.0
-PZG,Basic Materials,Gold,1.44,330693.0,120690000.0
-PZZA,Consumer Cyclical,Restaurants,31.14,1491297.0,1020000000.0
-QCLS,Technology,Computer Hardware,3.77,260062.0,29610000.0
-QDEL,Healthcare,Medical Devices,10.8,2146737.0,736460000.0
-QFIN,Financial,Credit Services,13.15,649529.0,1600000000.0
-QLEP-U,Financial,Shell Companies,10.01,289851.0,206150000.0
-QMCO,Technology,Computer Hardware,9.62,504842.0,140820000.0
-QNCX,Healthcare,Biotechnology,1.28,1246456.0,20870000.0
-QNST,Communication Services,Advertising Agencies,13.21,1585074.0,752890000.0
-QRED,Financial,Shell Companies,9.9,784001.0,138300000.0
-QTRX,Healthcare,Medical Devices,2.83,2359142.0,133070000.0
-QURE,Healthcare,Biotechnology,27.66,6717881.0,1700000000.0
-RAMP,Technology,Software - Infrastructure,30.38,516261.0,1920000000.0
-RAYA,Industrials,Electrical Equipment & Parts,3.96,56978.0,3890000.0
-RBBN,Technology,Software - Application,2.78,673539.0,489670000.0
-RBNE,Energy,Oil & Gas Midstream,1.31,351126.0,9920000.0
-RC,Real Estate,REIT - Mortgage,1.89,2189299.0,312260000.0
-RCAT,Industrials,Aerospace & Defense,10.37,8726480.0,1270000000.0
-RCKT,Healthcare,Biotechnology,3.63,3687933.0,396370000.0
-REA,Basic Materials,Other Industrial Metals & Mining,23.43,1136701.0,454310000.0
-REAL,Consumer Cyclical,Luxury Goods,10.26,14368174.0,1240000000.0
-REAX,Real Estate,Real Estate Services,2.04,5732276.0,435540000.0
-RECT,Consumer Cyclical,Specialty Retail,1.37,19247.0,19860000.0
-REI,Energy,Oil & Gas E&P,1.61,2917426.0,337150000.0
-RENX,Real Estate,Real Estate - Development,2.03,117275.0,5090000.0
-REPL,Healthcare,Biotechnology,4.07,15126034.0,336070000.0
-RERE,Consumer Cyclical,Internet Retail,4.77,892965.0,628300000.0
-RES,Energy,Oil & Gas Equipment & Services,6.8,5082193.0,1510000000.0
-RGNX,Healthcare,Biotechnology,10.55,1379346.0,544560000.0
-RILY,Financial,Financial Conglomerates,8.18,1224473.0,303730000.0
-RLJ,Real Estate,REIT - Hotel & Motel,8.95,4439375.0,1370000000.0
-RLMD,Healthcare,Biotechnology,7.32,830544.0,767780000.0
-RLX,Consumer Defensive,Tobacco,2.1,1143911.0,1910000000.0
-RMAX,Real Estate,Real Estate Services,10.38,825775.0,339450000.0
-RMSG,Technology,Software - Application,1.38,1280266.0,7000000.0
-RNA,Healthcare,Biotechnology,13.07,109772.0,223690000.0
-ROLR,Consumer Cyclical,Gambling,7.15,249610.0,77860000.0
-RPAY,Technology,Software - Infrastructure,3.54,578337.0,311830000.0
-RPC,Financial,Asset Management,8.75,332465.0,958170000.0
-RPD,Technology,Software - Infrastructure,6.9,2315562.0,461130000.0
-RR,Industrials,Specialty Industrial Machinery,2.64,11603858.0,590290000.0
-RREVU,Financial,Shell Companies,9.98,469327.0,249500000.0
-RSKD,Technology,Software - Application,4.79,679781.0,709900000.0
-RVI,Financial,Asset Management,39.13,1058125.0,493820000.0
-RVLV,Consumer Cyclical,Internet Retail,20.86,1904721.0,1490000000.0
-RWAY,Financial,Asset Management,6.54,1621255.0,277720000.0
-RWT,Real Estate,REIT - Mortgage,5.57,865556.0,697450000.0
-RXRX,Healthcare,Biotechnology,3.32,13647904.0,1760000000.0
-RXST,Healthcare,Medical Devices,5.85,923384.0,242170000.0
-RXT,Technology,Software - Infrastructure,5.49,154086144.0,1360000000.0
-RYAM,Basic Materials,Chemicals,9.16,1076482.0,617740000.0
-RYDE,Technology,Software - Application,1.03,304546.0,125290000.0
-RYZ,Industrials,Metal Fabrication,27.22,515559.0,1410000000.0
-RZLT,Healthcare,Biotechnology,3.21,710407.0,307190000.0
-RZLV,Technology,Software - Infrastructure,2.4,16077621.0,957190000.0
-SABR,Technology,Software - Infrastructure,2.06,10929079.0,814350000.0
-SABS,Healthcare,Biotechnology,4.11,6026892.0,209410000.0
-SAGT,Technology,Software - Application,1.55,135789.0,19450000.0
-SAGU-U,Financial,Shell Companies,9.99,298104.0,99900000.0
-SANA,Healthcare,Biotechnology,3.51,1635179.0,936700000.0
-SATL,Industrials,Aerospace & Defense,7.57,11184225.0,1080000000.0
-SB,Industrials,Marine Shipping,7.03,341465.0,718780000.0
-SBET,Financial,Capital Markets,7.44,6086550.0,1470000000.0
-SBH,Consumer Cyclical,Specialty Retail,14.03,1484844.0,1360000000.0
-SCHL,Communication Services,Publishing,40.1,222837.0,871870000.0
-SCZM,Basic Materials,Other Industrial Metals & Mining,9.03,397923.0,834370000.0
-SDGR,Healthcare,Health Information Services,13.13,1777951.0,969320000.0
-SEGG,Consumer Cyclical,Gambling,1.43,1715365.0,18080000.0
-SENS,Healthcare,Medical Devices,5.03,4745290.0,210270000.0
-SER,Healthcare,Biotechnology,1.75,40751.0,26070000.0
-SERV,Industrials,Specialty Industrial Machinery,8.77,5585012.0,678560000.0
-SFIX,Consumer Cyclical,Apparel Retail,3.57,926035.0,487390000.0
-SFL,Industrials,Marine Shipping,12.0,980360.0,1730000000.0
-SG,Consumer Cyclical,Restaurants,7.0,9354900.0,831570000.0
-SGMT,Healthcare,Biotechnology,7.71,964158.0,471730000.0
-SGRY,Healthcare,Medical Care Facilities,14.44,1262448.0,1890000000.0
-SHLS,Technology,Solar,8.84,8526033.0,1480000000.0
-SHMD,Industrials,Specialty Industrial Machinery,6.0,2065661.0,292120000.0
-SHO,Real Estate,REIT - Hotel & Motel,10.49,1472576.0,1950000000.0
-SIBN,Healthcare,Medical Devices,12.27,725841.0,542870000.0
-SID,Basic Materials,Steel,1.38,2514858.0,1830000000.0
-SIDU,Industrials,Aerospace & Defense,3.41,23046120.0,268130000.0
-SIGA,Healthcare,Drug Manufacturers - Specialty & Generic,4.8,1083743.0,344280000.0
-SILA,Real Estate,REIT - Healthcare Facilities,30.58,270656.0,1690000000.0
-SITC,Real Estate,REIT - Retail,5.55,603656.0,291240000.0
-SKK,Industrials,Engineering & Construction,5.38,438214.0,13110000.0
-SKLZ,Communication Services,Electronic Gaming & Multimedia,6.67,420062.0,104060000.0
-SKYQ,Energy,Oil & Gas Integrated,3.91,1552042.0,14690000.0
-SKYT,Technology,Semiconductors,33.72,711472.0,1660000000.0
-SKYX,Industrials,Electrical Equipment & Parts,1.36,2686307.0,181260000.0
-SLDB,Healthcare,Biotechnology,7.27,924717.0,715330000.0
-SLDP,Consumer Cyclical,Auto Parts,3.08,7658179.0,691820000.0
-SLI,Basic Materials,Other Industrial Metals & Mining,3.93,1251674.0,955070000.0
-SLNH,Financial,Capital Markets,1.83,54768604.0,207120000.0
-SLQT,Financial,Insurance Brokers,1.12,1521416.0,197510000.0
-SLS,Healthcare,Biotechnology,5.01,3435225.0,899710000.0
-SMA,Real Estate,REIT - Industrial,32.56,774508.0,1930000000.0
-SMJF,Consumer Cyclical,Textile Manufacturing,3.39,1900679.0,93230000.0
-SMPL,Consumer Defensive,Packaged Foods,12.26,1916955.0,1110000000.0
-SMRT,Technology,Software - Application,1.12,1155379.0,215980000.0
-SMWB,Technology,Software - Application,3.43,595163.0,298280000.0
-SNBR,Consumer Cyclical,"Furnishings, Fixtures & Appliances",2.85,621769.0,65670000.0
-SNCY,Industrials,Airlines,17.02,344711.0,922420000.0
-SNDA,Healthcare,Medical Care Facilities,38.27,808917.0,1810000000.0
-SNDL,Consumer Defensive,Beverages - Wineries & Distilleries,1.43,2493891.0,371950000.0
-SNDX,Healthcare,Biotechnology,21.49,2177806.0,1900000000.0
-SOBR,Technology,Scientific & Technical Instruments,1.62,3685998.0,4550000.0
-SOC,Energy,Oil & Gas Drilling,12.85,2184892.0,1980000000.0
-SONO,Technology,Consumer Electronics,15.06,1587572.0,1790000000.0
-SPCE,Industrials,Aerospace & Defense,2.94,16260396.0,239340000.0
-SPIR,Industrials,Specialty Business Services,18.49,1452980.0,647840000.0
-SPRY,Healthcare,Biotechnology,8.74,1272299.0,867860000.0
-SPT,Technology,Software - Application,7.4,4669242.0,444610000.0
-SPTX,Healthcare,Biotechnology,16.05,304093.0,851130000.0
-SPWH,Consumer Cyclical,Specialty Retail,1.48,411061.0,57430000.0
-SPWR,Technology,Solar,1.09,1720199.0,138050000.0
-SQFT,Real Estate,REIT - Diversified,3.6,3779.0,5190000.0
-SRFM,Industrials,Airlines,1.35,3756456.0,134320000.0
-SRTA,Healthcare,Medical Care Facilities,5.57,823404.0,481950000.0
-SSP,Communication Services,Broadcasting,4.53,966439.0,414540000.0
-SST,Industrials,Specialty Business Services,3.92,527422.0,38790000.0
-SSYS,Technology,Computer Hardware,8.52,1717881.0,734190000.0
-STAA,Healthcare,Medical Instruments & Supplies,26.69,445980.0,1320000000.0
-STGW,Communication Services,Advertising Agencies,6.47,1312220.0,1600000000.0
-STIM,Healthcare,Medical Devices,1.65,2989309.0,115170000.0
-STKL,Consumer Defensive,Beverages - Non-Alcoholic,6.5,2917348.0,769420000.0
-STTK,Healthcare,Biotechnology,6.85,1573469.0,525260000.0
-SUNE,Technology,Solar,1.65,195306.0,5620000.0
-SUPV,Financial,Banks - Regional,7.97,681676.0,629630000.0
-SVC,Real Estate,REIT - Hotel & Motel,1.64,11564374.0,1060000000.0
-SVCO,Technology,Software - Application,11.49,533158.0,375510000.0
-SVRA,Healthcare,Biotechnology,5.23,816139.0,1070000000.0000001
-SVV,Consumer Cyclical,Specialty Retail,8.06,1212221.0,1240000000.0
-SWBI,Industrials,Aerospace & Defense,14.54,313885.0,646940000.0
-SWIM,Industrials,Building Products & Equipment,5.5,1521742.0,645760000.0
-SWMR,Technology,Software - Infrastructure,27.14,337967.0,347390000.0
-SXC,Basic Materials,Coking Coal,7.32,1160400.0,621130000.0
-SXTP,Healthcare,Biotechnology,1.54,63391.0,4059999.9999999995
-SY,Healthcare,Health Information Services,2.97,233165.0,251320000.0
-SYNX,Technology,Communication Equipment,1.19,11829.0,7890000.0
-TALK,Healthcare,Health Information Services,5.19,1119475.0,869390000.0
-TARA,Healthcare,Biotechnology,5.27,635570.0,290170000.0
-TASK,Technology,Information Technology Services,6.45,733881.0,590020000.0
-TBLA,Communication Services,Internet Content & Information,5.25,4917465.0,1430000000.0
-TBPH,Healthcare,Biotechnology,17.01,237594.0,876920000.0
-TCPC,Financial,Asset Management,4.19,1040408.0,351550000.0
-TCRX,Healthcare,Biotechnology,1.26,1276981.0,82340000.0
-TDAY,Communication Services,Publishing,7.63,1442111.0,1120000000.0
-TDIC,Communication Services,Advertising Agencies,1.24,3640579.0,9180000.0
-TDOC,Healthcare,Health Information Services,7.25,6501301.0,1310000000.0
-TDUP,Consumer Cyclical,Internet Retail,4.82,3399289.0,621980000.0
-TE,Industrials,Electrical Equipment & Parts,6.16,18277894.0,1720000000.0
-TH,Industrials,Specialty Business Services,15.33,912473.0,1530000000.0
-THM,Basic Materials,Gold,2.54,721490.0,664570000.0
-THRY,Technology,Software - Application,3.81,1124778.0,168970000.0
-TIGR,Financial,Capital Markets,6.46,3190035.0,1110000000.0
-TILE,Consumer Cyclical,"Furnishings, Fixtures & Appliances",29.66,1185983.0,1730000000.0
-TK,Energy,Oil & Gas Midstream,14.09,504981.0,1220000000.0
-TLIH,Industrials,Industrial Distribution,3.9,38035.0,11470000.0
-TLRY,Healthcare,Drug Manufacturers - Specialty & Generic,5.56,4392304.0,665000000.0
-TLS,Technology,Software - Infrastructure,4.48,1076283.0,351120000.0
-TLYS,Consumer Cyclical,Apparel Retail,4.22,139052.0,97830000.0
-TMCI,Healthcare,Medical Devices,2.01,763875.0,130220000.0
-TMQ,Basic Materials,Other Industrial Metals & Mining,4.49,2359936.0,788220000.0
-TNDM,Healthcare,Medical Devices,15.48,7532578.0,1060000000.0
-TNET,Industrials,Staffing & Employment Services,42.8,289400.0,1970000000.0
-TNYA,Healthcare,Biotechnology,1.0,10295574.0,217000000.0
-TOI,Healthcare,Medical Care Facilities,4.0,2448357.0,399930000.0
-TORO,Energy,Oil & Gas Midstream,5.37,66814.0,154940000.0
-TRAW,Healthcare,Biotechnology,2.18,89495224.0,33030000.0
-TRIN,Financial,Asset Management,16.99,1360560.0,1530000000.0
-TRIP,Consumer Cyclical,Travel Services,10.45,3529565.0,1220000000.0
-TRON,Consumer Cyclical,Leisure,2.23,1067035.0,611870000.0
-TROX,Basic Materials,Chemicals,8.82,3464325.0,1410000000.0
-TRS,Consumer Cyclical,Packaging & Containers,42.72,617184.0,1530000000.0
-TRT,Technology,Semiconductor Equipment & Materials,12.33,593981.0,123490000.0
-TRTX,Real Estate,REIT - Mortgage,8.57,363658.0,662530000.0
-TRX,Basic Materials,Gold,1.26,2930508.0,410670000.0
-TSHA,Healthcare,Biotechnology,6.81,2178153.0,1960000000.0
-TSLX,Financial,Asset Management,17.94,723043.0,1700000000.0
-TSSI,Technology,Information Technology Services,12.02,5796164.0,337450000.0
-TTEC,Technology,Information Technology Services,2.71,1330198.0,131860000.00000001
-TTGT,Technology,Information Technology Services,6.1,1341021.0,441030000.0
-TTI,Industrials,Conglomerates,9.78,780807.0,1320000000.0
-TURB,Technology,Solar,1.33,422701.0,15990000.0
-TUYA,Technology,Software - Infrastructure,2.48,1172667.0,1350000000.0
-TV,Communication Services,Telecom Services,2.85,1064093.0,1230000000.0
-TWI,Industrials,Farm & Heavy Construction Machinery,7.9,518530.0,508540000.0
-TWO,Real Estate,REIT - Mortgage,12.55,2452467.0,1320000000.0
-TYGO,Technology,Solar,4.27,921779.0,324140000.0
-UAMY,Basic Materials,Other Industrial Metals & Mining,10.66,10666097.0,1520000000.0
-UAVS,Technology,Computer Hardware,1.17,2414405.0,66980000.00000001
-UCAR,Consumer Cyclical,Auto & Truck Dealerships,1.51,347866.0,3720000.0
-UDMY,Consumer Defensive,Education & Training Services,4.63,2366160.0,675680000.0
-UGRO,Industrials,Farm & Heavy Construction Machinery,5.99,111971.0,6760000.0
-UIS,Technology,Information Technology Services,3.18,1298712.0,231840000.0
-ULCC,Industrials,Airlines,5.29,5285227.0,1220000000.0
-UMAC,Technology,Computer Hardware,13.42,4231867.0,522860000.0
-UMH,Real Estate,REIT - Residential,15.82,704017.0,1350000000.0
-UNCY,Healthcare,Biotechnology,7.94,401799.0,200390000.0
-UPB,Healthcare,Biotechnology,9.09,456143.0,494680000.0
-UPBD,Technology,Software - Application,18.78,638595.0,1090000000.0
-UPWK,Communication Services,Internet Content & Information,8.82,26574810.0,1090000000.0
-UPXI,Communication Services,Internet Content & Information,1.38,2901187.0,95700000.0
-URG,Energy,Uranium,1.74,5439739.0,691360000.0
-URGN,Healthcare,Biotechnology,29.4,1696614.0,1430000000.0
-UROY,Energy,Uranium,4.0,3740633.0,585920000.0
-USA,Financial,Closed-End Fund - Equity,5.82,1091418.0,1760000000.0
-UTI,Consumer Defensive,Education & Training Services,35.74,726523.0,1970000000.0
-UTZ,Consumer Defensive,Packaged Foods,7.5,2045911.0,1080000000.0
-VCEL,Healthcare,Biotechnology,33.46,1541563.0,1710000000.0
-VECA-U,Financial,Shell Companies,9.97,302873.0,99700000.0
-VELO,Technology,Computer Hardware,13.46,2026273.0,400950000.0
-VERI,Technology,Software - Infrastructure,2.13,2605543.0,197990000.0
-VET,Energy,Oil & Gas E&P,11.79,1677936.0,1800000000.0
-VFF,Consumer Defensive,Farm Products,2.57,5527942.0,295820000.0
-VGZ,Basic Materials,Gold,2.25,1077654.0,328440000.0
-VHUB,Consumer Defensive,Grocery Stores,1.06,739489.0,90160000.0
-VIA,Technology,Software - Application,17.31,605593.0,1410000000.0
-VIR,Healthcare,Biotechnology,9.12,1611672.0,1540000000.0
-VITL,Consumer Defensive,Farm Products,8.94,6525696.0,383070000.0
-VIVO,Technology,Software - Infrastructure,3.02,744066.0,50710000.0
-VLN,Technology,Semiconductors,2.79,5478406.0,293770000.0
-VLRS,Industrials,Airlines,7.68,180509.0,882120000.0
-VNDA,Healthcare,Biotechnology,6.28,1309261.0,377650000.0
-VNRX,Healthcare,Medical Devices,2.25,172342.0,18200000.0
-VOR,Healthcare,Biotechnology,16.94,1173332.0,827480000.0
-VOXR,Basic Materials,Other Precious Metals & Mining,5.95,137711.0,409950000.0
-VOYG,Industrials,Aerospace & Defense,29.74,2040832.0,1760000000.0
-VRDN,Healthcare,Biotechnology,16.61,4372601.0,1710000000.0
-VRE,Real Estate,REIT - Residential,18.97,509369.0,1780000000.0
-VSTM,Healthcare,Biotechnology,4.89,7555492.0,429700000.0
-VSTS,Industrials,Rental & Leasing Services,9.24,1038617.0,1220000000.0
-VTEX,Technology,Software - Application,3.74,1581654.0,637620000.0
-VTS,Energy,Oil & Gas E&P,17.81,338458.0,742900000.0
-VUZI,Technology,Consumer Electronics,3.11,2012144.0,258620000.0
-VVR,Financial,Closed-End Fund - Debt,3.04,549474.0,467930000.0
-VYGR,Healthcare,Biotechnology,4.05,639750.0,244710000.0
-VYX,Technology,Information Technology Services,8.35,3375365.0,1150000000.0
-VZLA,Basic Materials,Other Industrial Metals & Mining,3.56,5244190.0,1240000000.0
-WALD,Consumer Defensive,Household & Personal Products,1.8,980170.0,230870000.0
-WB,Communication Services,Internet Content & Information,8.49,583114.0,1340000000.0
-WBI,Energy,Oil & Gas Equipment & Services,27.35,976263.0,1290000000.0
-WBUY,Consumer Cyclical,Internet Retail,1.24,56569.0,6800000.0
-WEAV,Healthcare,Health Information Services,5.94,920280.0,472620000.0
-WEN,Consumer Cyclical,Restaurants,7.3,22274636.0,1390000000.0
-WGO,Consumer Cyclical,Recreational Vehicles,31.75,487487.0,897440000.0
-WGS,Healthcare,Diagnostics & Research,40.77,2105983.0,1210000000.0
-WKC,Energy,Oil & Gas Refining & Marketing,27.07,602923.0,1390000000.0
-WLDS,Technology,Consumer Electronics,1.03,121316.0,3640000.0
-WLTH,Technology,Software - Application,11.47,697515.0,1720000000.0
-WNC,Industrials,Farm & Heavy Construction Machinery,7.47,548370.0,303830000.0
-WNW,Consumer Cyclical,Internet Retail,3.72,107203.0,4950000.0
-WOOF,Consumer Cyclical,Specialty Retail,2.81,961961.0,799040000.0
-WRN,Basic Materials,Other Industrial Metals & Mining,3.08,2835227.0,694940000.0
-WSHP,Communication Services,Internet Content & Information,7.69,78204.0,180280000.0
-WTI,Energy,Oil & Gas E&P,3.71,8363170.0,551970000.0
-WVE,Healthcare,Biotechnology,7.18,2549816.0,1380000000.0
-WWW,Consumer Cyclical,Footwear & Accessories,16.7,785329.0,1370000000.0
-WYFI,Technology,Information Technology Services,21.25,1048883.0,815260000.0
-XERS,Healthcare,Drug Manufacturers - Specialty & Generic,6.53,3020196.0,1130000000.0
-XHR,Real Estate,REIT - Hotel & Motel,17.03,568082.0,1570000000.0
-XNCR,Healthcare,Biotechnology,12.86,899451.0,953460000.0
-XNDU,Technology,Software - Infrastructure,15.71,11580845.0,680000000.0
-XPOF,Consumer Cyclical,Leisure,5.6,1653008.0,249000000.0
-XPRO,Energy,Oil & Gas Equipment & Services,15.37,714023.0,1740000000.0
-XRTX,Healthcare,Biotechnology,2.79,17352.0,3880000.0
-XRX,Industrials,Business Equipment & Supplies,2.78,8441859.0,363570000.0
-XTIA,Industrials,Aerospace & Defense,1.75,1575258.0,67330000.0
-XTLB,Healthcare,Biotechnology,2.54,43872.0,6020000.0
-XWEL,Healthcare,Diagnostics & Research,1.47,613128.0,11650000.0
-XWIN,Consumer Cyclical,"Furnishings, Fixtures & Appliances",8.34,2094727.0,530440000.00000006
-YELP,Communication Services,Internet Content & Information,27.08,2020120.0,1510000000.0
-YEXT,Technology,Software - Infrastructure,4.02,1088888.0,495850000.0
-YSWY,Consumer Defensive,Grocery Stores,25.77,261039.0,1570000000.0
-YYGH,Consumer Cyclical,Personal Services,1.12,109904.0,10500000.0
-ZBIO,Healthcare,Biotechnology,19.64,289145.0,1130000000.0
-ZD,Communication Services,Advertising Agencies,41.02,1128977.0,1550000000.0
-ZENA,Technology,Software - Infrastructure,2.05,1764725.0,98570000.0
-ZIP,Communication Services,Internet Content & Information,3.62,2079935.0,305580000.0
-ZNTL,Healthcare,Biotechnology,4.41,769536.0,312810000.0
-ZURA,Healthcare,Biotechnology,4.79,1053757.0,455040000.0
-ZVIA,Consumer Defensive,Beverages - Non-Alcoholic,1.45,1012885.0,105410000.0
-ZVRA,Healthcare,Biotechnology,11.13,2650026.0,657950000.0
-ZYME,Healthcare,Biotechnology,23.89,1454522.0,1760000000.0
+ABAT,Industrials,Waste Management,3.13,4719847.0,426980000.0
+ABCL,Healthcare,Biotechnology,4.09,8865506.0,1250000000.0
+ABEO,Healthcare,Biotechnology,5.49,1516138.0,312900000.0
+ABOS,Healthcare,Biotechnology,2.28,390233.0,164680000.0
+ABR,Real Estate,REIT - Mortgage,5.79,4124601.0,1110000000.0
+ABSI,Healthcare,Biotechnology,5.13,4088723.0,799790000.0
+ABTC,Financial,Capital Markets,1.11,12147674.0,1180000000.0
+ABUS,Healthcare,Biotechnology,4.24,1409775.0,837560000.0
+ABX,Financial,Insurance - Life,9.09,595849.0,871930000.0
+ACB,Healthcare,Drug Manufacturers - Specialty & Generic,3.32,1002643.0,188280000.0
+ACCO,Industrials,Business Equipment & Supplies,3.76,1078579.0,346890000.0
+ACDC,Energy,Oil & Gas Equipment & Services,7.28,837936.0,1320000000.0
+ACH,Healthcare,Medical Distribution,2.91,818639.0,222860000.0
+ACHV,Healthcare,Biotechnology,5.29,1295495.0,543070000.0
+ACP,Financial,Closed-End Fund - Debt,5.36,398474.0,672520000.0
+ACRS,Healthcare,Biotechnology,4.52,929251.0,631280000.0
+ACRV,Healthcare,Biotechnology,1.77,696692.0,75760000.0
+ACVA,Consumer Cyclical,Auto & Truck Dealerships,5.92,2892042.0,1030000000.0
+ACXP,Healthcare,Biotechnology,1.92,112407.0,8250000.0
+ADAM,Real Estate,REIT - Mortgage,8.72,695772.0,783590000.0
+ADCT,Healthcare,Biotechnology,3.25,1103265.0,413370000.0
+ADMA,Healthcare,Biotechnology,8.27,3718342.0,1920000000.0
+ADNT,Consumer Cyclical,Auto Parts,20.84,1096042.0,1630000000.0
+ADTN,Technology,Communication Equipment,14.91,1937584.0,1210000000.0
+ADVB,Healthcare,Diagnostics & Research,4.4,13563.0,6000000.0
+AEHL,Industrials,Building Products & Equipment,3.61,4633707.0,17520000.0
+AEVA,Technology,Software - Infrastructure,20.48,1964649.0,1290000000.0
+AGBK,Financial,Banks - Regional,7.25,346367.0,1160000000.0
+AGEN,Healthcare,Biotechnology,3.58,511890.0,149080000.0
+AGIG,Utilities,Utilities - Renewable,1.1,146349.0,48430000.0
+AGIO,Healthcare,Biotechnology,28.17,604010.0,1680000000.0
+AGNT,Real Estate,Real Estate Services,4.75,1769455.0,780540000.0
+AGPU,Technology,Software - Infrastructure,5.85,345832.0,32400000.0
+AGRO,Consumer Defensive,Farm Products,13.11,544176.0,1890000000.0
+AHCO,Healthcare,Medical Devices,10.66,1130695.0,1450000000.0
+AHMA,Consumer Cyclical,Travel Services,1.19,122671.0,35370000.0
+AHRT,Real Estate,REIT - Diversified,6.49,1018247.0,631290000.0
+AI,Technology,Software - Infrastructure,8.65,5240888.0,1260000000.0
+AIAI,Industrials,Conglomerates,14.96,661351.0,1050000000.0
+AIB,Technology,Software - Application,1.44,955191.0,54190000.0
+AIFC,Technology,Software - Infrastructure,1.0,903402.0,127800000.0
+AIFF,Technology,Software - Application,1.7,324480.0,26470000.0
+AIIO,Consumer Cyclical,Auto Manufacturers,4.02,26658324.0,78810000.0
+AIOT,Technology,Software - Infrastructure,3.23,1594974.0,433300000.0
+AIP,Technology,Semiconductors,33.71,1728665.0,1560000000.0
+AIRO,Industrials,Aerospace & Defense,6.37,518626.0,200310000.0
+AIRS,Healthcare,Medical Care Facilities,4.8,1150055.0,338620000.0
+AIV,Real Estate,REIT - Residential,4.19,1270599.0,602760000.0
+AIXI,Technology,Software - Application,11.3,228148.0,7570000.0
+AKAN,Healthcare,Drug Manufacturers - Specialty & Generic,20.48,64029.0,10940000.0
+AKBA,Healthcare,Drug Manufacturers - Specialty & Generic,1.06,4820193.0,284350000.0
+ALDX,Healthcare,Biotechnology,1.68,1311985.0,101340000.0
+ALEC,Healthcare,Biotechnology,2.16,1104527.0,239810000.0
+ALKT,Technology,Software - Application,16.61,1193252.0,1780000000.0
+ALLO,Healthcare,Biotechnology,2.0,7668856.0,690310000.0
+ALLT,Technology,Software - Infrastructure,7.13,538325.0,348820000.0
+ALMR,Healthcare,Medical Devices,21.54,253189.0,1490000000.0
+ALMU,Technology,Semiconductors,24.86,1960749.0,455070000.0
+ALOY,Basic Materials,Other Industrial Metals & Mining,8.64,915334.0,516940000.00000006
+ALT,Healthcare,Biotechnology,2.85,2285576.0,553900000.0
+ALTO,Basic Materials,Specialty Chemicals,4.67,1146595.0,361860000.0
+ALVO,Healthcare,Drug Manufacturers - Specialty & Generic,3.31,683785.0,1030000000.0
+ALXO,Healthcare,Biotechnology,2.03,468128.0,273160000.0
+AMC,Communication Services,Entertainment,1.28,19673176.0,783450000.0
+AMLX,Healthcare,Drug Manufacturers - Specialty & Generic,13.28,998001.0,1480000000.0
+AMN,Healthcare,Medical Care Facilities,28.61,1120092.0,1110000000.0
+AMPG,Technology,Communication Equipment,2.95,902239.0,74750000.0
+AMPH,Healthcare,Drug Manufacturers - Specialty & Generic,16.87,679289.0,743850000.0
+AMPL,Technology,Software - Application,6.06,2919319.0,803430000.0
+AMPY,Energy,Oil & Gas E&P,5.23,550688.0,215930000.0
+AMRC,Industrials,Engineering & Construction,33.03,1047146.0,1750000000.0
+AMTX,Basic Materials,Specialty Chemicals,2.29,1147371.0,161140000.0
+ANAB,Healthcare,Biotechnology,63.15,447720.0,1840000000.0
+ANGI,Communication Services,Internet Content & Information,4.98,1502815.0,201430000.0
+ANGX,Communication Services,Entertainment,2.7,1037094.0,503310000.0
+ANNA,Energy,Oil & Gas E&P,3.43,484946.0,228620000.0
+ANNX,Healthcare,Biotechnology,5.21,1850635.0,853620000.0
+ANTX,Healthcare,Biotechnology,4.75,408710.0,171080000.0
+ANVS,Healthcare,Biotechnology,2.06,854584.0,71140000.0
+ANY,Financial,Capital Markets,2.29,146070.0,8630000.0
+AOD,Financial,Closed-End Fund - Foreign,10.4,360076.0,1100000000.0
+AORT,Healthcare,Medical Devices,22.77,863968.0,1110000000.0
+AOSL,Technology,Semiconductors,38.87,703020.0,1160000000.0
+APPN,Technology,Software - Infrastructure,19.53,1092441.0,1430000000.0
+APPS,Technology,Software - Application,4.22,2478368.0,505980000.0
+AQST,Healthcare,Drug Manufacturers - Specialty & Generic,4.17,3419689.0,523130000.0
+ARBE,Technology,Scientific & Technical Instruments,1.05,2746403.0,128780000.0
+ARCO,Consumer Cyclical,Restaurants,8.13,1147450.0,1710000000.0
+ARDX,Healthcare,Biotechnology,6.23,3233301.0,1540000000.0
+AREC,Basic Materials,Coking Coal,2.2,1697844.0,223070000.0
+ARHS,Consumer Cyclical,Specialty Retail,5.75,2799555.0,812350000.0
+ARI,Real Estate,REIT - Mortgage,10.84,1589672.0,1440000000.0
+ARKO,Consumer Cyclical,Specialty Retail,6.99,775396.0,784180000.0
+ARLO,Industrials,Building Products & Equipment,12.32,1678981.0,1340000000.0
+ARQ,Industrials,Pollution & Treatment Controls,2.62,174539.0,112470000.0
+ARRY,Technology,Solar,8.97,5289616.0,1380000000.0
+ARTL,Healthcare,Biotechnology,1.84,8612774.0,4290000.0
+ARVN,Healthcare,Biotechnology,9.08,968097.0,585850000.0
+ASAN,Technology,Software - Application,6.2,5669704.0,1510000000.0
+ASC,Industrials,Marine Shipping,18.93,653465.0,772390000.0
+ASM,Basic Materials,Other Precious Metals & Mining,7.14,7790058.0,1200000000.0
+ASPI,Basic Materials,Chemicals,5.8,4169613.0,730240000.0
+ASPN,Industrials,Building Products & Equipment,5.6,2023149.0,464110000.0
+ASST,Financial,Asset Management,16.79,3135278.0,1160000000.0
+ASTC,Technology,Scientific & Technical Instruments,2.54,20322.0,4470000.0
+ASTI,Technology,Solar,4.58,960892.0,43340000.0
+ASTL,Basic Materials,Steel,5.21,2534654.0,546690000.0
+ATAI,Healthcare,Biotechnology,4.01,2885868.0,1480000000.0
+ATEC,Healthcare,Medical Devices,7.66,2882362.0,1180000000.0
+ATER,Consumer Cyclical,"Furnishings, Fixtures & Appliances",1.09,504967.0,11800000.0
+ATHM,Communication Services,Internet Content & Information,17.05,899804.0,1970000000.0
+ATLX,Basic Materials,Other Industrial Metals & Mining,4.29,1478982.0,126520000.0
+ATOM,Technology,Semiconductor Equipment & Materials,8.8,1344212.0,340710000.0
+ATPC,Consumer Defensive,Packaged Foods,2.21,18661.0,2210000.0
+ATRA,Healthcare,Biotechnology,9.58,226219.0,86320000.0
+ATRC,Healthcare,Medical Instruments & Supplies,28.12,1034664.0,1420000000.0
+AUPH,Healthcare,Biotechnology,15.28,1112289.0,1970000000.0
+AUTL,Healthcare,Biotechnology,1.63,1482827.0,433810000.0
+AUUD,Technology,Software - Application,1.96,138603120.0,980000.0
+AVAH,Healthcare,Medical Care Facilities,7.72,3572151.0,1680000000.0
+AVLN,Healthcare,Biotechnology,29.84,205029.0,1250000000.0
+AVNS,Healthcare,Medical Devices,24.71,592052.0,1160000000.0
+AVO,Consumer Defensive,Food Distribution,11.95,809050.0,846610000.0
+AVR,Healthcare,Medical Instruments & Supplies,7.24,1027828.0,704760000.0
+AVTX,Healthcare,Biotechnology,17.74,1529609.0,932510000.0
+AVXL,Healthcare,Biotechnology,2.91,1215524.0,269670000.0
+AZI,Consumer Cyclical,Auto & Truck Dealerships,1.22,23964.0,5550000.0
+AZTA,Healthcare,Medical Instruments & Supplies,16.02,1401133.0,738410000.0
+BAER,Industrials,Security & Protection Services,1.67,535103.0,96250000.0
+BAK,Basic Materials,Chemicals,4.9,2629501.0,845400000.0
+BAND,Technology,Software - Infrastructure,53.97,1646976.0,1730000000.0
+BATL,Energy,Oil & Gas E&P,2.23,4535085.0,49100000.0
+BBAI,Technology,Information Technology Services,4.08,33930568.0,1950000000.0
+BBBY,Consumer Cyclical,Internet Retail,4.57,1879121.0,337900000.0
+BBDC,Financial,Asset Management,8.6,539070.0,900480000.0
+BBGI,Communication Services,Broadcasting,13.81,46406.0,24950000.0
+BBNX,Healthcare,Medical Devices,9.46,906254.0,421550000.0
+BCAT,Financial,Closed-End Fund - Equity,15.4,1007971.0,1610000000.0
+BCAX,Healthcare,Biotechnology,20.23,552349.0,1330000000.0
+BCG,Financial,Asset Management,1.84,65345.0,30550000.0
+BCSF,Financial,Asset Management,13.36,273910.0,866640000.0
+BDMD,Healthcare,Medical Devices,1.67,146130.0,68440000.0
+BDN,Real Estate,REIT - Office,2.99,1295588.0,520940000.00000006
+BDRX,Healthcare,Biotechnology,3.3,28386.0,1480000.0
+BDTX,Healthcare,Biotechnology,2.75,626386.0,157580000.0
+BENF,Financial,Asset Management,3.66,38742.0,52020000.0
+BETR,Financial,Mortgage Finance,27.0,332384.0,509320000.0
+BFLY,Healthcare,Medical Devices,3.83,4187977.0,1000000000.0
+BGDE,Financial,Capital Markets,6.05,95331.0,33400000.0
+BGS,Consumer Defensive,Packaged Foods,4.17,3595034.0,338470000.0
+BHVN,Healthcare,Biotechnology,8.76,2023030.0,1320000000.0
+BIAF,Healthcare,Diagnostics & Research,1.88,96714.0,8530000.0
+BIRD,Consumer Cyclical,Apparel Retail,4.41,514695.0,38650000.0
+BKKT,Technology,Software - Infrastructure,8.28,2156450.0,369390000.0
+BKSY,Industrials,Specialty Business Services,38.75,2465597.0,1440000000.0
+BL,Technology,Software - Application,27.25,1126223.0,1600000000.0
+BLDP,Industrials,Electrical Equipment & Parts,4.45,32847104.0,1340000000.0
+BLKB,Technology,Software - Application,30.85,683849.0,1420000000.0
+BLMN,Consumer Cyclical,Restaurants,8.04,2107087.0,688340000.0
+BLND,Technology,Software - Application,1.45,7160051.0,372820000.0
+BLNE,Financial,Mortgage Finance,1.08,3243256.0,33100000.0
+BLZE,Technology,Software - Infrastructure,7.03,1113839.0,421800000.0
+BMBL,Communication Services,Internet Content & Information,3.14,1742485.0,409550000.0
+BMEA,Healthcare,Biotechnology,1.35,1913877.0,97600000.0
+BNAI,Technology,Software - Infrastructure,22.34,180965.0,130870000.0
+BOBS,Consumer Cyclical,Specialty Retail,11.91,1307595.0,1560000000.0
+BORR,Energy,Oil & Gas Drilling,6.26,5016689.0,1930000000.0
+BOT,Financial,Closed-End Fund - Equity,36.01,1982347.0,716960000.0
+BRBR,Consumer Defensive,Packaged Foods,9.69,4950821.0,1130000000.0
+BRCB,Consumer Cyclical,Restaurants,7.01,1057594.0,347110000.0
+BRCC,Consumer Defensive,Packaged Foods,1.6,1718664.0,399200000.0
+BREZU,Financial,Shell Companies,10.01,743186.0,125120000.0
+BRN,Energy,Oil & Gas E&P,1.12,115122.0,15940000.0
+BRR,Financial,Capital Markets,2.01,695250.0,182050000.0
+BRSP,Real Estate,REIT - Mortgage,5.7,951208.0,742580000.0
+BRUN,Technology,Software - Infrastructure,29.6,4896390.0,511490000.0
+BTAI,Healthcare,Drug Manufacturers - Specialty & Generic,1.14,576983.0,30870000.0
+BTBD,Consumer Cyclical,Restaurants,1.08,72928.0,6410000.0
+BTBT,Financial,Capital Markets,1.8,31622934.0,589470000.0
+BTCS,Financial,Capital Markets,1.83,1314184.0,91090000.0
+BTGO,Financial,Capital Markets,8.89,3201667.0,1030000000.0
+BTOG,Financial,Financial Data & Stock Exchanges,1.81,48067.0,2700000.0
+BTQ,Technology,Software - Infrastructure,2.93,2603278.0,411370000.0
+BUR,Financial,Asset Management,4.65,3036515.0,1020000000.0
+BV,Industrials,Specialty Business Services,12.57,700847.0,1170000000.0
+BWEN,Industrials,Specialty Industrial Machinery,4.52,2850534.0,105790000.0
+BYRN,Industrials,Aerospace & Defense,4.96,383722.0,112520000.0
+BZAI,Technology,Software - Application,1.31,21445138.0,186410000.0
+BZFD,Communication Services,Internet Content & Information,1.49,4723095.0,56080000.0
+BZH,Consumer Cyclical,Residential Construction,22.12,710074.0,604620000.0
+CABA,Healthcare,Biotechnology,3.31,3192917.0,539710000.0
+CADL,Healthcare,Biotechnology,8.77,3683149.0,642580000.0
+CAIIU,Financial,Shell Companies,9.97,11517.0,219340000.0
+CAL,Consumer Cyclical,Apparel Retail,11.07,485869.0,373510000.0
+CANF,Healthcare,Biotechnology,3.36,21627.0,7190000.0
+CAPR,Healthcare,Biotechnology,28.79,988778.0,1670000000.0
+CARS,Communication Services,Internet Content & Information,9.85,827686.0,550640000.0
+CAST,Communication Services,Broadcasting,1.44,167118.0,58840000.0
+CATX,Healthcare,Medical Devices,3.85,885278.0,439080000.0
+CBRL,Consumer Cyclical,Restaurants,30.71,1350576.0,686400000.0
+CBUS,Healthcare,Biotechnology,1.31,342065.0,100010000.0
+CBZ,Industrials,Specialty Business Services,28.92,655735.0,1550000000.0
+CCCC,Healthcare,Biotechnology,3.56,2282394.0,393620000.0
+CCLD,Healthcare,Health Information Services,2.11,392353.0,89660000.0
+CCO,Communication Services,Advertising Agencies,2.39,4790991.0,1220000000.0
+CCOI,Communication Services,Telecom Services,16.48,1006518.0,825280000.0
+CCRN,Healthcare,Medical Care Facilities,13.13,593942.0,424530000.0
+CDIO,Healthcare,Biotechnology,1.55,65350.0,4590000.0
+CDNA,Healthcare,Diagnostics & Research,19.97,637538.0,1030000000.0
+CDXS,Healthcare,Biotechnology,2.46,773940.0,223610000.0
+CDZI,Utilities,Utilities - Regulated Water,4.12,1999604.0,346440000.0
+CEPT,Financial,Shell Companies,12.22,458445.0,373690000.0
+CERS,Healthcare,Medical Devices,2.34,2622454.0,468860000.0
+CERT,Healthcare,Health Information Services,4.48,3039328.0,696930000.0
+CEVA,Technology,Semiconductors,36.51,646059.0,1020000000.0
+CFFN,Financial,Banks - Regional,7.52,935473.0,953310000.0
+CGBD,Financial,Asset Management,11.2,468105.0,778370000.0
+CGC,Healthcare,Drug Manufacturers - Specialty & Generic,1.04,10769121.0,442870000.0
+CGEM,Healthcare,Biotechnology,15.73,766858.0,966740000.0
+CGNT,Technology,Software - Infrastructure,9.79,401919.0,715440000.0
+CGTX,Healthcare,Biotechnology,1.14,763563.0,102030000.0
+CHGG,Consumer Defensive,Education & Training Services,1.02,1093914.0,114200000.0
+CHNR,Basic Materials,Other Industrial Metals & Mining,4.16,45183.0,5130000.0
+CHRS,Healthcare,Biotechnology,1.57,1507776.0,242170000.0
+CHSN,Consumer Cyclical,Restaurants,1.28,267870.0,4660000.0
+CIIT,Industrials,Integrated Freight & Logistics,1.29,9403.0,4670000.0
+CIM,Real Estate,REIT - Mortgage,13.09,572874.0,1090000000.0
+CING,Healthcare,Biotechnology,4.57,461447.0,60670000.0
+CION,Financial,Asset Management,6.73,581366.0,335080000.0
+CLIK,Consumer Cyclical,Personal Services,1.48,197108.0,4830000.0
+CLNE,Energy,Oil & Gas Refining & Marketing,2.03,1318907.0,447060000.0
+CLOV,Healthcare,Healthcare Plans,3.47,10672037.0,1820000000.0
+CLPT,Healthcare,Medical Devices,11.64,727218.0,349080000.0
+CLRB,Healthcare,Biotechnology,3.09,216322.0,24690000.0
+CLVT,Technology,Information Technology Services,2.42,4297842.0,1550000000.0
+CLYM,Healthcare,Biotechnology,10.8,655307.0,618410000.0
+CMP,Basic Materials,Other Industrial Metals & Mining,29.35,772450.0,1230000000.0
+CMPS,Healthcare,Medical Care Facilities,10.37,3132835.0,996450000.0
+CMPX,Healthcare,Biotechnology,1.86,3866010.0,334960000.0
+CMRC,Technology,Software - Application,2.72,748575.0,224430000.0
+CMTG,Real Estate,REIT - Mortgage,2.11,434801.0,295860000.0
+CNCK,Financial,Capital Markets,2.03,360282.0,275930000.0
+CNDT,Technology,Information Technology Services,1.39,1862415.0,215580000.0
+CNNE,Consumer Cyclical,Restaurants,13.15,325076.0,577820000.0
+CNSP,Healthcare,Biotechnology,4.95,32322.0,7230000.0
+CNTN,Healthcare,Biotechnology,3.62,431328.0,252690000.0
+CNTX,Healthcare,Biotechnology,2.16,570687.0,198460000.0
+CNXC,Technology,Information Technology Services,24.03,1359154.0,1470000000.0
+COAG,Healthcare,Biotechnology,28.07,118339.0,1310000000.0
+COCP,Healthcare,Biotechnology,1.2,101295.0,16540000.0
+CODI,Industrials,Conglomerates,11.97,1121671.0,900570000.0
+CODX,Healthcare,Medical Devices,1.28,419012.0,4630000.0
+COLL,Healthcare,Drug Manufacturers - Specialty & Generic,33.78,307586.0,1100000000.0
+COTY,Consumer Defensive,Household & Personal Products,2.06,7098141.0,1810000000.0
+COUR,Consumer Defensive,Education & Training Services,5.28,7466407.0,1510000000.0
+CPIX,Healthcare,Drug Manufacturers - Specialty & Generic,5.47,290441.0,81960000.0
+CRBU,Healthcare,Biotechnology,2.14,1923805.0,212250000.0
+CRCT,Technology,Computer Hardware,3.93,587459.0,824900000.0
+CRDF,Healthcare,Biotechnology,1.67,883083.0,114180000.0
+CRDL,Healthcare,Drug Manufacturers - Specialty & Generic,1.32,473451.0,147670000.0
+CRE,Industrials,Specialty Business Services,2.4,9200.0,4830000.0
+CRF,Financial,Closed-End Fund - Equity,7.19,1008195.0,1170000000.0
+CRI,Consumer Cyclical,Apparel Retail,33.46,835327.0,1230000000.0
+CRMD,Healthcare,Biotechnology,7.55,2835605.0,592310000.0
+CRML,Basic Materials,Other Industrial Metals & Mining,11.18,7979926.0,1360000000.0
+CRNC,Technology,Software - Application,9.79,763345.0,442390000.0
+CRON,Healthcare,Drug Manufacturers - Specialty & Generic,2.63,3907189.0,982730000.0
+CRSR,Technology,Computer Hardware,6.72,1629516.0,718250000.0
+CRVS,Healthcare,Biotechnology,12.31,3488797.0,1040000000.0
+CSIQ,Technology,Solar,17.88,4459561.0,1210000000.0
+CSTE,Industrials,Building Products & Equipment,1.72,475989.0,59470000.0
+CSWC,Financial,Asset Management,23.57,684447.0,1420000000.0
+CTKB,Healthcare,Medical Devices,3.4,1622109.0,439730000.0
+CTLP,Technology,Software - Infrastructure,11.2,3431524.0,825780000.0
+CTMX,Healthcare,Biotechnology,3.61,3923661.0,785910000.0
+CTNT,Industrials,Integrated Freight & Logistics,1.83,177080.0,3590000.0
+CUE,Healthcare,Biotechnology,23.01,180330.0,93090000.0
+CURV,Consumer Cyclical,Apparel Retail,1.31,381603.0,130340000.0
+CVGI,Consumer Cyclical,Auto Parts,5.12,338234.0,185640000.0
+CWH,Consumer Cyclical,Auto & Truck Dealerships,6.63,2042777.0,682800000.0
+CXIIU,Financial,Shell Companies,10.12,16757.0,367860000.0
+CXM,Technology,Software - Application,5.11,2841851.0,1200000000.0
+CYCN,Healthcare,Biotechnology,3.12,51808.0,13510000.0
+CYH,Healthcare,Medical Care Facilities,2.82,1093878.0,397390000.0
+CYN,Technology,Software - Application,1.43,394508.0,20630000.0
+CYPH,Healthcare,Biotechnology,1.09,2468560.0,115510000.0
+CYRX,Industrials,Integrated Freight & Logistics,13.14,439663.0,662290000.0
+DARE,Healthcare,Biotechnology,2.17,1222639.0,32509999.999999996
+DBGI,Consumer Cyclical,Apparel Retail,1.12,628409.0,18620000.0
+DBI,Consumer Cyclical,Footwear & Accessories,6.41,389747.0,325310000.0
+DC,Basic Materials,Gold,5.7,1222908.0,763390000.0
+DCH,Consumer Cyclical,Auto Parts,6.36,4691854.0,1510000000.0
+DDD,Technology,Computer Hardware,3.02,3702977.0,443780000.0
+DDL,Consumer Defensive,Grocery Stores,2.49,333086.0,453900000.0
+DEC,Energy,Oil & Gas Integrated,16.08,691842.0,1160000000.0
+DEI,Real Estate,REIT - Office,11.68,2456368.0,1960000000.0
+DFDV,Financial,Asset Management,4.8,787537.0,141590000.0
+DFH,Consumer Cyclical,Residential Construction,13.1,982437.0,1200000000.0
+DGXX,Utilities,Utilities - Independent Power Producers,7.54,22579392.0,554110000.0
+DHY,Financial,Closed-End Fund - Debt,1.75,839116.0,181320000.0
+DNA,Healthcare,Biotechnology,7.71,1045745.0,473000000.0
+DNUT,Consumer Defensive,Grocery Stores,3.23,2451718.0,556850000.0
+DOLE,Consumer Defensive,Farm Products,14.1,1068595.0,1340000000.0
+DOMO,Technology,Software - Application,3.51,460581.0,158460000.0
+DOUG,Real Estate,Real Estate Services,1.58,757608.0,143630000.0
+DPRO,Technology,Computer Hardware,5.34,884567.0,194910000.0
+DQ,Technology,Solar,18.19,669944.0,1230000000.0
+DRMA,Healthcare,Biotechnology,1.19,59280.0,4790000.0
+DSL,Financial,Closed-End Fund - Debt,10.75,813950.0,1230000000.0
+DSX,Industrials,Marine Shipping,2.67,810757.0,329850000.0
+DUOT,Technology,Software - Application,8.97,1401685.0,262779999.99999997
+DV,Communication Services,Advertising Agencies,9.06,4244508.0,1390000000.0
+DXC,Technology,Information Technology Services,8.94,9648108.0,1460000000.0
+DXF,Financial,Credit Services,1.39,2595968.0,2180000.0
+DXST,Industrials,Waste Management,1.78,19479.0,3230000.0
+DXYZ,Financial,Asset Management,47.62,5326577.0,687160000.0
+EBS,Healthcare,Drug Manufacturers - Specialty & Generic,7.94,508195.0,409670000.0
+ECAT,Financial,Closed-End Fund - Equity,15.07,489886.0,1500000000.0
+ECC,Financial,Closed-End Fund - Debt,4.03,469373.0,532799999.99999994
+ECVT,Basic Materials,Specialty Chemicals,14.56,1001528.0,1590000000.0
+ECX,Consumer Cyclical,Auto Parts,1.09,1641308.0,388850000.0
+EDIT,Healthcare,Biotechnology,2.62,1277281.0,256510000.0
+EDSA,Healthcare,Biotechnology,13.05,168515.0,116040000.0
+EEIQ,Consumer Defensive,Education & Training Services,2.82,9857.0,4170000.0
+EFC,Real Estate,REIT - Mortgage,13.33,939129.0,1670000000.0
+EFOI,Consumer Cyclical,"Furnishings, Fixtures & Appliances",4.02,71665.0,25340000.0
+EFOR,Technology,Information Technology Services,17.96,1071097.0,736360000.0
+EGHT,Technology,Software - Application,2.36,1443252.0,328790000.0
+EGY,Energy,Oil & Gas E&P,5.98,1162410.0,623460000.0
+EH,Industrials,Aerospace & Defense,9.44,620760.0,493330000.0
+EHAB,Healthcare,Medical Care Facilities,13.8,1382540.0,706910000.0
+EHTH,Financial,Insurance Brokers,1.76,182301.0,55860000.0
+ELAB,Healthcare,Biotechnology,2.08,1629026.0,9450000.0
+ELDN,Healthcare,Biotechnology,3.8,992793.0,293310000.0
+ELME,Real Estate,REIT - Residential,2.01,943168.0,178600000.0
+ELMT,Industrials,Aerospace & Defense,15.45,282330.0,432140000.0
+EMBC,Healthcare,Medical Instruments & Supplies,3.14,2783239.0,186290000.0
+EMPD,Consumer Cyclical,Auto Manufacturers,5.11,249094.0,143640000.0
+ENGN,Healthcare,Biotechnology,1.72,2750157.0,115220000.0
+ENOV,Healthcare,Medical Devices,24.29,1262382.0,1400000000.0
+ENR,Industrials,Electrical Equipment & Parts,16.81,1081462.0,1150000000.0
+ENVB,Healthcare,Biotechnology,2.25,136012.0,4470000.0
+ENVX,Industrials,Electrical Equipment & Parts,6.11,7769986.0,1330000000.0
+EOLS,Healthcare,Drug Manufacturers - Specialty & Generic,6.5,559755.0,428060000.0
+EPC,Consumer Defensive,Household & Personal Products,15.93,1697040.0,734080000.0
+ERII,Industrials,Pollution & Treatment Controls,8.41,1247806.0,433500000.0
+ERNA,Healthcare,Biotechnology,13.63,1372783.0,15900000.0
+ESPR,Healthcare,Drug Manufacturers - Specialty & Generic,3.12,8135536.0,803190000.0
+ESRT,Real Estate,REIT - Diversified,5.38,892954.0,927670000.0
+ESTA,Healthcare,Medical Devices,65.76,532859.0,1940000000.0
+ETSS-U,Financial,Shell Companies,9.99,4117058.0,149850000.0
+EU,Energy,Uranium,1.52,2486057.0,295230000.0
+EVC,Communication Services,Advertising Agencies,7.83,3160321.0,720670000.0
+EVER,Communication Services,Internet Content & Information,17.48,779075.0,618320000.0
+EVEX,Industrials,Aerospace & Defense,2.99,902141.0,1040000000.0
+EVGO,Consumer Cyclical,Specialty Retail,1.9,3107200.0,596330000.0
+EVH,Healthcare,Health Information Services,3.96,2847166.0,445430000.0
+EVLV,Industrials,Security & Protection Services,5.7,4211028.0,1030000000.0
+EVTC,Technology,Software - Infrastructure,23.63,512526.0,1460000000.0
+EVTL,Industrials,Aerospace & Defense,2.55,1458116.0,324690000.0
+EVTV,Consumer Cyclical,Auto Manufacturers,2.33,393989.0,30130000.0
+EWCZ,Consumer Defensive,Household & Personal Products,5.82,5669099.0,257940000.0
+EXFY,Technology,Software - Application,1.14,496137.0,109940000.0
+EYE,Consumer Cyclical,Specialty Retail,17.45,3714917.0,1400000000.0
+EYPT,Healthcare,Biotechnology,12.35,538700.0,1040000000.0
+FABC,Consumer Cyclical,Auto Manufacturers,3.82,817247.0,5560000.0
+FATE,Healthcare,Biotechnology,1.75,2067665.0,204560000.0
+FATN,Technology,Software - Infrastructure,4.1,208411.0,57090000.0
+FBIO,Healthcare,Biotechnology,2.41,771528.0,77610000.0
+FBRT,Real Estate,REIT - Mortgage,9.04,1400212.0,695750000.0
+FCEL,Industrials,Electrical Equipment & Parts,21.36,15082230.0,1130000000.0
+FCF,Financial,Banks - Regional,18.06,573519.0,1840000000.0
+FCHL,Consumer Defensive,Education & Training Services,1.76,882724.0,2170000.0
+FDMT,Healthcare,Biotechnology,9.15,573997.0,478310000.0
+FEED,Healthcare,Medical Devices,1.1,264961.0,4050000.0
+FF,Basic Materials,Specialty Chemicals,4.03,314128.0,176770000.0
+FIGS,Consumer Cyclical,Apparel Manufacturing,11.77,2765819.0,1960000000.0
+FINV,Financial,Credit Services,4.74,966008.0,615960000.0
+FIP,Industrials,Conglomerates,4.63,1054351.0,547100000.0
+FIVN,Technology,Software - Infrastructure,21.64,3441297.0,1660000000.0
+FJET,Industrials,Aerospace & Defense,5.41,1350441.0,238980000.0
+FLGT,Healthcare,Diagnostics & Research,15.7,470742.0,445890000.0
+FLNA,Healthcare,Biotechnology,1.18,251001.0,57000000.0
+FLNG,Energy,Oil & Gas Midstream,32.13,346576.0,1710000000.0
+FLO,Consumer Defensive,Packaged Foods,7.18,44904028.0,1520000000.0
+FLWS,Consumer Cyclical,Specialty Retail,4.33,451141.0,277400000.0
+FLYW,Technology,Software - Infrastructure,16.06,1557507.0,1980000000.0
+FLYX,Industrials,Airlines,2.28,161832.0,215120000.0
+FMC,Basic Materials,Agricultural Inputs,14.17,4780878.0,1770000000.0
+FNKO,Consumer Cyclical,Leisure,5.06,491873.0,283010000.0
+FOSL,Consumer Cyclical,Footwear & Accessories,4.06,1439789.0,239950000.0
+FOXF,Consumer Cyclical,Auto Parts,16.07,534463.0,673910000.0
+FPI,Real Estate,REIT - Specialty,10.16,413674.0,443150000.0
+FRMM,Technology,Software - Application,3.7,844088.0,75160000.0
+FSCO,Financial,Closed-End Fund - Debt,5.07,644811.0,1030000000.0
+FTRE,Healthcare,Biotechnology,13.66,1100621.0,1290000000.0
+FUBO,Communication Services,Broadcasting,9.62,948436.0,1040000000.0
+FULC,Healthcare,Biotechnology,6.69,431144.0,445780000.0
+FUSE,Technology,Software - Application,1.62,154590.0,46880000.0
+FVRR,Communication Services,Internet Content & Information,10.35,587189.0,372090000.0
+FWDI,Consumer Cyclical,Footwear & Accessories,4.48,1178528.0,334570000.0
+FWRD,Industrials,Integrated Freight & Logistics,8.76,1473544.0,277040000.0
+FWRG,Consumer Cyclical,Restaurants,11.23,1872809.0,692270000.0
+GAB,Financial,Closed-End Fund - Equity,5.53,1602044.0,1720000000.0
+GAMB,Consumer Cyclical,Gambling,2.4,6553562.0,84230000.0
+GANX,Healthcare,Biotechnology,1.75,603231.0,74640000.0
+GAU,Basic Materials,Gold,2.32,3346213.0,605570000.0
+GCGRU,Financial,Shell Companies,10.16,19590.0,418130000.0
+GCT,Technology,Software - Infrastructure,36.06,514565.0,1320000000.0
+GCTS,Technology,Semiconductors,1.83,10798644.0,152040000.0
+GDOT,Financial,Credit Services,12.63,381010.0,715870000.0
+GDRX,Healthcare,Health Information Services,2.43,1382316.0,822980000.0
+GDYN,Technology,Information Technology Services,6.71,2578174.0,561130000.0
+GEMI,Financial,Capital Markets,5.58,17024336.0,669520000.0
+GENI,Communication Services,Internet Content & Information,4.24,4180960.0,1130000000.0
+GERN,Healthcare,Biotechnology,1.29,16064523.0,827560000.0
+GEVO,Basic Materials,Specialty Chemicals,1.68,1996974.0,408930000.0
+GGN,Financial,Closed-End Fund - Equity,5.21,648507.0,813930000.0
+GIII,Consumer Cyclical,Apparel Manufacturing,28.73,963790.0,1210000000.0
+GILT,Technology,Communication Equipment,15.19,824939.0,1150000000.0
+GLDG,Basic Materials,Gold,1.1,3605104.0,235400000.0
+GLIBK,Communication Services,Telecom Services,25.26,646440.0,1010000000.0
+GLND,Energy,Oil & Gas E&P,2.9,626958.0,126820000.0
+GLOB,Technology,Information Technology Services,38.91,6514534.0,1680000000.0
+GLUE,Healthcare,Biotechnology,18.15,925835.0,1530000000.0
+GMEX,Technology,Consumer Electronics,1.8,125971.0,1910000.0
+GNL,Real Estate,REIT - Diversified,9.23,1974941.0,1960000000.0
+GO,Consumer Defensive,Grocery Stores,7.4,4322442.0,732030000.0
+GOGO,Communication Services,Telecom Services,3.88,1719783.0,524730000.0
+GOLD,Financial,Capital Markets,38.73,573285.0,1100000000.0
+GORO,Basic Materials,Other Precious Metals & Mining,1.31,1247329.0,212070000.0
+GPRE,Basic Materials,Chemicals,17.14,1373153.0,1200000000.0
+GPRK,Energy,Oil & Gas E&P,9.58,375474.0,619620000.0
+GPRO,Technology,Consumer Electronics,1.11,5144488.0,192720000.0
+GRCE,Healthcare,Biotechnology,2.16,268418.0,33420000.0
+GRFS,Healthcare,Drug Manufacturers - General,7.66,461949.0,1980000000.0
+GRNT,Energy,Oil & Gas E&P,5.51,896470.0,726750000.0
+GRO,Basic Materials,Other Industrial Metals & Mining,2.63,775188.0,142660000.0
+GROY,Basic Materials,Gold,3.32,3071280.0,766230000.0
+GRPN,Communication Services,Internet Content & Information,17.46,1653894.0,663200000.0
+GRRR,Technology,Software - Infrastructure,13.15,769038.0,363650000.0
+GSBD,Financial,Asset Management,8.93,1165428.0,1010000000.0
+GSIT,Technology,Semiconductors,9.64,2012119.0,348650000.0
+GSM,Basic Materials,Other Industrial Metals & Mining,3.96,1214475.0,739970000.0
+GSRVU,Financial,Shell Companies,9.99,1841010.0,206080000.0
+GT,Consumer Cyclical,Auto Parts,5.64,8904755.0,1620000000.0
+GTE,Energy,Oil & Gas E&P,9.17,327913.0,324250000.0
+GTM,Technology,Software - Application,3.86,11953885.0,1140000000.0
+GTN,Communication Services,Broadcasting,4.15,1685774.0,489220000.0
+GTY,Real Estate,REIT - Retail,32.67,350750.0,1980000000.0
+GVH,Industrials,Integrated Freight & Logistics,4.83,24135.0,10220000.0
+GXAI,Communication Services,Electronic Gaming & Multimedia,1.2,192306.0,8550000.0
+HCAI,Industrials,Farm & Heavy Construction Machinery,5.54,113024.0,6440000.0
+HCAT,Healthcare,Health Information Services,1.19,851444.0,87930000.0
+HCSG,Healthcare,Medical Care Facilities,21.25,426647.0,1460000000.0
+HCTI,Healthcare,Health Information Services,2.17,250727.0,4400000.0
+HCWB,Healthcare,Biotechnology,1.22,394917440.0,8220000.000000001
+HELE,Consumer Defensive,Household & Personal Products,22.61,551014.0,525860000.0
+HELP,Healthcare,Biotechnology,4.67,992626.0,233690000.0
+HIVE,Financial,Capital Markets,2.69,10834861.0,683230000.0
+HKD,Technology,Software - Application,1.65,160830.0,325080000.0
+HLF,Consumer Defensive,Packaged Foods,12.83,1459936.0,1330000000.0
+HLIT,Technology,Communication Equipment,12.54,2140550.0,1360000000.0
+HLLY,Consumer Cyclical,Auto Parts,2.64,752884.0,317780000.0
+HLMN,Industrials,Tools & Accessories,7.21,1232189.0,1410000000.0
+HLX,Energy,Oil & Gas Equipment & Services,10.05,1305006.0,1480000000.0
+HNRG,Energy,Thermal Coal,18.15,805065.0,855420000.0
+HNST,Consumer Defensive,Household & Personal Products,3.12,1072446.0,343450000.0
+HOLO,Technology,Electronic Components,1.69,457955.0,38720000.0
+HOPE,Financial,Banks - Regional,11.86,853801.0,1520000000.0
+HOVR,Industrials,Aerospace & Defense,2.21,2804414.0,100030000.0
+HPAI,Technology,Software - Infrastructure,1.15,202596.0,43050000.0
+HPK,Energy,Oil & Gas E&P,7.1,910519.0,897140000.0
+HPP,Real Estate,REIT - Office,11.26,619683.0,624380000.0
+HRMY,Healthcare,Biotechnology,30.09,471143.0,1740000000.0
+HROW,Healthcare,Drug Manufacturers - Specialty & Generic,31.21,1199685.0,1160000000.0
+HRZN,Financial,Asset Management,4.25,885334.0,290110000.0
+HTCO,Industrials,Marine Shipping,6.37,521472.0,47040000.0
+HTZ,Industrials,Rental & Leasing Services,5.53,6322093.0,1750000000.0
+HURA,Healthcare,Biotechnology,2.31,614400.0,147110000.0
+HUYA,Communication Services,Entertainment,2.92,950007.0,231850000.0
+HYLN,Consumer Cyclical,Auto Parts,4.67,10605272.0,832790000.0
+HYPR,Healthcare,Medical Devices,1.55,452229.0,152710000.0
+HYT,Financial,Closed-End Fund - Debt,8.47,710499.0,1380000000.0
+IACQU,Financial,Shell Companies,10.0,135384.0,226400000.0
+IART,Healthcare,Medical Devices,14.1,864781.0,1100000000.0
+IAUX,Basic Materials,Gold,1.48,30289910.0,1280000000.0
+IBIO,Healthcare,Biotechnology,1.47,425032.0,73030000.0
+IDACU,Financial,Shell Companies,10.0,5083601.0,269300000.0
+IFRX,Healthcare,Biotechnology,2.47,1450840.0,178560000.0
+IGR,Financial,Closed-End Fund - Foreign,4.6,540698.0,696440000.0
+IHRT,Communication Services,Broadcasting,4.78,1012898.0,653850000.0
+IKT,Healthcare,Biotechnology,1.73,947904.0,228420000.0
+IMAX,Communication Services,Entertainment,33.59,991181.0,1840000000.0
+IMMR,Technology,Software - Application,6.15,314920.0,203570000.0
+IMMX,Healthcare,Biotechnology,9.94,603020.0,540850000.0
+IMPP,Energy,Oil & Gas Midstream,4.83,262301.0,215650000.0
+IMRX,Healthcare,Biotechnology,5.16,650924.0,333840000.0
+IMSR,Utilities,Utilities - Regulated Electric,7.3,2823258.0,600750000.0
+IMXI,Technology,Software - Infrastructure,15.36,673317.0,462250000.0
+INDI,Technology,Semiconductors,4.19,3919375.0,950730000.0
+INDO,Energy,Oil & Gas E&P,3.07,681142.0,47240000.0
+INHD,Basic Materials,Steel,1.4,104895.0,3530000.0
+INMD,Healthcare,Medical Devices,13.9,773429.0,880690000.0
+INN,Real Estate,REIT - Hotel & Motel,5.24,784592.0,635430000.0
+INO,Healthcare,Biotechnology,1.3,1950912.0,106520000.0
+INSP,Healthcare,Medical Devices,40.05,1676523.0,1150000000.0
+INTA,Technology,Software - Application,20.99,1541197.0,1620000000.0
+INV,Financial,Asset Management,6.72,2259334.0,564780000.0
+INVA,Healthcare,Biotechnology,21.97,1001722.0,1620000000.0
+INVX,Energy,Oil & Gas Equipment & Services,28.0,394113.0,1930000000.0
+IOVA,Healthcare,Biotechnology,3.45,7837137.0,1540000000.0
+IPSC,Healthcare,Biotechnology,2.34,751262.0,422030000.0
+IQ,Communication Services,Entertainment,1.16,3867159.0,615350000.0
+IRD,Healthcare,Biotechnology,4.8,917865.0,390700000.0
+IRWD,Healthcare,Drug Manufacturers - Specialty & Generic,3.58,2174428.0,589320000.0
+ISPC,Healthcare,Diagnostics & Research,4.15,125379.0,5460000.0
+ISSC,Industrials,Aerospace & Defense,16.27,761740.0,289340000.0
+ITRG,Basic Materials,Other Precious Metals & Mining,2.55,2857791.0,515510000.0
+IVR,Real Estate,REIT - Mortgage,7.98,2716904.0,740730000.0
+IVVD,Healthcare,Biotechnology,1.21,7274905.0,356480000.0
+IXHL,Healthcare,Drug Manufacturers - Specialty & Generic,3.96,308773.0,1370000000.0
+JACK,Consumer Cyclical,Restaurants,10.87,937085.0,207330000.0
+JANX,Healthcare,Biotechnology,13.89,737158.0,847070000.0
+JBGS,Real Estate,REIT - Diversified,14.22,498024.0,1060000000.0
+JBI,Industrials,Building Products & Equipment,4.81,1990324.0,656050000.0
+JBIO,Healthcare,Biotechnology,23.35,555109.0,1150000000.0
+JBLU,Industrials,Airlines,4.58,18332480.0,1700000000.0
+JCSE,Industrials,Specialty Industrial Machinery,1.24,26165.0,6210000.0
+JDZG,Consumer Defensive,Education & Training Services,2.21,750126.0,3130000.0
+JELD,Industrials,Building Products & Equipment,1.47,817242.0,126640000.0
+JFR,Financial,Closed-End Fund - Debt,7.46,389957.0,1200000000.0
+JKS,Technology,Solar,24.6,1376288.0,1240000000.0
+JMIA,Consumer Cyclical,Internet Retail,7.0,1759145.0,866950000.0
+JQC,Financial,Closed-End Fund - Debt,4.8,436656.0,709520000.0
+JZXN,Consumer Cyclical,Auto & Truck Dealerships,1.35,9017539.0,1880000.0
+KALV,Healthcare,Biotechnology,26.73,8869862.0,1420000000.0
+KDK,Technology,Software - Infrastructure,8.11,915722.0,1490000000.0
+KITT,Industrials,Aerospace & Defense,1.83,211021.0,9160000.0
+KLC,Consumer Defensive,Education & Training Services,4.02,3031958.0,476080000.0
+KLTR,Technology,Software - Application,1.46,294618.0,219550000.0
+KMPR,Financial,Insurance - Property & Casualty,29.69,987130.0,1750000000.0
+KODK,Industrials,Specialty Business Services,9.69,1063221.0,945740000.0
+KOPN,Technology,Electronic Components,5.05,9042118.0,923750000.0
+KOS,Energy,Oil & Gas E&P,3.23,15780030.0,1920000000.0
+KPTI,Healthcare,Biotechnology,7.67,998049.0,173820000.0
+KREF,Real Estate,REIT - Mortgage,6.33,751620.0,409530000.0
+KRP,Energy,Oil & Gas E&P,15.44,779965.0,1720000000.0
+KSCP,Industrials,Security & Protection Services,2.95,202898.0,48030000.0
+KSS,Consumer Cyclical,Department Stores,11.77,3789728.0,1320000000.0
+KULR,Technology,Electronic Components,3.6,2342862.0,166530000.0
+KURA,Healthcare,Biotechnology,9.22,1516198.0,818500000.0
+KW,Real Estate,Real Estate Services,11.03,1322118.0,1540000000.0
+KYTX,Healthcare,Biotechnology,9.49,1195416.0,576950000.0
+LABT,Healthcare,Biotechnology,1.5,235139.0,21030000.0
+LAC,Basic Materials,Other Industrial Metals & Mining,5.01,11339334.0,1740000000.0
+LADR,Real Estate,REIT - Mortgage,9.89,915133.0,1260000000.0
+LAES,Technology,Semiconductors,2.87,8150416.0,660880000.0
+LAND,Real Estate,REIT - Specialty,9.4,498807.0,405480000.0
+LAR,Basic Materials,Other Industrial Metals & Mining,9.96,2640550.0,1630000000.0
+LC,Financial,Banks - Regional,15.59,1145591.0,1800000000.0
+LCTX,Healthcare,Biotechnology,1.25,1064415.0,311620000.0
+LDI,Financial,Mortgage Finance,1.25,1612313.0,421280000.0
+LEG,Consumer Cyclical,"Furnishings, Fixtures & Appliances",9.17,2735347.0,1250000000.0
+LENZ,Healthcare,Biotechnology,7.34,993070.0,230140000.0
+LESL,Consumer Cyclical,Specialty Retail,3.03,5703728.0,28360000.0
+LFMD,Healthcare,Health Information Services,4.33,811638.0,209410000.0
+LGO,Basic Materials,Other Industrial Metals & Mining,1.01,846504.0,84510000.0
+LIDR,Technology,Software - Infrastructure,1.89,3392771.0,87540000.0
+LIFE,Financial,Insurance Brokers,21.71,1124245.0,1360000000.0
+LILAK,Communication Services,Telecom Services,7.32,440255.0,1460000000.0
+LINC,Consumer Defensive,Education & Training Services,49.1,637339.0,1560000000.0
+LIND,Consumer Cyclical,Travel Services,18.67,551182.0,1220000000.0
+LMRI,Healthcare,Medical Devices,7.03,2949205.0,675450000.0
+LNKS,Industrials,Electrical Equipment & Parts,1.49,867710.0,2390000.0
+LOCL,Consumer Defensive,Farm Products,1.88,106861.0,42770000.0
+LODE,Basic Materials,Other Precious Metals & Mining,3.49,1641779.0,264940000.0
+LPG,Energy,Oil & Gas Midstream,40.87,601922.0,1750000000.0
+LPRO,Financial,Credit Services,1.85,839923.0,218700000.0
+LPTH,Technology,Electronic Components,11.52,1908382.0,723330000.0
+LRHC,Real Estate,Real Estate Services,1.47,107685.0,1540000.0
+LRMR,Healthcare,Biotechnology,3.58,3491960.0,371900000.0
+LSPD,Technology,Software - Application,8.83,681426.0,1210000000.0
+LTBR,Industrials,Electrical Equipment & Parts,11.44,1109731.0,401910000.0
+LTRN,Healthcare,Biotechnology,3.14,557720.0,35500000.0
+LTRX,Technology,Communication Equipment,6.27,592348.0,249650000.0
+LU,Financial,Credit Services,1.87,422956.0,1570000000.0
+LUNG,Healthcare,Medical Devices,1.27,275275.0,53640000.0
+LX,Financial,Credit Services,1.95,1392539.0,257070000.0
+LXEO,Healthcare,Biotechnology,5.09,787572.0,399680000.0
+LXRX,Healthcare,Biotechnology,2.23,2117562.0,990560000.0
+LXU,Basic Materials,Chemicals,14.5,948417.0,1040000000.0
+LZ,Industrials,Specialty Business Services,6.0,3002083.0,1030000000.0
+LZM,Basic Materials,Other Industrial Metals & Mining,4.89,516556.0,439630000.0
+MAIA,Healthcare,Biotechnology,1.26,541952.0,76610000.0
+MAN,Industrials,Staffing & Employment Services,25.97,1015079.0,1210000000.0
+MASK,Technology,Software - Application,1.62,181698.0,1830000.0
+MAX,Communication Services,Internet Content & Information,8.06,497055.0,502540000.0
+MAZE,Healthcare,Biotechnology,25.56,411801.0,1410000000.0
+MBC,Consumer Cyclical,"Furnishings, Fixtures & Appliances",7.0,3272988.0,895890000.0
+MBOT,Healthcare,Medical Instruments & Supplies,1.85,1803866.0,124250000.0
+MBX,Healthcare,Biotechnology,32.45,606347.0,1540000000.0
+MD,Healthcare,Medical Care Facilities,22.49,888926.0,1850000000.0
+MDAI,Healthcare,Medical Devices,2.43,800647.0,77330000.0
+MDXG,Healthcare,Biotechnology,3.56,1221195.0,530250000.0
+MEI,Technology,Electronic Components,10.53,1402450.0,373080000.0
+METC,Basic Materials,Coking Coal,14.51,1700561.0,901650000.0
+MFA,Real Estate,REIT - Mortgage,9.31,1305170.0,945860000.0
+MFIC,Financial,Asset Management,11.02,541049.0,907720000.0
+MGNI,Communication Services,Advertising Agencies,12.82,2164924.0,1840000000.0
+MGNX,Healthcare,Biotechnology,4.25,1997626.0,270140000.0
+MGTX,Healthcare,Biotechnology,9.4,768588.0,870530000.0
+MIMI,Industrials,Engineering & Construction,3.01,55819.0,8279999.999999999
+MIST,Healthcare,Biotechnology,1.5,2020688.0,187370000.0
+MITK,Technology,Software - Application,14.26,1319086.0,643970000.0
+MLKN,Consumer Cyclical,"Furnishings, Fixtures & Appliances",14.46,659472.0,988700000.0
+MLTX,Healthcare,Biotechnology,17.55,585569.0,1290000000.0
+MNKD,Healthcare,Biotechnology,3.09,4962234.0,954660000.0
+MNRO,Consumer Cyclical,Auto Parts,15.76,796529.0,473110000.0
+MNTN,Technology,Software - Application,7.78,796168.0,542320000.0
+MNTS,Industrials,Aerospace & Defense,5.45,2101855.0,31230000.0
+MOBI,Healthcare,Medical Devices,11.9,102177.0,393770000.0
+MOBX,Technology,Semiconductors,2.25,8331297.0,23950000.0
+MOMO,Communication Services,Internet Content & Information,6.05,313634.0,675180000.0
+MQ,Technology,Software - Infrastructure,3.81,3154959.0,1620000000.0
+MRAM,Technology,Semiconductors,37.57,4434856.0,880930000.0
+MRLN,Industrials,Aerospace & Defense,6.61,1683597.0,558840000.0
+MRTN,Industrials,Trucking,15.52,868966.0,1270000000.0
+MRVI,Healthcare,Biotechnology,4.15,1538467.0,1070000000.0000001
+MSDL,Financial,Asset Management,15.24,797871.0,1290000000.0
+MTEK,Technology,Electronic Components,1.13,202402.0,10960000.0
+MTNE-U,Financial,Shell Companies,10.0,764.0,202090000.0
+MUX,Basic Materials,Other Precious Metals & Mining,22.81,1072528.0,1360000000.0
+MVST,Consumer Cyclical,Auto Parts,1.42,18214854.0,473080000.0
+MWC,Consumer Cyclical,Auto Parts,8.0,275203.0,466320000.0
+MX,Technology,Semiconductors,4.34,1632886.0,158150000.0
+MXCT,Healthcare,Medical Devices,1.04,1017206.0,111410000.0
+MYGN,Healthcare,Diagnostics & Research,3.58,1637002.0,338120000.0
+MYSE,Technology,Software - Application,1.81,90729.0,7710000.0
+NABL,Technology,Information Technology Services,3.39,2753290.0,638600000.0
+NAC,Financial,Closed-End Fund - Debt,11.82,1005876.0,1850000000.0
+NAGE,Healthcare,Biotechnology,3.65,1403745.0,290700000.0
+NAK,Basic Materials,Other Industrial Metals & Mining,2.04,7239186.0,1140000000.0
+NAMM,Basic Materials,Gold,1.48,224588.0,80630000.0
+NAT,Energy,Oil & Gas Midstream,5.47,3548352.0,1160000000.0
+NAVI,Financial,Credit Services,8.14,958055.0,765070000.0
+NB,Basic Materials,Other Industrial Metals & Mining,5.46,4042883.0,794910000.0
+NBHC,Financial,Banks - Regional,40.81,405477.0,1830000000.0
+NBP,Healthcare,Biotechnology,1.82,885921.0,209990000.0
+NCI,Consumer Cyclical,Apparel Manufacturing,1.06,267812.0,4310000.0
+NCNO,Technology,Software - Application,14.97,4323480.0,1630000000.0
+NEO,Healthcare,Diagnostics & Research,8.24,1111402.0,1070000000.0000001
+NEOG,Healthcare,Medical Devices,8.19,1515326.0,1780000000.0
+NEOV,Industrials,Electrical Equipment & Parts,2.56,508397.0,109340000.0
+NEWP,Basic Materials,Silver,5.33,6320951.0,980830000.0
+NEXA,Basic Materials,Other Industrial Metals & Mining,14.85,1245568.0,1970000000.0
+NEXR,Consumer Cyclical,Internet Retail,1.44,40809.0,940000.0
+NFGC,Basic Materials,Gold,2.02,1017882.0,697320000.0
+NHP,Real Estate,REIT - Healthcare Facilities,14.86,550574.0,241500000.0
+NKLR,Utilities,Utilities - Regulated Electric,5.84,454281.0,645330000.0
+NKTX,Healthcare,Biotechnology,2.64,730248.0,188880000.0
+NMAX,Communication Services,Broadcasting,7.2,1625529.0,929800000.0
+NMFC,Financial,Asset Management,8.09,412664.0,764120000.0
+NMG,Basic Materials,Other Industrial Metals & Mining,1.92,1291424.0,308790000.0
+NMRA,Healthcare,Biotechnology,1.84,829176.0,340920000.0
+NMZ,Financial,Closed-End Fund - Debt,10.13,609227.0,1190000000.0
+NNBR,Industrials,Conglomerates,2.22,646050.0,117160000.0
+NNDM,Technology,Computer Hardware,1.58,1685498.0,328620000.0
+NNE,Industrials,Specialty Industrial Machinery,24.92,2805899.0,1300000000.0
+NNOX,Healthcare,Medical Devices,1.72,906679.0,119700000.0
+NOMD,Consumer Defensive,Packaged Foods,9.8,1817391.0,1390000000.0
+NPKI,Energy,Oil & Gas Equipment & Services,15.29,551385.0,1290000000.0
+NPT,Consumer Cyclical,Specialty Retail,1.48,293817.0,32830000.0
+NPWR,Industrials,Specialty Industrial Machinery,2.13,1167084.0,470870000.0
+NRDS,Communication Services,Internet Content & Information,7.77,2163589.0,511260000.0
+NRGV,Utilities,Utilities - Renewable,5.93,7270875.0,1030000000.0
+NRIX,Healthcare,Biotechnology,15.85,999164.0,1640000000.0
+NRXP,Healthcare,Biotechnology,3.28,2251986.0,108460000.0
+NSP,Industrials,Staffing & Employment Services,30.23,492353.0,1150000000.0
+NSSC,Industrials,Security & Protection Services,36.22,447600.0,1290000000.0
+NTGR,Technology,Communication Equipment,24.75,353268.0,664290000.0
+NTIP,Industrials,Specialty Business Services,1.48,21108.0,33840000.0
+NTLA,Healthcare,Biotechnology,13.67,14834017.0,1910000000.0
+NTST,Real Estate,REIT - Retail,20.44,1269125.0,2000000000.0
+NUAI,Technology,Software - Infrastructure,4.88,5382327.0,483120000.0
+NUS,Consumer Defensive,Household & Personal Products,6.12,688514.0,297130000.0
+NUVB,Healthcare,Biotechnology,4.32,8030763.0,1510000000.0
+NVA,Basic Materials,Other Industrial Metals & Mining,5.84,510302.0,222800000.0
+NVAX,Healthcare,Biotechnology,9.06,4070808.0,1490000000.0
+NVRI,Industrials,Waste Management,19.39,835952.0,1600000000.0
+NWBI,Financial,Banks - Regional,13.4,1059831.0,1960000000.0
+NWL,Consumer Defensive,Household & Personal Products,3.84,7785394.0,1630000000.0
+NXDR,Communication Services,Internet Content & Information,2.03,3171999.0,774250000.0
+NXTT,Technology,Software - Application,1.55,211395.0,118210000.0
+OABI,Healthcare,Biotechnology,2.18,915650.0,316040000.0
+OBE,Energy,Oil & Gas E&P,13.47,551683.0,906670000.0
+OCFC,Financial,Banks - Regional,18.2,750581.0,1050000000.0
+OCG,Consumer Cyclical,Internet Retail,2.23,325258.0,4320000.0
+OCGN,Healthcare,Biotechnology,1.39,4785060.0,470550000.0
+OCSL,Financial,Asset Management,12.1,584920.0,1070000000.0000001
+ODD,Consumer Defensive,Household & Personal Products,12.65,1308431.0,716710000.0
+ODTX,Healthcare,Biotechnology,17.62,405163.0,831140000.0
+ODV,Basic Materials,Gold,3.05,1814880.0,929030000.0
+ODYS,Technology,Scientific & Technical Instruments,4.56,143027.0,76500000.0
+OEC,Basic Materials,Specialty Chemicals,6.92,413991.0,390210000.0
+OFRM,Consumer Defensive,Packaged Foods,15.97,340953.0,669140000.0
+OGI,Healthcare,Drug Manufacturers - Specialty & Generic,1.07,1263564.0,145880000.0
+OI,Consumer Cyclical,Packaging & Containers,8.35,1870537.0,1280000000.0
+OIS,Energy,Oil & Gas Equipment & Services,9.01,611942.0,542340000.0
+OLMA,Healthcare,Biotechnology,13.59,1222027.0,1190000000.0
+OLPX,Consumer Cyclical,Specialty Retail,2.03,3218027.0,1360000000.0
+OMCL,Healthcare,Health Information Services,43.12,549697.0,1960000000.0
+OMDA,Healthcare,Health Information Services,16.56,1336359.0,984470000.0
+OMER,Healthcare,Biotechnology,12.25,3266355.0,886600000.0
+OMEX,Basic Materials,Other Industrial Metals & Mining,1.08,414732.0,63260000.0
+OPFI,Financial,Credit Services,8.61,640489.0,735530000.0
+OPK,Healthcare,Diagnostics & Research,1.1,2667319.0,830600000.0
+OPRA,Communication Services,Internet Content & Information,17.89,348651.0,1600000000.0
+OPRT,Financial,Credit Services,5.25,387744.0,240130000.0
+OPRX,Healthcare,Health Information Services,5.21,572843.0,97770000.0
+OPTX,Technology,Electronic Components,7.16,764424.0,285340000.0
+ORC,Real Estate,REIT - Mortgage,6.86,4833428.0,1380000000.0
+ORGN,Basic Materials,Chemicals,1.43,23845178.0,7870000.0
+ORGO,Healthcare,Drug Manufacturers - Specialty & Generic,2.41,1948905.0,310110000.0
+ORIC,Healthcare,Biotechnology,8.15,1204732.0,843670000.0
+OSG,Financial,Insurance - Specialty,5.66,447469.0,254780000.0
+OSPN,Technology,Software - Infrastructure,12.26,390199.0,454510000.0
+OSS,Technology,Computer Hardware,16.47,1702908.0,407950000.0
+OSTX,Healthcare,Biotechnology,1.88,861707.0,79030000.0
+OSUR,Healthcare,Medical Instruments & Supplies,3.0,1389244.0,206550000.0
+OTAI-U,Financial,Shell Companies,10.02,17398.0,102420000.0
+OVID,Healthcare,Biotechnology,2.63,1252595.0,490860000.0
+OXLC,Financial,Closed-End Fund - Debt,9.97,1183786.0,973070000.0
+OXSQ,Financial,Asset Management,1.65,3206452.0,154320000.0
+PACB,Healthcare,Medical Devices,1.12,9318968.0,347870000.0
+PACK,Consumer Cyclical,Packaging & Containers,5.75,757108.0,491880000.0
+PALI,Healthcare,Biotechnology,1.83,1811925.0,317650000.0
+PANL,Industrials,Marine Shipping,8.19,1205440.0,535750000.0
+PAPL,Financial,Mortgage Finance,1.25,198032.0,32610000.0
+PAR,Technology,Software - Application,14.7,1443394.0,606320000.0
+PAVS,Consumer Defensive,Packaged Foods,1.11,25359.0,1160000.0
+PAX,Financial,Asset Management,11.36,1146138.0,1830000000.0
+PAYO,Technology,Software - Infrastructure,4.6,4804161.0,1540000000.0
+PAYS,Technology,Software - Infrastructure,5.62,494650.0,314190000.0
+PBM,Healthcare,Biotechnology,4.91,137239.0,1470000.0
+PCRX,Healthcare,Drug Manufacturers - Specialty & Generic,22.64,449831.0,890540000.0
+PD,Technology,Software - Application,6.77,1553946.0,575310000.0
+PDFS,Technology,Software - Application,44.7,2406119.0,1780000000.0
+PDM,Real Estate,REIT - Office,7.8,761511.0,975150000.0
+PDO,Financial,Closed-End Fund - Debt,12.65,826051.0,1800000000.0
+PDSB,Healthcare,Biotechnology,1.34,956319.0,74790000.0
+PDYN,Technology,Software - Infrastructure,6.45,1012868.0,304730000.0
+PEB,Real Estate,REIT - Hotel & Motel,14.06,1266835.0,1590000000.0
+PEPG,Healthcare,Biotechnology,1.55,716568.0,107210000.0
+PFLT,Financial,Asset Management,8.48,1005802.0,841370000.0
+PFN,Financial,Closed-End Fund - Debt,6.83,350577.0,673440000.0
+PGEN,Healthcare,Biotechnology,4.42,3614558.0,1580000000.0
+PGNY,Healthcare,Healthcare Plans,23.25,944780.0,1820000000.0
+PGY,Technology,Software - Infrastructure,13.54,3035012.0,1120000000.0
+PHAT,Healthcare,Biotechnology,11.87,1110938.0,946700000.0
+PHK,Financial,Closed-End Fund - Debt,4.5,707084.0,839100000.0
+PHR,Healthcare,Health Information Services,8.77,1550935.0,532890000.0
+PICS,Technology,Software - Infrastructure,10.5,1412209.0,1360000000.0
+PIII,Healthcare,Medical Care Facilities,11.29,65653008.0,81710000.0
+PLAY,Communication Services,Entertainment,10.11,1178762.0,351220000.0
+PLBY,Consumer Cyclical,Leisure,1.33,1482757.0,154240000.0
+PLG,Basic Materials,Other Precious Metals & Mining,1.71,2003143.0,216880000.0
+PLRX,Healthcare,Biotechnology,1.15,439114.0,71210000.0
+PLTK,Communication Services,Electronic Gaming & Multimedia,3.57,791511.0,1360000000.0
+PLX,Healthcare,Biotechnology,1.98,1100822.0,159530000.0
+PLYX,Healthcare,Biotechnology,2.67,315259.0,126400000.0
+PMAX,Financial,Capital Markets,3.19,96743.0,3310000.0
+PMT,Real Estate,REIT - Mortgage,10.28,1051237.0,896440000.0
+PMVP,Healthcare,Biotechnology,1.29,499068.0,68800000.0
+PN,Technology,Solar,4.31,83357.0,61680000.0
+PNNT,Financial,Asset Management,4.09,940478.0,267060000.0
+POAS,Healthcare,Medical Devices,2.55,3379058.0,73520000.0
+POLA,Industrials,Electrical Equipment & Parts,1.63,163805.0,5930000.0
+POWW,Industrials,Aerospace & Defense,1.91,373827.0,224020000.0
+PRA,Financial,Insurance - Property & Casualty,24.51,1741906.0,1260000000.0
+PRAA,Financial,Credit Services,15.16,633811.0,578220000.0
+PRCH,Financial,Insurance - Property & Casualty,9.84,2810330.0,1080000000.0
+PRCT,Healthcare,Medical Devices,26.12,2135594.0,1490000000.0
+PRFX,Healthcare,Drug Manufacturers - Specialty & Generic,1.58,26441.0,1330000.0
+PRG,Industrials,Rental & Leasing Services,33.23,452206.0,1330000000.0
+PRGO,Healthcare,Drug Manufacturers - Specialty & Generic,10.61,2437220.0,1470000000.0
+PRGS,Technology,Software - Infrastructure,27.81,595088.0,1170000000.0
+PRKS,Consumer Cyclical,Leisure,36.13,1042415.0,1700000000.0
+PRME,Healthcare,Biotechnology,2.93,3113198.0,529210000.00000006
+PROK,Healthcare,Biotechnology,1.66,884534.0,501260000.0
+PRQR,Healthcare,Biotechnology,1.59,413834.0,167520000.0
+PRTA,Healthcare,Biotechnology,9.76,700010.0,510970000.0
+PSEC,Financial,Asset Management,2.18,6214411.0,1090000000.0
+PSIX,Industrials,Specialty Industrial Machinery,38.75,1104969.0,893200000.0
+PSNL,Healthcare,Diagnostics & Research,6.36,1773810.0,666030000.0
+PTACU,Financial,Shell Companies,9.93,8104914.0,248250000.0
+PTLO,Consumer Cyclical,Restaurants,3.98,2119304.0,301710000.0
+PUBM,Technology,Software - Application,9.72,551972.0,451430000.0
+PURR,Financial,Capital Markets,6.99,10875136.0,941000000.0
+PUSA,Consumer Cyclical,Leisure,4.33,987967.0,93550000.0
+PWP,Financial,Capital Markets,18.33,771943.0,1700000000.0
+PZG,Basic Materials,Gold,1.41,2735842.0,120960000.0
+PZZA,Consumer Cyclical,Restaurants,34.73,3075074.0,1140000000.0
+QCLS,Technology,Computer Hardware,4.33,616644.0,34010000.0
+QDEL,Healthcare,Medical Devices,10.32,2450635.0,703730000.0
+QFIN,Financial,Credit Services,12.79,1103656.0,1560000000.0
+QLEP-U,Financial,Shell Companies,10.01,3171.0,206080000.0
+QMCO,Technology,Computer Hardware,8.35,402022.0,122230000.0
+QNC,Technology,Software - Infrastructure,2.7,563902.0,592300000.0
+QNCX,Healthcare,Biotechnology,1.15,595629.0,18750000.0
+QNST,Communication Services,Advertising Agencies,11.28,1312746.0,647980000.0
+QTRX,Healthcare,Medical Devices,2.75,1503845.0,129539999.99999999
+QUCY,Healthcare,Diagnostics & Research,3.46,82063504.0,43300000.0
+QURE,Healthcare,Biotechnology,27.05,1449684.0,1690000000.0
+RAMP,Technology,Software - Infrastructure,29.66,521454.0,1870000000.0
+RANI,Healthcare,Biotechnology,1.08,994049.0,133690000.0
+RAYA,Industrials,Electrical Equipment & Parts,3.33,17969.0,3270000.0
+RBBN,Technology,Software - Application,2.57,1000540.0,452680000.0
+RBNE,Energy,Oil & Gas Midstream,1.29,334756.0,9770000.0
+RC,Real Estate,REIT - Mortgage,1.73,2290668.0,285830000.0
+RCAT,Industrials,Aerospace & Defense,9.49,8915364.0,1160000000.0
+RCKT,Healthcare,Biotechnology,3.25,1926256.0,354880000.0
+REA,Basic Materials,Other Industrial Metals & Mining,22.1,205794.0,440670000.0
+REAL,Consumer Cyclical,Luxury Goods,9.06,2801107.0,1090000000.0
+REAX,Real Estate,Real Estate Services,1.71,6194256.0,365080000.0
+RECT,Consumer Cyclical,Specialty Retail,1.26,10471.0,18270000.0
+REI,Energy,Oil & Gas E&P,1.36,8312210.0,284800000.0
+RENX,Real Estate,Real Estate - Development,2.08,454071.0,5200000.0
+REPL,Healthcare,Biotechnology,5.22,5875124.0,431030000.0
+RERE,Consumer Cyclical,Internet Retail,4.32,686416.0,569030000.0
+RES,Energy,Oil & Gas Equipment & Services,6.92,1534893.0,1530000000.0
+RGNX,Healthcare,Biotechnology,5.72,4342926.0,295710000.0
+RILY,Financial,Financial Conglomerates,9.01,711759.0,334550000.0
+RLJ,Real Estate,REIT - Hotel & Motel,8.95,2334978.0,1370000000.0
+RLMD,Healthcare,Biotechnology,6.9,1440736.0,723740000.0
+RLX,Consumer Defensive,Tobacco,2.16,2063758.0,1960000000.0
+RMAX,Real Estate,Real Estate Services,8.97,840239.0,303120000.0
+RMSG,Technology,Software - Application,1.29,79303.0,6540000.0
+RNA,Healthcare,Biotechnology,13.23,234428.0,226310000.0
+RNTX,Healthcare,Biotechnology,1.05,683846.0,29440000.0
+RNW,Utilities,Utilities - Renewable,5.35,957244.0,1950000000.0
+ROLR,Consumer Cyclical,Gambling,5.54,369589.0,60770000.0
+RPAY,Technology,Software - Infrastructure,3.47,601291.0,305660000.0
+RPC,Financial,Asset Management,8.26,439597.0,904340000.0
+RPD,Technology,Software - Infrastructure,6.5,1253413.0,434400000.0
+RR,Industrials,Specialty Industrial Machinery,2.68,13817978.0,599240000.0
+RREVU,Financial,Shell Companies,9.97,260151.0,249250000.0
+RSKD,Technology,Software - Application,4.61,1297721.0,678620000.0
+RVI,Financial,Asset Management,54.05,1056640.0,682110000.0
+RVLV,Consumer Cyclical,Internet Retail,18.61,1367634.0,1330000000.0
+RWAY,Financial,Asset Management,6.65,1208831.0,282390000.0
+RWT,Real Estate,REIT - Mortgage,5.18,851363.0,648620000.0
+RXRX,Healthcare,Biotechnology,2.93,17390690.0,1560000000.0
+RXST,Healthcare,Medical Devices,5.68,572053.0,235130000.0
+RXT,Technology,Software - Infrastructure,5.82,36048004.0,1450000000.0
+RYAM,Basic Materials,Chemicals,8.72,1746253.0,588060000.0
+RYZ,Industrials,Metal Fabrication,25.38,552641.0,1320000000.0
+RZLT,Healthcare,Biotechnology,3.34,891460.0,321620000.0
+RZLV,Technology,Software - Infrastructure,2.55,14017436.0,1020000000.0
+SABR,Technology,Software - Infrastructure,1.6,9576788.0,630520000.0
+SABS,Healthcare,Biotechnology,3.7,944588.0,282920000.0
+SANA,Healthcare,Biotechnology,3.07,3699197.0,854360000.0
+SATL,Industrials,Aerospace & Defense,9.84,16348327.0,1410000000.0
+SB,Industrials,Marine Shipping,7.04,667975.0,719800000.0
+SBET,Financial,Capital Markets,6.72,7985652.0,1330000000.0
+SBH,Consumer Cyclical,Specialty Retail,11.9,1371334.0,1140000000.0
+SCHL,Communication Services,Publishing,39.7,395499.0,863170000.0
+SCZM,Basic Materials,Other Industrial Metals & Mining,8.7,449556.0,804660000.0
+SDGR,Healthcare,Health Information Services,11.95,1181474.0,892910000.0
+SEGG,Consumer Cyclical,Gambling,1.87,5188731.0,23640000.0
+SENS,Healthcare,Medical Devices,5.77,364707.0,241200000.0
+SER,Healthcare,Biotechnology,1.64,160052.0,24600000.0
+SERV,Industrials,Specialty Industrial Machinery,8.24,6297857.0,637560000.0
+SES,Consumer Cyclical,Auto Parts,1.13,8450720.0,417290000.0
+SFIX,Consumer Cyclical,Apparel Retail,3.06,1286854.0,417760000.0
+SFL,Industrials,Marine Shipping,12.48,1190215.0,1800000000.0
+SG,Consumer Cyclical,Restaurants,8.09,9967672.0,961320000.0
+SGML,Basic Materials,Other Industrial Metals & Mining,16.82,9246837.0,1870000000.0
+SGMT,Healthcare,Biotechnology,6.9,744645.0,422170000.0
+SGRY,Healthcare,Medical Care Facilities,13.95,1491230.0,1820000000.0
+SHLS,Technology,Solar,10.33,11398667.0,1730000000.0
+SHMD,Industrials,Specialty Industrial Machinery,6.87,1253416.0,334480000.0
+SHO,Real Estate,REIT - Hotel & Motel,10.15,2716192.0,1890000000.0
+SIBN,Healthcare,Medical Devices,14.16,763653.0,627990000.0
+SID,Basic Materials,Steel,1.26,3371164.0,1670000000.0
+SIDU,Industrials,Aerospace & Defense,4.01,35552068.0,324270000.0
+SIGA,Healthcare,Drug Manufacturers - Specialty & Generic,4.17,700383.0,299090000.0
+SILA,Real Estate,REIT - Healthcare Facilities,30.55,275305.0,1690000000.0
+SITC,Real Estate,REIT - Retail,5.39,637934.0,282840000.0
+SKK,Industrials,Engineering & Construction,4.77,7412226.0,11630000.0
+SKLZ,Communication Services,Electronic Gaming & Multimedia,6.18,683157.0,98050000.0
+SKYQ,Energy,Oil & Gas Integrated,3.07,5661893.0,11540000.0
+SKYT,Technology,Semiconductors,34.72,930193.0,1710000000.0
+SKYX,Industrials,Electrical Equipment & Parts,1.08,1665010.0,145240000.0
+SLDB,Healthcare,Biotechnology,6.92,2022292.0,681270000.0
+SLDP,Consumer Cyclical,Auto Parts,2.88,6979410.0,647950000.0
+SLE,Communication Services,Internet Content & Information,6.04,45591440.0,8820000.0
+SLI,Basic Materials,Other Industrial Metals & Mining,3.85,1790855.0,935630000.0
+SLNH,Financial,Capital Markets,2.22,38211528.0,251260000.0
+SLQT,Financial,Insurance Brokers,1.16,1098975.0,204560000.0
+SLS,Healthcare,Biotechnology,7.08,8554120.0,1320000000.0
+SMA,Real Estate,REIT - Industrial,29.64,669334.0,1760000000.0
+SMJF,Consumer Cyclical,Textile Manufacturing,3.42,85308.0,94050000.0
+SMPL,Consumer Defensive,Packaged Foods,11.55,1892989.0,1050000000.0
+SMRT,Technology,Software - Application,1.12,858597.0,215980000.0
+SMWB,Technology,Software - Application,3.16,680572.0,274800000.0
+SNAL,Communication Services,Electronic Gaming & Multimedia,1.16,53666676.0,49440000.0
+SNBR,Consumer Cyclical,"Furnishings, Fixtures & Appliances",1.54,1086636.0,35610000.0
+SNCY,Industrials,Airlines,16.17,2100284.0,876410000.0
+SNDA,Healthcare,Medical Care Facilities,37.78,496427.0,1790000000.0
+SNDL,Consumer Defensive,Beverages - Wineries & Distilleries,1.43,2360630.0,370660000.0
+SNDX,Healthcare,Biotechnology,20.23,1842663.0,1790000000.0
+SOBR,Technology,Scientific & Technical Instruments,1.36,469143.0,3820000.0
+SONO,Technology,Consumer Electronics,14.83,1672450.0,1770000000.0
+SPCE,Industrials,Aerospace & Defense,2.81,13424201.0,282920000.0
+SPIR,Industrials,Specialty Business Services,20.01,2906802.0,701090000.0
+SPPL,Industrials,Specialty Industrial Machinery,2.87,207880.0,28090000.0
+SPPP,Financial,Asset Management,15.4,593263.0,670930000.0
+SPRY,Healthcare,Biotechnology,7.43,3673512.0,737280000.0
+SPSC,Technology,Software - Application,51.17,475506.0,1880000000.0
+SPT,Technology,Software - Application,6.25,1122183.0,375910000.0
+SPTX,Healthcare,Biotechnology,16.81,611624.0,891170000.0
+SPWH,Consumer Cyclical,Specialty Retail,1.32,216980.0,51420000.0
+SPWR,Technology,Solar,1.02,880950.0,129190000.0
+SQFT,Real Estate,REIT - Diversified,2.84,16724.0,4090000.0
+SRFM,Industrials,Airlines,1.18,2134743.0,118470000.0
+SRPT,Healthcare,Biotechnology,17.55,4570827.0,1850000000.0
+SRTA,Healthcare,Medical Care Facilities,5.22,1048172.0,451670000.0
+SSP,Communication Services,Broadcasting,3.38,764348.0,308960000.0
+SST,Industrials,Specialty Business Services,3.02,365775.0,30090000.0
+SSYS,Technology,Computer Hardware,8.56,683849.0,737640000.0
+STAA,Healthcare,Medical Instruments & Supplies,32.07,1371649.0,1590000000.0
+STGW,Communication Services,Advertising Agencies,6.05,1429120.0,1500000000.0
+STIM,Healthcare,Medical Devices,1.28,2489188.0,89070000.0
+STOK,Healthcare,Biotechnology,30.08,673293.0,1870000000.0
+STTK,Healthcare,Biotechnology,6.26,265422.0,480020000.0
+SUNE,Technology,Solar,1.65,200318.0,5620000.0
+SUPV,Financial,Banks - Regional,7.5,652327.0,592500000.0
+SVC,Real Estate,REIT - Hotel & Motel,1.66,6674295.0,1070000000.0000001
+SVCO,Technology,Software - Application,10.09,350179.0,329750000.0
+SVRA,Healthcare,Biotechnology,5.03,2510737.0,1030000000.0
+SVV,Consumer Cyclical,Specialty Retail,7.13,1133467.0,1100000000.0
+SWBI,Industrials,Aerospace & Defense,15.34,549036.0,682530000.0
+SWIM,Industrials,Building Products & Equipment,4.76,845610.0,558880000.0
+SWMR,Technology,Software - Infrastructure,29.64,438317.0,379390000.0
+SXC,Basic Materials,Coking Coal,7.62,1975501.0,646580000.0
+SXTP,Healthcare,Biotechnology,1.39,23286.0,3670000.0
+SYNX,Technology,Communication Equipment,1.24,147293.0,8230000.0
+TALK,Healthcare,Health Information Services,5.2,1618955.0,871070000.0
+TARA,Healthcare,Biotechnology,5.1,1122896.0,286640000.0
+TASK,Technology,Information Technology Services,5.49,682765.0,502760000.0
+TBLA,Communication Services,Internet Content & Information,4.99,2299029.0,1360000000.0
+TBPH,Healthcare,Biotechnology,16.22,556157.0,836190000.0
+TCPC,Financial,Asset Management,4.15,508114.0,348200000.0
+TCRX,Healthcare,Biotechnology,1.0,840889.0,65349999.99999999
+TDAY,Communication Services,Publishing,7.39,1677170.0,1080000000.0
+TDIC,Communication Services,Advertising Agencies,1.04,145712512.0,7700000.0
+TDOC,Healthcare,Health Information Services,6.36,4380825.0,1150000000.0
+TDUP,Consumer Cyclical,Internet Retail,4.1,2401468.0,529070000.00000006
+TE,Industrials,Electrical Equipment & Parts,5.67,18203662.0,1580000000.0
+TENX,Healthcare,Biotechnology,11.98,775404.0,317770000.0
+TGEN,Industrials,Electrical Equipment & Parts,6.52,1109161.0,195070000.0
+TH,Industrials,Specialty Business Services,18.66,1364448.0,1870000000.0
+THM,Basic Materials,Gold,2.49,970711.0,651480000.0
+THRY,Technology,Software - Application,3.41,855605.0,151230000.0
+TIC,Industrials,Specialty Business Services,8.96,2448660.0,1980000000.0
+TIGR,Financial,Capital Markets,6.16,2540362.0,1060000000.0
+TILE,Consumer Cyclical,"Furnishings, Fixtures & Appliances",28.05,613206.0,1630000000.0
+TK,Energy,Oil & Gas Midstream,13.22,496510.0,1150000000.0
+TLIH,Industrials,Industrial Distribution,3.48,17875.0,10230000.0
+TLRY,Healthcare,Drug Manufacturers - Specialty & Generic,5.32,4336208.0,636290000.0
+TLS,Technology,Software - Infrastructure,4.2,590886.0,314240000.0
+TLYS,Consumer Cyclical,Apparel Retail,4.04,158895.0,93660000.0
+TMCI,Healthcare,Medical Devices,2.66,985829.0,172560000.0
+TMQ,Basic Materials,Other Industrial Metals & Mining,4.12,4374466.0,723270000.0
+TNDM,Healthcare,Medical Devices,12.82,6098286.0,878540000.0
+TNET,Industrials,Staffing & Employment Services,40.52,510570.0,1860000000.0
+TOI,Healthcare,Medical Care Facilities,3.98,1049389.0,397930000.0
+TOPS,Energy,Oil & Gas Midstream,1.02,18019896.0,4720000.0
+TORO,Energy,Oil & Gas Midstream,5.49,116464.0,158400000.0
+TPB,Consumer Defensive,Tobacco,89.56,311359.0,1730000000.0
+TRAW,Healthcare,Biotechnology,1.88,1937620.0,28480000.0
+TRIN,Financial,Asset Management,16.85,812795.0,1510000000.0
+TRIP,Consumer Cyclical,Travel Services,9.46,2971683.0,1100000000.0
+TRNR,Consumer Cyclical,Personal Services,1.14,178365.0,2560000.0
+TRON,Consumer Cyclical,Leisure,2.11,524315.0,1000000000.0
+TROX,Basic Materials,Chemicals,7.99,3124669.0,1270000000.0
+TRS,Consumer Cyclical,Packaging & Containers,38.03,308191.0,1360000000.0
+TRT,Technology,Semiconductor Equipment & Materials,20.05,4709649.0,202760000.0
+TRTX,Real Estate,REIT - Mortgage,8.1,473536.0,626200000.0
+TRX,Basic Materials,Gold,1.13,3238383.0,368300000.0
+TSHA,Healthcare,Biotechnology,5.96,3249704.0,1710000000.0
+TSLX,Financial,Asset Management,17.73,663428.0,1680000000.0
+TSSI,Technology,Information Technology Services,11.12,971291.0,312180000.0
+TTEC,Technology,Information Technology Services,2.45,274771.0,119210000.0
+TTGT,Technology,Information Technology Services,5.19,944724.0,375230000.0
+TTI,Industrials,Conglomerates,10.52,1479523.0,1420000000.0
+TURB,Technology,Solar,1.36,1336101.0,14990000.0
+TUYA,Technology,Software - Infrastructure,2.21,739503.0,1200000000.0
+TV,Communication Services,Telecom Services,2.85,1195965.0,1230000000.0
+TWI,Industrials,Farm & Heavy Construction Machinery,7.57,449567.0,487300000.0
+TWO,Real Estate,REIT - Mortgage,12.6,2428064.0,1320000000.0
+TYGO,Technology,Solar,3.95,432076.0,299850000.0
+UAMY,Basic Materials,Other Industrial Metals & Mining,8.61,14692851.0,1280000000.0
+UAVS,Technology,Computer Hardware,1.05,1767305.0,61110000.0
+UCAR,Consumer Cyclical,Auto & Truck Dealerships,1.3,304015.0,3200000.0
+UDMY,Consumer Defensive,Education & Training Services,4.63,2366160.0,675700000.0
+UGRO,Industrials,Farm & Heavy Construction Machinery,4.63,137875.0,5220000.0
+UIS,Technology,Information Technology Services,2.99,613202.0,217990000.0
+ULCC,Industrials,Airlines,4.75,3617662.0,1090000000.0
+UMAC,Technology,Computer Hardware,16.2,5535332.0,774260000.0
+UMH,Real Estate,REIT - Residential,14.92,880367.0,1270000000.0
+UNCY,Healthcare,Biotechnology,8.26,828704.0,220540000.0
+UPB,Healthcare,Biotechnology,9.09,979725.0,494680000.0
+UPBD,Technology,Software - Application,17.13,743231.0,998570000.0
+UPWK,Communication Services,Internet Content & Information,8.17,3472133.0,1010000000.0
+UPXI,Communication Services,Internet Content & Information,1.45,3053726.0,101880000.0
+URG,Energy,Uranium,1.66,8863755.0,659570000.0
+URGN,Healthcare,Biotechnology,28.78,944064.0,1400000000.0
+UROY,Energy,Uranium,3.75,3932503.0,549300000.0
+USA,Financial,Closed-End Fund - Equity,5.73,688220.0,1730000000.0
+UTZ,Consumer Defensive,Packaged Foods,7.04,1997802.0,1010000000.0
+VCEL,Healthcare,Biotechnology,33.03,448985.0,1690000000.0
+VECA-U,Financial,Shell Companies,10.05,417046.0,103030000.0
+VELO,Technology,Computer Hardware,18.59,2675368.0,554000000.0
+VERI,Technology,Software - Infrastructure,2.07,2595637.0,192430000.0
+VET,Energy,Oil & Gas E&P,12.8,1058502.0,1960000000.0
+VFF,Consumer Defensive,Farm Products,2.61,898864.0,298290000.0
+VGZ,Basic Materials,Gold,2.17,1214498.0,316760000.0
+VHUB,Consumer Defensive,Grocery Stores,1.3,496651.0,110580000.0
+VIA,Technology,Software - Application,14.75,554597.0,1200000000.0
+VIR,Healthcare,Biotechnology,8.79,1712233.0,1480000000.0
+VITL,Consumer Defensive,Farm Products,8.48,4427229.0,363350000.0
+VIVO,Technology,Software - Infrastructure,4.54,2917088.0,76230000.0
+VLN,Technology,Semiconductors,3.05,5347000.0,321140000.0
+VLRS,Industrials,Airlines,6.53,1224117.0,750040000.0
+VNDA,Healthcare,Biotechnology,6.28,1106098.0,377650000.0
+VNRX,Healthcare,Medical Devices,2.0,174443.0,16660000.0
+VOR,Healthcare,Biotechnology,14.63,649865.0,792740000.0
+VRDN,Healthcare,Biotechnology,16.82,1613977.0,1730000000.0
+VRE,Real Estate,REIT - Residential,18.96,621195.0,1780000000.0
+VRRM,Technology,Information Technology Services,13.1,1742674.0,1990000000.0
+VSTM,Healthcare,Biotechnology,4.32,2211567.0,379610000.0
+VSTS,Industrials,Rental & Leasing Services,12.25,2532452.0,1620000000.0
+VTEX,Technology,Software - Application,3.55,981398.0,605230000.0
+VTS,Energy,Oil & Gas E&P,18.5,570949.0,771680000.0
+VUZI,Technology,Consumer Electronics,3.0,3397227.0,249470000.0
+VVR,Financial,Closed-End Fund - Debt,2.99,664435.0,460240000.0
+VWAV,Industrials,Aerospace & Defense,5.59,343752.0,133310000.0
+VYGR,Healthcare,Biotechnology,3.77,837207.0,227490000.0
+VYX,Technology,Information Technology Services,6.66,1925524.0,917800000.0
+VZLA,Basic Materials,Other Industrial Metals & Mining,3.5,12426762.0,1220000000.0
+WALD,Consumer Defensive,Household & Personal Products,1.47,239537.0,188540000.0
+WB,Communication Services,Internet Content & Information,8.12,886808.0,1280000000.0
+WBI,Energy,Oil & Gas Equipment & Services,30.72,573038.0,1440000000.0
+WBUY,Consumer Cyclical,Internet Retail,1.19,12622.0,6520000.0
+WEAV,Healthcare,Health Information Services,5.28,1073773.0,420110000.0
+WEN,Consumer Cyclical,Restaurants,8.02,9927364.0,1530000000.0
+WEST,Consumer Defensive,Packaged Foods,8.45,816949.0,824360000.0
+WGO,Consumer Cyclical,Recreational Vehicles,28.82,650814.0,814620000.0
+WGS,Healthcare,Diagnostics & Research,40.75,1629000.0,1210000000.0
+WKC,Energy,Oil & Gas Refining & Marketing,28.45,741426.0,1460000000.0
+WLTH,Technology,Software - Application,11.28,1507428.0,1690000000.0
+WNC,Industrials,Farm & Heavy Construction Machinery,6.89,1027817.0,280240000.0
+WNW,Consumer Cyclical,Internet Retail,3.12,71586.0,4150000.0000000005
+WOOF,Consumer Cyclical,Specialty Retail,2.5,2168134.0,710890000.0
+WRN,Basic Materials,Other Industrial Metals & Mining,2.8,6670044.0,631760000.0
+WSHP,Communication Services,Internet Content & Information,6.95,60393.0,163070000.0
+WTI,Energy,Oil & Gas E&P,4.75,7651762.0,706690000.0
+WVE,Healthcare,Biotechnology,6.77,4223940.0,1300000000.0
+WWW,Consumer Cyclical,Footwear & Accessories,15.35,1634810.0,1260000000.0
+WYFI,Technology,Information Technology Services,24.2,3377037.0,934460000.0
+XERS,Healthcare,Drug Manufacturers - Specialty & Generic,6.24,1219245.0,1080000000.0
+XHR,Real Estate,REIT - Hotel & Motel,15.91,1226987.0,1470000000.0
+XMAX,Consumer Cyclical,"Furnishings, Fixtures & Appliances",8.24,1391162.0,524080000.00000006
+XNCR,Healthcare,Biotechnology,11.22,895138.0,831870000.0
+XNDU,Technology,Software - Infrastructure,13.6,4890485.0,588670000.0
+XPOF,Consumer Cyclical,Leisure,4.79,598091.0,212990000.0
+XPRO,Energy,Oil & Gas Equipment & Services,15.85,717044.0,1800000000.0
+XRTX,Healthcare,Biotechnology,2.59,102197.0,3600000.0
+XRX,Industrials,Business Equipment & Supplies,2.58,9098943.0,337410000.0
+XTIA,Industrials,Aerospace & Defense,1.77,1196480.0,68110000.0
+XTLB,Healthcare,Biotechnology,2.61,26568.0,6190000.0
+XWEL,Healthcare,Diagnostics & Research,1.47,81435.0,11650000.0
+YELP,Communication Services,Internet Content & Information,21.65,1379479.0,1190000000.0
+YEXT,Technology,Software - Infrastructure,3.46,1041385.0,426770000.0
+YMAT,Basic Materials,Specialty Chemicals,1.6,4785472.0,27520000.0
+YOOV,Industrials,Security & Protection Services,1.28,2323345.0,290540000.0
+YSWY,Consumer Defensive,Grocery Stores,25.84,245740.0,1570000000.0
+YYGH,Consumer Cyclical,Personal Services,1.03,121068.0,9650000.0
+ZBIO,Healthcare,Biotechnology,18.34,642856.0,1160000000.0
+ZD,Communication Services,Advertising Agencies,40.51,509382.0,1490000000.0
+ZENA,Technology,Software - Infrastructure,1.52,12836453.0,73080000.0
+ZIP,Communication Services,Internet Content & Information,3.51,421279.0,286150000.0
+ZNTL,Healthcare,Biotechnology,4.05,918083.0,288300000.0
+ZURA,Healthcare,Biotechnology,4.72,525546.0,448390000.0
+ZVIA,Consumer Defensive,Beverages - Non-Alcoholic,1.33,1824096.0,102390000.0
+ZVRA,Healthcare,Biotechnology,11.01,1726320.0,650860000.0
+ZYME,Healthcare,Biotechnology,23.93,640795.0,1760000000.0

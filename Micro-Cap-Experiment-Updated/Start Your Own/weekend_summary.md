@@ -66,64 +66,68 @@ Before producing your output, work through these steps internally:
 </thinking_approach>
 
 <weekly_context>
-<date>Monday, May 11, 2026</date>
-<week_number>34 of 52 (twelve-month live experiment)</week_number>
+<date>Monday, May 18, 2026</date>
+<week_number>35 of 52 (twelve-month live experiment)</week_number>
 
 <market_data>
 <price_volume>
 | Ticker | Close   | % Chg  | Volume      | Role       |
 |--------|---------|--------|-------------|------------|
-| IWO    |  368.99 | +0.66% |     187,500 | Benchmark  |
-| XBI    |  134.71 | +0.79% |  11,765,700 | Benchmark  |
-| SPY    |  737.62 | +0.83% |  47,172,700 | Benchmark  |
-| IWM    |  284.17 | +0.68% |  22,449,500 | Benchmark  |
-| QQQ    |  711.23 | +2.34% |  44,146,300 | Benchmark  |
-| TLT    |   86.08 | +0.50% |  30,778,900 | Macro      |
-| HYG    |   80.14 | +0.35% |  29,715,200 | Macro      |
+| ECVT   |   14.56 | -2.74% |   1,000,500 | Holding    |
+| ORN    |   15.04 | -2.84% |     373,200 | Holding    |
+| WKC    |   28.45 | +1.46% |     741,400 | Holding    |
+| ACCO   |    3.76 | -4.08% |   1,078,600 | Holding    |
+| IWO    |  362.25 | -2.68% |     253,400 | Benchmark  |
+| XBI    |  130.69 | -3.08% |   9,436,100 | Benchmark  |
+| SPY    |  739.17 | -1.20% |  60,290,000 | Benchmark  |
+| IWM    |  277.60 | -2.41% |  35,384,700 | Benchmark  |
+| QQQ    |  708.93 | -1.51% |  51,687,900 | Benchmark  |
+| TLT    |   83.66 | -1.48% |  50,726,700 | Macro      |
+| HYG    |   79.46 | -0.49% |  54,377,000 | Macro      |
 </price_volume>
 
 <risk_metrics>
 | Metric                        | Value     | Note                    |
 |-------------------------------|-----------|-------------------------|
-| Max Drawdown                  |   -64.93% | on 2026-05-11           |
-| Sharpe Ratio (annualized)     |    1.3870 |                         |
-| Sortino Ratio (annualized)    |    2.4097 |                         |
-| Beta (daily) vs ^GSPC         |    2.1587 |                         |
-| Alpha (annualized) vs ^GSPC   | +1898.78% |                         |
-| R²                            |     0.045 | Low — alpha/beta unstable |
+| Max Drawdown                  |   -24.99% | on 2026-03-20           |
+| Sharpe Ratio (annualized)     |    2.3375 |                         |
+| Sortino Ratio (annualized)    |    8.0139 |                         |
+| Beta (daily) vs ^GSPC         |    2.1053 |                         |
+| Alpha (annualized) vs ^GSPC   | +1555.43% |                         |
+| R²                            |     0.044 | Low — alpha/beta unstable |
 </risk_metrics>
 </market_data>
 
 <portfolio_snapshot>
 | Metric              | Value     |
 |---------------------|-----------|
-| Portfolio Equity    |   $244.42 |
-| S&P Equivalent      |       N/A |
-| Cash Balance        |   $244.42 |
+| Portfolio Equity    |   $656.12 |
+| S&P Equivalent      |   $743.58 |
+| Cash Balance        |   $342.18 |
 </portfolio_snapshot>
 
 <capital_injection>
   <planned>false</planned>
 </capital_injection>
 
-<screener_watchlist generated="2026-05-11" candidates="15">
-|   rank | ticker   | sector                 |   latest_price | market_cap   |   momentum_20d |   momentum_5d |   volume_ratio |   rs_vs_iwm |   bb_width | above_sma20   | data_confidence   |   composite_score |
-|-------:|:---------|:-----------------------|---------------:|:-------------|---------------:|--------------:|---------------:|------------:|-----------:|:--------------|:------------------|------------------:|
-|      1 | LPRO     | Financial              |           1.9  | $225M        |          23.38 |          7.34 |           3.52 |       16.17 |     0.1807 | True          | HIGH              |            0.8118 |
-|      2 | ARLO     | Industrials            |          15.25 | $1.7B        |          11.15 |          3.39 |           3.17 |        3.94 |     0.1193 | True          | HIGH              |            0.8023 |
-|      3 | TLS      | Technology             |           4.48 | $351M        |          10.07 |          2.52 |           2.19 |        2.86 |     0.1053 | True          | HIGH              |            0.7905 |
-|      4 | SIGA     | Healthcare             |           4.8  | $344M        |           7.62 |          3.67 |           2.27 |        0.41 |     0.0828 | True          | HIGH              |            0.7883 |
-|      5 | TILE     | Consumer Cyclical      |          29.66 | $1.7B        |           8.49 |         11.17 |           2.2  |        1.28 |     0.0919 | True          | HIGH              |            0.7873 |
-|      6 | PUBM     | Technology             |          10.74 | $501M        |          24.16 |          4.78 |           2.46 |       16.95 |     0.2085 | True          | HIGH              |            0.7827 |
-|      7 | SG       | Consumer Cyclical      |           7    | $832M        |          21.95 |          4.01 |           2.15 |       14.74 |     0.186  | True          | HIGH              |            0.7818 |
-|      8 | WEN      | Consumer Cyclical      |           7.3  | $1.4B        |           8.96 |         11.62 |           2.42 |        1.75 |     0.1163 | True          | HIGH              |            0.7816 |
-|      9 | PAYO     | Technology             |           5.16 | $1.7B        |           7.28 |          2.99 |           2.61 |        0.07 |     0.0996 | True          | HIGH              |            0.7815 |
-|     10 | MVST     | Consumer Cyclical      |           2.13 | $707M        |          29.88 |         13.9  |           2.31 |       22.67 |     0.2217 | True          | HIGH              |            0.781  |
-|     11 | CLPT     | Healthcare             |          12.82 | $384M        |          28.07 |         14.67 |           2.74 |       20.86 |     0.231  | True          | HIGH              |            0.7772 |
-|     12 | FNKO     | Consumer Cyclical      |           5.26 | $294M        |          47.34 |         22.9  |           5.98 |       40.13 |     0.31   | True          | HIGH              |            0.7724 |
-|     13 | CRSR     | Technology             |           7.88 | $842M        |          30.9  |         14.37 |           3.72 |       23.69 |     0.2607 | True          | HIGH              |            0.7695 |
-|     14 | CERT     | Healthcare             |           6.31 | $967M        |           8.98 |          1.94 |           1.79 |        1.77 |     0.1043 | True          | HIGH              |            0.7688 |
-|     15 | QNST     | Communication Services |          13.21 | $753M        |          10.18 |          3.69 |           2.04 |        2.97 |     0.1327 | True          | HIGH              |            0.7662 |
+<screener_watchlist generated="2026-05-18" candidates="15">
+|   rank | ticker   | sector             |   latest_price | market_cap   |   momentum_20d |   momentum_5d |   volume_ratio |   rs_vs_iwm |   bb_width | above_sma20   | data_confidence   |   composite_score |
+|-------:|:---------|:-------------------|---------------:|:-------------|---------------:|--------------:|---------------:|------------:|-----------:|:--------------|:------------------|------------------:|
+|      1 | SG       | Consumer Cyclical  |           8.09 | $961M        |          16.07 |         20.03 |           2.24 |       15.98 |     0.1896 | True          | HIGH              |            0.8353 |
+|      2 | SHO      | Real Estate        |          10.15 | $1.9B        |           4.32 |         -1.17 |           1.88 |        4.23 |     0.1244 | True          | HIGH              |            0.8334 |
+|      3 | NAC      | Financial          |          11.82 | $1.9B        |           0.6  |         -1.5  |           1.6  |        0.51 |     0.0268 | False         | HIGH              |            0.8315 |
+|      4 | PRA      | Financial          |          24.51 | $1.3B        |          -0.81 |         -0.53 |           1.88 |       -0.9  |     0.0106 | False         | HIGH              |            0.8312 |
+|      5 | KW       | Real Estate        |          11.03 | $1.5B        |           1.1  |          0    |           1.49 |        1.01 |     0.0202 | True          | HIGH              |            0.8307 |
+|      6 | BCAT     | Financial          |          15.4  | $1.6B        |           4.05 |         -1.22 |           1.48 |        3.96 |     0.0839 | True          | HIGH              |            0.8301 |
+|      7 | FBIO     | Healthcare         |           2.41 | $78M         |           3.88 |          7.59 |           2.63 |        3.79 |     0.1556 | True          | HIGH              |            0.8222 |
+|      8 | AVAH     | Healthcare         |           7.72 | $1.7B        |          12.37 |         17.15 |           2.27 |       12.28 |     0.1919 | True          | HIGH              |            0.8221 |
+|      9 | FBRT     | Real Estate        |           9.04 | $696M        |          -0.99 |          2.84 |           1.7  |       -1.08 |     0.0515 | False         | HIGH              |            0.8157 |
+|     10 | WLTH     | Technology         |          11.28 | $1.7B        |           2.73 |         -2.08 |           1.78 |        2.64 |     0.1271 | True          | HIGH              |            0.8148 |
+|     11 | VTS      | Energy             |          18.5  | $772M        |           3.82 |          0.43 |           1.3  |        3.73 |     0.0772 | True          | HIGH              |            0.8134 |
+|     12 | EHAB     | Healthcare         |          13.8  | $707M        |           0.58 |          0.07 |           1.32 |        0.49 |     0.0074 | True          | MEDIUM            |            0.8125 |
+|     13 | CRMD     | Healthcare         |           7.55 | $592M        |          -0.4  |         -1.44 |           2.28 |       -0.49 |     0.1106 | False         | HIGH              |            0.8109 |
+|     14 | LPG      | Energy             |          40.87 | $1.8B        |          10.82 |          1.14 |           1.39 |       10.73 |     0.1672 | True          | HIGH              |            0.8041 |
+|     15 | RLX      | Consumer Defensive |           2.16 | $2.0B        |           0.93 |          0.47 |           1.35 |        0.84 |     0.073  | False         | HIGH              |            0.8035 |
 </screener_watchlist>
 
 **Screener Integration:**
@@ -131,115 +135,73 @@ Before producing your output, work through these steps internally:
 - For each screener candidate not selected, state why in one line.
 - Respect the sector cap: max 2 positions in the same GICS sector.
 
-<holdings date="2026-05-08">
+<holdings date="2026-05-15">
+<holding ticker="ECVT" shares="5" avg_cost="13.99" current_price="14.56" stop_loss="13.24" stop_limit="13.14" />
+<holding ticker="ORN" shares="5" avg_cost="11.88" current_price="15.04" stop_loss="13.50" stop_limit="13.40" />
+<holding ticker="WKC" shares="2" avg_cost="26.00" current_price="28.45" stop_loss="23.40" stop_limit="23.30" />
+<holding ticker="ACCO" shares="29" avg_cost="3.92" current_price="3.76" stop_loss="3.53" stop_limit="3.43" />
 </holdings>
 
 <last_analyst_thesis>
-# Week 33 — Thesis Review Summary
+# Week 34 — Thesis Review Summary
 
 ## Per-Position Thesis
 
-**MRAM (Everspin Technologies) -- Conviction: 5/5**
+**ECVT (Ecovyst) — Conviction 4/5 ↑ from 2/5**
+Q1 2026 was a clean beat (EPS $0.11 vs $0.06; revenue $215M vs $194.95M; sales +50% YoY; adj. EBITDA +87%). FY26 guide raised to $890–970M revenue / $180–195M adj. EBITDA. Calabrian acquisition ($190M) on track for Q2 close at ~2x pro forma leverage. Stock $14.14 with $13.24 stop — adequate cushion. Thesis pivots from speculative to confirmed; this is now a growth-by-acquisition compounder, not a deep-value bet.
+**Risk:** Sulfur cost pass-through dynamics could compress mix optics in 2H. Stop locks +6% min if triggered.
 
-MRAM is the experiment's breakout success story. The stock has returned +109.5% in 14 trading days, driven by a Q1 earnings beat (EPS $0.11 vs $0.09 consensus, revenue $14.9M vs $14.6M) and a transformative $40M Navy defense contract with Amentum Services for mil-aero MRAM applications (30-month term through Nov 2028).
+**ORN (Orion Group) — Conviction 4/5**
+JPMorgan Overweight initiation drove +15.9%; Roth MKM Buy reaffirmed; J.E. McAmis acquisition adds Pacific marine capability. Federal infrastructure + data-center build + shipbuilding tailwinds intact. INDOPACOM/PDI MACC large-task-order timing slipped ~1 year — biggest medium-term risk to the thesis. Domestic backlog and concrete segment cushion the slip.
+**Risk:** Project timing is lumpy; weather and federal CR risk. Stop $12.35 locks +25% if triggered.
 
-The defense contract is the key new catalyst that justified deferring the +60% partial profit rule. At ~$16M/year, the contract could nearly double Everspin's annual MRAM product revenue ($14.1M Q1 annualized = ~$56M). Needham raised its PT from $14 to $18.50, but the stock has already blown past that at $21.49. Additional analyst upgrades are expected as the defense revenue begins flowing.
+**WKC (World Kinect) — Conviction 3/5 ↓ from 4/5**
+Marine segment Q4 gross profit -22% YoY signals the post-conflict bunker-pricing normalization is biting. Morgan Stanley cut PT to $25; analyst stance Hold-biased. Stock at $27.07 trades above mean target. No clean 30–60 day catalyst.
+**Risk:** Earnings re-rating could roll over. Flagged for review; will exit on close below $25 or stop trigger at $23.40.
 
-Four of the original 10 shares have been sold (1 concentration trim at $12.35, 3 at +30% partial for $13.53), realizing $11.90 in gains. The remaining 6 shares run with a raised stop at $18.25, locking in +78% minimum return. The trailing stop is the primary risk management tool per the partial deferral exception.
+**ACCO (ACCO Brands) — Conviction 4/5**
+Q1 confirmed the EPOS-led transformation: revenue $343.7M vs $320.2M, EPS $0.02 vs -$0.05, EPOS contributed $15.2M. FY26 guide reiterated ($0.84–0.89 EPS); peripherals targeting 25% of revenue by year-end. Cost-synergy update next quarter is the next durable catalyst.
+**Risk:** Office-products secular decline; FX exposure. Stop $3.53 locks small loss.
 
-**Risk:** Stock is 16% above the only analyst PT ($18.50). If the defense contract revenue is slower to materialize than expected, or if the broader MRAM market softens, profit-taking could be sharp. The $18.25 stop limits downside to still-excellent returns.
+**ARDX (Ardelyx) — Conviction 4/5**
+Q1 product revenue $93.4M (+38% YoY) with IBSRELA at $70.1M (+58%). FY26 guidance reaffirmed; ACCEL Phase 3 CIC enrollment EOY 2026, topline 2H27. Commercial-stage with two revenue products, not a binary biotech. Stop $6.48 is tight at -4.4%; will widen on confirmed strength.
+**Risk:** XPHOZAH reimbursement; market wants profitability. Stop is the primary risk control.
 
-**ORN (Orion Group Holdings) -- Conviction: 4/5**
+**ARLO (Arlo Technologies) — Conviction 4/5 (new position)**
+Q1 2026 inflection: revenue $150M (+26%), non-GAAP EPS $0.28 (+86%), paid-account adds 318k vs 190–230k target. Services now 60% of revenue at 85.4% gross margin growing 31%. $50M buyback authorized. FY26 guide $550–580M. Subscription mix re-rating is the 30–60 day catalyst.
+**Risk:** Hardware competition from Ring/Wyze; FY guide implies 2H deceleration; ad-spend cycle. Stop $13.85 caps loss at 1.8% of equity.
 
-ORN delivered a strong post-earnings week. Q1 results ($216M revenue, +15% YoY, GAAP EPS $0.12, $668M backlog) confirmed the infrastructure thesis, and the stock rallied +22.6% from entry. The most bullish detail: $200M+ in new work awarded in April that isn't yet in the $668M backlog figure. CEO Travis Boone cited a "$24 billion pipeline of opportunities."
+## Overall Portfolio Thesis — Week 34 of 52
 
-The marine segment is benefiting from defense spending and port modernization projects. The Concrete segment posted a record quarter. Full-year guidance of $900-950M revenue and $54-58M Adjusted EBITDA was reiterated.
+Portfolio enters Week 34 at ~$676 equity (mark-to-market) with five confirmed-thesis holdings and one fresh add (ARLO). After Week 33's deployment of $216.54 + MRAM stop-out, the structural picture is:
 
-Yahoo Finance notes ORN is up 42% in 6 months, outperforming the Zacks Heavy Construction industry (+28.4%). Analyst consensus is "Strong Buy" with a $16.25 PT (12% upside from current).
+1. **Six positions across six sectors** — maximum diversification of the experiment.
+2. **All current holdings post-Q1** — every name has now reported and survived its earnings window, which sharply reduces single-print drawdown risk for the next 4–6 weeks.
+3. **30–60 day catalyst posture** — ECVT Calabrian close (Q2), ACCO peripherals mix milestone, ARDX IBSRELA tracking to FY guide, ARLO post-print re-rating. ORN AGM 5/19 and TLS earnings 5/11 are the near-term watch-items but not portfolio-moving.
+4. **Cash 18% post-trade** — above 15% reserve, room for one defensive trim if WKC thesis decays further.
 
-**Risk:** Infrastructure spending is cyclical and weather-sensitive. A weak Q2 due to storms or project delays could cause a pullback. The raised stop at $12.35 protects a minimum +4% return.
+**Scenarios (Week 34→35):**
+- **Bull (30%):** ARLO re-rates to $17–18, ECVT pre-Calabrian-close pop, ARDX recovers entry → equity $710–730.
+- **Base (50%):** Holdings consolidate, ARLO drifts $15–16 → equity $670–690.
+- **Bear (20%):** WKC rolls under $25 and we exit at $24, ARDX stops out at $6.48, broader small-cap risk-off → equity $620–640. Maximum aggregate stop-trigger downside is ~$48 (7.1%).
 
-**WKC (World Kinect) -- Conviction: 4/5**
-
-WKC continues its quiet, steady climb. The stock is up +4.2% from the $26.00 entry in just 4 trading days, with no volatility. Raymond James raised its PT to $34 (Outperform) on April 28, citing margin improvement in the Land segment. Stifel lowered to $28 (Hold) but that's still above current price.
-
-The Q1 blowout (EPS $0.75 vs $0.31 consensus, revenue $9.69B vs $9.29B) and raised FY guide ($2.65-2.85 adjusted EPS) provide a solid floor. The company is rebranding back to "World Fuel" for most activities.
-
-**Risk:** Marine segment revenue driven by Middle East conflict-driven pricing may not repeat. Stop at $23.40 limits loss.
-
-**ECVT (Ecovyst) -- Conviction: 2/5 (unchanged)**
-
-ECVT reports Q1 earnings Monday May 5. The stock has drifted to $14.36 (+2.7% from entry), but conviction remains low. Key concerns:
-- Analyst average PT of $11.70 is below current price (consensus says overvalued)
-- Benzinga flagged ECVT as "Top 2 Materials Stocks to Dump in Q2"
-- Q1 EPS consensus is thin (~$0.05-0.10)
-
-Positive: BWS maintains Buy with $16 PT. Full-year guide $860-940M revenue, $0.45-0.65 EPS. Waggaman sulfuric acid acquisition expanding capacity 10%.
-
-**Risk:** Stop at $13.24 is 7.8% below current price. If earnings miss, the stock could gap through the stop. This is an acceptable outcome -- capital would be freed for better opportunities. If earnings beat, will reassess conviction upward.
-
-**ACCO (ACCO Brands) -- Conviction: 4/5 (new position)**
-
-ACCO is a textbook post-earnings momentum play. Q1 results beat across the board: EPS $0.02 vs -$0.05 consensus ($0.07 beat), revenue $343.7M vs $319.9M (+7.4% beat), comparable sales +8% driven by the EPOS acquisition. The company reiterated FY guide of $0.84-$0.89 EPS.
-
-The EPOS acquisition is the durable catalyst: $80M in 2026 sales, higher-than-average gross margins, $15M in cost synergies within 12-18 months, plus a $38M bargain purchase gain. This transforms ACCO from a declining office products company into a technology peripherals hybrid.
-
-The stock surged from $3.21 (52-week low area) to $3.95 on the beat, with 3.2x volume ratio confirming institutional interest. The 50-day SMA is $3.34, so the stock is well above.
-
-**Bear case:** Office products are in secular decline. If EPOS synergies take longer than expected or core sales continue declining, the turnaround narrative weakens. International exposure creates FX risk.
-
-**Risk:** At $3.95 entry with $3.56 stop, max loss is $11.31 on 29 shares (1.6% of equity).
-
-**ARDX (Ardelyx) -- Conviction: 4/5 (new position)**
-
-Ardelyx is a commercial-stage pharmaceutical company with two marketed products: IBSRELA (IBS-C) and XPHOZAH (hyperphosphatemia in CKD). This is NOT a binary biotech bet -- both products are already generating significant revenue.
-
-Q1 2026 results: total product revenue $93.4M, with IBSRELA sales of $70.1M (+58% YoY). Management guided FY product revenue to $520-550M ($410-430M IBSRELA, $110-120M XPHOZAH) and said IBSRELA is tracking to $1B annual revenue by 2029.
-
-The pipeline includes a Phase 3 ACCEL trial for CIC (chronic idiopathic constipation) with enrollment expected to complete by end-2026, plus IND-enabling work for RDX10531.
-
-The stock has +15.2% 20d momentum and 3.3x volume ratio, signaling institutional accumulation. At $6.88 with a $1.7B market cap, the stock trades at ~3.4x forward revenue -- reasonable for a high-growth pharma.
-
-**Bear case:** EPS remains negative (-$0.15 Q1). XPHOZAH reimbursement uncertainty persists. The stock dropped 16.3% after Q1 results despite raising guidance, suggesting the market wants to see profitability. If the IBSRELA growth trajectory slows, the valuation compresses.
-
-**Risk:** At $6.88 entry with $6.19 stop, max loss is $11.73 on 17 shares (1.7% of equity).
-
-### Overall Portfolio Thesis -- Deployment Week (Week 33 of 52)
-
-This is the most critical capital deployment week since the strategy pivot. The $216.54 injection brings total equity to $696.91, with $339.98 in cash (48.8%). The portfolio needs to deploy efficiently into 2 new positions while managing the MRAM breakout and preparing for ECVT's earnings.
-
-**Key strategic shifts this week:**
-1. **Portfolio expands to 6 positions across 5 sectors** -- maximum diversification since experiment began
-2. **MRAM trailing stop raised to $18.25** -- locks in +78% minimum return; partial deferral active
-3. **ORN trailing stop raised to $12.35** -- locks in +4% minimum return post-earnings
-4. **$231.51 deployed into ACCO + ARDX** -- Industrials + Healthcare add growth vectors
-5. **Cash maintained at 15.6%** -- above reserve minimum; provides optionality
-
-**Path to closing the benchmark gap:**
-Portfolio trails S&P by $28.77 ($696.91 vs $725.68). The gap has narrowed from -$101.24 at the pivot (Week 30) to -$28.77 today -- a 72% improvement in 3 weeks. Note: the $216.54 injection flatters the absolute dollar gap; on a return basis, portfolio is at +74.6% (from $200 + $216.54 = $416.54 total invested) vs S&P at +73.9% ($725.68 / $416.54), meaning **the portfolio has actually caught the benchmark on a total-return basis when adjusting for the injection timing**.
-
-Scenarios for this week:
-
-- **Bull case (30% probability):** ECVT beats, MRAM holds above $20, ACCO/ARDX start strong -> portfolio reaches $720-740, may surpass S&P equivalent
-- **Base case (50% probability):** ECVT meets/misses, MRAM consolidates $18-21, new positions settle -> portfolio stays $680-710
-- **Bear case (20% probability):** ECVT stop triggers, MRAM pulls back to stop -> portfolio drops to $640-660, but diversification limits damage
+**Path vs. benchmark:** MRAM was the alpha engine. Without it, the new portfolio must rely on breadth rather than a single explosive winner. ARLO + ECVT inflection narratives are the two best candidates to fill that role over Weeks 34–36.
 </last_analyst_thesis>
 
 <recent_trades>
 <!-- Trades from Monday through Friday of current week -->
 Date,Ticker,Shares Bought,Buy Price,Cost Basis,PnL,Reason,Shares Sold,Sell Price
-2026-05-04,ACCO,29.0,3.92,113.68,0.0,MANUAL BUY LIMIT - Filled,,
-2026-05-04,ARDX,17.0,7.2,122.4,0.0,MANUAL BUY LIMIT - Filled,,
-2026-05-05,MRAM,,,61.56,47.94,AUTOMATED SELL - STOP LIMIT TRIGGERED,6.0,18.25
-2026-05-06,ORN,,,23.76,7.259999999999998,MANUAL SELL LIMIT - ,2.0,15.51
+2026-05-11,ARLO,8.0,15.25,122.0,0.0,MANUAL BUY LIMIT - Filled,,
+2026-05-12,ARLO,,,122.0,-12.400000000000006,MANUAL SELL LIMIT - ,8.0,13.7
+2026-05-12,ARDX,,,122.4,-12.239999999999997,MANUAL SELL LIMIT - ,17.0,6.48
 </recent_trades>
 
 <execution_requests>
 <session_directives>
 - Sector focus: Wide net
-- Catalyst timing: 30-60 days
+- Catalyst timing: Within 10 days
 - Risk posture: Neutral
-- Max concurrent positions: 6
+- Max concurrent positions: 5
 </session_directives>
 
 Using the rules, safeguards, and portfolio context above, execute the deep research window now.

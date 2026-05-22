@@ -4,6 +4,19 @@ Reference documentation for key implementation decisions and change history.
 
 ---
 
+### 2026-05-18 — Week 35 Deep Research
+
+Weekend deep research for Week 35 of 52. Directives: Wide net / Within 10 days / Neutral risk / Max 5 positions. Recommended Neutral (not Aggressive as user initially leaned) because two stop-outs the prior week argued against post-loss tilt. Key research findings: WKC thesis materially upgraded (Q1 print 4/23 blew out the marine segment that was the entire bear case — Marine GP +82% YoY, FY26 EPS guide raised to $2.65-2.85 from $2.20-2.40); ECVT $100M Term Loan B add-on May 14 funds Calabrian close (end of Q2); ORN AGM 5/19 administrative; ACCO Q1 beat with no price response. Evaluated top 5 screener picks (SG, SHO, NAC, PRA, KW) + 3 momentum names (AVAH, LPG, VTS). Skipped AVAH on post-earnings cooldown (5/14 print), LPG on stacked binary risk (ex-div 5/18 + earnings 5/20), KW on capped deal-arb. Top pick: **SHO** — Q1 RevPAR +14.6%, raised guide, $458M buyback remaining, post-print consolidation cleared. Order: 11 sh @ $10.20 limit DAY for Tuesday 5/19, stop $9.40/$9.30 (1.75× ATR). Post-trade: 5 holdings across 5 sectors, 35% cash, worst-case aggregate stop-out -2.0% equity.
+
+| File | Change |
+|------|--------|
+| `Weekly Deep Research (MD)/Week 35 Full.md` | **CREATED** — full 10-section deep research |
+| `Weekly Deep Research (MD)/Week 35 Summary.md` | **CREATED** — Section 9 thesis review only |
+| `Weekly Deep Research (PDF)/Week 35.pdf` | **CREATED** — PDF render of full report |
+| `CLAUDE.md` | Current State refreshed for Week 35 |
+
+---
+
 ### 2026-05-12 — Double Exit: ARLO + ARDX
 
 Two positions closed on 2026-05-12. (1) **ARLO** manual SELL LIMIT 8 @ $13.70 per `entry-discipline.md` day-1 drawdown rule, realized -$12.40 / -10.2%. (2) **ARDX** manual SELL LIMIT 17 @ $6.48 — stop level — that user flagged should have auto-executed. The script's auto-stop check did not trigger because the close ($6.61) sat above the $6.48 stop even though the intraday low touched it. Likely a close-vs-low logic gap in `trading_script.py:482-741` (process_portfolio) worth auditing before the next stop-eligible position. Final state: 4 holdings (ECVT, ORN, WKC, ACCO), cash $342.18, equity $657.64, 52% cash.
