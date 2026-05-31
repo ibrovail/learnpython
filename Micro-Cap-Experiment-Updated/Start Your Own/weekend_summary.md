@@ -66,141 +66,112 @@ Before producing your output, work through these steps internally:
 </thinking_approach>
 
 <weekly_context>
-<date>Monday, May 18, 2026</date>
-<week_number>35 of 52 (twelve-month live experiment)</week_number>
+<date>Friday, May 29, 2026</date>
+<week_number>37 of 52 (twelve-month live experiment)</week_number>
 
 <market_data>
 <price_volume>
 | Ticker | Close   | % Chg  | Volume      | Role       |
 |--------|---------|--------|-------------|------------|
-| ECVT   |   14.56 | -2.74% |   1,000,500 | Holding    |
-| ORN    |   15.04 | -2.84% |     373,200 | Holding    |
-| WKC    |   28.45 | +1.46% |     741,400 | Holding    |
-| ACCO   |    3.76 | -4.08% |   1,078,600 | Holding    |
-| IWO    |  362.25 | -2.68% |     253,400 | Benchmark  |
-| XBI    |  130.69 | -3.08% |   9,436,100 | Benchmark  |
-| SPY    |  739.17 | -1.20% |  60,290,000 | Benchmark  |
-| IWM    |  277.60 | -2.41% |  35,384,700 | Benchmark  |
-| QQQ    |  708.93 | -1.51% |  51,687,900 | Benchmark  |
-| TLT    |   83.66 | -1.48% |  50,726,700 | Macro      |
-| HYG    |   79.46 | -0.49% |  54,377,000 | Macro      |
+| WKC    |   28.81 | +1.23% |     870,400 | Holding    |
+| ACCO   |    3.96 | -2.22% |     861,400 | Holding    |
+| SHO    |   10.82 | -0.82% |   1,986,100 | Holding    |
+| OSPN   |   14.44 | +3.81% |     610,200 | Holding    |
+| IWO    |  380.77 | -0.53% |     487,900 | Benchmark  |
+| XBI    |  136.69 | +0.51% |   6,734,800 | Benchmark  |
+| SPY    |  756.48 | +0.25% |  54,976,100 | Benchmark  |
+| IWM    |  290.43 | -0.55% |  26,952,800 | Benchmark  |
+| QQQ    |  738.31 | +0.37% |  37,477,400 | Benchmark  |
+| TLT    |   85.76 | +0.02% |  31,304,300 | Macro      |
+| HYG    |   80.31 | +0.10% |  39,142,200 | Macro      |
 </price_volume>
 
 <risk_metrics>
 | Metric                        | Value     | Note                    |
 |-------------------------------|-----------|-------------------------|
 | Max Drawdown                  |   -24.99% | on 2026-03-20           |
-| Sharpe Ratio (annualized)     |    2.3375 |                         |
-| Sortino Ratio (annualized)    |    8.0139 |                         |
-| Beta (daily) vs ^GSPC         |    2.1053 |                         |
-| Alpha (annualized) vs ^GSPC   | +1555.43% |                         |
-| R²                            |     0.044 | Low — alpha/beta unstable |
+| Sharpe Ratio (annualized)     |    2.3005 |                         |
+| Sortino Ratio (annualized)    |    7.8832 |                         |
+| Beta (daily) vs ^GSPC         |    2.0702 |                         |
+| Alpha (annualized) vs ^GSPC   | +1287.51% |                         |
+| R²                            |     0.043 | Low — alpha/beta unstable |
 </risk_metrics>
 </market_data>
 
 <portfolio_snapshot>
 | Metric              | Value     |
 |---------------------|-----------|
-| Portfolio Equity    |   $656.12 |
-| S&P Equivalent      |   $743.58 |
-| Cash Balance        |   $342.18 |
+| Portfolio Equity    |   $672.44 |
+| S&P Equivalent      |   $760.80 |
+| Cash Balance        |   $207.68 |
 </portfolio_snapshot>
 
 <capital_injection>
   <planned>false</planned>
 </capital_injection>
 
-<screener_watchlist generated="2026-05-18" candidates="15">
-|   rank | ticker   | sector             |   latest_price | market_cap   |   momentum_20d |   momentum_5d |   volume_ratio |   rs_vs_iwm |   bb_width | above_sma20   | data_confidence   |   composite_score |
-|-------:|:---------|:-------------------|---------------:|:-------------|---------------:|--------------:|---------------:|------------:|-----------:|:--------------|:------------------|------------------:|
-|      1 | SG       | Consumer Cyclical  |           8.09 | $961M        |          16.07 |         20.03 |           2.24 |       15.98 |     0.1896 | True          | HIGH              |            0.8353 |
-|      2 | SHO      | Real Estate        |          10.15 | $1.9B        |           4.32 |         -1.17 |           1.88 |        4.23 |     0.1244 | True          | HIGH              |            0.8334 |
-|      3 | NAC      | Financial          |          11.82 | $1.9B        |           0.6  |         -1.5  |           1.6  |        0.51 |     0.0268 | False         | HIGH              |            0.8315 |
-|      4 | PRA      | Financial          |          24.51 | $1.3B        |          -0.81 |         -0.53 |           1.88 |       -0.9  |     0.0106 | False         | HIGH              |            0.8312 |
-|      5 | KW       | Real Estate        |          11.03 | $1.5B        |           1.1  |          0    |           1.49 |        1.01 |     0.0202 | True          | HIGH              |            0.8307 |
-|      6 | BCAT     | Financial          |          15.4  | $1.6B        |           4.05 |         -1.22 |           1.48 |        3.96 |     0.0839 | True          | HIGH              |            0.8301 |
-|      7 | FBIO     | Healthcare         |           2.41 | $78M         |           3.88 |          7.59 |           2.63 |        3.79 |     0.1556 | True          | HIGH              |            0.8222 |
-|      8 | AVAH     | Healthcare         |           7.72 | $1.7B        |          12.37 |         17.15 |           2.27 |       12.28 |     0.1919 | True          | HIGH              |            0.8221 |
-|      9 | FBRT     | Real Estate        |           9.04 | $696M        |          -0.99 |          2.84 |           1.7  |       -1.08 |     0.0515 | False         | HIGH              |            0.8157 |
-|     10 | WLTH     | Technology         |          11.28 | $1.7B        |           2.73 |         -2.08 |           1.78 |        2.64 |     0.1271 | True          | HIGH              |            0.8148 |
-|     11 | VTS      | Energy             |          18.5  | $772M        |           3.82 |          0.43 |           1.3  |        3.73 |     0.0772 | True          | HIGH              |            0.8134 |
-|     12 | EHAB     | Healthcare         |          13.8  | $707M        |           0.58 |          0.07 |           1.32 |        0.49 |     0.0074 | True          | MEDIUM            |            0.8125 |
-|     13 | CRMD     | Healthcare         |           7.55 | $592M        |          -0.4  |         -1.44 |           2.28 |       -0.49 |     0.1106 | False         | HIGH              |            0.8109 |
-|     14 | LPG      | Energy             |          40.87 | $1.8B        |          10.82 |          1.14 |           1.39 |       10.73 |     0.1672 | True          | HIGH              |            0.8041 |
-|     15 | RLX      | Consumer Defensive |           2.16 | $2.0B        |           0.93 |          0.47 |           1.35 |        0.84 |     0.073  | False         | HIGH              |            0.8035 |
-</screener_watchlist>
-
-**Screener Integration:**
-- Evaluate AT LEAST the top 5 screener candidates via WebSearch before selecting.
-- For each screener candidate not selected, state why in one line.
-- Respect the sector cap: max 2 positions in the same GICS sector.
-
-<holdings date="2026-05-15">
-<holding ticker="ECVT" shares="5" avg_cost="13.99" current_price="14.56" stop_loss="13.24" stop_limit="13.14" />
-<holding ticker="ORN" shares="5" avg_cost="11.88" current_price="15.04" stop_loss="13.50" stop_limit="13.40" />
-<holding ticker="WKC" shares="2" avg_cost="26.00" current_price="28.45" stop_loss="23.40" stop_limit="23.30" />
-<holding ticker="ACCO" shares="29" avg_cost="3.92" current_price="3.76" stop_loss="3.53" stop_limit="3.43" />
+<screener_watchlist generated="2026-05-23" candidates="15">
+<holdings date="2026-05-29">
+<holding ticker="WKC" shares="2" avg_cost="26.00" current_price="28.81" stop_loss="25.00" stop_limit="24.85" />
+<holding ticker="ACCO" shares="29" avg_cost="3.92" current_price="3.96" stop_loss="3.53" stop_limit="3.43" />
+<holding ticker="SHO" shares="11" avg_cost="10.20" current_price="10.82" stop_loss="9.40" stop_limit="9.30" />
+<holding ticker="OSPN" shares="12" avg_cost="13.00" current_price="14.44" stop_loss="12.00" stop_limit="11.90" />
 </holdings>
 
 <last_analyst_thesis>
-# Week 34 — Thesis Review Summary
+# Week 36 — Thesis Review Summary
 
 ## Per-Position Thesis
 
-**ECVT (Ecovyst) — Conviction 4/5 ↑ from 2/5**
-Q1 2026 was a clean beat (EPS $0.11 vs $0.06; revenue $215M vs $194.95M; sales +50% YoY; adj. EBITDA +87%). FY26 guide raised to $890–970M revenue / $180–195M adj. EBITDA. Calabrian acquisition ($190M) on track for Q2 close at ~2x pro forma leverage. Stock $14.14 with $13.24 stop — adequate cushion. Thesis pivots from speculative to confirmed; this is now a growth-by-acquisition compounder, not a deep-value bet.
-**Risk:** Sulfur cost pass-through dynamics could compress mix optics in 2H. Stop locks +6% min if triggered.
+**ECVT (Ecovyst) — Conviction 4/5 (unchanged)**
+Q1 was excellent: revenue +50% to $215M, adjusted EBITDA +87% to $39.8M, net income flipped to +$5.7M from -$8.1M. Calabrian acquisition ($190M) on track to close by end of June, financed via $100M Term Loan B add-on. FY26 guidance raised ($890-970M revenue, $180-195M EBITDA). The stock at $13.81 is flat to slightly below cost ($13.99) — the market hasn't priced in the Calabrian accretion yet.
+**Risk:** Sulfur cost volatility in 2H. Integration execution. Stop $13.24 caps downside at -5.6%.
 
-**ORN (Orion Group) — Conviction 4/5**
-JPMorgan Overweight initiation drove +15.9%; Roth MKM Buy reaffirmed; J.E. McAmis acquisition adds Pacific marine capability. Federal infrastructure + data-center build + shipbuilding tailwinds intact. INDOPACOM/PDI MACC large-task-order timing slipped ~1 year — biggest medium-term risk to the thesis. Domestic backlog and concrete segment cushion the slip.
-**Risk:** Project timing is lumpy; weather and federal CR risk. Stop $12.35 locks +25% if triggered.
+**WKC (World Kinect) — Conviction 4/5 (unchanged)**
+Thesis fully confirmed. Marine GP +82% YoY was the knockout punch to the bear case. FY26 adj-EPS guide raised to $2.65-$2.85. Multiple upgrades: Zacks Strong Buy, Raymond James Outperform. Morgan Stanley remains Underweight at $26 PT (stale). Insider sales (Chairman Kasbar, 10.5K shares May 4-5) are pre-scheduled 10b5-1 — non-material. Stock closed at $29.50, near 52-week high.
+**Risk:** Energy distribution is cyclical; marine segment outperformance may normalize. New stop at $26.50 locks in breakeven+ profit if thesis deteriorates.
 
-**WKC (World Kinect) — Conviction 3/5 ↓ from 4/5**
-Marine segment Q4 gross profit -22% YoY signals the post-conflict bunker-pricing normalization is biting. Morgan Stanley cut PT to $25; analyst stance Hold-biased. Stock at $27.07 trades above mean target. No clean 30–60 day catalyst.
-**Risk:** Earnings re-rating could roll over. Flagged for review; will exit on close below $25 or stop trigger at $23.40.
+**ACCO (ACCO Brands) — Conviction 3/5 (unchanged)**
+Q1 revenue beat ($343.7M vs $320.2M est, +8% YoY) driven by EPOS acquisition ($15.2M contribution). FY26 EPS guide maintained at $0.84-$0.89. Stock is not rewarding the execution — at $3.82, it's -2.6% from entry. The EPOS transformation (tech peripherals pivot away from office products) is credible but the market wants proof of organic growth before re-rating.
+**Risk:** Office-products secular decline, FX headwinds. This is the marginal name in the portfolio. If flat through Week 37, capital may be better deployed elsewhere. Stop at $3.53 provides -7.6% max drawdown from current.
 
-**ACCO (ACCO Brands) — Conviction 4/5**
-Q1 confirmed the EPOS-led transformation: revenue $343.7M vs $320.2M, EPS $0.02 vs -$0.05, EPOS contributed $15.2M. FY26 guide reiterated ($0.84–0.89 EPS); peripherals targeting 25% of revenue by year-end. Cost-synergy update next quarter is the next durable catalyst.
-**Risk:** Office-products secular decline; FX exposure. Stop $3.53 locks small loss.
+**SHO (Sunstone Hotel Investors) — Conviction 4/5 (up from 3/5)**
+Week 1 performance validates the entry thesis. Stock hit a new 52-week high ($10.66). Management raised FY26 guidance (RevPAR growth 5.0-7.5%, adj. EBITDAre $238-252M). Q1 earnings beat ($0.27 vs $0.04 est). $458M buyback authorization provides substantial floor (vs $1.9B market cap = 24% of equity could be retired). Dividend intact at $0.09/quarter (3.5% yield at entry).
+**Risk:** Hotel REITs are late-cycle; rate environment could compress RevPAR in 2H. Executive restructuring (GC departure) is noise. Stop at $9.40 is 1.75× ATR below entry — appropriate for current vol.
 
-**ARDX (Ardelyx) — Conviction 4/5**
-Q1 product revenue $93.4M (+38% YoY) with IBSRELA at $70.1M (+58%). FY26 guidance reaffirmed; ACCEL Phase 3 CIC enrollment EOY 2026, topline 2H27. Commercial-stage with two revenue products, not a binary biotech. Stop $6.48 is tight at -4.4%; will widen on confirmed strength.
-**Risk:** XPHOZAH reimbursement; market wants profitability. Stop is the primary risk control.
+**OSPN (OneSpan) — Conviction 3/5 (new entry, screener-sourced)**
+Technology cybersecurity/digital identity company in a subscription-revenue inflection. Q1: revenue +4% to $66M, ARR $192M (+14% YoY), adjusted EBITDA margin 32%, net retention 105%. Management raised ARR guidance ($194-198M). $50M buyback program announced May 11 provides price support. $0.13/quarter dividend (4% yield). Entry is screener-sourced — conviction starts at 2/5 per entry-discipline protocol but elevated to 3/5 on independent verification of ARR growth durability, buyback size, and dividend yield.
+**Risk:** Below 50-day SMA suggests medium-term trend is still recovering; we're buying an early-stage breakout. Hardware revenue ($43-45M FY26 guide) is low-margin and could drag blended margins. If stop at $12.00 is hit, max loss = $12.00 (1.8% of equity).
 
-**ARLO (Arlo Technologies) — Conviction 4/5 (new position)**
-Q1 2026 inflection: revenue $150M (+26%), non-GAAP EPS $0.28 (+86%), paid-account adds 318k vs 190–230k target. Services now 60% of revenue at 85.4% gross margin growing 31%. $50M buyback authorized. FY26 guide $550–580M. Subscription mix re-rating is the 30–60 day catalyst.
-**Risk:** Hardware competition from Ring/Wyze; FY guide implies 2H deceleration; ad-spend cycle. Stop $13.85 caps loss at 1.8% of equity.
+## Overall Portfolio Thesis — Week 36 of 52
 
-## Overall Portfolio Thesis — Week 34 of 52
+Portfolio enters Week 36 at $653.13 equity, trailing the S&P equivalent by $96.97 (-12.9%). The ORN stop-out last week was a controlled exit — it locked in a +13.6% gain on the lot, demonstrating that the tightened-stop protocol works. The portfolio now has 4 holdings plus a pending OSPN initiation that would bring it to the full 5-position allocation.
 
-Portfolio enters Week 34 at ~$676 equity (mark-to-market) with five confirmed-thesis holdings and one fresh add (ARLO). After Week 33's deployment of $216.54 + MRAM stop-out, the structural picture is:
+1. **5 positions across 5 sectors** (if OSPN fills): Materials (ECVT), Energy (WKC), Consumer/Industrials (ACCO), Real Estate (SHO), Technology (OSPN). Maximum diversification.
+2. **Two high-conviction anchors (4/5):** ECVT (Calabrian close catalyst) and WKC (thesis confirmed, gains to protect). SHO upgraded to 4/5.
+3. **ACCO remains marginal (3/5)** — recycling decision at Week 37 if no price action.
+4. **Cash at 21.7% post-OSPN fill** — above 15% floor with room for one opportunistic swap.
 
-1. **Six positions across six sectors** — maximum diversification of the experiment.
-2. **All current holdings post-Q1** — every name has now reported and survived its earnings window, which sharply reduces single-print drawdown risk for the next 4–6 weeks.
-3. **30–60 day catalyst posture** — ECVT Calabrian close (Q2), ACCO peripherals mix milestone, ARDX IBSRELA tracking to FY guide, ARLO post-print re-rating. ORN AGM 5/19 and TLS earnings 5/11 are the near-term watch-items but not portfolio-moving.
-4. **Cash 18% post-trade** — above 15% reserve, room for one defensive trim if WKC thesis decays further.
+**Scenarios (Week 36→37):**
+- **Bull (30%):** WKC breaks $30, SHO grinds to $11 on buyback, OSPN fills and holds, ECVT gets Calabrian-close color → equity $680-$710.
+- **Base (50%):** Holdings consolidate, OSPN fills flat, ACCO stuck → equity $650-$680.
+- **Bear (20%):** Extended-weekend gap risk, OSPN day-1 fade triggers exit, ACCO approaches stop → equity $620-$645. Max stop-trigger downside: $38.28 (5.9% of equity).
 
-**Scenarios (Week 34→35):**
-- **Bull (30%):** ARLO re-rates to $17–18, ECVT pre-Calabrian-close pop, ARDX recovers entry → equity $710–730.
-- **Base (50%):** Holdings consolidate, ARLO drifts $15–16 → equity $670–690.
-- **Bear (20%):** WKC rolls under $25 and we exit at $24, ARDX stops out at $6.48, broader small-cap risk-off → equity $620–640. Maximum aggregate stop-trigger downside is ~$48 (7.1%).
-
-**Path vs. benchmark:** MRAM was the alpha engine. Without it, the new portfolio must rely on breadth rather than a single explosive winner. ARLO + ECVT inflection narratives are the two best candidates to fill that role over Weeks 34–36.
+**Alpha source:** ECVT Calabrian close re-rating is the near-term catalyst. WKC marine-segment momentum is the confirmed winner. SHO buyback grind is the steady compounder. OSPN is the controlled-vol add with buyback floor. ACCO is the drag — recycling into a higher-beta name (CRNC or IMPP post-cooldown) at Week 37 could unlock the missing alpha source needed to close the benchmark gap.
 </last_analyst_thesis>
 
 <recent_trades>
 <!-- Trades from Monday through Friday of current week -->
 Date,Ticker,Shares Bought,Buy Price,Cost Basis,PnL,Reason,Shares Sold,Sell Price
-2026-05-11,ARLO,8.0,15.25,122.0,0.0,MANUAL BUY LIMIT - Filled,,
-2026-05-12,ARLO,,,122.0,-12.400000000000006,MANUAL SELL LIMIT - ,8.0,13.7
-2026-05-12,ARDX,,,122.4,-12.239999999999997,MANUAL SELL LIMIT - ,17.0,6.48
+2026-05-26,OSPN,12.0,13.0,156.0,0.0,MANUAL BUY LIMIT - Filled,,
+2026-05-29,ECVT,,,13.988,-3.74,AUTOMATED SELL - STOP LIMIT TRIGGERED,5.0,13.24
 </recent_trades>
 
 <execution_requests>
 <session_directives>
-- Sector focus: Wide net
-- Catalyst timing: Within 10 days
-- Risk posture: Neutral
+- Sector focus: Wide net across all sectors
+- Catalyst timing: Within 10 trading days
+- Risk posture: Aggressive — trailing benchmark
 - Max concurrent positions: 5
 </session_directives>
 

@@ -4,6 +4,32 @@ Reference documentation for key implementation decisions and change history.
 
 ---
 
+### 2026-05-29 — Week 37 Deep Research
+
+Weekend deep research for Week 37 of 52. Directives: Wide net / Within 10 days / Aggressive / Max 5 positions. Key events this week: OSPN entered 5/26 (12sh @ $13.00, +11.1% in 3 days), ECVT stopped out 5/29 @ $13.24 (-$3.74, -5.4% from entry). Portfolio at $672.44 equity (+3.0% WoW), trailing S&P by $88.36 (-11.6%). Evaluated 7 candidates (IMPP, CRNC, AIOT, CLPT, CDZI, PRGS, MGTX). CRNC rejected on distance-from-base (20-day SMA +22% exceeds 20% gate). IMPP selected for 5th slot: Q1 revenue +25.8% beat, EPS +67.3% beat, fleet expanding 21→26 vessels by Q3. Entry: 19sh @ $5.40 limit, stop $4.80/$4.70. ACCO downgraded 2/5 — recycling decision deferred to Week 38. WKC stop raised to $27.90/$27.75; SHO stop raised to $10.00/$9.90. Post-trade: 5 holdings across 4 sectors, cash 15.6%, worst-case aggregate stop-out -5.6% equity.
+
+| File | Change |
+|------|--------|
+| `Weekly Deep Research (MD)/Week 37 Full.md` | **CREATED** — full 10-section deep research |
+| `Weekly Deep Research (MD)/Week 37 Summary.md` | **CREATED** — Section 9 thesis review only |
+| `Weekly Deep Research (PDF)/Week 37.pdf` | **CREATED** — PDF render of full report |
+| `CLAUDE.md` | Current State refreshed for Week 37 |
+
+---
+
+### 2026-05-23 — Week 36 Deep Research
+
+Weekend deep research for Week 36 of 52. Directives: Wide net / Within 10 days / Aggressive / Max 5 positions. ORN stopped out 5/21 (+13.6% gain on the lot). SHO upgraded 3/5→4/5 after hitting 52-week high ($10.66). OSPN selected from screener as new entry: 12sh @ $13.00 limit, stop $12.00/$11.90. WKC stop raised $25.00→$26.50. Post-trade: 5 holdings across 5 sectors, cash 21.7%.
+
+| File | Change |
+|------|--------|
+| `Weekly Deep Research (MD)/Week 36 Full.md` | **CREATED** — full 10-section deep research |
+| `Weekly Deep Research (MD)/Week 36 Summary.md` | **CREATED** — Section 9 thesis review only |
+| `Weekly Deep Research (PDF)/Week 36.pdf` | **CREATED** — PDF render of full report |
+| `CLAUDE.md` | Current State refreshed for Week 36 |
+
+---
+
 ### 2026-05-18 — Week 35 Deep Research
 
 Weekend deep research for Week 35 of 52. Directives: Wide net / Within 10 days / Neutral risk / Max 5 positions. Recommended Neutral (not Aggressive as user initially leaned) because two stop-outs the prior week argued against post-loss tilt. Key research findings: WKC thesis materially upgraded (Q1 print 4/23 blew out the marine segment that was the entire bear case — Marine GP +82% YoY, FY26 EPS guide raised to $2.65-2.85 from $2.20-2.40); ECVT $100M Term Loan B add-on May 14 funds Calabrian close (end of Q2); ORN AGM 5/19 administrative; ACCO Q1 beat with no price response. Evaluated top 5 screener picks (SG, SHO, NAC, PRA, KW) + 3 momentum names (AVAH, LPG, VTS). Skipped AVAH on post-earnings cooldown (5/14 print), LPG on stacked binary risk (ex-div 5/18 + earnings 5/20), KW on capped deal-arb. Top pick: **SHO** — Q1 RevPAR +14.6%, raised guide, $458M buyback remaining, post-print consolidation cleared. Order: 11 sh @ $10.20 limit DAY for Tuesday 5/19, stop $9.40/$9.30 (1.75× ATR). Post-trade: 5 holdings across 5 sectors, 35% cash, worst-case aggregate stop-out -2.0% equity.
