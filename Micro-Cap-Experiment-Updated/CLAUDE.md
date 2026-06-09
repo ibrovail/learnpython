@@ -77,9 +77,9 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: Week 37 deep research — ECVT stopped out 5/29 @ $13.24 (-$3.74); OSPN entered 5/26 12sh @ $13.00 (+11.1% Week 1); IMPP 19sh @ $5.40 limit queued for Mon 6/2; WKC stop raised to $27.90/$27.75; SHO stop raised to $10.00/$9.90; ACCO downgraded 2/5
-- **In progress**: Week 37 of 52, 4 holdings + pending IMPP; equity $672.44, cash $207.68 → $105 post-fill (15.6%)
-- **Next**: Pre-open verification IMPP 6/2; place IMPP + broker stop ($4.80/$4.70); ACCO recycle decision Week 38; OSPN stop reassess after 5-day hold (June 2)
+- **Complete**: Week 38 deep research — ACCO recycled (sell 29sh @ $3.82); TDAY initiated 16sh @ $8.15 (AI monetization); INN initiated 22sh @ $5.75 (FIFA World Cup); WKC stop → $28.80/$28.65; SHO stop → $10.60/$10.50; IMPP conviction ↓ 2/5
+- **In progress**: Week 38 of 52, 5 positions (WKC/SHO/IMPP/TDAY/INN); equity $675.59, cash $138.32 post-trades (20.5%)
+- **Next**: Mon 6/9 pre-open verify TDAY+INN; place orders + broker stops; IMPP 3.4% from stop — monitor tanker rates; daily checks through week
 
 ## Documentation
 
