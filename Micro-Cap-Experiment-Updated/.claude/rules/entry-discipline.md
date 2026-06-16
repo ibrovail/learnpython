@@ -47,9 +47,9 @@ Conviction rating starts at 2/5 for any screener pick and can only rise on the s
 
 ## Stop-Placement Surfacing
 
-Every BUY recommendation must include an explicit reminder: **"Place this stop with your broker before the next market open."** The script's CSV stop field is informational and does not auto-execute at the broker.
+The **weekend deep research report** may include the reminder "Place this stop with your broker before the next market open" in a BUY recommendation, since at that stage the order has not yet been placed.
 
-In the next daily analysis after a BUY, the analyst must ask whether the stop was placed. If not, mark the position as "STOP NOT LIVE" in the per-holding review and surface it every day until acknowledged.
+**Exception — stop specified in a `run daily` command:** When the user executes a buy via `run daily: buy N TICKER limit $X stop $A/$B`, the stop has **already been placed with the brokerage** — the `stop $A/$B` syntax confirms it. Do NOT tell the user to place or confirm the broker stop, and do NOT mark the position "STOP NOT LIVE." The CSV stop field is informational, but the user's broker stop is already live. No confirmation reminder is needed in the post-buy daily analysis.
 
 ---
 

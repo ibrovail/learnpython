@@ -4,6 +4,15 @@ Reference documentation for key implementation decisions and change history.
 
 ---
 
+### 2026-06-11 — Time-Weighted Return (TWR) Analytics
+
+Added injection-neutral performance reporting to `_compute_portfolio_metrics`. Raw equity growth was misleading because $547.64 of total capital was injected across 5 tranches — equity could rise purely from contributions, not performance. TWR fixes this by chaining daily equity returns while removing the step-change on each injection day (start-of-day convention: `factor_t = Equity_t / (Equity_{t-1} + injection_on_t)`; each injection attributed to the first trading session on or after its date). Three new rows now print in both the daily and weekend `<risk_metrics>` tables: **Time-Weighted Return (cum)** (portfolio, injection-neutral), **S&P 500 Return (cum)** (^GSPC price return over the same window — injection-neutral by nature), and **TWR Alpha (cum)** (the difference). First live read: portfolio +9.54% vs S&P +11.49% since inception → −1.95% cumulative alpha, a far more trustworthy figure than the CAPM annualized alpha (+1287%, R²=0.04). `PortfolioMetrics` gained `twr`/`twr_spx`/`twr_alpha` fields (defaulted to NaN, so early-return paths are unaffected); `_print_risk_metrics` gained matching optional params.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | Added TWR/S&P-cum/alpha computation in `_compute_portfolio_metrics`; 3 new fields on `PortfolioMetrics`; 3 new params + rows in `_print_risk_metrics`; updated both call sites (daily + weekend) |
+| `CLAUDE.md` | Updated Current State |
+
 ### 2026-05-29 — Week 37 Deep Research
 
 Weekend deep research for Week 37 of 52. Directives: Wide net / Within 10 days / Aggressive / Max 5 positions. Key events this week: OSPN entered 5/26 (12sh @ $13.00, +11.1% in 3 days), ECVT stopped out 5/29 @ $13.24 (-$3.74, -5.4% from entry). Portfolio at $672.44 equity (+3.0% WoW), trailing S&P by $88.36 (-11.6%). Evaluated 7 candidates (IMPP, CRNC, AIOT, CLPT, CDZI, PRGS, MGTX). CRNC rejected on distance-from-base (20-day SMA +22% exceeds 20% gate). IMPP selected for 5th slot: Q1 revenue +25.8% beat, EPS +67.3% beat, fleet expanding 21→26 vessels by Q3. Entry: 19sh @ $5.40 limit, stop $4.80/$4.70. ACCO downgraded 2/5 — recycling decision deferred to Week 38. WKC stop raised to $27.90/$27.75; SHO stop raised to $10.00/$9.90. Post-trade: 5 holdings across 4 sectors, cash 15.6%, worst-case aggregate stop-out -5.6% equity.

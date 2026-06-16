@@ -77,9 +77,9 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: Week 38 deep research — ACCO recycled (sell 29sh @ $3.82); TDAY initiated 16sh @ $8.15 (AI monetization); INN initiated 22sh @ $5.75 (FIFA World Cup); WKC stop → $28.80/$28.65; SHO stop → $10.60/$10.50; IMPP conviction ↓ 2/5
-- **In progress**: Week 38 of 52, 5 positions (WKC/SHO/IMPP/TDAY/INN); equity $675.59, cash $138.32 post-trades (20.5%)
-- **Next**: Mon 6/9 pre-open verify TDAY+INN; place orders + broker stops; IMPP 3.4% from stop — monitor tanker rates; daily checks through week
+- **Complete**: Week 40 rotation executed (6/15) — IMPP exited pre-market 19sh @ $5.25 (tanker thesis undercut by Iran de-escalation); TILE initiated 4sh @ $32.10 (beat-and-raise momentum, stop $28.70/$28.55); WKC stop → $29.20/$29.05, SHO stop → $10.90/$10.80
+- **In progress**: Week 40 of 52, 5 positions (WKC/SHO/TDAY/INN/TILE); equity $690.02, cash $110.54 (16.0%); 6th slot held open for AMLX Phase 3 (Q3 readout)
+- **Next**: Confirm broker stop placed on TILE; watch TDAY (−6.7%, stop $7.20); INN FIFA catalyst live; TILE 5-day min-hold through 6/19
 
 ## Documentation
 

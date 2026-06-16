@@ -1078,6 +1078,9 @@ class PortfolioMetrics:
     final_equity: float
     dollar_weighted_spx: float
     experiment_start_date: str
+    twr: float = np.nan
+    twr_spx: float = np.nan
+    twr_alpha: float = np.nan
 
 
 def _get_ticker_role(ticker: str, holdings_set: set[str]) -> str:
@@ -1126,6 +1129,7 @@ def _print_risk_metrics(
     max_drawdown: float, mdd_date: str,
     sharpe_annual: float, sortino_annual: float,
     beta: float, alpha_annual: float, r2: float,
+    twr: float = np.nan, twr_spx: float = np.nan, twr_alpha: float = np.nan,
 ) -> None:
     """Print the <risk_metrics> table."""
     print("<risk_metrics>")
@@ -1151,6 +1155,15 @@ def _print_risk_metrics(
     r2_val = _fmt_num(r2, 3) if not (r2 is None or (isinstance(r2, float) and np.isnan(r2))) else "N/A"
     r2_note = "Low — alpha/beta unstable" if not (r2 is None or (isinstance(r2, float) and np.isnan(r2))) and r2 < 0.15 else ""
     print(f"| {'R²':<29} | {r2_val:>9} | {r2_note:<23} |")
+
+    twr_val = _fmt_pct(twr * 100) if not (twr is None or (isinstance(twr, float) and np.isnan(twr))) else "N/A"
+    print(f"| {'Time-Weighted Return (cum)':<29} | {twr_val:>9} | {'injection-neutral':<23} |")
+
+    twr_spx_val = _fmt_pct(twr_spx * 100) if not (twr_spx is None or (isinstance(twr_spx, float) and np.isnan(twr_spx))) else "N/A"
+    print(f"| {'S&P 500 Return (cum)':<29} | {twr_spx_val:>9} | {'same window':<23} |")
+
+    twr_alpha_val = _fmt_pct(twr_alpha * 100) if not (twr_alpha is None or (isinstance(twr_alpha, float) and np.isnan(twr_alpha))) else "N/A"
+    print(f"| {'TWR Alpha (cum)':<29} | {twr_alpha_val:>9} | {'TWR minus S&P':<23} |")
 
     print("</risk_metrics>")
 
@@ -1362,6 +1375,46 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
                 corr = np.corrcoef(x, y)[0, 1]
                 r2 = float(corr ** 2)
 
+    # -------- Time-Weighted Return (injection-neutral) --------
+    # TWR chains daily equity returns while removing the step-change caused by
+    # each capital injection, so the result reflects strategy performance only
+    # (not the size or timing of contributions). Each injection is attributed to
+    # the first trading session on or after its date, using a start-of-day
+    # convention: factor_t = Equity_t / (Equity_{t-1} + injection_on_t).
+    twr = np.nan
+    twr_spx = np.nan
+    twr_alpha = np.nan
+    try:
+        inj_by_date: dict[Any, float] = {}
+        if not injections.empty:
+            series_dates = equity_series.index
+            for _, _inj in injections.iterrows():
+                _d = pd.Timestamp(_inj["Date"]).normalize()
+                _future = series_dates[series_dates >= _d]
+                if len(_future) > 0:
+                    _key = _future[0]
+                    inj_by_date[_key] = inj_by_date.get(_key, 0.0) + float(_inj["Amount"])
+        _vals = equity_series.values.astype(float)
+        _dates = list(equity_series.index)
+        _factor = 1.0
+        for _i in range(1, len(_vals)):
+            _denom = _vals[_i - 1] + inj_by_date.get(_dates[_i], 0.0)
+            if _denom > 0:
+                _factor *= _vals[_i] / _denom
+        twr = _factor - 1.0
+    except Exception:
+        twr = np.nan
+
+    # S&P 500 cumulative price return over the same window. A price index has no
+    # contributions, so it is injection-neutral by nature — the right benchmark
+    # for a TWR comparison.
+    if not spx.empty:
+        _spx_close = spx["Close"].astype(float).dropna()
+        if len(_spx_close) >= 2:
+            twr_spx = float(_spx_close.iloc[-1] / _spx_close.iloc[0] - 1.0)
+    if not (isinstance(twr, float) and np.isnan(twr)) and not (isinstance(twr_spx, float) and np.isnan(twr_spx)):
+        twr_alpha = twr - twr_spx
+
     return PortfolioMetrics(
         price_volume_rows=price_volume_rows,
         max_drawdown=max_drawdown, mdd_date_str=mdd_date_str,
@@ -1369,6 +1422,7 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
         beta=beta, alpha_annual=alpha_annual, r2=r2,
         final_equity=final_equity, dollar_weighted_spx=dollar_weighted_spx,
         experiment_start_date=experiment_start_date,
+        twr=twr, twr_spx=twr_spx, twr_alpha=twr_alpha,
     )
 
 
@@ -1432,6 +1486,7 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
         metrics.max_drawdown, metrics.mdd_date_str,
         metrics.sharpe_annual, metrics.sortino_annual,
         metrics.beta, metrics.alpha_annual, metrics.r2,
+        metrics.twr, metrics.twr_spx, metrics.twr_alpha,
     )
     print("</market_data>")
     print()
@@ -1604,6 +1659,7 @@ def _print_xml_summary(
         metrics.max_drawdown, metrics.mdd_date_str,
         metrics.sharpe_annual, metrics.sortino_annual,
         metrics.beta, metrics.alpha_annual, metrics.r2,
+        metrics.twr, metrics.twr_spx, metrics.twr_alpha,
     )
     print("</market_data>")
     print()
