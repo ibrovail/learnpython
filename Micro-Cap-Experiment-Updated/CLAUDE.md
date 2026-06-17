@@ -78,8 +78,8 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 ## Current State
 
 - **Complete**: Week 40 rotation executed (6/15) — IMPP exited pre-market 19sh @ $5.25 (tanker thesis undercut by Iran de-escalation); TILE initiated 4sh @ $32.10 (beat-and-raise momentum, stop $28.70/$28.55); WKC stop → $29.20/$29.05, SHO stop → $10.90/$10.80
-- **In progress**: Week 40 of 52, 5 positions (WKC/SHO/TDAY/INN/TILE); equity $690.02, cash $110.54 (16.0%); 6th slot held open for AMLX Phase 3 (Q3 readout)
-- **Next**: Confirm broker stop placed on TILE; watch TDAY (−6.7%, stop $7.20); INN FIFA catalyst live; TILE 5-day min-hold through 6/19
+- **In progress**: Week 40 of 52, 5 positions (WKC/SHO/TDAY/INN/TILE); equity $697.21, cash $110.54 (15.9%); INN stop raised → $5.90/$5.80 (6/16, locks +2.6%); 6th slot held open for AMLX Phase 3 (Q3 readout)
+- **Next**: Watch TDAY (recovered to −4.8%, stop $7.20); INN FIFA catalyst live (CFO resigned 6/12, PT cut to $6); WKC nearing +30% partial zone (~$33.80); TILE min-hold through 6/19
 
 ## Documentation
 
