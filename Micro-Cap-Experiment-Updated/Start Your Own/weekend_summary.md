@@ -66,72 +66,72 @@ Before producing your output, work through these steps internally:
 </thinking_approach>
 
 <weekly_context>
-<date>Sunday, June 14, 2026</date>
-<week_number>39 of 52 (twelve-month live experiment)</week_number>
+<date>Sunday, June 21, 2026</date>
+<week_number>41 of 52 (twelve-month live experiment)</week_number>
 
 <market_data>
 <price_volume>
 | Ticker | Close   | % Chg  | Volume      | Role       |
 |--------|---------|--------|-------------|------------|
-| WKC    |   31.72 | +0.89% |     551,400 | Holding    |
-| SHO    |   11.72 | +0.17% |   1,370,600 | Holding    |
-| IMPP   |    5.25 | -0.57% |     352,400 | Holding    |
-| TDAY   |    7.74 | +0.91% |   1,145,400 | Holding    |
-| INN    |    6.20 | -1.74% |   1,830,900 | Holding    |
-| IWO    |  380.39 | +0.66% |     274,900 | Benchmark  |
-| XBI    |  133.79 | +0.79% |   7,822,900 | Benchmark  |
-| SPY    |  741.75 | +0.54% |  56,939,800 | Benchmark  |
-| IWM    |  292.95 | +0.87% |  34,388,500 | Benchmark  |
-| QQQ    |  721.34 | +0.59% |  51,168,400 | Benchmark  |
-| TLT    |   85.77 | -0.24% |  23,092,600 | Macro      |
-| HYG    |   79.94 | +0.00% |  29,868,800 | Macro      |
+| WKC    |   31.12 | -0.45% |   3,645,500 | Holding    |
+| SHO    |   11.91 | +1.45% |   4,521,000 | Holding    |
+| TDAY   |    7.88 | -0.51% |   1,936,900 | Holding    |
+| INN    |    6.63 | +3.43% |   1,761,200 | Holding    |
+| TILE   |   32.56 | +5.27% |   1,322,700 | Holding    |
+| IWO    |  389.04 | +2.37% |     613,600 | Benchmark  |
+| XBI    |  140.72 | +0.95% |   9,569,900 | Benchmark  |
+| SPY    |  746.74 | +1.04% |  80,875,700 | Benchmark  |
+| IWM    |  295.59 | +1.97% |  32,463,200 | Benchmark  |
+| QQQ    |  740.62 | +2.51% |  50,154,600 | Benchmark  |
+| TLT    |   86.75 | +0.49% |  32,350,900 | Macro      |
+| HYG    |   80.01 | +0.35% |  41,111,700 | Macro      |
 </price_volume>
 
 <risk_metrics>
 | Metric                        | Value     | Note                    |
 |-------------------------------|-----------|-------------------------|
 | Max Drawdown                  |   -24.99% | on 2026-03-20           |
-| Sharpe Ratio (annualized)     |    2.2643 |                         |
-| Sortino Ratio (annualized)    |    7.7530 |                         |
-| Beta (daily) vs ^GSPC         |    1.8942 |                         |
-| Alpha (annualized) vs ^GSPC   | +1247.16% |                         |
-| R²                            |     0.041 | Low — alpha/beta unstable |
-| Time-Weighted Return (cum)    |    +9.37% | injection-neutral       |
-| S&P 500 Return (cum)          |   +12.06% | same window             |
-| TWR Alpha (cum)               |    -2.68% | TWR minus S&P           |
+| Sharpe Ratio (annualized)     |    2.2617 |                         |
+| Sortino Ratio (annualized)    |    7.7440 |                         |
+| Beta (daily) vs ^GSPC         |    1.8176 |                         |
+| Alpha (annualized) vs ^GSPC   | +1190.52% |                         |
+| R²                            |     0.039 | Low — alpha/beta unstable |
+| Time-Weighted Return (cum)    |   +11.65% | injection-neutral       |
+| S&P 500 Return (cum)          |   +13.10% | same window             |
+| TWR Alpha (cum)               |    -1.44% | TWR minus S&P           |
 </risk_metrics>
 </market_data>
 
 <portfolio_snapshot>
 | Metric              | Value     |
 |---------------------|-----------|
-| Portfolio Equity    |   $691.54 |
-| S&P Equivalent      |   $745.89 |
-| Cash Balance        |   $139.19 |
+| Portfolio Equity    |   $705.97 |
+| S&P Equivalent      |   $752.82 |
+| Cash Balance        |   $110.54 |
 </portfolio_snapshot>
 
 <capital_injection>
   <planned>false</planned>
 </capital_injection>
 
-<screener_watchlist generated="2026-06-14" candidates="15">
-|   rank | ticker   | sector            |   latest_price | market_cap   |   momentum_20d |   momentum_5d |   volume_ratio |   rs_vs_iwm |   bb_width | above_sma20   | data_confidence   |   composite_score |
-|-------:|:---------|:------------------|---------------:|:-------------|---------------:|--------------:|---------------:|------------:|-----------:|:--------------|:------------------|------------------:|
-|      1 | GT       | Consumer Cyclical |           6.4  | $1.8B        |          13.48 |         10.34 |           1.61 |        7.95 |     0.1478 | True          | HIGH              |            0.8371 |
-|      2 | TILE     | Consumer Cyclical |          31.87 | $1.9B        |          13.62 |          4.49 |           1.65 |        8.09 |     0.1528 | True          | HIGH              |            0.835  |
-|      3 | ADAM     | Real Estate       |           9.31 | $837M        |           6.77 |          4.49 |           1.69 |        1.24 |     0.0746 | True          | HIGH              |            0.8292 |
-|      4 | JBI      | Industrials       |           5.35 | $730M        |          11.23 |          8.3  |           1.23 |        5.7  |     0.1445 | True          | HIGH              |            0.8099 |
-|      5 | BCAT     | Financial         |          16.05 | $1.7B        |           4.22 |          1.78 |           1.52 |       -1.31 |     0.0613 | True          | HIGH              |            0.8087 |
-|      6 | CBZ      | Industrials       |          35.26 | $1.9B        |          21.92 |          5    |           1.09 |       16.39 |     0.1875 | True          | HIGH              |            0.8076 |
-|      7 | AMLX     | Healthcare        |          14.59 | $1.6B        |           9.82 |         12.14 |           1.38 |        4.29 |     0.1521 | True          | HIGH              |            0.8069 |
-|      8 | VYX      | Technology        |           7.85 | $1.1B        |          17.87 |         13.28 |           1.73 |       12.34 |     0.2229 | True          | HIGH              |            0.8051 |
-|      9 | PDM      | Real Estate       |           9.1  | $1.1B        |          16.67 |          2.02 |           1.53 |       11.14 |     0.2121 | True          | HIGH              |            0.8038 |
-|     10 | AIP      | Technology        |          41    | $1.9B        |          21.63 |         16.28 |           1.22 |       16.1  |     0.214  | True          | HIGH              |            0.8015 |
-|     11 | ACCO     | Industrials       |           4.04 | $373M        |           7.45 |          3.86 |           1.15 |        1.92 |     0.1011 | True          | HIGH              |            0.7997 |
-|     12 | EVTC     | Technology        |          26.28 | $1.6B        |          11.21 |         16.28 |           1.33 |        5.68 |     0.1677 | True          | HIGH              |            0.7991 |
-|     13 | ARHS     | Consumer Cyclical |           7.17 | $1.0B        |          24.7  |         15.27 |           1.31 |       19.17 |     0.2447 | True          | HIGH              |            0.7965 |
-|     14 | MLKN     | Consumer Cyclical |          16.24 | $1.1B        |          12.31 |         11.85 |           1.24 |        6.78 |     0.1776 | True          | HIGH              |            0.7934 |
-|     15 | INN      | Real Estate       |           6.2  | $752M        |          18.32 |          3.68 |           1.06 |       12.79 |     0.1935 | True          | HIGH              |            0.7887 |
+<screener_watchlist generated="2026-06-21" candidates="15">
+|   rank | ticker   | sector                 |   latest_price | market_cap   |   momentum_20d |   momentum_5d |   volume_ratio |   rs_vs_iwm |   bb_width | above_sma20   | data_confidence   |   composite_score |
+|-------:|:---------|:-----------------------|---------------:|:-------------|---------------:|--------------:|---------------:|------------:|-----------:|:--------------|:------------------|------------------:|
+|      1 | CDNA     | Healthcare             |          26.18 | $1.4B        |          21.37 |         13.97 |           3.23 |       16.73 |     0.1872 | True          | HIGH              |            0.8373 |
+|      2 | ZD       | Communication Services |          46.03 | $1.7B        |          10.33 |         -0.5  |           2.64 |        5.69 |     0.1118 | True          | HIGH              |            0.8291 |
+|      3 | SCHL     | Communication Services |          42.83 | $931M        |           6.7  |         -2.42 |           4.08 |        2.06 |     0.1137 | True          | HIGH              |            0.8268 |
+|      4 | SVRA     | Healthcare             |           5.5  | $1.1B        |           8.7  |          4.56 |           2.83 |        4.06 |     0.1059 | True          | HIGH              |            0.8265 |
+|      5 | VITL     | Consumer Defensive     |          10.41 | $446M        |          12.66 |         -1.79 |           3.34 |        8.02 |     0.1666 | True          | HIGH              |            0.8222 |
+|      6 | WBI      | Energy                 |          33.19 | $1.6B        |           7.86 |          2.31 |           9.28 |        3.22 |     0.156  | True          | HIGH              |            0.8162 |
+|      7 | AMBQ     | Technology             |          90.48 | $1.9B        |          18.18 |          6.8  |           3.14 |       13.54 |     0.198  | True          | HIGH              |            0.8155 |
+|      8 | XNCR     | Healthcare             |          12.64 | $937M        |          12.16 |          2.51 |           2.45 |        7.52 |     0.1458 | True          | HIGH              |            0.8124 |
+|      9 | SLDB     | Healthcare             |           8.33 | $820M        |          28.15 |         16.67 |           7.48 |       23.51 |     0.2509 | True          | HIGH              |            0.8123 |
+|     10 | PLX      | Healthcare             |           2.22 | $179M        |           9.36 |          6.22 |           2.74 |        4.72 |     0.1342 | True          | HIGH              |            0.8104 |
+|     11 | LUCD     | Healthcare             |           1.08 | $219M        |           8    |         12.38 |           4.88 |        3.36 |     0.1586 | True          | HIGH              |            0.8097 |
+|     12 | WKC      | Energy                 |          31.12 | $1.6B        |           7.72 |         -1.89 |           3.92 |        3.08 |     0.151  | True          | HIGH              |            0.8061 |
+|     13 | BCAX     | Healthcare             |          23.23 | $1.5B        |          11.47 |          7.1  |           3.4  |        6.83 |     0.1868 | True          | HIGH              |            0.8022 |
+|     14 | AVLN     | Healthcare             |          31.45 | $1.4B        |          10.7  |          4.55 |           4.4  |        6.06 |     0.194  | True          | HIGH              |            0.7987 |
+|     15 | TILE     | Consumer Cyclical      |          32.56 | $1.9B        |          11.77 |          2.17 |           2.2  |        7.13 |     0.1469 | True          | HIGH              |            0.7976 |
 </screener_watchlist>
 
 **Screener Integration:**
@@ -139,68 +139,70 @@ Before producing your output, work through these steps internally:
 - For each screener candidate not selected, state why in one line.
 - Respect the sector cap: max 2 positions in the same GICS sector.
 
-<holdings date="2026-06-12">
-<holding ticker="WKC" shares="2" avg_cost="26.00" current_price="31.72" stop_loss="28.80" stop_limit="28.65" />
-<holding ticker="SHO" shares="11" avg_cost="10.20" current_price="11.72" stop_loss="10.60" stop_limit="10.50" />
-<holding ticker="IMPP" shares="19" avg_cost="5.20" current_price="5.25" stop_loss="4.80" stop_limit="4.70" />
-<holding ticker="TDAY" shares="16" avg_cost="8.15" current_price="7.74" stop_loss="7.20" stop_limit="7.10" />
-<holding ticker="INN" shares="22" avg_cost="5.75" current_price="6.20" stop_loss="5.15" stop_limit="5.05" />
+<holdings date="2026-06-18">
+<holding ticker="WKC" shares="2" avg_cost="26.00" current_price="31.12" stop_loss="29.20" stop_limit="29.05" />
+<holding ticker="SHO" shares="11" avg_cost="10.20" current_price="11.91" stop_loss="10.90" stop_limit="10.80" />
+<holding ticker="TDAY" shares="16" avg_cost="8.15" current_price="7.88" stop_loss="7.20" stop_limit="7.10" />
+<holding ticker="INN" shares="22" avg_cost="5.75" current_price="6.63" stop_loss="5.90" stop_limit="5.80" />
+<holding ticker="TILE" shares="4" avg_cost="32.10" current_price="32.56" stop_loss="28.70" stop_limit="28.55" />
 </holdings>
 
 <last_analyst_thesis>
-# Week 38 — Thesis Review Summary
+# Week 40 — Thesis Review Summary
 
-**Date:** 2026-06-07 | **Week:** 38 of 52
+**Date:** 2026-06-14 | **Week:** 40 of 52
 
 ---
 
 ## Per-Position Thesis
 
 **WKC (World Kinect) — HOLD | Conviction 4/5**
-Energy distribution and services company riding strong fuel demand and operational efficiency. Q1 EPS beat by 142% ($0.75 vs $0.31 est). FY26 guidance $2.65–$2.85 implies P/E of ~10.5-11.3× at current price — still reasonable for the growth trajectory. At 52-week high territory. Key risk: analyst consensus diverging (Hold/$28.75 PT) suggests limited upside from here. Raising stop to $28.80 locks in +10.8% gain while allowing room for continued appreciation. **Thesis intact but approaching valuation ceiling.**
+Fuel distribution/services compounding on the Q1 beat (EPS $0.75 vs $0.31 est). Re-branding back to "World Fuel." Now at 52-week highs and above consensus PT ($28.75), so upside is narrowing — stop raised to $29.20 to lock +12.3% while leaving room. **Thesis intact but valuation-capped.**
 
 **SHO (Sunstone Hotel Investors) — HOLD | Conviction 4/5**
-Premium upscale hotel REIT benefiting from RevPAR recovery and strategic portfolio repositioning. Q1 exceeded expectations by 200bp. Raised FY26 outlook. Andaz Miami Beach renovation delivering results. Active share repurchase program. FIFA World Cup 2026 provides potential tailwind for hotel REITs broadly. Trading above analyst consensus PT ($10), suggesting either re-rating or that analysts need to raise targets. Raising stop to $10.60 to lock in profit after strong run. **Thesis strengthening — operating fundamentals improving faster than expected.**
+Upscale hotel REIT with a raised FY2026 outlook, active buybacks, and Andaz Miami Beach renovation delivering. 23% World Cup city revenue exposure adds a near-term RevPAR tailwind (Deutsche Bank: +50–75bp lift for full-service REITs). Stop raised to $10.90. **Thesis strengthening.**
 
-**IMPP (Imperial Petroleum) — HOLD WITH TIGHT STOP | Conviction 2/5 ↓**
-Entered as a tanker rate catalyst play following Strait of Hormuz closure. Q1 delivered spectacularly (revenue $61.7M, net income $28M, second-best quarter ever). However, the stock has declined from $5.58 (May 27) to $4.97 despite the beat, suggesting the market views the rate environment as peaking or transitory. The thesis was rate-driven upside — if the market is pricing in rate normalization, the thesis is weakening. Only 3.4% from stop ($4.80). Let the stop manage risk — max loss $3.23 (0.5% of equity). **Thesis weakening — post-earnings price action signals market skepticism.**
+**IMPP (Imperial Petroleum) — EXIT | Conviction 2/5**
+Entered as a Strait-of-Hormuz tanker-rate spike play. This week's US–Iran de-escalation directly pressures the rate environment the thesis required; the stock is flat since the 06-01 entry. Despite cheap optics (P/E ~3.4) and bullish analyst PTs ($7.50 mean), the catalyst is fading — recycle the capital into a better setup. 10-day re-entry ban applies after the exit. **Thesis broken by macro reversal.**
 
-**TDAY (USA TODAY Co.) — INITIATING | Conviction 3/5**
-Digital transformation play entering Communication Services as a new sector. The AI licensing revenue surge (+125.6% to $18.8M from Meta/Microsoft deals) represents a new, high-margin revenue stream that could fundamentally change the company's trajectory. Digital revenue at an all-time high 47.8% of total, digital subscriptions growing 6.2% with record ARPU. While total revenue still declining (-4% YoY), the rate of decline is improving and management says they're "nearing" the inflection point. If AI licensing revenue continues growing and digital crosses 50% of revenue, the stock could re-rate from a legacy media company to a digital/AI content platform. **Thesis: AI monetization creates new growth narrative that the market hasn't fully priced.**
+**TDAY (USA TODAY Co.) — HOLD | Conviction 3/5**
+AI-licensing surge (+125.6% to $18.8M) with digital nearing 50% of revenue and a $100M cost-reduction plan. Recovered from the post-entry dip; 5-day minimum hold expired with the thesis intact. Analyst PTs $6.75–$8. **Thesis: AI monetization re-rating, intact.**
 
-**INN (Summit Hotel Properties) — INITIATING | Conviction 3/5**
-Hotel REIT positioned for FIFA World Cup 2026 tourism catalyst (June 11 start). Q1 RevPAR beat expectations by 200bp with March RevPAR accelerating to +4%. FY26 AFFO guide 75–85c represents 7-10% yield at current price. Conservative balance sheet (no debt maturities until 2028, $34.8M cash), active buyback ($6M), and strong dividend (7.46%). Volume ratio at 5.13× suggests institutional accumulation ahead of World Cup catalyst. **Thesis: FIFA World Cup creates a 6-week demand surge that lifts RevPAR and sentiment for hotel REITs.**
+**INN (Summit Hotel Properties) — HOLD | Conviction 3/5**
+FIFA World Cup demand surge now live (June 11–July 19); 44 hotels across six U.S. host markets (~⅓ of room count), Q2 revenue pace +4%. Conservative balance sheet, 7%+ yield. A six-week catalyst runway — hold through the tournament on the wide $5.15 catalyst stop. **Thesis: World Cup RevPAR lift, delivering.**
+
+**TILE (Interface) — INITIATE | Conviction 3/5**
+Commercial flooring leader executing its "One Interface" strategy: Q1 EPS $0.41 vs $0.33, revenue $331M beat, **raised FY sales and margin guidance**, and a fresh 200-DMA reclaim (06-07). A momentum/technical entry (no dated catalyst) with real fundamental support, sized small (4 shares, ~18.6%) and stopped at the 50-day SMA for a 2.0%-equity risk budget. Bear case: cyclical commercial-real-estate demand, raw-material/tariff costs, and an extended tape at market highs. **Thesis: beat-and-raise momentum with technical confirmation.**
 
 ---
 
 ## Overall Portfolio Thesis
 
-The portfolio enters Week 38 with a clear strategic imperative: **close the 8.8% gap to the S&P 500 benchmark over the remaining 14 weeks.** The Week 38 restructuring deploys excess cash (reducing from 42% to 21%) into two diversified plays — TDAY (AI/digital transformation) and INN (FIFA World Cup tourism) — while recycling the underperforming ACCO position. The portfolio now spans three sectors (Energy, Real Estate, Communication Services) with five positions, maximum diversification within constraints.
+Week 40 of 52, trailing the S&P-equivalent benchmark by ~7%. The Week 40 action is a disciplined **rotation** — exit IMPP (fading macro catalyst, 2/5) and initiate TILE (fundamentally-supported momentum, 3/5) — funded entirely by the IMPP proceeds so the **15% cash reserve is preserved** (lands at 15.9%). Stops are raised on the two winners carrying the book (WKC, SHO).
 
-Key portfolio characteristics post-restructuring:
-- **Fully deployed:** 5 of 5 slots filled, 79.5% invested vs 57.9% previously
-- **Diversified:** 3 GICS sectors, no sector exceeding 2 positions
-- **Risk-managed:** 6.4% aggregate stop-risk, each position ≤2.3% individual risk
-- **Catalyst-loaded:** INN (FIFA World Cup June 11), TDAY (AI monetization ongoing), WKC/SHO (trailing momentum)
-- **Weak links identified:** IMPP (2/5 conviction, 3.4% from stop) — will likely self-resolve via stop within 1-2 weeks
+Key characteristics post-rotation:
+- **5 of 6 slots filled** — the 6th deliberately held open for a higher-conviction catalyst (AMLX Phase 3 LUCIDITY, Q3 readout) as it approaches.
+- **Diversified:** five GICS sectors (Energy, Real Estate ×2, Comm Services, Consumer Cyclical), no sector over the 2-position cap.
+- **Catalyst-loaded:** INN (FIFA World Cup, live), TDAY (AI licensing), plus WKC/SHO momentum.
+- **Risk-managed:** TILE risk 2.0% of equity; all stops clear; cash reserve intact.
+- **Weak link removed:** IMPP recycled before its weakening thesis could round-trip.
 
 ---
 
-*Week 38 Summary generated 2026-06-07 by Claude Code*
+*Week 40 Summary generated 2026-06-14 by Claude Code.*
 </last_analyst_thesis>
 
 <recent_trades>
 <!-- Trades from Monday through Friday of current week -->
 Date,Ticker,Shares Bought,Buy Price,Cost Basis,PnL,Reason,Shares Sold,Sell Price
-2026-06-08,ACCO,,,113.68,-2.029999999999987,MANUAL SELL LIMIT - ,29.0,3.85
-2026-06-08,TDAY,16.0,8.15,130.4,0.0,MANUAL BUY LIMIT - Filled,,
-2026-06-08,INN,22.0,5.75,126.5,0.0,MANUAL BUY LIMIT - Filled (pre-market),,
+2026-06-15,TILE,4.0,32.1,128.4,0.0,MANUAL BUY LIMIT - Filled,,
+2026-06-15,IMPP,,,98.8,0.95,MANUAL SELL LIMIT - pre-market,19.0,5.25
 </recent_trades>
 
 <execution_requests>
 <session_directives>
 - Sector focus: Wide net across all sectors
-- Catalyst timing: Within 10 trading days
+- Catalyst timing: 30-60 days (medium-term catalysts, high conviction)
 - Risk posture: Neutral
 - Max concurrent positions: 6
 </session_directives>

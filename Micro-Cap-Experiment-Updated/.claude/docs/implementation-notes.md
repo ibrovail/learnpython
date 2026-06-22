@@ -4,6 +4,16 @@ Reference documentation for key implementation decisions and change history.
 
 ---
 
+### 2026-06-21 — Fix Makefile weekend staleness guard (holiday weekends)
+
+The `make weekend` portfolio-staleness guard crashed on any weekend run and silently fell back to non-holiday-aware logic. It called `xnys.previous_session(pd.Timestamp(today))`, but `previous_session` requires its argument to *be* a session — on a Saturday/Sunday/holiday it raises `NotSessionError`, which the bare `except` swallowed, dropping to a weekday-only fallback that computed Friday. On a holiday-shortened week (Juneteenth, Fri 6/19) this demanded a 6/19 portfolio row that correctly doesn't exist (the ledger skips holidays), blocking the weekend run with a false "data not current" error. Fixed by replacing `previous_session(today)` with `sessions_in_range(today-10d, today)[-1]`, which returns the most recent session on/before any date. Verified it resolves to 2026-06-18 and the guard passes. Separately noted: report week labels (Week 40, 41…) run ~1 ahead of the script's date-based `week_number`, and `inject_last_thesis.py` keys off `Week {N-1}` so a mismatch can inject a stale thesis (worked around this run by setting the context week to 41 so it pulled Week 40).
+
+| File | Change |
+|------|--------|
+| `Makefile` | weekend staleness guard: `previous_session(today)` → `sessions_in_range(today - 10d, today)[-1]` |
+| `Weekly Deep Research (MD)/Week 41 *.md`, `Weekly Deep Research (PDF)/Week 41.pdf` | Week 41 deep research (hold, no initiation) |
+| `CLAUDE.md` | Updated Current State |
+
 ### 2026-06-11 — Time-Weighted Return (TWR) Analytics
 
 Added injection-neutral performance reporting to `_compute_portfolio_metrics`. Raw equity growth was misleading because $547.64 of total capital was injected across 5 tranches — equity could rise purely from contributions, not performance. TWR fixes this by chaining daily equity returns while removing the step-change on each injection day (start-of-day convention: `factor_t = Equity_t / (Equity_{t-1} + injection_on_t)`; each injection attributed to the first trading session on or after its date). Three new rows now print in both the daily and weekend `<risk_metrics>` tables: **Time-Weighted Return (cum)** (portfolio, injection-neutral), **S&P 500 Return (cum)** (^GSPC price return over the same window — injection-neutral by nature), and **TWR Alpha (cum)** (the difference). First live read: portfolio +9.54% vs S&P +11.49% since inception → −1.95% cumulative alpha, a far more trustworthy figure than the CAPM annualized alpha (+1287%, R²=0.04). `PortfolioMetrics` gained `twr`/`twr_spx`/`twr_alpha` fields (defaulted to NaN, so early-return paths are unaffected); `_print_risk_metrics` gained matching optional params.

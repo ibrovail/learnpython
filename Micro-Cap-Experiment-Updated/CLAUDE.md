@@ -77,9 +77,9 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: Week 40 rotation executed (6/15) — IMPP exited pre-market 19sh @ $5.25 (tanker thesis undercut by Iran de-escalation); TILE initiated 4sh @ $32.10 (beat-and-raise momentum, stop $28.70/$28.55); WKC stop → $29.20/$29.05, SHO stop → $10.90/$10.80
-- **In progress**: Week 40 of 52, 5 positions (WKC/SHO/TDAY/INN/TILE); equity $697.21, cash $110.54 (15.9%); INN stop raised → $5.90/$5.80 (6/16, locks +2.6%); 6th slot held open for AMLX Phase 3 (Q3 readout)
-- **Next**: Watch TDAY (recovered to −4.8%, stop $7.20); INN FIFA catalyst live (CFO resigned 6/12, PT cut to $6); WKC nearing +30% partial zone (~$33.80); TILE min-hold through 6/19
+- **Complete**: Week 41 deep research (6/21) — HOLD all 5, no initiation (No-Candidates rule: no screener pick clears date-certain-within-60d + cash bar; only ~$4.6 deployable above 15% floor). Fixed Makefile weekend staleness guard (previous_session→sessions_in_range; was crashing on holiday weekends)
+- **In progress**: Week 41 of 52, 5 positions (WKC/SHO/TDAY/INN/TILE); equity $705.97 (as of 6/18; Fri 6/19 Juneteenth), cash $110.54 (15.7%); gap −6.2%, TWR alpha −1.44%; 6th slot reserved for AMLX (fund via WKC +30% partial ~$33.80)
+- **Next**: WKC +30% partial alert $33.80; raise SHO stop ~$11.10 if >$12, INN ~$6.10 if >$6.80; watch AMLX for a dated Q3 topline. Note: report week labels run ~1 ahead of script's date-based week_number
 
 ## Documentation
 
