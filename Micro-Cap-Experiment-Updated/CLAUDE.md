@@ -77,7 +77,7 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: Week 41 deep research (6/21) — HOLD all 5, no initiation (No-Candidates rule: no screener pick clears date-certain-within-60d + cash bar; only ~$4.6 deployable above 15% floor). Fixed Makefile weekend staleness guard (previous_session→sessions_in_range; was crashing on holiday weekends)
+- **Complete**: Week 41 deep research (6/21) — HOLD all 5, no initiation (No-Candidates rule). INN stop raised → $6.20/$6.10 (6/23, weakening FIFA hotel-demand reports). Tweaked `update_stops_only()` for clean 1-line diffs (read-as-strings); use `--update-stops` for stop changes, never inline csv rewrites (one truncated the ledger 6/23, recovered from git)
 - **In progress**: Week 41 of 52, 5 positions (WKC/SHO/TDAY/INN/TILE); equity $705.97 (as of 6/18; Fri 6/19 Juneteenth), cash $110.54 (15.7%); gap −6.2%, TWR alpha −1.44%; 6th slot reserved for AMLX (fund via WKC +30% partial ~$33.80)
 - **Next**: WKC +30% partial alert $33.80; raise SHO stop ~$11.10 if >$12, INN ~$6.10 if >$6.80; watch AMLX for a dated Q3 topline. Note: report week labels run ~1 ahead of script's date-based week_number
 

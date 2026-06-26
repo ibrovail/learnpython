@@ -1807,24 +1807,31 @@ def update_stops_only() -> None:
         return
 
     logger.info("Reading CSV file: %s", PORTFOLIO_CSV)
-    df = pd.read_csv(PORTFOLIO_CSV)
+    # Read as strings (and keep blanks blank) so writing back only changes the
+    # Stop Loss / Stop Limit cells we touch — no reformatting of other columns
+    # (e.g. Shares 22 -> 22.0 from float inference), which keeps git diffs minimal.
+    df = pd.read_csv(PORTFOLIO_CSV, dtype=str, keep_default_na=False)
     logger.info("Successfully read CSV file: %s", PORTFOLIO_CSV)
 
-    # Find the latest date in the CSV (where portfolio rows actually exist)
+    # Find the latest date that has actual holding rows (keep its raw string form)
     non_total = df[df["Ticker"] != "TOTAL"].copy()
-    non_total["Date"] = pd.to_datetime(non_total["Date"], format="mixed", errors="coerce")
-    latest_date = non_total["Date"].max().strftime("%Y-%m-%d")
+    non_total["_parsed"] = pd.to_datetime(non_total["Date"], format="mixed", errors="coerce")
+    latest_date = non_total.loc[non_total["_parsed"].idxmax(), "Date"]
 
-    # Update the latest date's rows with new stop losses and stop limits
+    def _fmt_price(x: Any) -> str:
+        # Minimal price repr matching the ledger's style: 6.20 -> "6.2", 28.65 -> "28.65"
+        return f"{float(x):.2f}".rstrip("0").rstrip(".")
+
+    # Update only the Stop Loss / Stop Limit cells of the latest-date holding rows
     for _, stock in portfolio_df.iterrows():
         ticker = str(stock['ticker']).upper()
 
         mask = (df['Date'] == latest_date) & (df['Ticker'] == ticker)
         if mask.any():
-            df.loc[mask, 'Stop Loss'] = float(stock['stop_loss'])
+            df.loc[mask, 'Stop Loss'] = _fmt_price(stock['stop_loss'])
             if 'Stop Limit' in df.columns:
-                df.loc[mask, 'Stop Limit'] = float(stock['stop_limit'])
-    
+                df.loc[mask, 'Stop Limit'] = _fmt_price(stock['stop_limit'])
+
     logger.info("Writing CSV file: %s", PORTFOLIO_CSV)
     df.to_csv(PORTFOLIO_CSV, index=False)
     logger.info("Successfully wrote CSV file: %s", PORTFOLIO_CSV)

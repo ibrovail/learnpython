@@ -4,6 +4,15 @@ Reference documentation for key implementation decisions and change history.
 
 ---
 
+### 2026-06-23 — Clean-diff stop updates in update_stops_only()
+
+`update_stops_only()` (the `--update-stops` mode) rewrote the whole portfolio CSV via `pd.read_csv` → `to_csv`, which inferred the `Shares` column as float (TOTAL rows have blank shares → NaN) and reformatted whole numbers on write (`22` → `22.0`) for every current-date holding row — a ~5-line git diff for a single stop change. Fixed by reading the CSV as strings (`dtype=str, keep_default_na=False`) and updating only the touched `Stop Loss` / `Stop Limit` cells (formatted with a minimal-repr helper, e.g. `6.20`→`6.2`), so all other columns round-trip byte-for-byte. Verified: a no-op update now yields an identical file, and a real change produces a clean 1-line diff with shares left as int. This makes `--update-stops` the safe **and** clean default for stop changes (replacing risky manual CSV rewrites — one of which truncated the ledger to 0 bytes the same day).
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | `update_stops_only()`: read CSV as strings, edit only Stop Loss/Stop Limit cells, minimal price formatting |
+| `CLAUDE.md` | Updated Current State |
+
 ### 2026-06-21 — Fix Makefile weekend staleness guard (holiday weekends)
 
 The `make weekend` portfolio-staleness guard crashed on any weekend run and silently fell back to non-holiday-aware logic. It called `xnys.previous_session(pd.Timestamp(today))`, but `previous_session` requires its argument to *be* a session — on a Saturday/Sunday/holiday it raises `NotSessionError`, which the bare `except` swallowed, dropping to a weekday-only fallback that computed Friday. On a holiday-shortened week (Juneteenth, Fri 6/19) this demanded a 6/19 portfolio row that correctly doesn't exist (the ledger skips holidays), blocking the weekend run with a false "data not current" error. Fixed by replacing `previous_session(today)` with `sessions_in_range(today-10d, today)[-1]`, which returns the most recent session on/before any date. Verified it resolves to 2026-06-18 and the guard passes. Separately noted: report week labels (Week 40, 41…) run ~1 ahead of the script's date-based `week_number`, and `inject_last_thesis.py` keys off `Week {N-1}` so a mismatch can inject a stale thesis (worked around this run by setting the context week to 41 so it pulled Week 40).
