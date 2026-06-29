@@ -77,9 +77,9 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: Week 41 deep research (6/21) — HOLD all 5, no initiation (No-Candidates rule). INN stop raised → $6.20/$6.10 (6/23, weakening FIFA hotel-demand reports). Tweaked `update_stops_only()` for clean 1-line diffs (read-as-strings); use `--update-stops` for stop changes, never inline csv rewrites (one truncated the ledger 6/23, recovered from git)
-- **In progress**: Week 41 of 52, 5 positions (WKC/SHO/TDAY/INN/TILE); equity $705.97 (as of 6/18; Fri 6/19 Juneteenth), cash $110.54 (15.7%); gap −6.2%, TWR alpha −1.44%; 6th slot reserved for AMLX (fund via WKC +30% partial ~$33.80)
-- **Next**: WKC +30% partial alert $33.80; raise SHO stop ~$11.10 if >$12, INN ~$6.10 if >$6.80; watch AMLX for a dated Q3 topline. Note: report week labels run ~1 ahead of script's date-based week_number
+- **Complete**: Week 42 deep research (6/28, Neutral — reran after weighing Aggressive vs Neutral) — defend the just-won lead: take WKC +30% partial ($33.80), KEEP all others, NO initiation (No-Candidates: BLFS=Aug-6 earnings not binary, AMLX=vague Q3). Strategic Pivot Week 41 Readout written (gap closed to +0.4%, TWR alpha +6.34%). INN/TILE stops raised 6/26 → $6.40/$6.30 and $31.00/$30.85 (uncommitted)
+- **In progress**: Week 42 of 52, 5 positions (WKC/SHO/TDAY/INN/TILE); equity $741.20 (6/26), cash $110.54 (14.9%); gap +0.4% (AHEAD), TWR alpha +6.34%; 6th slot + WKC-partial cash reserved for BLFS (on pullback) or AMLX (dated Q3)
+- **Next**: Mon 6/29 WKC +30% partial $33.80 (rebuilds reserve to ~19.5%); raise SHO stop ~$11.10 if >$12; watch BLFS pullback + AMLX dated topline. Note: report week labels run ~1 ahead of script's date-based week_number
 
 ## Documentation
 
