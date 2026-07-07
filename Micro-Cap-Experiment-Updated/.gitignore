@@ -4,3 +4,7 @@ venv 2
 .idea
 __pycache__
 venv.nosync
+
+# Personal cross-portfolio allocation reviews — keep local, not part of the experiment repo
+# (the committed Performance Results/*.png monthly charts are unaffected)
+Performance Results/allocation_review_*.md
