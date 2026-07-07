@@ -66,47 +66,48 @@ Before producing your output, work through these steps internally:
 </thinking_approach>
 
 <weekly_context>
-<date>Sunday, June 28, 2026</date>
-<week_number>42 of 52 (twelve-month live experiment)</week_number>
+<date>Monday, July 06, 2026</date>
+<week_number>43 of 52 (twelve-month live experiment)</week_number>
+<experiment_runway>ends 2026-09-18 (11 calendar weeks remaining)</experiment_runway>
 
 <market_data>
 <price_volume>
 | Ticker | Close   | % Chg  | Volume      | Role       |
 |--------|---------|--------|-------------|------------|
-| WKC    |   33.72 | +4.75% |   2,284,400 | Holding    |
-| SHO    |   11.92 | +2.76% |  12,726,700 | Holding    |
-| TDAY   |    8.35 | +5.16% |   3,500,200 | Holding    |
-| INN    |    7.07 | +3.36% |   3,411,400 | Holding    |
-| TILE   |   35.74 | +0.65% |   1,992,300 | Holding    |
-| IWO    |  388.31 | -0.92% |     836,500 | Benchmark  |
-| XBI    |  155.38 | +2.50% |  11,005,800 | Benchmark  |
-| SPY    |  728.99 | -0.72% |  70,932,800 | Benchmark  |
-| IWM    |  299.83 | +0.31% |  39,794,200 | Benchmark  |
-| QQQ    |  706.52 | -1.38% |  46,937,400 | Benchmark  |
-| TLT    |   87.36 | +0.01% |  21,642,400 | Macro      |
-| HYG    |   79.83 | -0.06% |  27,647,500 | Macro      |
+| WKC    |   33.17 | -0.12% |     609,902 | Holding    |
+| SHO    |   11.18 | -1.76% |   1,807,578 | Holding    |
+| TDAY   |    8.67 | -1.81% |   1,215,759 | Holding    |
+| INN    |    6.55 | -3.53% |     717,881 | Holding    |
+| TILE   |   34.81 | -2.41% |     463,164 | Holding    |
+| IWO    |  389.99 | +0.83% |     233,717 | Benchmark  |
+| XBI    |  160.81 | +0.22% |   7,358,632 | Benchmark  |
+| SPY    |  751.28 | +0.87% |  42,581,021 | Benchmark  |
+| IWM    |  298.90 | +0.44% |  18,352,966 | Benchmark  |
+| QQQ    |  722.82 | +1.43% |  29,416,923 | Benchmark  |
+| TLT    |   85.45 | -0.07% |  17,820,827 | Macro      |
+| HYG    |   79.87 | +0.20% |  25,013,409 | Macro      |
 </price_volume>
 
 <risk_metrics>
 | Metric                        | Value     | Note                    |
 |-------------------------------|-----------|-------------------------|
 | Max Drawdown                  |   -24.99% | on 2026-03-20           |
-| Sharpe Ratio (annualized)     |    2.2846 |                         |
-| Sortino Ratio (annualized)    |    7.8224 |                         |
-| Beta (daily) vs ^GSPC         |    1.7906 |                         |
-| Alpha (annualized) vs ^GSPC   | +1254.68% |                         |
-| R²                            |     0.039 | Low — alpha/beta unstable |
-| Time-Weighted Return (cum)    |   +17.23% | injection-neutral       |
-| S&P 500 Return (cum)          |   +10.89% | same window             |
-| TWR Alpha (cum)               |    +6.34% | TWR minus S&P           |
+| Sharpe Ratio (annualized)     |    2.2508 |                         |
+| Sortino Ratio (annualized)    |    7.7053 |                         |
+| Beta (daily) vs ^GSPC         |    1.7512 |                         |
+| Alpha (annualized) vs ^GSPC   | +1125.41% |                         |
+| R²                            |     0.038 | Low — alpha/beta unstable |
+| Time-Weighted Return (cum)    |   +16.32% | injection-neutral       |
+| S&P 500 Return (cum)          |   +12.84% | same window             |
+| TWR Alpha (cum)               |    +3.48% | TWR minus S&P           |
 </risk_metrics>
 </market_data>
 
 <portfolio_snapshot>
 | Metric              | Value     |
 |---------------------|-----------|
-| Portfolio Equity    |   $741.20 |
-| S&P Equivalent      |   $738.11 |
+| Portfolio Equity    |   $735.48 |
+| S&P Equivalent      |   $751.08 |
 | Cash Balance        |   $110.54 |
 </portfolio_snapshot>
 
@@ -114,24 +115,24 @@ Before producing your output, work through these steps internally:
   <planned>false</planned>
 </capital_injection>
 
-<screener_watchlist generated="2026-06-28" candidates="15">
-|   rank | ticker   | sector                 |   latest_price | market_cap   |   momentum_20d |   momentum_5d |   volume_ratio |   rs_vs_iwm |   bb_width | above_sma20   | data_confidence   |   composite_score |
-|-------:|:---------|:-----------------------|---------------:|:-------------|---------------:|--------------:|---------------:|------------:|-----------:|:--------------|:------------------|------------------:|
-|      1 | DV       | Communication Services |          10.82 | $1.7B        |          11.55 |          6.39 |           5.58 |        8.31 |     0.0948 | True          | HIGH              |            0.8798 |
-|      2 | MAN      | Industrials            |          36.2  | $1.7B        |          14.45 |         15.54 |           6.05 |       11.21 |     0.1588 | True          | HIGH              |            0.8608 |
-|      3 | INSP     | Healthcare             |          45.72 | $1.3B        |          10.54 |         10.57 |           4.52 |        7.3  |     0.1153 | True          | HIGH              |            0.8564 |
-|      4 | BLFS     | Healthcare             |          28.67 | $1.4B        |          15.05 |         15.14 |           3.96 |       11.81 |     0.1513 | True          | HIGH              |            0.8462 |
-|      5 | KPTI     | Healthcare             |          10.21 | $231M        |          12.2  |         13.44 |           6.33 |        8.96 |     0.1705 | True          | HIGH              |            0.8454 |
-|      6 | TWI      | Industrials            |           8.02 | $516M        |          11.08 |          6.08 |           3.66 |        7.84 |     0.1207 | True          | HIGH              |            0.8402 |
-|      7 | KMPR     | Financial              |          26.81 | $1.6B        |           8.67 |          6.94 |           5.45 |        5.43 |     0.1418 | True          | HIGH              |            0.835  |
-|      8 | XMAX     | Consumer Cyclical      |           8.79 | $559M        |           2.81 |          7.46 |           6.82 |       -0.43 |     0.0974 | True          | HIGH              |            0.8289 |
-|      9 | UMH      | Real Estate            |          15.45 | $1.3B        |           2.86 |          3.21 |           4.85 |       -0.38 |     0.0445 | True          | HIGH              |            0.8287 |
-|     10 | VIA      | Technology             |          17.48 | $1.4B        |          14.77 |         17    |           5.13 |       11.53 |     0.2003 | True          | HIGH              |            0.8276 |
-|     11 | MDXG     | Healthcare             |           3.93 | $585M        |           6.79 |          7.08 |           3.79 |        3.55 |     0.0976 | True          | HIGH              |            0.825  |
-|     12 | SILA     | Real Estate            |          30.31 | $1.7B        |           0.23 |         -0.1  |           6.76 |       -3.01 |     0.0049 | True          | HIGH              |            0.8235 |
-|     13 | ACCO     | Industrials            |           4.21 | $388M        |           6.31 |         10.21 |           3.63 |        3.07 |     0.0924 | True          | HIGH              |            0.8228 |
-|     14 | NHP      | Real Estate            |          14.91 | $315M        |           3.18 |          4.34 |           6.09 |       -0.06 |     0.107  | True          | HIGH              |            0.8228 |
-|     15 | CCO      | Communication Services |           2.43 | $1.2B        |           0.83 |          0.83 |           5.52 |       -2.41 |     0.0136 | True          | HIGH              |            0.8226 |
+<screener_watchlist generated="2026-07-05" candidates="15">
+|   rank | ticker   | sector             |   latest_price | market_cap   |   momentum_20d |   momentum_5d |   volume_ratio |   rs_vs_iwm |   bb_width | above_sma20   | data_confidence   |   composite_score |
+|-------:|:---------|:-------------------|---------------:|:-------------|---------------:|--------------:|---------------:|------------:|-----------:|:--------------|:------------------|------------------:|
+|      1 | RMAX     | Real Estate        |          11.12 | $376M        |          23.97 |         12.78 |           2.59 |       22.06 |     0.2121 | True          | HIGH              |            0.8573 |
+|      2 | NCI      | Consumer Cyclical  |          11.91 | $28M         |          13.32 |          5.21 |           2.03 |       11.41 |     0.153  | True          | HIGH              |            0.8506 |
+|      3 | ATRC     | Healthcare         |          31.79 | $1.6B        |          16.57 |          5.33 |           1.46 |       14.66 |     0.1657 | True          | HIGH              |            0.8479 |
+|      4 | FRMM     | Technology         |           6.02 | $80M         |          21.13 |          7.89 |           1.49 |       19.22 |     0.2061 | True          | HIGH              |            0.8399 |
+|      5 | SMA      | Real Estate        |          33.67 | $2.0B        |           9.46 |          0.69 |           1.17 |        7.55 |     0.0911 | True          | HIGH              |            0.8227 |
+|      6 | OLPX     | Consumer Cyclical  |           2.07 | $1.4B        |           1.47 |          0.49 |           8.5  |       -0.44 |     0.018  | True          | HIGH              |            0.8221 |
+|      7 | NOMD     | Consumer Defensive |          11.42 | $1.6B        |          17.25 |          2.7  |           1.32 |       15.34 |     0.1935 | True          | HIGH              |            0.8196 |
+|      8 | HPP      | Real Estate        |          16.91 | $938M        |          21.22 |         10.02 |           1.33 |       19.31 |     0.2173 | True          | HIGH              |            0.8196 |
+|      9 | GT       | Consumer Cyclical  |           6.59 | $1.9B        |          16.43 |         -3.65 |           4.46 |       14.52 |     0.2252 | True          | HIGH              |            0.8191 |
+|     10 | ESRT     | Real Estate        |           5.69 | $981M        |           8.17 |          5.96 |           1.4  |        6.26 |     0.1291 | True          | HIGH              |            0.8169 |
+|     11 | RSKD     | Technology         |           5.13 | $686M        |           6.65 |          1.38 |           1.18 |        4.74 |     0.0743 | True          | HIGH              |            0.8133 |
+|     12 | HNST     | Consumer Defensive |           3.9  | $429M        |          18.54 |          8.33 |           1.09 |       16.63 |     0.1824 | True          | HIGH              |            0.8112 |
+|     13 | INO      | Healthcare         |           1.22 | $100M        |           5.17 |         10.91 |           1.72 |        3.26 |     0.1304 | True          | HIGH              |            0.8096 |
+|     14 | GO       | Consumer Defensive |          10.39 | $1.0B        |          22.81 |          4.74 |           1.08 |       20.9  |     0.2084 | True          | HIGH              |            0.8069 |
+|     15 | SILA     | Real Estate        |          30.36 | $1.7B        |           0.43 |          0.1  |           1.93 |       -1.48 |     0.0052 | True          | MEDIUM            |            0.8067 |
 </screener_watchlist>
 
 **Screener Integration:**
@@ -139,53 +140,56 @@ Before producing your output, work through these steps internally:
 - For each screener candidate not selected, state why in one line.
 - Respect the sector cap: max 2 positions in the same GICS sector.
 
-<holdings date="2026-06-26">
-<holding ticker="WKC" shares="2" avg_cost="26.00" current_price="33.72" stop_loss="29.20" stop_limit="29.05" />
-<holding ticker="SHO" shares="11" avg_cost="10.20" current_price="11.92" stop_loss="10.90" stop_limit="10.80" />
-<holding ticker="TDAY" shares="16" avg_cost="8.15" current_price="8.35" stop_loss="7.20" stop_limit="7.10" />
-<holding ticker="INN" shares="22" avg_cost="5.75" current_price="7.07" stop_loss="6.40" stop_limit="6.30" />
-<holding ticker="TILE" shares="4" avg_cost="32.10" current_price="35.74" stop_loss="31.00" stop_limit="30.85" />
+<holdings date="2026-07-06">
+<holding ticker="WKC" shares="2" avg_cost="26.00" current_price="33.17" stop_loss="29.20" stop_limit="29.05" />
+<holding ticker="SHO" shares="11" avg_cost="10.20" current_price="11.18" stop_loss="10.90" stop_limit="10.80" />
+<holding ticker="TDAY" shares="16" avg_cost="8.15" current_price="8.67" stop_loss="7.20" stop_limit="7.10" />
+<holding ticker="INN" shares="22" avg_cost="5.75" current_price="6.55" stop_loss="6.40" stop_limit="6.30" />
+<holding ticker="TILE" shares="4" avg_cost="32.10" current_price="34.81" stop_loss="31.00" stop_limit="30.85" />
 </holdings>
 
 <last_analyst_thesis>
-# Week 41 — Thesis Review Summary
+# Week 42 — Thesis Review Summary
 
-**Date:** 2026-06-21 | **Week:** 41 of 52
+**Date:** 2026-06-28 | **Week:** 42 of 52 | **Posture:** Neutral
 
 ---
 
 ## Per-Position Thesis
 
-**WKC (World Kinect) — KEEP | Conviction 4/5**
-Fuel distribution/services compounding on the Q1 beat; re-brand to "World Fuel." +19.7% and approaching the +30% partial-profit zone (~$33.80) — a partial there both books profit and frees cash for the reserved 6th slot. Valuation-capped (above consensus PT) but momentum intact. Stop $29.20.
+**WKC (World Kinect) — PARTIAL / KEEP | Conviction 4/5**
++29.7% — at the +30% partial trigger ($33.80). Take the rule-mandated ~1/3 partial (1 of 2 shares); the remaining share rides the $29.20 stop. Fuel distribution/services compounding on the Q1 beat; valuation-capped above consensus PT but momentum intact. The partial banks the biggest winner and rebuilds the cash reserve to ~19.5%.
 
 **SHO (Sunstone Hotel Investors) — KEEP | Conviction 4/5**
-Upscale hotel REIT at a new high (+16.8%); raised FY outlook, active buybacks, and a World Cup RevPAR tailwind (Deutsche Bank: +50–75bp for full-service REITs). Trailing-stop discipline — raise toward ~$11.10 on a push through $12. Stop $10.90.
+Hotel REIT at new highs (+16.9%); raised FY outlook, buybacks, World Cup RevPAR lift. Trail the stop toward ~$11.10 on a push through $12.
 
-**TDAY (USA TODAY Co.) — KEEP | Conviction 3/5**
-AI-licensing surge with digital nearing 50% of revenue and a $100M cost plan. Recovered from the post-entry dip (−6.7% → −3.3%); thesis intact, analyst PTs $6.75–$8. Stop $7.20.
+**TDAY (USA Today Co.) — KEEP | Conviction 3/5**
+Fully recovered to green (+2.5%) from the −6.7% post-entry dip. AI-licensing surge + digital nearing 50% of revenue + $100M cost plan; thesis intact. Stop $7.20.
 
-**INN (Summit Hotel Properties) — KEEP | Conviction 4/5**
-FIFA World Cup demand live (through July 19); +15.3% to a new high, Q2 pace +4%, ~⅓ of rooms in six host markets. Stop raised to $5.90 (locks +2.6%) given the CFO transition and the cut $6 analyst PT now sitting below price. Thesis delivering.
+**INN (Summit Hotel Properties) — KEEP (watch) | Conviction 3/5**
++23% at new highs, but the sole thesis — World Cup demand — is underdelivering industry-wide (80% of host-city hotels below forecast; NYC cut its WC revenue outlook 60%). Let the raised $6.40 stop and the tournament end (July 19) manage it; trim into further strength rather than forcing a sale now.
 
-**TILE (Interface) — KEEP | Conviction 3/5**
-Beat-and-raise commercial flooring; turned green (+1.4%) after post-entry digestion, 5-day min-hold cleared. A momentum/technical entry managed against the 50-day SMA (~$28); no dated catalyst, so trend is the thesis. Stop $28.70.
+**TILE (Interface) — KEEP | Conviction 4/5**
+Beat-and-raise breakout (+11.3%), reclaimed 200-DMA and extended; conviction raised. Manage on the $31.00 stop; let it run and trail up on new highs.
 
 ---
 
 ## Overall Portfolio Thesis
 
-Week 41 of 52, trailing the S&P-equivalent benchmark by ~6.2% — a gap that narrowed three sessions running into the holiday, with TWR alpha improving to −1.44%. The book is healthy (every position green or recovered, all stops clear) and the small-cap "Great Rotation" is a tailwind for the value/cyclical tilt.
+Week 42 of 52 — the portfolio sits **+0.4% ahead of the S&P-equivalent** for the first time (TWR alpha +6.34%), having closed a −21.1% deficit since the Week 30 pivot. After an 11-week climb, the week we finally get ahead is the week to **defend, not chase** — so the Neutral mandate fits.
 
-The Week 41 decision is **no new initiation** — a disciplined application of the No-Candidates rule. Despite a 6-position directive and a 30–60 day catalyst window, no screener candidate cleared *both* the timing filter (date-certain within the window) and the cash/conviction bar:
-- **SVRA** PDUFA is Nov 22 (too far); **AMLX** and **SLDB** are vaguely "Q3/mid-2026" dated; **CDNA**/**AMBQ** are extended momentum with no binary; **VITL** cut guidance.
-- Cash is only $110.54 (15.7%) — ~$4.6 above the 15% floor — so a 6th position would require selling a healthy winner, which nothing warrants.
+The only action is the **rule-mandated WKC +30% partial**, which banks the experiment's biggest winner and rebuilds the cash reserve to ~19.5%. The other four winners (SHO/TDAY/INN/TILE) compound on their recently-raised stops.
 
-The **6th slot stays reserved for AMLX** (Phase 3 LUCIDITY binary), to be funded cleanly by WKC's eventual +30% partial-profit take (~$33.80) once Amylyx confirms a dated topline inside the window. Until then: let the winners run, ride the INN FIFA catalyst, and hold the reserve intact.
+**No new position is forced.** Per the No-Candidates rule, no screener pick has a date-certain catalyst inside the window: the best quality name (**BLFS** — beat, return to profitability, Strong Buy, +30% PT) has only an Aug-6 *earnings* catalyst and is extended, and **AMLX**'s Phase 3 is still vaguely "Q3." Both stay on watch for the open 6th slot, to be funded cleanly by the banked WKC partial when a better entry or a dated catalyst appears.
+
+Key characteristics:
+- **5 of 6 slots filled** — six-sector diversification available; 6th slot + ~19.5% cash reserved.
+- **Lead defended, not pressed:** the +0.4% edge is thin and partly a Great-Rotation tailwind, so the discipline is to protect it and let the stops do the risk work.
+- The job for the final 10 weeks: **extend the alpha where conviction and profit clearly allow, but defend it first.**
 
 ---
 
-*Week 41 Summary generated 2026-06-21 by Claude Code.*
+*Week 42 Summary generated 2026-06-28 by Claude Code (Neutral posture).*
 </last_analyst_thesis>
 
 <recent_trades>

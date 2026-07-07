@@ -1,0 +1,5 @@
+{
+  "_comment": "Experiment horizon. Set end_date and total_weeks to null to run as an ongoing process with no fixed end (week label becomes 'Week N (ongoing live process)' and the runway line reports 'ongoing'). Delete this file to restore defaults (first ledger date + 364 days, 52 weeks).",
+  "end_date": "2026-09-18",
+  "total_weeks": 52
+}

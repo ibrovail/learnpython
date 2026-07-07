@@ -77,9 +77,9 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: Week 42 deep research (6/28, Neutral — reran after weighing Aggressive vs Neutral) — defend the just-won lead: take WKC +30% partial ($33.80), KEEP all others, NO initiation (No-Candidates: BLFS=Aug-6 earnings not binary, AMLX=vague Q3). Strategic Pivot Week 41 Readout written (gap closed to +0.4%, TWR alpha +6.34%). INN/TILE stops raised 6/26 → $6.40/$6.30 and $31.00/$30.85 (uncommitted)
-- **In progress**: Week 42 of 52, 5 positions (WKC/SHO/TDAY/INN/TILE); equity $741.20 (6/26), cash $110.54 (14.9%); gap +0.4% (AHEAD), TWR alpha +6.34%; 6th slot + WKC-partial cash reserved for BLFS (on pullback) or AMLX (dated Q3)
-- **Next**: Mon 6/29 WKC +30% partial $33.80 (rebuilds reserve to ~19.5%); raise SHO stop ~$11.10 if >$12; watch BLFS pullback + AMLX dated topline. Note: report week labels run ~1 ahead of script's date-based week_number
+- **Complete**: Week 43 deep research (7/5, Neutral) — KEEP all 5, NO initiation (cash at 15.0% floor); harvest-then-redeploy plan: WKC partial alert $33.80 + INN exit-into-strength $7.00 (FIFA ends 7/19, demand soft), funding ranked 6th-slot queue ATRC (7/23 earnings) → BLFS (8/6) → AMLX (needs dated topline). SHO conviction ↓3/5 (at fair value), TDAY ↑4/5 (new leader). Week numbering fixed: label now derived from report files (max+1, rerun guard), new `<experiment_runway>` line for calendar time remaining
+- **In progress**: Week 43 of 52, 5 positions (WKC/SHO/TDAY/INN/TILE); equity $735.48 (7/2; Fri 7/3 holiday), cash $110.54 (15.0%); gap −2.1% (lead eroded on tech rebound, stabilized, no stop fired), TWR alpha +3.48%
+- **Next**: Mon 7/6 arm WKC $33.80 partial + INN $7.00 exit limit (re-arm daily thru 7/17); TDAY stop-raise candidate ~$7.80 next weekend; ATRC pre/post-7/23 sizing per cooldown rule. Week labels are now sequence-derived (no manual correction needed); read `<experiment_runway>` for real time remaining
 
 ## Documentation
 

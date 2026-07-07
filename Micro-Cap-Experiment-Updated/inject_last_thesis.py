@@ -7,8 +7,10 @@ content of the most recent Weekly Deep Research summary file.
 Run as part of `make weekend`, after trading_script.py --weekend-summary.
 
 Logic:
-  - Reads the week number from <week_number> in weekend_summary.md
-  - Loads "Weekly Deep Research (MD)/Week {N-1} Summary.md"
+  - Reads the week number N from <week_number> in weekend_summary.md
+  - Loads the highest-numbered "Weekly Deep Research (MD)/Week {k} Summary.md"
+    with k < N (gap-tolerant: a missing week number, e.g. the skipped Week 39,
+    no longer blocks injection or silently leaves a stale thesis in place)
   - Replaces the content inside <last_analyst_thesis>...</last_analyst_thesis>
   - Writes the updated file back
 """
@@ -36,16 +38,19 @@ def main() -> None:
         return
 
     current_week = int(match.group(1))
-    prev_week = current_week - 1
+
+    # Find the highest-numbered summary below the current week (gap-tolerant).
+    prev_week = 0
+    for p in WEEKLY_MD_DIR.glob("Week * Summary.md"):
+        m = re.match(r"Week (\d+) Summary\.md$", p.name)
+        if m and prev_week < int(m.group(1)) < current_week:
+            prev_week = int(m.group(1))
 
     if prev_week < 1:
-        print(f"inject_last_thesis: week {current_week} has no prior week — skipping.")
+        print(f"inject_last_thesis: no summary earlier than week {current_week} found — skipping.")
         return
 
     thesis_path = WEEKLY_MD_DIR / f"Week {prev_week} Summary.md"
-    if not thesis_path.exists():
-        print(f"inject_last_thesis: {thesis_path} not found — leaving <last_analyst_thesis> unchanged.")
-        return
 
     thesis_content = thesis_path.read_text(encoding="utf-8").strip()
 

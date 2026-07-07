@@ -1466,16 +1466,69 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
     today_dt = _effective_now()
     today_formatted = today_dt.strftime("%A, %B %d, %Y")
 
-    if metrics.experiment_start_date:
-        start = pd.Timestamp(metrics.experiment_start_date)
-        week_num = (friday_date - start).days // 7 + 1
-    else:
+    # Week label = previous report's number + 1 (sequence-based). The old
+    # date-based formula ((last_session - start).days // 7 + 1) anchored to the
+    # resolved last trading session, so holiday-shortened weeks stalled it (it
+    # printed the same number two weekends running), and it sat -1 behind the
+    # committed report sequence — forcing a manual correction before every
+    # weekend run. The report files are the source of truth for the label.
+    week_num = 0
+    _md_dir = Path(__file__).resolve().parent / "Weekly Deep Research (MD)"
+    try:
+        _latest_n = 0
+        _latest_path: Optional[Path] = None
+        for _p in _md_dir.glob("Week * Full.md"):
+            _m = re.match(r"Week (\d+) Full\.md$", _p.name)
+            if _m and int(_m.group(1)) > _latest_n:
+                _latest_n, _latest_path = int(_m.group(1)), _p
+        if _latest_path is not None:
+            # Re-run guard: if the latest report was written in the last 3 days
+            # we are regenerating the same weekend — reuse its number instead of
+            # incrementing (reports are only produced on weekends, 7 days apart).
+            _age_days = (datetime.now() - datetime.fromtimestamp(_latest_path.stat().st_mtime)).days
+            week_num = _latest_n if _age_days < 3 else _latest_n + 1
+    except Exception:
         week_num = 0
-    total_weeks = 52
+    if week_num == 0 and metrics.experiment_start_date:
+        # Fallback if no report files are found: date-based estimate.
+        week_num = (friday_date - pd.Timestamp(metrics.experiment_start_date)).days // 7 + 1
+
+    # Experiment horizon — editable via "Start Your Own/experiment_config.json":
+    #   {"end_date": "YYYY-MM-DD" | null, "total_weeks": int | null}
+    # null values = ongoing process with no fixed end. Missing file = defaults
+    # (first ledger date + 364 days, 52 weeks).
+    total_weeks: Optional[int] = 52
+    horizon_end: Optional[pd.Timestamp] = (
+        pd.Timestamp(metrics.experiment_start_date) + pd.Timedelta(days=364)
+        if metrics.experiment_start_date else None
+    )
+    _cfg_file = Path(DATA_DIR) / "experiment_config.json"
+    if _cfg_file.exists():
+        try:
+            _cfg = json.loads(_cfg_file.read_text(encoding="utf-8"))
+            if "total_weeks" in _cfg:
+                total_weeks = _cfg["total_weeks"]  # int, or None for ongoing
+            if "end_date" in _cfg:
+                horizon_end = pd.Timestamp(_cfg["end_date"]) if _cfg["end_date"] else None
+        except Exception:
+            logger.warning("experiment_config.json unreadable — using default horizon")
 
     print("\n<weekly_context>")
     print(f"<date>{today_formatted}</date>")
-    print(f"<week_number>{week_num} of {total_weeks} (twelve-month live experiment)</week_number>")
+    if total_weeks:
+        _horizon_desc = "twelve-month live experiment" if total_weeks == 52 else f"{total_weeks}-week live experiment"
+        print(f"<week_number>{week_num} of {total_weeks} ({_horizon_desc})</week_number>")
+    else:
+        print(f"<week_number>{week_num} (ongoing live process)</week_number>")
+    # Calendar-anchored runway, independent of the report label above: planning-
+    # horizon decisions (e.g. holding through a catalyst) must read this line,
+    # not the week label, since the label counts reports rather than weeks.
+    if horizon_end is not None:
+        _days_left = (horizon_end - pd.Timestamp(today_dt).normalize()).days
+        _weeks_left = max(0, round(_days_left / 7))
+        print(f"<experiment_runway>ends {horizon_end.date().isoformat()} ({_weeks_left} calendar weeks remaining)</experiment_runway>")
+    else:
+        print("<experiment_runway>ongoing — no end date set</experiment_runway>")
     print()
 
     # -------- Market Data --------
