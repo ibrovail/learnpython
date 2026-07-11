@@ -782,10 +782,29 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
     }
     results.append(total_row)
 
-    df_out = pd.DataFrame(results)
+    # Serialize today's rows to strings in the ledger's canonical style (int Shares,
+    # 2-decimal floats) and read the existing file as strings too, so the whole frame
+    # stays string-typed on write. Otherwise pd.read_csv re-infers the Shares/Stop
+    # columns as float (TOTAL rows leave them blank -> NaN -> float64) and to_csv
+    # rewrites every historical whole-number cell (22 -> 22.0, 31 -> 31.0), churning
+    # the entire file on every run.
+    _cols = list(pd.DataFrame(results).columns)
+    def _cell(col: str, v: Any) -> str:
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return ""
+        if col == "Shares":
+            return str(int(round(float(v))))
+        try:
+            return str(round(float(v), 2))
+        except (TypeError, ValueError):
+            return str(v)
+    df_out = pd.DataFrame(
+        [{c: _cell(c, r.get(c, "")) for c in _cols} for r in results],
+        columns=_cols,
+    )
     if PORTFOLIO_CSV.exists():
         logger.info("Reading CSV file: %s", PORTFOLIO_CSV)
-        existing = pd.read_csv(PORTFOLIO_CSV)
+        existing = pd.read_csv(PORTFOLIO_CSV, dtype=str, keep_default_na=False)
         logger.info("Successfully read CSV file: %s", PORTFOLIO_CSV)
         existing = existing[existing["Date"] != str(today_iso)]
         print("Saving results to CSV...")
@@ -1872,8 +1891,9 @@ def update_stops_only() -> None:
     latest_date = non_total.loc[non_total["_parsed"].idxmax(), "Date"]
 
     def _fmt_price(x: Any) -> str:
-        # Minimal price repr matching the ledger's style: 6.20 -> "6.2", 28.65 -> "28.65"
-        return f"{float(x):.2f}".rstrip("0").rstrip(".")
+        # Canonical price repr matching the daily save path: 6.20 -> "6.2",
+        # 28.65 -> "28.65", 31.00 -> "31.0" (str of the 2-dp-rounded float).
+        return str(round(float(x), 2))
 
     # Update only the Stop Loss / Stop Limit cells of the latest-date holding rows
     for _, stock in portfolio_df.iterrows():
