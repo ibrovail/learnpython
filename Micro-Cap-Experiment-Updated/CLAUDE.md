@@ -77,9 +77,9 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: Week 43 deep research (7/5, Neutral) — KEEP all 5, NO initiation (cash at 15.0% floor); harvest-then-redeploy plan: WKC partial alert $33.80 + INN exit-into-strength $7.00 (FIFA ends 7/19, demand soft), funding ranked 6th-slot queue ATRC (7/23 earnings) → BLFS (8/6) → AMLX (needs dated topline). SHO conviction ↓3/5 (at fair value), TDAY ↑4/5 (new leader). Week numbering fixed: label now derived from report files (max+1, rerun guard), new `<experiment_runway>` line for calendar time remaining
-- **In progress**: Week 43 of 52, 5 positions (WKC/SHO/TDAY/INN/TILE); equity $735.48 (7/2; Fri 7/3 holiday), cash $110.54 (15.0%); gap −2.1% (lead eroded on tech rebound, stabilized, no stop fired), TWR alpha +3.48%
-- **Next**: Mon 7/6 arm WKC $33.80 partial + INN $7.00 exit limit (re-arm daily thru 7/17); TDAY stop-raise candidate ~$7.80 next weekend; ATRC pre/post-7/23 sizing per cooldown rule. Week labels are now sequence-derived (no manual correction needed); read `<experiment_runway>` for real time remaining
+- **Complete**: Week 44 deep research (7/12, Aggressive) — deployed the 40% harvest cash: initiated ATRC 3 sh $34.30 (binary 7/23 earnings, override stop $30.50) + PHAT 5 sh $12.61 (momentum) — PHAT stopped out same day at $11.50 (−8.8%, 0.78% of equity; day-1 rule satisfied via stop, re-entry ban thru ~7/27). Stops raised: WKC → $32.50 (locks +25%), TDAY → $7.55 (trailing)
+- **In progress**: Week 44 of 52, 5 positions (WKC/SHO/TDAY/TILE/ATRC); equity $722.66 (7/16), cash $177.29 (24.5%); gap −4.4%, TWR alpha +0.70% (flipped positive 7/16 after two days of outperformance on the tech selloff)
+- **Next**: Thu 7/23 double print — ATRC (strip binary override within 1 day, +30% alert on beat; $30.50 stop on miss) + WKC (stop banks +25% on fade); TILE earnings 7/31, SHO 8/6; SHO stop-raise trigger at $12; TDAY next raise on close >$8.86
 
 ## Documentation
 
