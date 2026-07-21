@@ -23,8 +23,10 @@ import yfinance as yf
 # Universe fetching (Finviz → cache fallback)
 # ---------------------------------------------------------------------------
 
-# Exclusion keywords for security types we don't trade (portfolio_rules.md)
-_EXCLUDED_TYPES = {"ETF", "ETN", "SPAC", "ADR"}
+# Exclusions for security types we don't trade (portfolio_rules.md):
+# industry-text keywords and ticker suffixes marking units/warrants/rights
+_EXCLUDED_TYPES = ("EXCHANGE TRADED FUND", "ETF", "ETN", "CLOSED-END", "CLOSED END", "SHELL COMPAN", "SPAC", "ADR")
+_EXCLUDED_TICKER_SUFFIX = r"(?:-U|-UN|-WS|-R|\.U|\.WS)$"
 
 
 def get_universe(data_dir: Path) -> pd.DataFrame:
@@ -34,6 +36,7 @@ def get_universe(data_dir: Path) -> pd.DataFrame:
     try:
         df = _fetch_finviz_universe()
         if len(df) > 0:
+            df = _repair_ticker_corruption(df)
             df.to_csv(cache_path, index=False)
             print(f"  Universe: {len(df)} stocks from Finviz (cached to {cache_path.name})")
             return df
@@ -43,6 +46,7 @@ def get_universe(data_dir: Path) -> pd.DataFrame:
     # Fallback to cache
     if cache_path.exists():
         df = pd.read_csv(cache_path)
+        df = _repair_ticker_corruption(df)
         print(f"  Universe: {len(df)} stocks from cache ({cache_path.name})")
         return df
 
@@ -59,6 +63,9 @@ def _fetch_finviz_universe() -> pd.DataFrame:
         "Market Cap.": "-Small (under $2bln)",
         "Average Volume": "Over 500K",
         "Price": "Over $1",
+        # U.S.-domiciled only: excludes ADRs/foreign issuers at the source
+        # (portfolio_rules.md exclusions)
+        "Country": "USA",
     }
     foverview.set_filter(filters_dict=filters_dict)
     df = foverview.screener_view()
@@ -99,6 +106,81 @@ def _fetch_finviz_universe() -> pd.DataFrame:
     df["ticker"] = df["ticker"].str.strip().str.upper()
 
     return df.reset_index(drop=True)
+
+
+def _repair_ticker_corruption(df: pd.DataFrame) -> pd.DataFrame:
+    """Detect and repair systematic first-character duplication in tickers.
+
+    2026-07-19 incident: a Finviz page change made every ticker scrape with its
+    first letter doubled (AAC-U -> AAAC-U, TE -> TTE, SG -> SSG), so yfinance
+    signals were later fetched for entirely different securities (TTE =
+    TotalEnergies) while sector/cap stayed with the real small-cap. The
+    corruption is uniform when present: 100% of rows had a doubled first
+    character vs a ~3% natural base rate. If the doubled-first-char share is
+    far above natural, strip the duplicated character across the board.
+    """
+    t = df["ticker"].astype(str)
+    eligible = t.str.len() >= 2
+    if not eligible.any():
+        return df
+    dup_share = (t[eligible].str[0] == t[eligible].str[1]).mean()
+    if dup_share > 0.60:
+        print(
+            f"  WARNING: {dup_share:.0%} of tickers have a doubled first character "
+            "(natural rate ~3%) — repairing Finviz parse corruption by stripping it."
+        )
+        df = df.copy()
+        df.loc[eligible, "ticker"] = t[eligible].str[1:]
+        df = df.drop_duplicates(subset="ticker", keep="first").reset_index(drop=True)
+    return df
+
+
+def _validate_enriched(df: pd.DataFrame) -> pd.DataFrame:
+    """Sanity-check enriched rows so corrupted data can't reach the watchlist.
+
+    Guards (portfolio_rules.md universe + the 2026-07-19 corruption incident):
+    - market cap must be within the $2B universe ceiling
+    - Finviz price must be >= $1
+    - excluded security types (ETF/ETN/SPAC/ADR keywords in sector/industry)
+    - ticker identity: the yfinance-derived latest_price must be within 40% of
+      the Finviz price — a larger gap means the two sources are describing
+      different securities (the signature of ticker corruption).
+    """
+    before = len(df)
+
+    if "market_cap" in df.columns:
+        df = df[df["market_cap"].isna() | (df["market_cap"] <= 2e9)]
+    if "price" in df.columns:
+        df = df[df["price"].isna() | (df["price"] >= 1.0)]
+
+    for col in ("sector", "industry"):
+        if col in df.columns:
+            text = df[col].astype(str).str.upper()
+            df = df[~text.str.contains("|".join(_EXCLUDED_TYPES), na=False)]
+    df = df[~df["ticker"].astype(str).str.upper().str.contains(_EXCLUDED_TICKER_SUFFIX, regex=True, na=False)]
+
+    if {"price", "latest_price"}.issubset(df.columns):
+        both = df["price"].notna() & df["latest_price"].notna() & (df["price"] > 0)
+        mismatch = both & ((df["latest_price"] - df["price"]).abs() / df["price"] > 0.40)
+        n_mismatch = int(mismatch.sum())
+        if n_mismatch:
+            print(
+                f"  WARNING: dropped {n_mismatch} rows where the yfinance price "
+                "diverges >40% from the Finviz price (ticker identity mismatch)."
+            )
+            if both.any() and n_mismatch / int(both.sum()) > 0.30:
+                print(
+                    "  WARNING: >30% of rows failed the identity check — the "
+                    "universe fetch is likely corrupted; treat this watchlist "
+                    "with suspicion.",
+                    file=sys.stderr,
+                )
+            df = df[~mismatch]
+
+    dropped = before - len(df)
+    if dropped > 0:
+        print(f"  Validation: dropped {dropped} rows failing sanity checks")
+    return df
 
 
 def _parse_market_cap(val) -> float:
@@ -358,7 +440,7 @@ def format_watchlist(df: pd.DataFrame, data_dir: Path) -> str:
         sma50 = "Y" if r.get("above_sma50") else ("N" if "above_sma50" in r and pd.notna(r.get("above_sma50")) else "-")
         lines.append(
             f"  {int(r.get('rank', 0)):>3} "
-            f"{r.get('ticker', '')::<7} "
+            f"{r.get('ticker', ''):<7} "
             f"{str(r.get('sector', 'N/A'))[:15]:<16} "
             f"${r.get('latest_price', 0):>7.2f} "
             f"{r.get('market_cap_display', 'N/A'):>9} "
@@ -411,6 +493,7 @@ def main():
     # Step 2: Enrich with signals
     print("\n[2/4] Enriching with technical signals...")
     enriched = enrich_with_signals(universe)
+    enriched = _validate_enriched(enriched)
 
     # Step 3: Score and rank
     print("\n[3/4] Scoring and ranking...")

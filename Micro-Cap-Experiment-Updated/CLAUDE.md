@@ -77,9 +77,9 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: Week 44 deep research (7/12, Aggressive) — deployed the 40% harvest cash: initiated ATRC 3 sh $34.30 (binary 7/23 earnings, override stop $30.50) + PHAT 5 sh $12.61 (momentum) — PHAT stopped out same day at $11.50 (−8.8%, 0.78% of equity; day-1 rule satisfied via stop, re-entry ban thru ~7/27). Stops raised: WKC → $32.50 (locks +25%), TDAY → $7.55 (trailing)
-- **In progress**: Week 44 of 52, 5 positions (WKC/SHO/TDAY/TILE/ATRC); equity $722.66 (7/16), cash $177.29 (24.5%); gap −4.4%, TWR alpha +0.70% (flipped positive 7/16 after two days of outperformance on the tech selloff)
-- **Next**: Thu 7/23 double print — ATRC (strip binary override within 1 day, +30% alert on beat; $30.50 stop on miss) + WKC (stop banks +25% on fade); TILE earnings 7/31, SHO 8/6; SHO stop-raise trigger at $12; TDAY next raise on close >$8.86
+- **Complete**: Week 45 deep research (7/19, Neutral) — HOLD all 5, no orders (4 of 5 print within 10 sessions). Screener corruption fixed (7/20): Finviz fetch was doubling every ticker's first char (TTE=TotalEnergies masquerading as small-cap); screener.py now auto-repairs, validates identity vs yfinance price (>40% divergence drop), excludes CEFs/ADRs/units (`Country: USA` + keyword/suffix guards). Corrected watchlist has real candidates (HTLD/CADL/GPRE/XNCR) — hold decision stands on Neutral+gauntlet rationale
+- **In progress**: Week 45 of 52, 5 positions (WKC/SHO/TDAY/TILE/ATRC); equity $715.91 (7/17), cash $177.29 (24.8%); gap (scoreboard) −4.4%, TWR alpha +0.77%; PHAT re-entry ban thru ~7/27
+- **Next**: Thu 7/23 double print — ATRC (strip binary override within 1 day, +30% alert on beat; $30.50 stop on miss) + WKC (stop banks +25% on fade); TDAY earnings 7/30, TILE 7/31, SHO 8/6; SHO stop-raise trigger at $12; TDAY next raise on close >$8.86; IWM 50-day cushion ~1.1% (close below $290.80 freezes momentum entries)
 
 ## Documentation
 
