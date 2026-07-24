@@ -2,6 +2,11 @@
 
 Read `Start Your Own/portfolio_rules.md` before any analysis session.
 
+**Price sourcing:** all prices used in analysis or order recommendations must follow
+`.claude/rules/price-data-integrity.md` — never source live/after-hours/pre-market
+prices from WebSearch (use the browser tool), require a session label + timestamp,
+and run the order-side check before naming any stop or limit level.
+
 ---
 
 ## Daily Analysis (Auto-trigger)

@@ -90,5 +90,6 @@ Reference docs (not auto-loaded — read on demand):
 | `.claude/docs/setup-guide.md` | Full iCloud venv setup, script arguments, troubleshooting |
 | `.claude/docs/implementation-notes.md` | Key implementation patterns + full change history |
 | `.claude/docs/architectural_patterns.md` | 10 core architectural patterns with code references |
+| `.claude/rules/price-data-integrity.md` | Price sourcing: no WebSearch for live/AH prices, timestamp + order-side checks |
 | `README_CLAUDE.md` | Claude Code daily/weekend workflow guide |
 | `Experiment Details/Prompts.md` | Original ChatGPT prompts and integration notes |
