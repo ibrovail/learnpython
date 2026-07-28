@@ -77,9 +77,9 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: Week 45 deep research (7/19, Neutral) — HOLD all 5, no orders (4 of 5 print within 10 sessions). Screener corruption fixed (7/20): Finviz fetch was doubling every ticker's first char (TTE=TotalEnergies masquerading as small-cap); screener.py now auto-repairs, validates identity vs yfinance price (>40% divergence drop), excludes CEFs/ADRs/units (`Country: USA` + keyword/suffix guards). Corrected watchlist has real candidates (HTLD/CADL/GPRE/XNCR) — hold decision stands on Neutral+gauntlet rationale
-- **In progress**: Week 45 of 52, 5 positions (WKC/SHO/TDAY/TILE/ATRC); equity $715.91 (7/17), cash $177.29 (24.8%); gap (scoreboard) −4.4%, TWR alpha +0.77%; PHAT re-entry ban thru ~7/27
-- **Next**: Thu 7/23 double print — ATRC (strip binary override within 1 day, +30% alert on beat; $30.50 stop on miss) + WKC (stop banks +25% on fade); TDAY earnings 7/30, TILE 7/31, SHO 8/6; SHO stop-raise trigger at $12; TDAY next raise on close >$8.86; IWM 50-day cushion ~1.1% (close below $290.80 freezes momentum entries)
+- **Complete**: Week 46 deep research (7/26, Aggressive) — both 7/23 prints beat-and-raised (WKC +72% EPS → +53%; ATRC guide doubled, held). Initiated LXU (nitrogen cyclical) — but the thesis was stale (built on LSB's April call while fertilizer prices had fallen 5 weeks); LXU −6.4% day 1, **exit pending Tue 7/28 open**. Rules-gap audit (7/27): NEW `entry-discipline.md` Thesis-Input Freshness rule (verify commodity/rate/FX driver currency within 10 sessions); fixed 2 WebSearch-for-live-price contradictions (pre-open check + daily IWM sourcing → browser tool)
+- **In progress**: Week 46 of 52, 6 positions (WKC/SHO/TDAY/TILE/ATRC/LXU→exiting); equity $723.39 (7/27), cash $116.29 (16.1%); gap (scoreboard) −2.8% (recovery best), TWR alpha +2.63%
+- **Next**: exit LXU Tue open; TDAY earnings 7/30, TILE 7/31, SHO 8/6; WKC +60% partial alert $41.60 (1-sh = exit-or-hold; stop $36.40 locks +40%); SHO stop-raise trigger $12; ATRC stop $32.50 (override retired, conv 4/5)
 
 ## Documentation
 

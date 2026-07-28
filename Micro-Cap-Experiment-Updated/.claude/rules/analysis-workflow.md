@@ -18,7 +18,13 @@ When `<daily_summary>` XML appears in the conversation, check for skip condition
 **Skip condition 2 — End-of-week run:** If `<daily_summary>` contains `is_end_of_week="true"`, skip the 6-section analysis and say:
 > End-of-week daily complete. Portfolio data is current as of [date]. Say `run weekend` to begin the deep research session.
 
-If neither skip condition applies, **immediately run the daily portfolio analysis without waiting for a prompt.** Use WebSearch for live IWM data, catalyst updates, and ATR. Follow the 6-section format in `Start Your Own/daily_analysis_prompt.md`.
+If neither skip condition applies, **immediately run the daily portfolio analysis without waiting for a prompt.** Follow the 6-section format in `Start Your Own/daily_analysis_prompt.md`.
+
+**Sourcing within the daily** (per `.claude/rules/price-data-integrity.md`):
+- **IWM close** for the regime check comes from the `<daily_summary>` itself (the script prices IWM as a benchmark) — do NOT WebSearch a "live IWM price."
+- **IWM 50-day SMA** is a slow-moving technical level; a dated technical-analysis page is acceptable, but note the date.
+- **Any live/after-hours/pre-market price** (e.g. reacting to a post-close print) → **browser tool** with a timestamp, never WebSearch.
+- **Catalyst dates, guidance, ATR, analyst PTs** → WebSearch is fine; date each claim and apply *Thesis-Input Freshness* (`.claude/rules/entry-discipline.md`) to any time-varying driver.
 
 ---
 
@@ -48,7 +54,7 @@ When `<weekly_context>` XML appears in the conversation output, **immediately be
 
 1. **Screener candidate evaluation**: If a `<screener_watchlist>` block is present, evaluate AT LEAST the top 5 candidates via WebSearch for catalyst/fundamental info. For each screener candidate NOT selected, state why in one line. Include at least 2 candidates from different GICS sectors in the evaluation table. Screener candidates get priority over web-search-only finds.
 2. **Run analysis**: produce the full 10-section deep research report (format defined in `Start Your Own/weekend_summary.md`) using WebSearch extensively for all holdings and new candidates
-3. **Sector cap check**: Before finalizing positions, verify no more than 2 of 5 positions are in the same GICS sector (per `portfolio_rules.md` Allocation Framework).
+3. **Sector cap check**: Before finalizing positions, verify no more than 2 positions (of the up-to-6 book) are in the same GICS sector (per `portfolio_rules.md` Allocation Framework).
 4. **Save outputs** immediately after the report completes:
    - Full report → `Weekly Deep Research (MD)/Week X Full.md`
    - Section 9 (Thesis Review Summary) only → `Weekly Deep Research (MD)/Week X Summary.md`

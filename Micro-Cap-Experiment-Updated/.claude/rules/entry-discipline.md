@@ -31,17 +31,57 @@ A stop within 1.5 × ATR is too tight for normal daily noise and will be trigger
 ## Pre-Open Verification
 
 Before recommending an open-of-Monday buy at the close-of-Friday price:
-1. Check Monday pre-market action via WebSearch.
+1. Check Monday pre-market action via the **browser tool** on a live quote page
+   (`mcp__Claude_Browser__` → a quote page such as `https://www.cnbc.com/quotes/TICKER`).
+   **Never source the pre-market price from WebSearch** — it returns undated cached
+   quotes (see `.claude/rules/price-data-integrity.md`). Require a session label +
+   timestamp on the quote before using it.
 2. If pre-market is down >2%, downgrade to a limit at the pre-market price or pass entirely.
 3. If pre-market is flat-to-up, the Friday-close limit is acceptable.
+4. If a live pre-market quote cannot be verified, do not name a fixed limit at the stale
+   close — recommend a limit at/below the last verified price and state the timestamp.
+
+## Thesis-Input Freshness (verify the driver, not the story about it)
+
+Every BUY thesis rests on one or more **inputs**. Before recommending entry, list the
+inputs the thesis depends on and confirm each is **current** — dated within the last
+**10 trading days** — from a source that post-dates any summary you are tempted to rely on.
+
+**Time-varying external drivers** — a commodity/spot price (fertilizer, oil, gas, metals,
+freight/tanker rates, ethanol, power), an interest rate, an FX cross, a tariff/subsidy, or
+a named supply/demand condition (e.g. "supply disruption keeping prices elevated") — must
+be verified at their **current level AND direction** before entry:
+
+- **Never source a live driver from the company's earnings call or any note that predates
+  the current data.** A Q1 (April) call is not evidence about July spot prices. Pull the
+  driver from a dated market source (price index, trade press) within the last 10 trading days.
+- **Report the driver's latest dated value and its 4-week trend** (rising / falling / flat)
+  in the candidate evaluation. A thesis that requires the driver to *stay elevated* is
+  **INVALID if the driver has fallen for ≥3 consecutive weeks** — do not recommend the entry.
+- **A reversing driver kills the thesis even with strong screener momentum**, because the
+  screener's trailing 20-day momentum lags a driver that just turned.
+- Reason: LXU Week 46 — entered on "sustained nitrogen pricing into 2027" taken from LSB's
+  April Q1 call, without checking current fertilizer prices. UAN32 had fallen **5 straight
+  weeks** (−15% MoM) as the Middle East supply disruption eased mid-June; the stock was
+  rated Strong Sell and closed **−6.4% on entry day**. The thesis input was stale before the
+  order was written.
+
+**General principle — date every material input.** For any claim that moves the entry
+decision (catalyst date, guidance, analyst PT/rating, the driver above), note its source
+date. If the claim is time-sensitive and older than its natural refresh cycle, re-verify it
+against a current source before relying on it. This is the same failure mode as a stale
+price quote (`.claude/rules/price-data-integrity.md`): trusting a cached narrative over
+current data. If sources disagree or the latest data is unavailable, mark it
+**INSUFFICIENT CONFIRMATION** and do not lean on it.
 
 ## Screener Score is Sourcing, Not Conviction
 
-Screener composite score (momentum + volume + volatility-squeeze) identifies *candidates* but does NOT confer fundamental conviction. Apply the full 4-step verification to every screener pick:
+Screener composite score (momentum + volume + volatility-squeeze) identifies *candidates* but does NOT confer fundamental conviction. Apply the full 5-step verification to every screener pick:
 1. Fundamental quality (revenue growth, margin, balance sheet)
 2. Catalyst durability over the chosen timing window
-3. Distance-from-base and post-earnings cooldown checks
-4. Liquidity (ADV >$1M for full sizing, $500K-$1M for half sizing)
+3. **Thesis-input freshness** — identify the thesis's time-varying driver(s) and verify each is current and not reversing (see *Thesis-Input Freshness* above). Mandatory for any commodity/rate/FX/subsidy-dependent name.
+4. Distance-from-base and post-earnings cooldown checks
+5. Liquidity (ADV >$1M for full sizing, $500K-$1M for half sizing)
 
 Conviction rating starts at 2/5 for any screener pick and can only rise on the strength of independent web-research evidence, not the screener score itself.
 
