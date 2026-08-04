@@ -26,6 +26,17 @@ If neither skip condition applies, **immediately run the daily portfolio analysi
 - **Any live/after-hours/pre-market price** (e.g. reacting to a post-close print) → **browser tool** with a timestamp, never WebSearch.
 - **Catalyst dates, guidance, ATR, analyst PTs** → WebSearch is fine; date each claim and apply *Thesis-Input Freshness* (`.claude/rules/entry-discipline.md`) to any time-varying driver.
 
+**Mandatory earnings-night live check (do NOT defer):** if any holding reports earnings **after the close on the day of the daily run** (or the previous evening, before a morning run), you MUST — *within that same daily analysis, before writing the Post-Event Playbook* — pull BOTH via the **browser tool**:
+1. the **live after-hours quote** (session label + timestamp, reconcile against the close), AND
+2. the **actual earnings release from a live, timestamped news source** (e.g. StockTitan/press-wire/IR) — the real revenue/EPS/EBITDA/guidance, not the pre-print consensus and not the AH price alone.
+
+Do not write "the reaction is a tomorrow event" and defer it, and do not infer "beat/miss" from the price move alone. Origin: 2026-08-04 — ARDT reported after close and popped **+6.98% AH**, which read like a clean beat; the live release showed a **mixed print** (revenue beat $1.622B, but EPS $0.12 *missed* the $0.17 est and adj. EBITDA −32.3% YoY — the pop was on a +67% cash-flow jump + reaffirmed guidance). WebSearch had **none** of these numbers at that hour. Confirm the actual result, run the post-catalyst reassessment (re-rate conviction on the substance, plan the next-open stop change), and report it.
+
+**News recency — the same discipline as prices, applied to news** (`.claude/rules/price-data-integrity.md`): WebSearch returns cached snippets and lags real time; it can surface an *older* article as the latest and miss a newer downgrade, guidance cut, or the print itself. So:
+- **Time-sensitive / breaking / price-moving news and sentiment** — actual earnings results, same-day analyst rating/PT changes, M&A, halts, or the driver behind an **unexplained intraday move** — must be verified on a **live, timestamped source via the browser tool**, not on WebSearch alone.
+- **Established, slower-moving facts** — a confirmed future earnings *date*, historical guidance, an analyst PT from several days ago — WebSearch is acceptable, but **date every claim** and re-verify live anything that could have changed in the last ~48h.
+- If a holding is moving and you can't explain why, browser-check its live news feed before writing the review.
+
 ---
 
 ## Weekend Analysis (Two-step flow)

@@ -77,9 +77,9 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: Week 46 deep research (7/26, Aggressive) — both 7/23 prints beat-and-raised (WKC +72% EPS → +53%; ATRC guide doubled, held). Initiated LXU (nitrogen cyclical) — but the thesis was stale (built on LSB's April call while fertilizer prices had fallen 5 weeks); LXU −6.4% day 1, **exit pending Tue 7/28 open**. Rules-gap audit (7/27): NEW `entry-discipline.md` Thesis-Input Freshness rule (verify commodity/rate/FX driver currency within 10 sessions); fixed 2 WebSearch-for-live-price contradictions (pre-open check + daily IWM sourcing → browser tool)
-- **In progress**: Week 46 of 52, 6 positions (WKC/SHO/TDAY/TILE/ATRC/LXU→exiting); equity $723.39 (7/27), cash $116.29 (16.1%); gap (scoreboard) −2.8% (recovery best), TWR alpha +2.63%
-- **Next**: exit LXU Tue open; TDAY earnings 7/30, TILE 7/31, SHO 8/6; WKC +60% partial alert $41.60 (1-sh = exit-or-hold; stop $36.40 locks +40%); SHO stop-raise trigger $12; ATRC stop $32.50 (override retired, conv 4/5)
+- **Complete**: Week 47 deep research (8/2, Aggressive) — initiated ARDT 10sh @ $10.80 into its 8/4 print, chosen over screener momentum (AMCX missed Q2, PHAT cut guide, DMC identity-mismatch). Also `Strategic Pivot — Week 46 Readout` (gap repaired −21.1%→−2.6% since the April pivot, but the lead round-tripped twice). Rules added 8/4: **earnings-night live check** (browser for BOTH the AH quote AND the actual release — never infer beat/miss from price; news recency now browser-verified) and **stop range check** (a stop above the day's low is inside the noise; compute ATR, target 1.5–1.75×; de-risk by size, not stop tightness)
+- **In progress**: Week 47 of 52, 6 positions (WKC/SHO/TDAY/TILE/ATRC/ARDT); equity $739.77 (8/4), cash $65.54 (8.9% — user-authorized 15%-floor override for the ARDT buy); gap −4.7% (low-beta lag on a +1.8% SPY day), TWR alpha +0.34%. ARDT printed **mixed** 8/4: revenue beat $1.622B, but EPS $0.12 missed $0.17 and adj. EBITDA −32% YoY; +6.98% AH on +67% op cash flow + reaffirmed guidance
+- **Next**: 8/5 verify ARDT regular-session price — if it holds $11.30+, consider selling 3–4 sh into strength (de-risk by size, keep the wide $9.55 stop, ~2.5×ATR); TDAY + SHO both report 8/6 (do the live quote AND live release check that same evening); WKC +60% partial alert $41.60 (stop $37.65 locks +44.8%); SHO stop-raise trigger $12
 
 ## Documentation
 

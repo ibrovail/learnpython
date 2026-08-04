@@ -63,6 +63,43 @@ price:
 If the current price cannot be verified, do not name a stop level — recommend the
 action ("raise the stop after the open") and compute the number in the next daily.
 
+## Range check — a stop must clear the noise band, not just the last price
+
+"Below the current price" is necessary but **not sufficient**. A stop executes on the
+**intraday low**, not the close, so the order-side check must be run against the
+**recent trading range and the stock's ATR** — never the close alone:
+
+Before naming any stop level, state all three:
+
+1. **Today's low** (and the 5–10 day lowest low). **A proposed stop above the most
+   recent day's low is inside normal noise — reject it.**
+2. **ATR(14)** in dollars and as a % of price. The stop must sit at least
+   **1.5 × ATR** below the reference price, per `entry-discipline.md`
+   (target 1.75 × ATR below entry, or the swing low / technical level, whichever is wider).
+3. **The resulting max loss** — if the properly-wide stop implies more risk than
+   intended, **reduce position size; do not tighten the stop.**
+
+Compute ATR from price history (yfinance), don't estimate it by eye.
+
+- Reason: 2026-08-04 — ARDT (ATR(14) $0.497 = **4.62%** of price, avg daily range
+  4.71%) was recommended a $10.45 stop because it was "below the $10.75 close." But
+  that same session's **low was $10.42** — the stop would have fired on a day the
+  stock closed **unchanged**, pre-print. At 0.6 × ATR it was under half the rule
+  minimum, while the existing $9.55 (~2.5 × ATR, below the 10-day low $10.03) was
+  correctly calibrated. Tightening a stop into the noise band converts a *thesis*
+  exit into a *coin-flip* exit — realizing the loss **and** forfeiting the recovery.
+
+**Corollary — de-risk by size, not by stop tightness.** When a position's risk feels
+too high (a mixed earnings print, a shaky thesis), the correct lever is selling
+shares, not moving the stop inside the noise band. The broker's one-open-order-per-stock
+constraint also means a position cannot carry two stop levels, so partial protection
+is achieved by reducing share count.
+
+**Post-event volatility:** volatility is *elevated* for several sessions after an
+earnings print. Do not set a stop off an after-hours price — extended-hours prints
+frequently do not survive the open. Wait for a regular-session close to re-anchor,
+then trail.
+
 ## Correcting a bad price
 
 If a price already given to the user turns out to be wrong, correct it plainly and
