@@ -806,9 +806,27 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
         logger.info("Reading CSV file: %s", PORTFOLIO_CSV)
         existing = pd.read_csv(PORTFOLIO_CSV, dtype=str, keep_default_na=False)
         logger.info("Successfully read CSV file: %s", PORTFOLIO_CSV)
+
+        # Preserve today's SELL rows for tickers no longer held. A position that
+        # exited today (stop trigger or manual sell) is gone from portfolio_df, so
+        # a re-run of the same day would rebuild today's rows without it and
+        # silently drop the exit from the snapshot. Carry those rows forward.
+        today_rows = existing[existing["Date"] == str(today_iso)]
+        still_held = {str(r.get("Ticker", "")).upper() for r in results}
+        preserved = today_rows[
+            today_rows["Action"].astype(str).str.upper().str.contains("SELL", na=False)
+            & ~today_rows["Ticker"].astype(str).str.upper().isin(still_held)
+        ]
+        if not preserved.empty:
+            logger.info(
+                "Preserving %d exited-position row(s) for %s: %s",
+                len(preserved), today_iso, ", ".join(preserved["Ticker"].tolist()),
+            )
+
         existing = existing[existing["Date"] != str(today_iso)]
         print("Saving results to CSV...")
-        df_out = pd.concat([existing, df_out], ignore_index=True)
+        # Exit rows first so the day reads chronologically (exits, then holdings, then TOTAL)
+        df_out = pd.concat([existing, preserved, df_out], ignore_index=True)
     logger.info("Writing CSV file: %s", PORTFOLIO_CSV)
     df_out.to_csv(PORTFOLIO_CSV, index=False)
     logger.info("Successfully wrote CSV file: %s", PORTFOLIO_CSV)
