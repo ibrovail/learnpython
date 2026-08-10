@@ -78,8 +78,8 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 ## Current State
 
 - **Complete**: Week 48 deep research (8/9, Neutral) — 8/6 exits: WKC stop $37.66 (**+44.8%**, best trade of the experiment), TDAY stop $7.77 (−4.7%, Q2 revenue −8.3% YoY = broken thesis), ARDT trim (+2.8%); net realized +$7.08. TILE beat-and-raise 8/7 (+9.09%). Week 48 plan: EXIT SHO, raise TILE/ATRC/ARDT stops, **no initiation** (4 BDCs excluded, 4 healthcare sector-capped, 2 arbs, FOXF = day 2 of a +12% gap → queued #1). Script fix: daily save now preserves same-day SELL rows on re-run
-- **In progress**: Week 48 of 52, 4 positions → 3 after the SHO exit (TILE/ATRC/ARDT); equity $739.98 (8/7), cash $283.02 → ~$405 (**54.7%**) post-exit; gap −5.0%, TWR alpha +0.06%. Book is nearly all house money (aggregate stop-risk 0.8% of equity)
-- **Next**: execute SHO exit (11 sh at market) + 3 stop raises (TILE $35.75, ATRC $37.90, ARDT $10.35); **FOXF queued #1** — enter on consolidation (higher-low base >$20 or pullback toward the $18.70 20-day SMA), 1.75×ATR stop ≈ $19.37. **Strategic flag: 54.7% cash cannot close a −5.0% gap in 6 weeks** — if the Week 49 screen is again structurally blocked (BDC exclusions + healthcare cap), revisit the constraint set with the user
+- **In progress**: Week 48 of 52, **3 positions** (TILE/ATRC/ARDT); equity $734.97 (8/10), cash **$404.79 (55.1%)**. SHO exited 8/10 @ $11.07 (+8.5%) — beat sold into, and the exit beat the $10.90 stop that would have fired the same day. Stops: TILE $35.75 (+11.4% locked), ATRC $37.90 (+10.5%), ARDT $10.35. Aggregate stop-risk ≈ −$0.65 — the book is effectively all house money
+- **Next**: **FOXF queued #1** — enter on consolidation (higher-low base >$20 or pullback toward the $18.70 20-day SMA), 1.75×ATR stop ≈ $19.37. **Strategic flag: 55% cash cannot close a −5.0% gap in 6 weeks** — if the Week 49 screen is again structurally blocked (4 BDCs excluded + 4 healthcare sector-capped this week), revisit the constraint set with the user
 
 ## Documentation
 

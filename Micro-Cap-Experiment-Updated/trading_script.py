@@ -659,8 +659,16 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
             if action == "s":
                 try:
                     ticker = input("Enter ticker symbol: ").strip().upper()
-                    shares = float(input("Enter number of shares to sell (LIMIT): "))
-                    sell_price = float(input("Enter sell LIMIT price: "))
+                    sell_type = input("Order type? 'm' = market (confirmed fill), 'l' = limit: ").strip().lower()
+                    if sell_type not in ("m", "l"):
+                        print("Unknown order type. Use 'm' or 'l'. Manual sell cancelled.")
+                        continue
+                    shares = float(input("Enter number of shares to sell: "))
+                    prompt = (
+                        "Enter the actual fill price: " if sell_type == "m"
+                        else "Enter sell LIMIT price: "
+                    )
+                    sell_price = float(input(prompt))
                     if shares <= 0 or sell_price <= 0:
                         raise ValueError
                 except ValueError:
@@ -668,7 +676,8 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
                     continue
 
                 cash, portfolio_df = log_manual_sell(
-                    sell_price, shares, ticker, cash, portfolio_df
+                    sell_price, shares, ticker, cash, portfolio_df,
+                    market_order=(sell_type == "m"),
                 )
                 continue
 
@@ -999,6 +1008,7 @@ def log_manual_sell(
     chatgpt_portfolio: pd.DataFrame,
     reason: str | None = None,
     interactive: bool = True,
+    market_order: bool = False,
 ) -> tuple[float, pd.DataFrame]:
     today = check_weekend()
     if interactive:
@@ -1035,10 +1045,20 @@ If this is a mistake, enter 1, or hit Enter."""
     if np.isnan(o):
         o = float(data["Close"].iloc[-1])
 
-    # Check if sell limit was triggered (high >= sell_price means price touched our limit)
-    # Allow for floating-point precision tolerance
+    # A market order's fill is broker reality confirmed by the user, so it is taken
+    # as given — no range validation. (Vendor OHLC is also not always internally
+    # consistent: 2026-08-10 SHO showed open $11.07 but high $11.06, which would
+    # reject a true $11.07 open fill.) Limit orders still require the day's high to
+    # have reached the limit.
     epsilon = 0.005  # Half a cent tolerance
-    if h >= (sell_price - epsilon):
+    if market_order:
+        exec_price = sell_price
+        if not (l - epsilon) <= sell_price <= (h + epsilon):
+            print(
+                f"Note: {ticker} fill ${sell_price:.2f} is outside the recorded range "
+                f"{l:.2f}-{h:.2f} (vendor data); logging the confirmed fill."
+            )
+    elif h >= (sell_price - epsilon):
         exec_price = sell_price  # Fill at exact limit price
     else:
         print(f"Sell limit ${sell_price:.2f} for {ticker} not reached today (range {l:.2f}-{h:.2f}). Order not filled.")
@@ -1052,7 +1072,8 @@ If this is a mistake, enter 1, or hit Enter."""
         "Date": today, "Ticker": ticker,
         "Shares Bought": "", "Buy Price": "",
         "Cost Basis": cost_basis, "PnL": pnl,
-        "Reason": f"MANUAL SELL LIMIT - {reason}", "Shares Sold": shares_sold,
+        "Reason": f"MANUAL SELL {'MARKET' if market_order else 'LIMIT'} - {reason}",
+        "Shares Sold": shares_sold,
         "Sell Price": exec_price,
     }
     if os.path.exists(TRADE_LOG_CSV):

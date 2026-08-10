@@ -4,6 +4,14 @@ Reference documentation for key implementation decisions and change history.
 
 ---
 
+### 2026-08-10 — Market-sell order type
+
+Manual sells were limit-only, so a genuine market fill could not be logged when it fell outside the vendor's recorded range. Surfaced exiting SHO: the confirmed fill was **$11.07 at the open**, but yfinance recorded that session as open $11.07 / **high $11.06** — an internally inconsistent OHLC row — so `log_manual_sell`'s `high >= sell_price` check rejected the trade, and the run then hit the stop-trigger prompt with exhausted stdin and crashed (nothing was written; no ledger damage). Added an order-type prompt to the interactive sell path mirroring the buy path (`'m'` = market / confirmed fill, `'l'` = limit) and a `market_order` flag on `log_manual_sell`: market orders take the user-confirmed fill as given with no range validation (printing a note when it falls outside the recorded range), while limit orders keep the high-reached check. The trade-log reason is now `MANUAL SELL MARKET` vs `MANUAL SELL LIMIT`. Rationale: a market fill is broker reality the user confirms (see the portfolio-log-mirrors-broker principle) — the script should record it, not adjudicate it against imperfect vendor data.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | Sell order-type prompt; `log_manual_sell(market_order=...)` skips range validation; MARKET/LIMIT reason label |
+
 ### 2026-08-09 — Daily save preserves same-day exit rows
 
 Re-running a daily for a date on which a position exited silently dropped that exit from the snapshot. The save path rebuilt the day's rows from `portfolio_df`, which no longer contains a sold ticker, so the `SELL - Stop Limit Triggered` row written by the first run vanished on the second. Surfaced 2026-08-06 when WKC and TDAY both stopped out and a follow-up run (to capture benchmark metrics) erased both exits; the ledger had to be restored from a manual backup. Fix in `process_portfolio`: before dropping today's rows, capture any whose `Action` contains `SELL` and whose `Ticker` is no longer in the new results, then re-insert them ahead of the day's holdings so the day reads chronologically (exits → holdings → TOTAL). Logs `Preserving N exited-position row(s)` when it fires. Verified: the re-run preserved WKC + TDAY, and a third run produced a **byte-identical** file (md5 stable), so the churn fix still holds. The trade log was never affected — it is append-only and remained the authoritative transaction record throughout.
