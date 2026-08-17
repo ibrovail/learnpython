@@ -28,6 +28,11 @@ import yfinance as yf
 _EXCLUDED_TYPES = ("EXCHANGE TRADED FUND", "ETF", "ETN", "CLOSED-END", "CLOSED END", "SHELL COMPAN", "SPAC", "ADR")
 _EXCLUDED_TICKER_SUFFIX = r"(?:-U|-UN|-WS|-R|\.U|\.WS)$"
 
+# Universe ceiling (portfolio_rules.md). Raised 2026-08-15 from $2B to $5B for the
+# experiment's final stretch — the $2B cap plus the sector caps were structurally
+# blocking the field (Week 48: 8 of 15 candidates excluded, none investable).
+MAX_MARKET_CAP = 5e9
+
 
 def get_universe(data_dir: Path) -> pd.DataFrame:
     """Pull filtered stock list from Finviz. Falls back to cached file."""
@@ -60,7 +65,9 @@ def _fetch_finviz_universe() -> pd.DataFrame:
 
     foverview = Overview()
     filters_dict = {
-        "Market Cap.": "-Small (under $2bln)",
+        # Fetch mid-and-under, then trim to MAX_MARKET_CAP in _validate_enriched.
+        # Finviz has no $5bln bucket, so the wider bucket is pulled and filtered.
+        "Market Cap.": "-Mid (under $10bln)",
         "Average Volume": "Over 500K",
         "Price": "Over $1",
         # U.S.-domiciled only: excludes ADRs/foreign issuers at the source
@@ -149,7 +156,7 @@ def _validate_enriched(df: pd.DataFrame) -> pd.DataFrame:
     before = len(df)
 
     if "market_cap" in df.columns:
-        df = df[df["market_cap"].isna() | (df["market_cap"] <= 2e9)]
+        df = df[df["market_cap"].isna() | (df["market_cap"] <= MAX_MARKET_CAP)]
     if "price" in df.columns:
         df = df[df["price"].isna() | (df["price"] >= 1.0)]
 

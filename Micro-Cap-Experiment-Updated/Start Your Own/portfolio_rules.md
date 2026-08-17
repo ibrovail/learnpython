@@ -4,6 +4,26 @@ These rules govern all analysis — daily and weekend. Read this file before beg
 
 ---
 
+## ⚠️ Final-stretch amendments (authorized 2026-08-15, Week 49)
+
+With ~4.5 weeks left, a −4.8% benchmark gap and **54% of the book in cash**, the constraint
+set — not the market — had become the binding limit on deployment (Week 48: 8 of 15 screened
+candidates were excluded by rule, and the field yielded nothing investable). The user
+authorized three relaxations for the remainder of the experiment:
+
+1. **Health Care sector cap raised 2 → 3 positions.** Other sectors remain capped at 2.
+2. **Universe market-cap ceiling raised $2B → $5B.** `screener.py` now fetches Finviz's
+   mid-and-under bucket and trims to `MAX_MARKET_CAP = 5e9`.
+3. **Adding to existing winning positions is permitted** as a deployment route, subject to
+   the unchanged 30%-per-name cap and the no-averaging-down rule (which still forbids adding
+   to a position more than 5% below entry without a confirmed new catalyst).
+
+**Unchanged:** the 15% cash floor, 5% risk-per-trade, 30% single-name cap, all excluded
+security classes (ETFs, closed-end funds/BDCs, SPACs, ADRs, units/warrants), stop-loss
+requirements and range checks, and every entry-discipline rule.
+
+---
+
 ## Budget
 
 - No new capital beyond what is shown in the portfolio snapshot unless explicitly approved.
