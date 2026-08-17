@@ -1,6 +1,6 @@
 # Week 49 Deep Research — Full Report
 
-**Date:** Sunday, August 16, 2026
+**Date:** Sunday, August 16, 2026 — **orders revised Monday, August 17 after live pre-open verification (Section 6a)**
 **Week:** 49 of 52 (experiment ends 2026-09-18 — ~4.5 calendar weeks remaining)
 **Session posture:** Wide net · 30–60 day catalysts · **Aggressive** · max 6 positions
 **⚠️ Constraint amendments authorized this session** (see Section 1)
@@ -77,48 +77,66 @@
 
 ## 6. EXACT ORDERS
 
-**Order 1 — Initiate PAR**
+**Order 1 — Initiate PAR** *(revised 8/17)*
 - Action: buy · Ticker: PAR · Shares: **8**
-- Order Type: limit · Limit Price: **$19.20** (Friday close $19.05 + buffer)
+- Order Type: limit · Limit Price: **$18.55** (was $19.20 — repriced to the live $18.46 print)
 - Time in Force: DAY · Intended Execution: 2026-08-17
-- Stop Loss: **$17.05** — 1.75×ATR below the close; below the 5-day low ($16.82 was the low before the higher-low sequence began)
-- Stop Limit: **$16.90**
-- Range check: Friday low $18.38 · ATR(14) $1.135 (5.96%) · stop is **1.89×ATR** below close ✓ · max loss 8 × $2.15 = **$17.20 (2.3% of equity)**
-- Order-side check: $17.05 < $19.05 ✓
-- Special: **pre-open verification required** — browser-check Monday pre-market; if PAR gaps >2% above $19.05, wait rather than chase; if it gaps down, reprice at/below the verified print.
-- Rationale: 19% revenue growth + raised guidance in an empty sector, entered on a grind rather than a gap.
+- Stop Loss: **$16.50** (was $17.05) — 1.73×ATR below the live price
+- Stop Limit: **$16.35**
+- Range check: ATR(14) $1.135 (5.96%) · **the original $17.05 fell to 1.24×ATR once PAR dropped to $18.46 — below the 1.5× minimum — so the stop was widened** · max loss 8 × $2.05 = **$16.40 (2.2% of equity)**
+- Order-side check: $16.50 < $18.46 (live, 8/17) ✓
+- **Special — skip condition:** do **not** buy if PAR closes below **$18.38**. That is the last of the three higher lows ($16.82 → $17.65 → $18.38) the entry was built on; a close beneath it breaks the structure (the same test that disqualified FOXF). The decline is late-session and unexplained, so waiting for the close costs nothing and resolves it.
+- Rationale: 18.7% revenue growth + raised guidance in an empty sector; the pullback *improves* the entry to +7.6% over the 20-day SMA (was +11.1%).
 
-**Order 2 — Initiate CADL**
+**Order 2 — Initiate CADL** *(revised 8/17)*
 - Action: buy · Ticker: CADL · Shares: **10**
-- Order Type: limit · Limit Price: **$11.85**
+- Order Type: limit · Limit Price: **$11.50** (was $11.85 — repriced to the verified pre-market level)
 - Time in Force: DAY · Intended Execution: 2026-08-17
-- Stop Loss: **$10.70** — 1.75×ATR below the close; just above the 10-day low cluster ($10.35–10.50)
+- Stop Loss: **$10.70** (unchanged) — just above the 10-day low cluster ($10.35–10.50)
 - Stop Limit: **$10.55**
-- Range check: Friday low $11.04 · ATR(14) $0.577 (4.92%) · stop is **1.77×ATR** below close ✓ · max loss 10 × $1.15 = **$11.50 (1.5% of equity)**
-- Order-side check: $10.70 < $11.72 ✓
-- Special: pre-open verification. Note CADL rose +10.5% on 8/13 then consolidated (−0.7%) — cumulative move is just under the 10% breakout-avoidance threshold and the last session was a base-building day, so this clears, but it is the closer of the two calls.
-- Rationale: dated BLA catalyst (Q4 2026), Phase 3 data already in hand, funded into 2028; takes the newly permitted 3rd healthcare slot.
+- Range check: Friday low $11.04 · ATR(14) $0.577 (4.92%) · stop is **1.77×ATR** below ✓ · max loss 10 × $0.80 = **$8.00 (1.1% of equity)**
+- Order-side check: $10.70 < $11.48 (live, 9:28 AM EDT 8/17) ✓
+- Special: pre-market −2.05% at the rule's threshold but with no adverse news, so the entry stands at the verified price rather than Friday's close. Note CADL rose +10.5% on 8/13 (its earnings date) then consolidated — cumulative move sits just under the 10% breakout-avoidance threshold.
+- Rationale: dated BLA catalyst (Q4 2026), Phase 3 data in hand, funded into 2028; takes the newly permitted 3rd healthcare slot.
+
+---
+
+## 6a. PRE-OPEN VERIFICATION OUTCOME (2026-08-17)
+
+Both entries were verified live before execution, per `price-data-integrity.md`. The check materially changed both orders.
+
+**PAR — the pre-market signal was noise.** The first scan showed $19.26, **+1.10%** (5:26 AM EDT), which read as a constructive open. A re-scan closer to the bell returned the *same* 5:26 AM timestamp from two independent sources, and MarketWatch supplied the reason: **before-hours volume of 332 shares.** There had been no trades since — the print was a single tiny transaction carrying no information. The actual session opened and moved the other way: **$18.46, −3.25%.**
+
+**Lesson recorded: read extended-hours volume alongside the timestamp.** A 332-share print looks like a price but is not one, and it nearly anchored a limit $0.80 above where the stock actually traded.
+
+**Additional facts surfaced by the live pages:**
+- **PAR** — analyst PT **$25.31 (+37% from $18.46)**, Buy; forward P/E 17.4; revenue TTM +18.8% ✓. But the 52-week range is **$11.59–$54.62**: PAR is **~65% below its high** with GAAP EPS −$1.77. This is a beaten-down grower, not a leader — it doesn't break the thesis (ARR compounding, guidance raised, cheap on forward earnings) but it holds conviction at 4/5 rather than higher.
+- **CADL** — **Strong Buy, PT $20.88 (+78%)**, the largest upside on the board. 52-week range $4.35–$11.95, i.e. trading near its **high** — the mirror image of PAR.
+- **No adverse news on either name** (StockTitan feeds checked live; PAR's latest item is still the 8/6 Q2 release).
+
+**Net effect:** the pair is a deliberate barbell — PAR a fallen grower bought on a pullback, CADL a momentum biotech bought near highs on a dated catalyst — rather than two versions of the same bet.
 
 ---
 
 ## 7. RISK AND LIQUIDITY CHECKS
 
-Post-trade:
+Post-trade *(at the revised 8/17 limits)*:
 
 | Holding | Value | % of Equity |
 |---------|-------|-------------|
 | TILE | $151.84 | 20.4% |
 | ATRC | $132.90 | 17.9% |
-| PAR | $153.60 | 20.6% |
-| CADL | $118.50 | 15.9% |
+| PAR | $148.40 | 19.9% |
+| CADL | $115.00 | 15.5% |
 | ARDT | $54.55 | 7.3% |
-| **Cash** | **$132.69** | **17.8%** |
+| **Cash** | **$141.39** | **19.0%** |
 
-- No position >30% ✓ · **Cash 17.8% > 15% floor** ✓
+- No position >30% ✓ · **Cash 19.0% > 15% floor** ✓ (the lower entry prices left ~$9 more in reserve)
 - **Sectors:** Health Care **3** (ATRC, ARDT, CADL — at the new cap ✓), Cons. Cyclical 1, Technology 1 ✓
 - Binary-event plays: 0 ✓
-- Combined new-position risk: $17.20 + $11.50 = **$28.70 ≈ 3.9% of equity**; aggregate across all five holdings if every stop fired: **≈ −2.6%** (the three incumbents lock gains)
+- Combined new-position risk: $16.40 + $8.00 = **$24.40 ≈ 3.3% of equity** (down from $28.70 at the original limits); aggregate across all five holdings if every stop fired: **≈ −2.2%** (the three incumbents lock gains)
 - Order sizes are trivial fractions of ADV for both names ✓
+- **If the PAR skip condition triggers** (close below $18.38): 4 positions, cash $289.79 (**38.9%**), and PAR returns to the queue alongside WWW.
 
 ---
 
@@ -157,12 +175,13 @@ The deployment is **PAR** (real growth, empty sector, non-gapped entry) and **CA
 
 ## 10. CONFIRM CASH AND CONSTRAINTS
 
-- **Starting cash:** $404.79 · **PAR:** −$153.60 · **CADL:** −$118.50 → **Ending cash: $132.69 (17.8%)** — above the 15% floor ✓
+- **Starting cash:** $404.79 · **PAR:** −$148.40 · **CADL:** −$115.00 → **Ending cash: $141.39 (19.0%)** — above the 15% floor ✓
 - **Positions:** 5 of max 6 ✓ · **Sectors:** Health Care 3 (at the amended cap), Cons. Cyclical 1, Technology 1 ✓
-- **Binary plays:** 0 ✓ · **Largest position:** PAR 20.6% < 30% ✓
+- **Binary plays:** 0 ✓ · **Largest position:** TILE 20.4% < 30% ✓
 - **Amendments applied and documented** in `Start Your Own/portfolio_rules.md` and `screener.py` ✓
-- **All stops range-checked** against Friday's low + ATR ✓ · **Breakout-age test applied** to all three finalists ✓
-- **Note:** orders are recommendations — real only after broker execution with actual fills, which I then log. Both entries require **pre-open verification via the browser** before executing.
+- **All stops range-checked** — and PAR's **re-checked and widened** on 8/17 when the price drop pushed the original level inside the noise band ✓ · **Breakout-age test applied** to all three finalists ✓
+- **Pre-open verification completed** 8/17 via browser (Section 6a); both limits repriced to verified live prices ✓
+- **Note:** orders are recommendations — real only after broker execution with actual fills, which I then log.
 
 ---
 
