@@ -8,13 +8,52 @@ at the next open.
 
 ---
 
-## Source hierarchy — which tool for which price
+## Source hierarchy — browser is the DEFAULT, WebSearch is for discovery
 
-| Price type | Authoritative source | Never use |
-|------------|---------------------|-----------|
+**Revised 2026-08-20.** The previous version of this table assigned "guidance, PTs,
+filings" to WebSearch. That was wrong, and it caused repeated misses (see *Why this
+changed* below): WebSearch returns cached prose and does **not** reliably return
+forward P/E, beta, 52-week range, current analyst PT, or TTM revenue/EPS — all of
+which sit on a single quote page and all of which move recommendations.
+
+| Data type | Authoritative source | Never use |
+|-----------|---------------------|-----------|
 | Settled daily close, volume, OHLC | `trading_script.py` daily run (yfinance) | WebSearch |
-| After-hours / pre-market / intraday | **Browser tool** on a live quote page (`mcp__Claude_Browser__`) | **WebSearch** |
-| Earnings dates, guidance, PTs, filings | WebSearch (≥2 sources) | — |
+| Live / after-hours / pre-market / intraday price | **Browser** — live quote page | **WebSearch** |
+| **Valuation + analyst data** (P/E, forward P/E, PT, rating, beta, 52-wk range, market cap, TTM revenue/EPS) | **Browser** — quote page | **WebSearch** |
+| **Actual earnings results** (revenue/EPS/EBITDA/guidance) | **Browser** — live release (StockTitan/press-wire/IR) | WebSearch alone |
+| **Company news feed / recency check** | **Browser** — ticker news page | WebSearch alone |
+| Catalyst *dates*, historical guidance, discovering that something exists at all | WebSearch (≥2 sources), then browser-verify anything decision-relevant | — |
+
+**Rule of thumb:** if the data lives at a URL you can construct from a ticker
+(`stockanalysis.com/stocks/TICKER/`, `stocktitan.net/news/TICKER/`,
+`marketwatch.com/investing/stock/TICKER`), **fetch it — do not search for it.**
+WebSearch's job is to tell you what you don't know to look for; the browser's job is
+to get the actual numbers.
+
+**One quote-page fetch returns**: price, extended-hours price + timestamp, market cap,
+TTM revenue and growth, net income, EPS, P/E, **forward P/E**, shares out, volume,
+day range, **52-week range**, **beta**, **analyst rating**, **price target**, and
+earnings date. That single call replaces several WebSearches and is strictly better.
+
+### Why this changed — four misses, all the same shape
+
+Each was caught only because the user intervened and asked for a browser check:
+
+1. **ARDT exit (2026-08-20)** — recommended selling on "thesis spent." The live page
+   showed **forward P/E 9.51, PT $12.68 (+21%), Buy, revenue +3.3%, beta 0.70**. The
+   exit was withdrawn. None of that was in the daily data or my WebSearch.
+2. **FOXF buy (2026-08-12)** — recommended on a "beat and raise." The live page showed
+   **TTM EPS −$7.14** and a broken higher-low base. The buy was withdrawn.
+3. **PAR entry (2026-08-17)** — priced off a pre-market print of +1.10%; the live page
+   showed **332 shares of before-hours volume** — one trade, no information. The real
+   session opened −3.25%.
+4. **ARDT earnings night (2026-08-04)** — a +6.98% AH pop read as a clean beat; the live
+   release showed a **mixed print** (EPS missed, EBITDA −32% YoY).
+
+The common failure was not laziness about prices — it was **recommending an action
+without pulling the one page that contains the deciding facts.** See the
+*Pre-Recommendation Verification* gate in `analysis-workflow.md`.
 
 **Never source a live or extended-hours price from WebSearch.** Search results are
 undated cached snippets; the crawler's snapshot may be hours or weeks old, and the

@@ -3,9 +3,49 @@
 Read `Start Your Own/portfolio_rules.md` before any analysis session.
 
 **Price sourcing:** all prices used in analysis or order recommendations must follow
-`.claude/rules/price-data-integrity.md` — never source live/after-hours/pre-market
-prices from WebSearch (use the browser tool), require a session label + timestamp,
-and run the order-side check before naming any stop or limit level.
+`.claude/rules/price-data-integrity.md` — the **browser is the default source** for
+live prices, valuation/analyst data, actual earnings results and news recency;
+WebSearch is for discovery only. Require a session label + timestamp, and run the
+order-side and range checks before naming any stop or limit level.
+
+---
+
+## ⛔ Pre-Recommendation Verification (PRV) — mandatory gate
+
+**Before writing ANY buy, sell, trim, add, or exit recommendation for a ticker, fetch
+that ticker's live quote page via the browser.** No exceptions, and not only when
+something already looks wrong. This gate exists because every significant miss in this
+experiment shared one shape: a recommendation written without the page that held the
+deciding fact.
+
+**Capture and state these fields** (one `stockanalysis.com/stocks/TICKER/` fetch returns
+all of them):
+
+| Field | Why it decides things |
+|-------|----------------------|
+| Live price + extended-hours + timestamp | The order-side check must run against a verified price |
+| **Analyst rating + price target** | Upside/downside vs the recommendation; ARDT's +21% PT reversed an exit |
+| **Forward P/E** (vs trailing) | Shows expected earnings direction; ARDT 9.51 fwd vs 18.98 trailing |
+| **TTM revenue + growth %** | Growing vs shrinking is the single best filter this book has (TDAY −8.3% = exit; PAR +18.8% = buy) |
+| **TTM EPS / net income** | FOXF's −$7.14 TTM EPS was invisible in the "beat and raise" headline |
+| **52-week range** | Position within it: PAR was −65% from its high; CADL at its high |
+| **Beta** | ARDT 0.70 = genuinely defensive, which changed the hold/exit call |
+| Day range, volume, market cap | Range check inputs; volume validates whether a quote is meaningful |
+
+**Also required, same gate:**
+- **Extended-hours volume**, when quoting a pre/post-market price. A 332-share print is
+  not a price (PAR, 2026-08-17). Report volume alongside the timestamp or don't use the quote.
+- **Live news-feed check** (`stocktitan.net/news/TICKER/`) for any recommendation, to
+  confirm nothing material landed since the last settled close.
+
+**If the browser is unavailable or the page cannot be fetched:** say so explicitly and
+either defer the recommendation or mark it **UNVERIFIED** — never present an
+unverified recommendation as a normal one.
+
+**Applies equally to exits.** There was previously no verification requirement on the
+sell side at all, which is how the 2026-08-20 ARDT exit was recommended against a Buy
+rating, +21% PT and 9.5× forward earnings. **A sell recommendation needs the same
+evidence as a buy.**
 
 ---
 
@@ -24,7 +64,9 @@ If neither skip condition applies, **immediately run the daily portfolio analysi
 - **IWM close** for the regime check comes from the `<daily_summary>` itself (the script prices IWM as a benchmark) — do NOT WebSearch a "live IWM price."
 - **IWM 50-day SMA** is a slow-moving technical level; a dated technical-analysis page is acceptable, but note the date.
 - **Any live/after-hours/pre-market price** (e.g. reacting to a post-close print) → **browser tool** with a timestamp, never WebSearch.
-- **Catalyst dates, guidance, ATR, analyst PTs** → WebSearch is fine; date each claim and apply *Thesis-Input Freshness* (`.claude/rules/entry-discipline.md`) to any time-varying driver.
+- **Analyst PTs, ratings, forward P/E, TTM revenue/EPS, beta, 52-wk range** → **browser quote page**, not WebSearch (see the PRV gate above and the source hierarchy).
+- **Catalyst dates + historical guidance** → WebSearch is acceptable for discovery; date each claim, browser-verify anything decision-relevant, and apply *Thesis-Input Freshness* (`.claude/rules/entry-discipline.md`) to any time-varying driver.
+- **Any holding you are about to act on** (buy/sell/trim/add) → **PRV gate applies — fetch its quote page first.**
 
 **Mandatory earnings-night live check (do NOT defer):** if any holding reports earnings **after the close on the day of the daily run** (or the previous evening, before a morning run), you MUST — *within that same daily analysis, before writing the Post-Event Playbook* — pull BOTH via the **browser tool**:
 1. the **live after-hours quote** (session label + timestamp, reconcile against the close), AND
@@ -63,8 +105,8 @@ The `make weekend` target automatically runs the screener first. If the screener
 
 When `<weekly_context>` XML appears in the conversation output, **immediately begin the deep research** — do NOT ask for further input:
 
-1. **Screener candidate evaluation**: If a `<screener_watchlist>` block is present, evaluate AT LEAST the top 5 candidates via WebSearch for catalyst/fundamental info. For each screener candidate NOT selected, state why in one line. Include at least 2 candidates from different GICS sectors in the evaluation table. Screener candidates get priority over web-search-only finds.
-2. **Run analysis**: produce the full 10-section deep research report (format defined in `Start Your Own/weekend_summary.md`) using WebSearch extensively for all holdings and new candidates
+1. **Screener candidate evaluation**: If a `<screener_watchlist>` block is present, evaluate AT LEAST the top 5 candidates. Use WebSearch to *discover* the story (what happened, catalyst dates), then **browser-fetch the quote page of every candidate that reaches the shortlist** — the PRV gate applies to any name you will recommend buying, and the quote page is where forward P/E, PT, TTM growth, 52-wk position and beta actually live. For each screener candidate NOT selected, state why in one line. Include at least 2 candidates from different GICS sectors in the evaluation table. Screener candidates get priority over web-search-only finds.
+2. **Run analysis**: produce the full 10-section deep research report (format defined in `Start Your Own/weekend_summary.md`). Use WebSearch broadly for discovery, but **browser-verify every holding and every candidate you recommend acting on** (PRV gate).
 3. **Sector cap check**: Before finalizing positions, verify no more than 2 positions (of the up-to-6 book) are in the same GICS sector (per `portfolio_rules.md` Allocation Framework).
 4. **Save outputs** immediately after the report completes:
    - Full report → `Weekly Deep Research (MD)/Week X Full.md`
