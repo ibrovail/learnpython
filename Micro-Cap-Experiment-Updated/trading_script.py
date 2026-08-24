@@ -26,6 +26,7 @@ import contextlib
 import io
 import os
 import re
+import sys
 import warnings
 
 import numpy as np # type: ignore
@@ -203,6 +204,44 @@ def trading_day_window(target: datetime | None = None) -> tuple[pd.Timestamp, pd
     """[start, end) window for the last trading day (Fri on weekends)."""
     d = last_trading_date(target)
     return d, (d + pd.Timedelta(days=1))
+
+
+# The NYSE regular session ends 16:00 ET. A session's data does not exist until
+# after that; on a half day (13:00 ET close) the extra hours are harmless slack.
+_SESSION_CLOSE_HOUR_ET = 16
+
+
+def last_completed_session(now: datetime | None = None) -> pd.Timestamp:
+    """Return the most recent NYSE session whose close has already passed.
+
+    Distinct from `last_trading_date`, which returns *today* when today is a
+    weekday regardless of the hour. Data-currency checks need the last session
+    that actually produced a close: running on a Monday at 07:18 ET, the last
+    completed session is the previous Friday, not today.
+    """
+    ts = pd.Timestamp(now or _effective_now())
+    try:
+        et_now = (ts.tz_localize("America/New_York") if ts.tz is None
+                  else ts.tz_convert("America/New_York"))
+    except Exception:
+        et_now = ts
+
+    today = et_now.normalize().tz_localize(None) if et_now.tz else et_now.normalize()
+    closed_today = et_now.hour >= _SESSION_CLOSE_HOUR_ET
+
+    try:
+        xnys = xcals.get_calendar("XNYS")
+        sessions = xnys.sessions_in_range(today - pd.Timedelta(days=10), today)
+        sessions = [pd.Timestamp(s).normalize() for s in sessions]
+    except Exception:  # calendar unavailable -> weekday approximation
+        sessions = [d for d in pd.date_range(today - pd.Timedelta(days=10), today)
+                    if d.weekday() < 5]
+
+    if not sessions:
+        return today
+    if sessions[-1] == today and not closed_today:
+        return sessions[-2] if len(sessions) > 1 else sessions[-1]
+    return sessions[-1]
 
 
 # ------------------------------
@@ -718,10 +757,16 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
         if np.isnan(o):
             o = c
 
-        # Stop-loss only triggers during regular trading hours
+        # Stop-loss only triggers during regular trading hours.
+        # Compare with a half-cent tolerance: vendor OHLC arrives as float32 and
+        # widens on conversion, so a low that is exactly the stop can store as
+        # 10.350000381469727 and fail a bare `l <= stop`. 2026-08-21: ARDT's low
+        # WAS $10.35 against a $10.35 stop and filled at the broker, but the
+        # script did not flag it -- the miss was 0.0000004.
+        _PRICE_EPS = 0.005
         stop_triggered = False
         if stop and stop > 0:
-            if o >= stop and l <= stop:
+            if o >= stop and l <= stop + _PRICE_EPS:
                 # Stock opened at/above stop, fell during trading hours
                 stop_triggered = True
             elif o < stop:
@@ -2101,6 +2146,8 @@ if __name__ == "__main__":
                        help="Session directive: risk posture (e.g., 'Aggressive — trailing benchmark')")
     parser.add_argument("--max-positions", default=None,
                        help="Session directive: max concurrent positions (e.g., '5')")
+    parser.add_argument("--check-data-current", action="store_true",
+                       help="Exit 0 if the portfolio CSV covers the last completed session, else 1")
     parser.add_argument("--log-level", default="INFO",
                        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
                        help="Set the logging level (default: INFO)")
@@ -2119,6 +2166,16 @@ if __name__ == "__main__":
 
     if args.asof:
         set_asof(args.asof)
+
+    if args.check_data_current:
+        _dd = Path(args.data_dir) if args.data_dir else DATA_DIR
+        _pf = pd.read_csv(_dd / "chatgpt_portfolio_update.csv")
+        _last = pd.to_datetime(_pf["Date"]).max().normalize()
+        _need = last_completed_session()
+        if _last >= _need:
+            sys.exit(0)
+        print(f"    portfolio through {_last.date()}, last completed session {_need.date()}")
+        sys.exit(1)
 
     # Build session directives from CLI args if any are provided
     _sd_args = {

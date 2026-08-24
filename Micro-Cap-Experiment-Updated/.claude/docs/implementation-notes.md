@@ -406,3 +406,33 @@ Extended experiment timeline to 12 months. Upgraded rules for Phase 2 alpha gene
 |------|--------|
 | `Start Your Own/weekend_summary.md` | Updated rules, universe, and output format |
 | `trading_script.py` | Extended date range handling |
+
+---
+
+## 2026-08-24 — Stop-detection float epsilon + weekend staleness-gate fix
+
+Two defects in `trading_script.py`, both of which silently blocked or skipped correct behaviour.
+
+**1. Stop detection missed an exact-price fill.** ARDT's 2026-08-21 low was $10.35 against a
+$10.35 stop and filled at the broker, but the daily run reported a normal HOLD. yfinance
+delivers OHLC as float32; on conversion to float64 the low is stored as
+`10.350000381469727`, so `low <= stop` evaluated False by 4e-7. Added `_PRICE_EPS = 0.005`
+(half a cent) to the stop comparison, matching the epsilon convention already used in the
+manual buy/sell validation paths. Re-running 8/21 after the fix detected the stop and logged
+the exit correctly (`AUTOMATED SELL - STOP LIMIT TRIGGERED`, 5 sh @ $10.35, −$2.25).
+
+**2. The `make weekend` staleness gate was unrunnable on a weekday morning.** It computed the
+required session as the last NYSE session *including today*, so running Monday at 07:18 AM
+demanded data for a session that had not yet opened — the weekend workflow could never run
+before a Monday close. Added `last_completed_session()`, which returns the most recent
+session whose 16:00 ET close has actually passed (calendar-aware via `exchange_calendars`,
+falling back to a weekday approximation), plus a `--check-data-current` CLI flag. The
+Makefile now calls that flag instead of an inline `python -c` one-liner that had an
+`exec()`-inside-a-`-c`-string fallback — fragile and effectively untestable. Verified across
+five timestamps spanning both sides of the 4 PM boundary and a weekend.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | `_PRICE_EPS` half-cent tolerance in stop detection; `last_completed_session()`; `--check-data-current` flag; `import sys` |
+| `Makefile` | `weekend` target now calls `--check-data-current` instead of inline shell-Python |
+| `Weekly Deep Research (MD)/Week 50 Full.md`, `Week 50 Summary.md`, `(PDF)/Week 50.pdf` | Week 50 deliverables |

@@ -66,71 +66,72 @@ Before producing your output, work through these steps internally:
 </thinking_approach>
 
 <weekly_context>
-<date>Sunday, August 16, 2026</date>
-<week_number>49 of 52 (twelve-month live experiment)</week_number>
-<experiment_runway>ends 2026-09-18 (5 calendar weeks remaining)</experiment_runway>
+<date>Monday, August 24, 2026</date>
+<week_number>50 of 52 (twelve-month live experiment)</week_number>
+<experiment_runway>ends 2026-09-18 (4 calendar weeks remaining)</experiment_runway>
 
 <market_data>
 <price_volume>
 | Ticker | Close   | % Chg  | Volume      | Role       |
 |--------|---------|--------|-------------|------------|
-| TILE   |   37.96 | -1.99% |     436,300 | Holding    |
-| ATRC   |   44.30 | +1.86% |     340,900 | Holding    |
-| ARDT   |   10.91 | -1.00% |     250,400 | Holding    |
-| IWO    |  395.65 | +0.75% |     284,100 | Benchmark  |
-| XBI    |  157.41 | +0.35% |   6,321,300 | Benchmark  |
-| SPY    |  776.34 | -0.20% |  31,332,500 | Benchmark  |
-| IWM    |  305.09 | +0.52% |  13,150,100 | Benchmark  |
-| QQQ    |  731.07 | -0.14% |  23,748,000 | Benchmark  |
-| TLT    |   82.04 | -0.67% |  31,357,100 | Macro      |
-| HYG    |   79.71 | -0.10% |  26,608,900 | Macro      |
+| TILE   |   38.94 | -0.36% |     314,900 | Holding    |
+| ATRC   |   48.98 | +3.14% |     421,100 | Holding    |
+| PAR    |   19.53 | +3.06% |     962,800 | Holding    |
+| CADL   |   13.13 | +6.32% |   1,336,400 | Holding    |
+| IWO    |  387.37 | +1.24% |     570,400 | Benchmark  |
+| XBI    |  165.73 | +1.44% |  10,010,500 | Benchmark  |
+| SPY    |  765.72 | +0.41% |  39,030,400 | Benchmark  |
+| IWM    |  299.96 | +0.77% |  22,933,800 | Benchmark  |
+| QQQ    |  713.44 | +0.35% |  33,297,600 | Benchmark  |
+| TLT    |   82.05 | -0.35% |  24,221,600 | Macro      |
+| HYG    |   79.61 | +0.06% |  37,523,200 | Macro      |
 </price_volume>
 
 <risk_metrics>
 | Metric                        | Value     | Note                    |
 |-------------------------------|-----------|-------------------------|
 | Max Drawdown                  |   -24.99% | on 2026-03-20           |
-| Sharpe Ratio (annualized)     |    2.0961 |                         |
-| Sortino Ratio (annualized)    |    7.1300 |                         |
-| Beta (daily) vs ^GSPC         |    1.5673 |                         |
-| Alpha (annualized) vs ^GSPC   |  +774.21% |                         |
-| R²                            |     0.034 | Low — alpha/beta unstable |
-| Time-Weighted Return (cum)    |   +17.68% | injection-neutral       |
-| S&P 500 Return (cum)          |   +17.40% | same window             |
-| TWR Alpha (cum)               |    +0.28% | TWR minus S&P           |
+| Sharpe Ratio (annualized)     |    2.1213 |                         |
+| Sortino Ratio (annualized)    |    7.2033 |                         |
+| Beta (daily) vs ^GSPC         |    1.5686 |                         |
+| Alpha (annualized) vs ^GSPC   |  +771.58% |                         |
+| R²                            |     0.035 | Low — alpha/beta unstable |
+| Time-Weighted Return (cum)    |   +23.63% | injection-neutral       |
+| S&P 500 Return (cum)          |   +15.72% | same window             |
+| TWR Alpha (cum)               |    +7.91% | TWR minus S&P           |
 </risk_metrics>
 </market_data>
 
 <portfolio_snapshot>
 | Metric              | Value     |
 |---------------------|-----------|
-| Portfolio Equity    |   $744.08 |
-| S&P Equivalent      |   $781.45 |
-| Cash Balance        |   $404.79 |
+| Portfolio Equity    |   $781.68 |
+| S&P Equivalent      |   $770.27 |
+| Cash Balance        |   $191.44 |
 </portfolio_snapshot>
 
 <capital_injection>
   <planned>false</planned>
 </capital_injection>
 
-<screener_watchlist generated="2026-08-16" candidates="15">
+<screener_watchlist generated="2026-08-24" candidates="15">
 |   rank | ticker   | sector            |   latest_price | market_cap   |   momentum_20d |   momentum_5d |   volume_ratio |   rs_vs_iwm |   bb_width | above_sma20   | data_confidence   |   composite_score |
 |-------:|:---------|:------------------|---------------:|:-------------|---------------:|--------------:|---------------:|------------:|-----------:|:--------------|:------------------|------------------:|
-|      1 | BTCS     | Financial         |           1.12 | $56M         |          13.25 |         -0.88 |           2.03 |        8.88 |     0.1726 | True          | HIGH              |            0.8021 |
-|      2 | ANRO     | Healthcare        |          32.14 | $1.3B        |          24.09 |         13.61 |           2.02 |       19.72 |     0.2317 | True          | HIGH              |            0.7975 |
-|      3 | WWW      | Consumer Cyclical |          21.03 | $1.7B        |          12.94 |         11.15 |           1.5  |        8.57 |     0.1725 | True          | HIGH              |            0.7881 |
-|      4 | PAR      | Technology        |          19.05 | $788M        |          19.81 |          4.67 |           1.57 |       15.44 |     0.2218 | True          | HIGH              |            0.7832 |
-|      5 | SFNC     | Financial         |          24.08 | $3.5B        |           3.66 |          2.34 |           1.7  |       -0.71 |     0.0715 | True          | HIGH              |            0.7798 |
-|      6 | MGTX     | Healthcare        |          13.52 | $1.3B        |          10.73 |          3.84 |           1.72 |        6.36 |     0.1727 | True          | HIGH              |            0.7772 |
-|      7 | CADL     | Healthcare        |          11.72 | $897M        |          23.63 |         11.62 |           1.71 |       19.26 |     0.2581 | True          | HIGH              |            0.773  |
-|      8 | NUVB     | Healthcare        |           6.22 | $2.2B        |           7.24 |         -5.76 |           2.14 |        2.87 |     0.146  | False         | HIGH              |            0.773  |
-|      9 | NPWR     | Industrials       |           1.95 | $438M        |          26.62 |         24.2  |           5.35 |       22.25 |     0.3116 | True          | HIGH              |            0.7659 |
-|     10 | AORT     | Healthcare        |          29.14 | $1.4B        |          14.86 |         10.76 |           1.2  |       10.49 |     0.1903 | True          | HIGH              |            0.7658 |
-|     11 | CCCC     | Healthcare        |           4.24 | $522M        |          18.44 |         17.13 |           1.32 |       14.07 |     0.2239 | True          | HIGH              |            0.7638 |
-|     12 | UMH      | Real Estate       |          16.45 | $1.4B        |           7.66 |          4.91 |           1.11 |        3.29 |     0.1016 | True          | HIGH              |            0.763  |
-|     13 | VUZI     | Technology        |           3.1  | $262M        |          35.37 |         18.77 |           2.98 |       31    |     0.3535 | True          | HIGH              |            0.7623 |
-|     14 | KRP      | Energy            |          15.1  | $2.0B        |           2.03 |          0.07 |           1.67 |       -2.34 |     0.0663 | True          | HIGH              |            0.7622 |
-|     15 | RNST     | Financial         |          43.55 | $4.0B        |           1.4  |          1.99 |           1.74 |       -2.97 |     0.0447 | True          | HIGH              |            0.7602 |
+|      1 | SIBN     | Healthcare        |          19.96 | $908M        |          17.07 |          6.8  |           2.36 |       14.66 |     0.153  | True          | HIGH              |            0.8267 |
+|      2 | ABUS     | Healthcare        |           5.21 | $1.0B        |          18.14 |         10.62 |           8.28 |       15.73 |     0.1986 | True          | HIGH              |            0.8039 |
+|      3 | BEAM     | Healthcare        |          29.76 | $3.0B        |          18.71 |          9.82 |           1.44 |       16.3  |     0.1713 | True          | HIGH              |            0.8006 |
+|      4 | CYRX     | Industrials       |          17.13 | $866M        |          13.07 |         11.81 |           1.75 |       10.66 |     0.1652 | True          | HIGH              |            0.782  |
+|      5 | PD       | Technology        |          12.32 | $950M        |          26.23 |          5.3  |           1.8  |       23.82 |     0.252  | True          | HIGH              |            0.7784 |
+|      6 | ELME     | Real Estate       |           1.66 | $150M        |           2.47 |          3.11 |           1.88 |        0.06 |     0.0319 | True          | HIGH              |            0.7758 |
+|      7 | FBRT     | Real Estate       |           8.39 | $691M        |           7.15 |          4.48 |           1.81 |        4.74 |     0.1157 | True          | HIGH              |            0.775  |
+|      8 | BKKT     | Technology        |           8.59 | $379M        |          13.47 |         20.65 |           2.51 |       11.06 |     0.193  | True          | HIGH              |            0.7748 |
+|      9 | NVAX     | Healthcare        |           8.94 | $1.5B        |          19.36 |         10.78 |           2.58 |       16.95 |     0.2308 | True          | HIGH              |            0.7741 |
+|     10 | HNI      | Consumer Cyclical |          49.23 | $3.5B        |          14.62 |          1.88 |           1.76 |       12.21 |     0.1974 | True          | HIGH              |            0.771  |
+|     11 | GEO      | Industrials       |          32.71 | $4.3B        |           5.75 |          5.01 |           1.44 |        3.34 |     0.0804 | True          | HIGH              |            0.7708 |
+|     12 | ANY      | Financial         |           2.61 | $24M         |          33.85 |         24.29 |           5.65 |       31.44 |     0.3249 | True          | HIGH              |            0.7707 |
+|     13 | RXRX     | Healthcare        |           3.5  | $1.9B        |          16.28 |         12.54 |           1.4  |       13.87 |     0.195  | True          | HIGH              |            0.767  |
+|     14 | IRD      | Healthcare        |           4.05 | $339M        |          20.9  |         10.96 |           1.29 |       18.49 |     0.2152 | True          | HIGH              |            0.7629 |
+|     15 | VIR      | Healthcare        |           9.78 | $1.7B        |          11.14 |          4.15 |           1.2  |        8.73 |     0.1463 | True          | HIGH              |            0.761  |
 </screener_watchlist>
 
 **Screener Integration:**
@@ -138,64 +139,80 @@ Before producing your output, work through these steps internally:
 - For each screener candidate not selected, state why in one line.
 - Respect the sector cap: max 2 positions in the same GICS sector.
 
-<holdings date="2026-08-14">
-<holding ticker="TILE" shares="4" avg_cost="32.10" current_price="37.96" stop_loss="35.75" stop_limit="35.60" />
-<holding ticker="ATRC" shares="3" avg_cost="34.30" current_price="44.30" stop_loss="39.50" stop_limit="39.35" />
-<holding ticker="ARDT" shares="5" avg_cost="10.80" current_price="10.91" stop_loss="10.35" stop_limit="10.25" />
+<holdings date="2026-08-21">
+<holding ticker="TILE" shares="4" avg_cost="32.10" current_price="38.94" stop_loss="37.10" stop_limit="36.95" />
+<holding ticker="ATRC" shares="3" avg_cost="34.30" current_price="48.98" stop_loss="44.20" stop_limit="44.05" />
+<holding ticker="PAR" shares="8" avg_cost="18.85" current_price="19.53" stop_loss="16.50" stop_limit="16.35" />
+<holding ticker="CADL" shares="10" avg_cost="11.43" current_price="13.13" stop_loss="12.00" stop_limit="11.85" />
 </holdings>
 
 <last_analyst_thesis>
-# Week 48 — Thesis Review Summary
+# Week 49 — Thesis Review Summary
 
-**Date:** 2026-08-09 | **Week:** 48 of 52 | **Posture:** Neutral
+**Date:** 2026-08-16 | **Week:** 49 of 52 | **Posture:** Aggressive (amended constraints)
 
 ---
 
 ## Per-Position Thesis
 
-**TILE (Interface) — KEEP | Conviction 4/5**
-The Q2 print I could never date landed **8/7** and was a genuine beat-and-raise: net sales **$395.7M (+5.4%)**, EPS **$0.88 vs $0.55**, adj. EBITDA **+35.2%**, and FY guidance **raised** to $1.455–1.485B. Stock +9.09%; position **+19.3%**. Honest caveat: **393bps of the 560bps gross-margin gain came from one-time IEEPA tariff refunds** — underlying operational improvement is 131bps. Stop raised $33.25 → **$35.75** (2.0×ATR, above the pre-gap close), locking **+11.4%**.
-
 **ATRC (AtriCure) — KEEP | Conviction 4/5**
-**+20.7%**, still re-rating off the profitability inflection. Stop raised $36.00 → **$37.90** (1.82×ATR, just below the 5-day low), locking **+10.5%**. Worth noting: July's −12% two-day PT-trim scare never breached its stop — the range-check discipline earned its keep.
+**+29.2%** and knocking on the $44.59 partial trigger, which stays **deferred** — all four criteria hold: the FY EPS guidance doubling ($0.09–0.15 → $0.24–0.32) is a genuine new catalyst, the $39.50 stop locks **+15.2%**, the position is 17.9% of equity, conviction 4/5. With 54% cash going in, converting the best performer into more idle cash was the wrong direction.
+
+**TILE (Interface) — KEEP | Conviction 4/5**
++18.3%, holding its post-earnings gap above the $36–37 consensus PT. Stop $35.75 locks +11.4% (deliberately at 1.27×ATR, tighter than guideline).
 
 **ARDT (Ardent Health) — KEEP | Conviction 3/5**
-**+6.9%** on the 5-share residual after the 8/6 trim at $11.10. The mixed Q2 (revenue beat, EPS miss, **adj. EBITDA −32% YoY**) keeps conviction capped despite the reaffirmed guidance and +67% operating cash flow. Stop raised $10.05 → **$10.35**, capping the loss at −4.2%.
++1.0% on the 5-share residual after the trim. The mixed Q2 (revenue beat, EPS miss, **adj. EBITDA −32% YoY**) keeps conviction capped. Stop $10.35.
 
-**SHO (Sunstone Hotel Investors) — EXIT | Conviction 2/5 ↓**
-The thesis was a raised-guidance re-rating, and the **8/6 beat was the test — the market sold it**: opened +1.88% at $11.90, closed −3.3%, then three more down days and a second rejection of the $11.90–12.07 resistance. No catalyst remains. Compounding it, the stop sits at **0.70×ATR** — inside the noise band — so holding means a likely coin-flip exit near +6.9%. **Sell 11 at market Monday, banking +8.6% by choice rather than by accident.**
+**PAR (PAR Technology) — INITIATE | Conviction 4/5** *(order revised 8/17)*
+The cleanest setup in weeks: **revenue +18.7% to $133.4M, ARR $338M, adjusted EBITDA $14.3M (from $5.5M), FY guidance raised to $516–523M** — real growth, not a cost-cut story on a shrinking base (the trap that cost us on TDAY and nearly on FOXF). Technically it **ground** higher rather than gapping — three consecutive higher lows (16.82 → 17.65 → 18.38) — and it is 8 sessions past its print. Fills the **empty Technology sector**.
+**Revised order: 8 shares, limit $18.55, stop $16.50/$16.35.** PAR fell to **$18.46 (−3.25%)** on 8/17 with no news, which *improved* the entry to +7.6% over the 20-day SMA — but forced the stop wider, since the original $17.05 computed to only 1.24×ATR at the lower price. **Skip condition: do not buy if PAR closes below $18.38** (the last higher low).
+Bear case: GAAP still lossmaking (−$1.77 TTM EPS) and the stock sits **~65% below its 52-week high** ($11.59–$54.62) — a beaten-down grower, not a leader. Offsetting: analyst PT **$25.31 (+37%)**, forward P/E 17.4.
+
+**CADL (Candel Therapeutics) — INITIATE | Conviction 3/5** *(order revised 8/17)*
+The Week 45 queue name, finally investable under the amended healthcare cap. CAN-2409 Phase 3 in localized prostate cancer showed a **39% improvement in disease-free survival** (58-month median follow-up), holds RMAT designation, and the **BLA submission is guided for Q4 2026** with cash into 2028. **Strong Buy, PT $20.88 (+78%)** — the largest upside on the board.
+**Revised order: 10 shares, limit $11.50 (from $11.85), stop $10.70/$10.55 unchanged** — repriced to the verified pre-market level after a −2.05% print with no adverse news.
+Bear case: clinical-stage binary — a BLA delay or FDA question resets the thesis, and biotech financings dilute. It also trades near its 52-week high ($4.35–$11.95), the mirror image of PAR.
 
 ---
 
 ## Overall Portfolio Thesis
 
-**Gap −5.0%** ($739.98 vs $778.63) · **TWR alpha +0.06%.**
+**Gap −4.8% · TWR alpha +0.28% · cash 54.4% — and that cash was the problem.** Two sessions this week made it explicit: the book gained nothing while the S&P-equivalent rose, because half the portfolio earned zero. With ~4.5 weeks left, holding cash was a guaranteed way to finish behind.
 
-Week 48 was the catalyst week's reckoning, and the risk machinery worked: **WKC's stop banked +44.8%**, **TDAY's stop cut a broken thesis at −4.7%** (Q2 revenue −8.3% YoY — the AI-licensing inflection never reached the top line), and **TILE delivered a beat-and-raise**. Net realized **+$7.08**, no disasters.
+So the decisive act this week wasn't a trade — it was **amending the constraints that were blocking deployment**. Raising the **healthcare cap 2 → 3** and the **universe ceiling $2B → $5B** nearly doubled the screenable universe (856 → **1,593** names) and directly unlocked one of the two initiations.
 
-The problem is now the mirror image of six weeks ago: **not too little cash, but too much.** After the SHO exit the book holds **3 positions and 54.7% cash** with 6 weeks left — and the screen offered no legitimate deployment. That wasn't bad luck, it was structural: **4 BDCs (excluded class), 4 healthcare names blocked by our own 2-name sector cap, 2 merger-arbs with ~1% spreads**, and the single quality story — **FOXF** (Q2 EPS $0.37 vs $0.18, FY guide raised, $50M cost-savings program) — sitting **2 days into a +12% vertical gap**, the exact ARLO/PHAT pattern. Forcing an entry there would repeat our two worst trades.
+One useful finding: the ceiling change did **not** produce a flood of quality — the newly eligible $2–5B entrants (SFNC $3.5B, RNST $4.0B) screened poorly with *negative* relative strength. The micro-cap tilt wasn't the binding constraint; **the sector cap was.**
 
-So Week 48 is deliberately defensive, with an honest admission: **defensiveness alone cannot close a 5% gap in 6 weeks.** The plan — protect a book that is now nearly all house money (aggregate stop-risk 0.8% of equity), hold cash rather than donate it to a bad entry, and **deploy into FOXF the moment it consolidates** (queued #1; watch for a higher-low base above ~$20 or a pullback toward the $18.70 20-day SMA).
+Deployment: **PAR** (real growth, empty sector, non-gapped entry) and **CADL** (dated BLA catalyst) — taking the book to **5 positions and ~19.0% cash** at the revised limits.
 
-**Next:** execute the SHO exit and three stop raises; FOXF consolidation watch; if Week 49's screen is again structurally blocked, the constraint set itself — not the market — is what needs revisiting.
+**Pre-open verification changed both orders (8/17).** PAR's first pre-market scan read **+1.10% at $19.26** — but a re-scan returned the same 5:26 AM timestamp from two sources, and MarketWatch showed why: **before-hours volume of 332 shares.** The print was one tiny trade carrying no information; the real session went the other way to **$18.46 (−3.25%)**. Both limits were repriced to verified live prices, and PAR's stop was widened from $17.05 to $16.50 because the drop pushed the original level to 1.24×ATR — inside the noise band. **Lesson banked: read extended-hours volume alongside the timestamp — a 332-share print looks like a price but isn't one.**
+
+**WWW (Wolverine World Wide) is deliberately left on the table** despite having the strongest fundamentals of the three — Q2 revenue $506M (+7%), adj. EPS +14%, operating margin +80bps, and guidance raised on revenue, EPS, margin *and* free cash flow. It closed $18.06 → $19.88 → $21.03: **day 2 of a +16.4% move.** Chasing that is exactly what cost us on PHAT and LXU and nearly on FOXF. **Queued #1 for Week 50** on a higher-low base or a pullback toward the ~$19.35 20-day SMA.
+
+Three weeks to run: the cash is finally working, the incumbents are protected at +11% to +15% locked, and the remaining edge has to come from PAR and CADL delivering what their fundamentals say they should.
+
+**Next:** execute the revised orders (PAR subject to its $18.38 skip condition); WWW consolidation watch for Week 50; ATRC partial deferral under review.
 
 ---
 
-*Week 48 Summary generated 2026-08-09 by Claude Code (Neutral posture).*
+*Week 49 Summary generated 2026-08-16 by Claude Code (Aggressive posture, amended constraints). Orders revised 2026-08-17 after live pre-open verification.*
 </last_analyst_thesis>
 
 <recent_trades>
 <!-- Trades from Monday through Friday of current week -->
 Date,Ticker,Shares Bought,Buy Price,Cost Basis,PnL,Reason,Shares Sold,Sell Price
-2026-08-10,SHO,,,112.2,9.570000000000022,MANUAL SELL MARKET - Wk48 exit - beat sold into, no catalyst left,11.0,11.07
+2026-08-17,PAR,8.0,18.8499,150.7992,0.0,MANUAL BUY LIMIT - Filled,,
+2026-08-17,CADL,10.0,11.43,114.3,0.0,MANUAL BUY LIMIT - Filled,,
+2026-08-21,ARDT,,,10.8,-2.25,AUTOMATED SELL - STOP LIMIT TRIGGERED,5.0,10.35
 </recent_trades>
 
 <execution_requests>
 <session_directives>
 - Sector focus: Wide net
-- Catalyst timing: 30-60 days
-- Risk posture: Aggressive
-- Max concurrent positions: 6
+- Catalyst timing: Within 5 days
+- Risk posture: Tighten stops
+- Max concurrent positions: 5
 </session_directives>
 
 Using the rules, safeguards, and portfolio context above, execute the deep research window now.
