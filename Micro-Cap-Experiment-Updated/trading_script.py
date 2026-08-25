@@ -49,6 +49,38 @@ try:
 except Exception:
     _HAS_XCALS = False
 
+# ------------------------------
+# Interactive input
+# ------------------------------
+
+# Set once stdin runs dry. The `run daily:` workflow pipes a fixed number of
+# lines; if the prompt sequence consumes more than were supplied, a bare
+# _input() raises EOFError and unwinds out of process_portfolio -- which aborts
+# the run *after* any manual trade has been written to the trade log but
+# *before* the portfolio CSV is saved, leaving the two files inconsistent.
+# (2026-08-24: a WWW buy logged, then the run died on the next prompt.)
+_STDIN_EOF = False
+
+
+def _input(prompt: str = "") -> str:
+    """_input() that degrades to an empty response once stdin is exhausted.
+
+    Every call site already treats an empty answer as "skip" or "cancel", so
+    returning "" lets the run finish normally and still save the portfolio.
+    Callers driving a `while True` loop must also check `_STDIN_EOF` so they
+    exit rather than spin on the empty response.
+    """
+    global _STDIN_EOF
+    if _STDIN_EOF:
+        return ""
+    try:
+        return input(prompt)
+    except EOFError:
+        _STDIN_EOF = True
+        print("\n[stdin exhausted - continuing with defaults]")
+        return ""
+
+
 # -------- AS-OF override --------
 ASOF_DATE: pd.Timestamp | None = None
 
@@ -543,10 +575,10 @@ def process_portfolio(
     # ------- Capital injection option (supports manual capital adds) -------
     if interactive:
         print("\n--- Capital Injection ---")
-        inject_choice = input("Would you like to inject additional capital? ('y' or press Enter to skip): ").strip().lower()
+        inject_choice = _input("Would you like to inject additional capital? ('y' or press Enter to skip): ").strip().lower()
         if inject_choice == "y":
             try:
-                inject_amount = float(input("Enter amount to inject (e.g., 100): "))
+                inject_amount = float(_input("Enter amount to inject (e.g., 100): "))
                 if inject_amount > 0:
                     log_capital_injection(inject_amount)
                     cash += inject_amount
@@ -560,17 +592,20 @@ def process_portfolio(
     if interactive:
         while True:
             print(portfolio_df)
-            action = input(
+            action = _input(
                 f""" You have {cash} in cash.
 Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press Enter to continue: """
             ).strip().lower()
 
+            if _STDIN_EOF:
+                break
+
             if action == "b":
-                ticker = input("Enter ticker symbol: ").strip().upper()
-                order_type = input("Order type? 'm' = market-on-open, 'l' = limit: ").strip().lower()
+                ticker = _input("Enter ticker symbol: ").strip().upper()
+                order_type = _input("Order type? 'm' = market-on-open, 'l' = limit: ").strip().lower()
 
                 try:
-                    shares = float(input("Enter number of shares: "))
+                    shares = float(_input("Enter number of shares: "))
                     if shares <= 0:
                         raise ValueError
                 except ValueError:
@@ -579,7 +614,7 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
 
                 if order_type == "m":
                     try:
-                        stop_loss = float(input("Enter stop loss trigger price (or 0 to skip): "))
+                        stop_loss = float(_input("Enter stop loss trigger price (or 0 to skip): "))
                         if stop_loss < 0:
                             raise ValueError
                     except ValueError:
@@ -587,7 +622,7 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
                         continue
 
                     try:
-                        stop_limit_input = input(
+                        stop_limit_input = _input(
                             f"Enter stop-limit price (limit once stop triggers; or 0 to match stop ${stop_loss:.2f}): "
                         ).strip()
                         stop_limit = float(stop_limit_input) if stop_limit_input else 0.0
@@ -670,11 +705,11 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
 
                 elif order_type == "l":
                     try:
-                        buy_price = float(input("Enter buy LIMIT price: "))
-                        stop_loss = float(input("Enter stop loss trigger price (or 0 to skip): "))
+                        buy_price = float(_input("Enter buy LIMIT price: "))
+                        stop_loss = float(_input("Enter stop loss trigger price (or 0 to skip): "))
                         if buy_price <= 0 or stop_loss < 0:
                             raise ValueError
-                        stop_limit_input = input(
+                        stop_limit_input = _input(
                             f"Enter stop-limit price (or 0 to match stop ${stop_loss:.2f}): "
                         ).strip()
                         stop_limit = float(stop_limit_input) if stop_limit_input else 0.0
@@ -697,17 +732,17 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
 
             if action == "s":
                 try:
-                    ticker = input("Enter ticker symbol: ").strip().upper()
-                    sell_type = input("Order type? 'm' = market (confirmed fill), 'l' = limit: ").strip().lower()
+                    ticker = _input("Enter ticker symbol: ").strip().upper()
+                    sell_type = _input("Order type? 'm' = market (confirmed fill), 'l' = limit: ").strip().lower()
                     if sell_type not in ("m", "l"):
                         print("Unknown order type. Use 'm' or 'l'. Manual sell cancelled.")
                         continue
-                    shares = float(input("Enter number of shares to sell: "))
+                    shares = float(_input("Enter number of shares to sell: "))
                     prompt = (
                         "Enter the actual fill price: " if sell_type == "m"
                         else "Enter sell LIMIT price: "
                     )
-                    sell_price = float(input(prompt))
+                    sell_price = float(_input(prompt))
                     if shares <= 0 or sell_price <= 0:
                         raise ValueError
                 except ValueError:
@@ -784,11 +819,11 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
                 print(f"  Stop-limit     : not set (defaulting to stop ${stop:.2f})")
             print(f"  Today's range  : ${l:.2f} - ${h:.2f}  |  Open: ${o:.2f}")
             while True:
-                confirm = input(
+                confirm = _input(
                     f"Did {ticker} fill at the stop-limit ${default_exec:.2f}? "
                     f"Enter 'y' to confirm, or type the actual fill price: "
                 ).strip().lower()
-                if confirm == "y":
+                if confirm == "y" or _STDIN_EOF:
                     exec_price = round(default_exec, 2)
                     break
                 try:
@@ -943,7 +978,7 @@ def log_manual_buy(
     today = check_weekend()
 
     if interactive:
-        check = input(
+        check = _input(
             f"You are placing a BUY LIMIT for {shares} {ticker} at ${buy_price:.2f}.\n"
             f"If this is a mistake, type '1' or, just hit Enter: "
         )
@@ -1057,7 +1092,7 @@ def log_manual_sell(
 ) -> tuple[float, pd.DataFrame]:
     today = check_weekend()
     if interactive:
-        reason = input(
+        reason = _input(
             f"""You are placing a SELL LIMIT for {shares_sold} {ticker} at ${sell_price:.2f}.
 If this is a mistake, enter 1, or hit Enter."""
         )
@@ -1923,7 +1958,7 @@ def update_stops_only() -> None:
     updates_made = False
     
     while True:
-        ticker = input("Enter ticker to update (or press Enter to finish): ").strip().upper()
+        ticker = _input("Enter ticker to update (or press Enter to finish): ").strip().upper()
         if not ticker:
             break
         
@@ -1932,11 +1967,11 @@ def update_stops_only() -> None:
             continue
         
         try:
-            new_stop = float(input(f"Enter new stop loss for {ticker} (or 0 for no stop): "))
+            new_stop = float(_input(f"Enter new stop loss for {ticker} (or 0 for no stop): "))
             if new_stop < 0:
                 raise ValueError("Stop loss cannot be negative.")
 
-            sl_input = input(
+            sl_input = _input(
                 f"Enter new stop-limit price (limit once stop triggers; "
                 f"or 0 / Enter to match stop ${new_stop:.2f}): "
             ).strip()
@@ -2013,7 +2048,7 @@ def load_latest_portfolio_state() -> tuple[pd.DataFrame | list[dict[str, Any]], 
         portfolio = pd.DataFrame(columns=["ticker", "shares", "stop_loss", "buy_price", "cost_basis"])
         print("Portfolio CSV is empty. Returning set amount of cash for creating portfolio.")
         try:
-            cash = float(input("What would you like your starting cash amount to be? "))
+            cash = float(_input("What would you like your starting cash amount to be? "))
         except ValueError:
             raise ValueError(
                 "Cash could not be converted to float datatype. Please enter a valid number."
@@ -2091,17 +2126,19 @@ def main(data_dir: Path | None = None, update_stops: bool = False, weekend_summa
         chatgpt_portfolio, cash = load_latest_portfolio_state()
 
         print("\n--- Capital Injection for Coming Week ---")
-        inject_choice = input("Do you plan to inject additional capital this week? (y / Enter to skip): ").strip().lower()
+        inject_choice = _input("Do you plan to inject additional capital this week? (y / Enter to skip): ").strip().lower()
         planned_injection: float | None = None
         if inject_choice == "y":
             while True:
                 try:
-                    amount = float(input("Enter amount to inject (e.g., 50.00): "))
+                    amount = float(_input("Enter amount to inject (e.g., 50.00): "))
                     if amount > 0:
                         planned_injection = amount
                         break
                     print("Amount must be greater than 0. Try again.")
                 except ValueError:
+                    if _STDIN_EOF:
+                        break
                     print("Invalid input. Enter a number (e.g., 50.00).")
 
         buffer = io.StringIO()

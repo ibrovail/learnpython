@@ -436,3 +436,28 @@ five timestamps spanning both sides of the 4 PM boundary and a weekend.
 | `trading_script.py` | `_PRICE_EPS` half-cent tolerance in stop detection; `last_completed_session()`; `--check-data-current` flag; `import sys` |
 | `Makefile` | `weekend` target now calls `--check-data-current` instead of inline shell-Python |
 | `Weekly Deep Research (MD)/Week 50 Full.md`, `Week 50 Summary.md`, `(PDF)/Week 50.pdf` | Week 50 deliverables |
+
+---
+
+## 2026-08-24 (b) — EOF-tolerant interactive input
+
+The `run daily:` workflow pipes a fixed number of lines into the script's prompt sequence.
+When the sequence consumes more lines than were supplied, a bare `input()` raised
+`EOFError`, which unwound out of `process_portfolio` and aborted the run — **after** the
+manual trade had been written to `chatgpt_trade_log.csv` but **before** the portfolio CSV
+was saved. The two ledgers were left inconsistent, and a naive re-run would double-log the
+trade. Today a WWW buy hit exactly this: the piped input was one line short of the
+"If this is a mistake, type '1'" confirmation.
+
+Added `_input()`, which returns `""` once stdin is exhausted (setting a module-level
+`_STDIN_EOF` flag) instead of raising. Every call site already treats an empty answer as
+"skip" or "cancel", so the run completes and still saves. Because an empty answer would
+make an input-validating `while True` loop spin forever, the three such loops are guarded:
+the manual-trade loop breaks (equivalent to pressing Enter to continue), the stop-fill
+confirmation falls back to the stop-limit price it already offers as the default, and the
+capital-injection amount loop abandons the injection. All 27 `input(` call sites were
+switched to `_input(`.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | `_STDIN_EOF` + `_input()` helper; 27 call sites migrated; EOF guards on the manual-trade, stop-fill-confirm, and injection-amount loops |
