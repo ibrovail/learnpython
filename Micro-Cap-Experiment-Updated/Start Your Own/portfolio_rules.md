@@ -18,9 +18,51 @@ authorized three relaxations for the remainder of the experiment:
    the unchanged 30%-per-name cap and the no-averaging-down rule (which still forbids adding
    to a position more than 5% below entry without a confirmed new catalyst).
 
-**Unchanged:** the 15% cash floor, 5% risk-per-trade, 30% single-name cap, all excluded
-security classes (ETFs, closed-end funds/BDCs, SPACs, ADRs, units/warrants), stop-loss
-requirements and range checks, and every entry-discipline rule.
+**Unchanged at the time:** 5% risk-per-trade, 30% single-name cap, all excluded security
+classes (ETFs, closed-end funds/BDCs, SPACs, ADRs, units/warrants), stop-loss requirements
+and range checks, and every entry-discipline rule. *(The 15% cash floor was subsequently
+amended — see below.)*
+
+---
+
+## ⚠️ Cash floor amendment (authorized 2026-08-28, Week 50)
+
+**Cash floor lowered 15% → 8%.** At 15% the floor had become a dead constraint: $11 of $128
+was deployable, which neither protected the book nor funded a position. Analysis at the time
+established that the floor was *not* the real binding limit — the **30% single-name cap** was,
+since four of five holdings were disqualified as add targets on other grounds and the fifth
+(PAR) had only ~$77 of headroom regardless. Lowering to 8% therefore unlocked essentially all
+available deployment; lowering further would have unlocked nothing.
+
+---
+
+## ⚠️ One-time stop restoration (authorized 2026-08-31, Week 51)
+
+**The "never lower a stop" rule is suspended for a single, documented adjustment, then
+resumes in full.**
+
+By 8/31 all five positions sat **inside 1.0×ATR** of their stops — ATRC 0.64×, CADL 0.48×,
+WWW 0.68×, TILE 1.01×, PAR 1.30×. None had been tightened into that state; the market walked
+prices down to fixed lines. The result was that every stop had drifted **below the
+`max(1.5×ATR, …)` band this rules file itself mandates**, and that the one-open-order-per-stock
+constraint made every position ineligible to receive new capital, since new shares inherit the
+existing stop.
+
+The decisive argument was arithmetic, not sentiment: with a −1.6% to −2.5% benchmark gap and
+13 sessions left, **being stopped into cash locks the deficit permanently** — cash has no
+mechanism to recover a gap. Meanwhile the $69 of free cash could not close it either (it would
+need +27.5%, or SPY +9.2% at 3× leverage). Only the ~$683 of holdings could deliver the
+required +2.79%, so the sole question worth acting on was whether those positions survive.
+
+**Scope and limits of this authorization:**
+- Applies to **ATRC, PAR and TILE only**, restoring each to ~1.75×ATR. CADL and WWW were
+  deliberately left untouched.
+- Each restored level was checked against the live price, today's low, the 10-day low and the
+  ATR band before being named.
+- **Single use.** The no-lowering rule resumes immediately afterwards. "Restore the band" is
+  infinitely reusable as prices fall — that ratchet, not the $14 of added risk, is the reason
+  the rule exists, and it is why this is bounded to one adjustment rather than a standing
+  permission.
 
 ---
 

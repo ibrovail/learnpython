@@ -491,3 +491,38 @@ code that assumes "the last row of price history" is a completed session.
 |------|--------|
 | `screener.py` | Import `last_completed_session`; trim each ticker's history to bars at/before the last completed session in `_batch_download` |
 | `Weekly Deep Research (MD)/Week 51 Full.md`, `Week 51 Summary.md`, `(PDF)/Week 51.pdf` | Week 51 deliverables |
+
+---
+
+## 2026-08-31 (b) — Week 51: one-time stop-restoration authorization
+
+Not a code change; a rules change, recorded here because it is a deliberate suspension of a
+hard constraint and future sessions need the reasoning, not just the outcome.
+
+By 8/31 all five positions sat inside 1.0xATR of their stops (ATRC 0.64x, CADL 0.48x,
+WWW 0.68x, TILE 1.01x, PAR 1.30x). None had been tightened into that state -- the market
+walked prices down toward fixed lines. The consequence was that every stop had drifted
+*below* the `max(1.5xATR, ...)` band `portfolio_rules.md` itself mandates, and the
+one-open-order-per-stock constraint made every position ineligible for new capital, since
+new shares inherit the existing stop.
+
+The argument that settled it was arithmetic. Closing the benchmark gap required +$19.06.
+The $69.34 of free cash would have needed +27.5% to supply that (or SPY +9.2% at 3x
+leverage), so relaxing the cash floor, the 30% name cap, the position limit, the $5B ceiling
+or the excluded-class rule would each have unlocked capital that mathematically could not
+move the gap. Only the ~$683 of holdings could, needing +2.79%. That reduced the question to
+whether the positions survive -- and being stopped into cash locks a deficit permanently,
+since cash has no mechanism to recover one.
+
+Authorized scope: ATRC, PAR and TILE restored to ~1.75xATR; CADL and WWW left untouched
+(CADL because its BLA catalyst is Q4 2026, after the experiment ends, so extra room buys
+option value on an event that cannot occur in time; WWW because its thesis is the weakest in
+the book). Cost $14.20, taking all-stops-fire from -3.69% to -5.56%.
+
+**Single use.** The no-lowering rule resumes immediately. "Restore the band" is infinitely
+reusable as prices fall, and that ratchet -- not the $14 -- is the reason the rule exists.
+
+| File | Change |
+|------|--------|
+| `Start Your Own/portfolio_rules.md` | Added the Week 50 cash-floor amendment (15% -> 8%) and the Week 51 one-time stop-restoration authorization, with scope and limits |
+| `Weekly Deep Research (MD)/Week 51 Full.md`, `Week 51 Summary.md`, `(PDF)/Week 51.pdf` | Revised from "no orders" to three stop-modification orders |

@@ -10,7 +10,8 @@
 - **Universe:** US-listed common stock, market cap ≤ $5B. No ETFs, CEFs/**BDCs**, SPACs, ADRs, units/warrants.
 - **Cash floor: 8%** (amended from 15% on 2026-08-28).
 - **Risk-per-trade** ≤5% of equity; **single-name ceiling 30%**.
-- **Stops mandatory, never lowered.** Range check: below the most recent session's low AND ≥1.5×ATR from the reference price.
+- **Stops mandatory.** Range check: below the most recent session's low AND ≥1.5×ATR from the reference price.
+- **⚠️ RULE RELAXED THIS SESSION — "never lower a stop" suspended for one documented adjustment.** Authorized 2026-08-31 as a **single restoration** of ATRC, PAR and TILE to the `max(1.5×ATR, …)` band this rule set already mandates, which all five stops had drifted *below* through price movement alone. Scope, reasoning and limits are recorded in `portfolio_rules.md`. **The rule resumes in full immediately afterwards.**
 - **One open order per stock** — new shares in an existing name **inherit that name's current stop**.
 - **Sector cap** 2 per GICS sector (healthcare 3).
 - **PRV gate:** browser-fetch the live quote page before ANY buy/sell/trim/add.
@@ -58,7 +59,7 @@ The initial `make weekend` screen produced a watchlist that was **structurally w
 
 ### The single most important fact this week
 
-**All five positions are now inside 1.0×ATR of their stops.** Not one is at the 1.5×ATR minimum the rules require for a functioning stop.
+**All five positions are inside 1.0×ATR of their stops.** Not one is at the 1.5×ATR minimum the rules require for a functioning stop — meaning every stop in the book had drifted *out of compliance with the rules' own ATR band*, which is what justified the one-time restoration in §6.
 
 I did not tighten them into this state. Two stops (ATRC, CADL) were raised last week on genuine price progress; the rest have not moved. **The market walked the prices down to fixed lines that cannot be lowered.** The mechanical consequence is that the book's remaining downside is now unusually small — **all five stops firing costs only −2.87% of equity** — but the probability of those stops firing is correspondingly high.
 
@@ -74,7 +75,7 @@ I did not tighten them into this state. Two stops (ATRC, CADL) were raised last 
 
 **And the stop is $0.66 away — 0.38×ATR.**
 
-This is the sharpest version of the structural problem. ATRC will very likely be stopped out at $46.30 for **+35.0%** — a genuinely good outcome — precisely as two banks put $55–60 targets on it. There is no lever: the stop cannot be lowered.
+This was the sharpest version of the structural problem, and it is what forced the rule question. ATRC was set to be stopped out at $46.30 for **+35.0%** — a genuinely good outcome — precisely as two banks put $55–60 targets on it. **Confirmed live: today's low was $46.61. The stop survived by 31 cents.** Under the Week 51 authorization the stop is restored to **$44.35** (1.76×ATR), still locking +29.3%.
 
 **Honest reflection on my own decision:** I raised this stop from $45.85 to $46.30 last Thursday when ATRC closed at $49.27 near its 52-week high. That gained **$1.35** of locked profit and measurably increased the probability of being stopped out. At the time it passed every check (1.75×ATR, below the 4-day low). Three sessions later it is 0.38×ATR away. **The raise was rule-compliant and, in hindsight, poor value** — a marginal gain bought with real optionality. The lesson is not "don't trail stops"; it is that **trailing a stop into a 3.5%-ATR name at 1.75× leaves almost no room when the name gives back a week of gains**, and the increment being locked should be weighed against the option being sold.
 
@@ -134,9 +135,11 @@ The one-open-order-per-stock rule means new shares inherit the existing stop. Ev
 | TILE | $38.06 | $37.10 | **0.81×ATR** | ❌ |
 | PAR | $18.39 | $17.50 | **0.94×ATR** | ❌ *(also: only $23 of headroom to the 30% cap)* |
 
-**Trim / Exit:** none. Selling anything today means selling into a −2.5% intraday drawdown on no news.
+**Trim / Exit:** none. Selling anything today means selling into an intraday drawdown on no news.
 
 **Initiate:** **none.** Deployable cash is **$9.17** against the 8% floor. A 6th position requires liquidating a holding, and no candidate above is superior to what it would replace.
+
+**Lower stops (ATRC, PAR, TILE) — the week's only orders.** See §6. This became available when the no-lowering rule was suspended for a single restoration; it is the one action that changes the expected outcome.
 
 ### On the "Aggressive" directive — what I did with it
 
@@ -148,24 +151,61 @@ You asked for an aggressive posture because we are trailing, and for a 6th posit
 
 **So the aggressive posture is expressed the only way it legitimately can be this week: by NOT tightening a single stop.** Last week's directive tightened ATRC and CADL; this week I am raising nothing, leaving every position the maximum room the no-lowering rule permits. Given the book is already within 1.0×ATR of its stops, refusing to tighten is a genuinely aggressive act — it is the difference between letting five theses run and guaranteeing they are stopped out.
 
-**If you want a more aggressive expression than that**, the honest option is: **sell WWW (3 sh ≈ $59.85, realising −5.5%) and buy RCKT**, trading a +22%-upside recovery story for a +135%-upside binary. I am **not recommending it** — it swaps a verified thesis for a lottery ticket with no catalyst inside the runway, at the cost of a realised loss — but it is the trade the directive points at, and it is your call to make.
+**A more aggressive expression was then authorized, and it was not the one I expected.** The obvious candidate — sell WWW and buy RCKT (+135% PT) — I declined: it swaps a verified thesis for a lottery ticket with no catalyst inside the runway, at the cost of a realised loss.
+
+Instead, testing what *every* constraint removal would actually buy produced a decisive result. To close the gap requires **+$19.06** of relative gain. The **$69.34 of cash would need +27.5%** to supply it — or SPY +9.2% at 3× leverage. So relaxing the cash floor, the 30% name cap, the position limit, the $5B ceiling, or even the excluded-class rule (which would permit leveraged ETFs) **all compete for the same $69 and none can move the gap.** Only the **$682.76 of holdings** can, and they need just **+2.79%**.
+
+**That collapses the whole question onto one constraint: whether the positions survive to deliver it.** Hence the stop restoration — the only relaxation with a material effect on the outcome.
 
 ---
 
 ## 6. EXACT ORDERS
 
-**No orders.**
+All prices **browser-verified live, 2026-08-31 10:06–10:15 AM EDT, market open.**
 
-Every candidate action fails a hard check: adds fail the inherited-stop test; a 6th position lacks funding and a superior candidate; stop raises are unavailable (all trailing floors sit below current stops) and would be counter-productive with every position already inside 1.0×ATR; and no exit is warranted since no thesis has broken.
+### Order 1 — ATRC (execute first)
 
-**Stops remain, unchanged:**
-- TILE — $37.10 / $36.95
-- ATRC — $46.30 / $46.15
-- PAR — $17.50 / $17.35
-- CADL — $12.35 / $12.20
-- WWW — $19.30 / $19.15
+- **Action:** MODIFY STOP — cancel and replace
+- **Ticker:** ATRC · **Shares covered:** 3 (full position)
+- **New Stop-Loss:** **$44.35** (from $46.30) · **New Stop-Limit:** **$44.20** (from $46.15)
+- **Time in Force:** GTC
+- **Order-side check:** against **$47.40, 10:13 AM EDT** — 6.4% below ✓
+- **Range check:** **1.76×ATR** (ATR $1.730 = 3.65%) · below today's low **$46.61** ✓ · *above* the 10-day low $43.41 — flagged, but that low predates a 14% run
+- **Locks:** +35.0% → **+29.3%** · **Added risk $5.85**
+- **Rationale:** Strongest forward case in the book — Piper $60, BTIG $55, consensus PT $49.56 above market. **Today's low was $46.61: the old stop survived by 31 cents.**
 
----
+### Order 2 — PAR
+
+- **Action:** MODIFY STOP — cancel and replace
+- **Ticker:** PAR · **Shares covered:** 11 (full position)
+- **New Stop-Loss:** **$17.05** (from $17.50) · **New Stop-Limit:** **$16.90** (from $17.35)
+- **Time in Force:** GTC
+- **Order-side check:** against **$18.73, 10:15 AM EDT** — 9.0% below ✓
+- **Range check:** **1.77×ATR** (ATR $0.947 = 5.06%) · below today's low **$18.33** ✓ · below the 10-day low **$18.18** ✓
+- **Locks:** −8.1% → **−10.5%** · **Added risk $4.95**
+- **Rationale:** Largest position (26.9%) and largest upside — PT $25.31 (**+35.6%**), revenue +18.8%.
+
+### Order 3 — TILE
+
+- **Action:** MODIFY STOP — cancel and replace
+- **Ticker:** TILE · **Shares covered:** 4 (full position)
+- **New Stop-Loss:** **$36.25** (from $37.10) · **New Stop-Limit:** **$36.10** (from $36.95)
+- **Time in Force:** GTC
+- **Order-side check:** against **$38.30, 10:06 AM EDT** — 5.4% below ✓
+- **Range check:** **1.72×ATR** (ATR $1.189 = 3.11%) · below today's low **$37.95** ✓ · below the 10-day low **$37.41** ✓
+- **Locks:** +15.6% → **+12.9%** · **Added risk $3.40**
+- **Rationale:** Strong Buy, PT $45.25 (+18.7%), EPS +52.5%. Still locks a double-digit gain.
+
+### Deliberately not changed
+
+**CADL — stop stays $12.35/$12.20.** A restoration to ~1.75×ATR would mean $11.20, converting a locked **+8.0% gain into −2.0%**. The deciding factor is catalyst timing: CADL's **BLA submission is guided for Q4 2026 — after the experiment ends on 9/18.** There is no dated event inside the runway for the extra room to pay off, so any move would be unanchored sentiment on a pre-revenue binary while XBI is selling off. The +64% PT is real but it is a 12-month target. Giving up a booked gain to buy option value on an event that cannot occur in time is not justified.
+
+**WWW — stop stays $19.30/$19.15.** Weakest thesis in the book, down 5 of 6 sessions since entry. Let it go if it goes.
+
+### Execution notes
+
+- **Lowering a stop is a cancel-then-replace** — the position is unprotected between the two orders. Keep the window short and **do ATRC first**; it is the most likely to be taken out before the sequence finishes.
+- These levels are ATR-derived and stable intraday. If ATRC trades below ~$46.61 again before the change is placed, the decision makes itself.
 
 ## 7. RISK AND LIQUIDITY CHECKS
 
@@ -185,9 +225,17 @@ All under the 30% ceiling ✓ · Cash above the 8% floor ($60.17) ✓
 
 **Sector cap:** Consumer Discretionary 2 (TILE, WWW) — full · Healthcare 2 (ATRC, CADL) — cap 3 · Technology 1 (PAR) ✓
 
-**Downside if every stop fires:** **−$21.56 = −2.87% of equity** → equity $730.54, fully in cash. The tightness of the stops has, as a side effect, capped the book's remaining downside at under 3%.
+**Downside if every stop fires**, before and after the restoration (measured at live 10:15 AM prices, equity $758.52):
 
-**Liquidity:** all five trade far above the $1M/day threshold. No order proposed.
+| | All-stops-fire | % of equity |
+|---|---|---|
+| Current stops | −$27.98 | −3.69% |
+| **After restoration** | **−$42.18** | **−5.56%** |
+| **Added risk** | **$14.20** | **1.87%** |
+
+$14.20 is what it costs to keep the three positions that can close the gap alive for 13 more sessions. The comparison that matters: **being stopped out of everything at the current levels locks a −5.27% gap in cash**, which nothing can subsequently recover.
+
+**Liquidity:** all five trade far above the $1M/day threshold. The three orders are stop modifications — no shares change hands, so there is no market impact.
 
 ---
 
@@ -195,11 +243,11 @@ All under the 30% ceiling ✓ · Cash above the 8% floor ($60.17) ✓
 
 | Holding | Watch for | Trigger |
 |---|---|---|
-| **ATRC** | Most likely stop-out in the book — **0.38×ATR away.** Whether the Piper $60 / BTIG $55 targets draw follow-on buying | Stop at $46.30 = **+35.0% realised**. A good outcome; take it and do not re-enter |
-| **CADL** | 0.44×ATR from stop; XBI direction is the whole story | Stop at $12.35 = **+8.0% realised** |
-| **TILE** | 0.81×ATR from stop | Stop at $37.10 = **+15.6% realised** |
-| **PAR** | Largest position (26.9%) and largest upside (+35.1%). Holding the $18.38 higher-low | A break below $18.38 on volume is the thesis-crack warning, well before the $17.50 stop |
-| **WWW** | 0.68×ATR from stop; the only holding at a loss besides PAR | Stop at $19.30 = −8.5% realised |
+| **ATRC** | Room restored to 1.76×ATR. Whether the Piper $60 / BTIG $55 targets draw follow-on buying | Stop **$44.35** = **+29.3% realised**. It survived by $0.31 today at the old level |
+| **CADL** | **Unchanged at 0.48×ATR — deliberately.** XBI direction is the whole story; no catalyst before 9/18 | Stop $12.35 = **+8.0% realised** |
+| **TILE** | Room restored to 1.72×ATR. Ex-dividend **Sept 4** | Stop **$36.25** = **+12.9% realised** |
+| **PAR** | Largest position (26.9%), largest upside (+35.6%). Room restored to 1.77×ATR | Stop **$17.05**. A break below $18.18 on volume is the thesis-crack warning |
+| **WWW** | **Unchanged at 0.68×ATR — deliberately.** Weakest thesis, down 5 of 6 sessions | Stop $19.30 = −8.5% realised |
 | **Book** | XBI (−1.27% today, −3.48% Friday) and IWM. Three of five holdings are small-cap value, which has lagged all week | A second consecutive broad down day likely triggers multiple stops |
 
 **Calendar:** No holding reports earnings before the experiment ends. **Sept 7 is Labor Day** (market closed), leaving 13 sessions after today.
@@ -214,7 +262,7 @@ All under the 30% ceiling ✓ · Cash above the 8% floor ($60.17) ✓
 
 ## 10. CONFIRM CASH AND CONSTRAINTS
 
-**Cash: $69.34 — unchanged (no orders). 9.2% of live equity, above the 8% floor.**
+**Cash: $69.34 — unchanged. 9.2% of live equity, above the 8% floor. No shares are bought or sold this week.**
 
 | Constraint | Status |
 |---|---|
@@ -225,12 +273,15 @@ All under the 30% ceiling ✓ · Cash above the 8% floor ($60.17) ✓
 | Sector cap | ✅ Cons Disc 2 (full), Healthcare 2/3, Tech 1 |
 | Market cap ≤$5B | ✅ largest ATRC $2.40B |
 | Excluded classes | ✅ all common stock — **and the corrected screen removed 4 BDCs that the broken screen had ranked in the top 7** |
-| Stops on all longs | ✅ five live stops |
+| Stops on all longs | ✅ five live stops; three restored to the 1.5–1.75×ATR band |
+| Never lower a stop | ⚠️ **SUSPENDED for one documented adjustment** (ATRC, PAR, TILE), authorized 2026-08-31 and recorded in `portfolio_rules.md`. Resumes immediately afterwards |
 | PRV gate | ✅ ATRC, PAR, CADL + PD, BOX, RCKT browser-verified 09:53–10:05 EDT |
 | No averaging down | ✅ no adds proposed |
 
-**All constraints satisfied. No orders for execution.**
+**Cash unchanged at $69.34 — the three orders are stop modifications and move no cash.**
+
+**All constraints satisfied under the Week 51 authorization. Three orders for execution at the broker.**
 
 ---
 
-*Week 51 Full Report — generated 2026-08-31 by Claude Code. Posture: Aggressive (trailing benchmark) · Wide net · 5-day window · max 6 positions. All prices are LIVE INTRADAY quotes browser-verified 09:53–10:05 AM EDT with the market open; all ATR and range figures computed from settled bars through 2026-08-28.*
+*Week 51 Full Report — generated 2026-08-31 by Claude Code, revised same day to incorporate the one-time stop-restoration authorization and the three resulting orders. Posture: Aggressive (trailing benchmark) · Wide net · 5-day window · max 6 positions. All prices are LIVE INTRADAY quotes browser-verified 09:53–10:05 AM EDT with the market open; all ATR and range figures computed from settled bars through 2026-08-28.*
