@@ -4,13 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Article to Speech</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
+        fieldset { margin-bottom: 1rem; padding: 1rem; }
+        input[type="text"], input[type="file"] { width: 100%; padding: 0.5rem; box-sizing: border-box; }
+        .error { color: #b00020; background: #fdecea; padding: 0.75rem; border-radius: 4px; margin-bottom: 1rem; }
+        button { padding: 0.6rem 1.2rem; font-size: 1rem; cursor: pointer; }
+    </style>
 </head>
 <body>
     <h1>Convert Article to Speech</h1>
-    <form action="/" method="POST">
-        <label for="url">Article URL:</label><br><br>
-        <input type="text" id="url" name="url" placeholder="Enter article URL"><br><br>
-        <input type="submit" value="Convert to Speech">
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <fieldset>
+            <legend>From URL</legend>
+            <input type="text" id="url" name="url" placeholder="https://example.com/article">
+        </fieldset>
+
+        <fieldset>
+            <legend>Or upload a PDF</legend>
+            <input type="file" id="pdf" name="pdf" accept="application/pdf">
+        </fieldset>
+
+        <button type="submit">Convert to Speech</button>
     </form>
 </body>
 </html>

@@ -461,3 +461,33 @@ switched to `_input(`.
 | File | Change |
 |------|--------|
 | `trading_script.py` | `_STDIN_EOF` + `_input()` helper; 27 call sites migrated; EOF guards on the manual-trade, stop-fill-confirm, and injection-amount loops |
+
+---
+
+## 2026-08-31 — Screener: drop unsettled intraday bars
+
+Running `make weekend` during market hours produced a watchlist that was wrong in a way
+that did not look wrong. Every one of the 15 candidates showed a **volume ratio of
+0.10–0.38x** (the same screen pre-open the prior week produced 1.2–8.3x), and the top 7
+contained **four BDCs** — an explicitly excluded security class — alongside a cluster of
+mortgage REITs.
+
+Cause: `_calculate_signals` computes `volume_ratio = volume.iloc[-1] / volume.tail(20).mean()`.
+With the market open, `iloc[-1]` is the **current, incomplete** daily bar — roughly twenty
+minutes of trading measured against a full 20-day average. That collapsed the volume factor
+for every genuine momentum name, letting low-volatility yield vehicles float to the top on
+the remaining factors. `momentum_20d`, `above_sma20` and `bb_width` were likewise reading an
+intraday price instead of a close.
+
+Fixed at the fetch boundary in `_batch_download` so every downstream signal sees settled
+bars only, reusing `last_completed_session()` from `trading_script.py` rather than keeping a
+second copy of the calendar logic. Re-running produced a completely different universe
+(volume ratios 1.0–2.8x, no BDC cluster) that shares exactly one ticker with the broken one.
+
+Note this is the same class of defect as the weekend staleness gate fixed on 2026-08-24:
+code that assumes "the last row of price history" is a completed session.
+
+| File | Change |
+|------|--------|
+| `screener.py` | Import `last_completed_session`; trim each ticker's history to bars at/before the last completed session in `_batch_download` |
+| `Weekly Deep Research (MD)/Week 51 Full.md`, `Week 51 Summary.md`, `(PDF)/Week 51.pdf` | Week 51 deliverables |

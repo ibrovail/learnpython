@@ -1,64 +1,87 @@
-from flask import Flask, request, render_template, send_file
+import os
+from uuid import uuid4
+
 import boto3
 import requests
 from bs4 import BeautifulSoup
-import os
+from flask import Flask, render_template, request, send_file
+from pypdf import PdfReader
+
+AWS_REGION = "us-west-2"
+VOICE_ID = "Joanna"
+OUTPUT_FORMAT = "mp3"
+POLLY_CHUNK_SIZE = 3000
+OUTPUT_DIR = "static"
+MAX_UPLOAD_MB = 20
+REQUEST_TIMEOUT = 15
+USER_AGENT = "Mozilla/5.0 (compatible; ArticleToSpeech/1.0)"
 
 app = Flask(__name__)
+app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_MB * 1024 * 1024
 
-# Configure AWS Polly with region
-polly_client = boto3.Session().client('polly', region_name='us-west-2')  # Specify your region
+polly_client = boto3.Session().client("polly", region_name=AWS_REGION)
 
-# Function to scrape article content from a URL
+
 def get_article_content(url):
-    response = requests.get(url)
-    soup = BeautifulSoup(response.content, 'html.parser')
-    article_text = ' '.join([p.text for p in soup.find_all('p')])
-    return article_text
+    response = requests.get(
+        url, timeout=REQUEST_TIMEOUT, headers={"User-Agent": USER_AGENT}
+    )
+    response.raise_for_status()
+    soup = BeautifulSoup(response.content, "html.parser")
+    return " ".join(p.get_text(strip=True) for p in soup.find_all("p"))
 
-# Function to split the text into chunks of 3000 characters or less
-def split_text(text, max_length=3000):
-    return [text[i:i+max_length] for i in range(0, len(text), max_length)]
 
-# Convert article content to speech using Polly
-def text_to_speech(text, voice_id='Joanna', output_format='mp3'):
-    # Split the text into smaller chunks
-    text_chunks = split_text(text)
-    
-    # Create the static/ directory if it doesn't exist
-    output_dir = 'static'
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+def extract_pdf_text(file_storage):
+    reader = PdfReader(file_storage)
+    return "\n".join((page.extract_text() or "") for page in reader.pages).strip()
 
-    # Prepare the output file path
-    output_path = os.path.join(output_dir, 'output.mp3')
 
-    # Remove the output file if it already exists
-    if os.path.exists(output_path):
-        os.remove(output_path)
-    
-    # Write the audio chunks to the output file
-    with open(output_path, 'ab') as output_file:
-        for chunk in text_chunks:
+def split_text(text, max_length=POLLY_CHUNK_SIZE):
+    return [text[i : i + max_length] for i in range(0, len(text), max_length)]
+
+
+def text_to_speech(text):
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    output_path = os.path.join(OUTPUT_DIR, f"{uuid4().hex}.mp3")
+
+    with open(output_path, "wb") as output_file:
+        for chunk in split_text(text):
             response = polly_client.synthesize_speech(
-                Text=chunk,
-                OutputFormat=output_format,
-                VoiceId=voice_id
+                Text=chunk, OutputFormat=OUTPUT_FORMAT, VoiceId=VOICE_ID
             )
-            output_file.write(response['AudioStream'].read())
-    
+            output_file.write(response["AudioStream"].read())
+
     return output_path
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        article_url = request.form['url']
-        # Scrape article content
-        article_text = get_article_content(article_url)
-        # Convert to speech using Polly
-        audio_file = text_to_speech(article_text)
-        return send_file(audio_file, as_attachment=True)
-    return render_template('index.html')
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if request.method != "POST":
+        return render_template("index.html")
+
+    try:
+        pdf_file = request.files.get("pdf")
+        url = (request.form.get("url") or "").strip()
+
+        if pdf_file and pdf_file.filename:
+            if not pdf_file.filename.lower().endswith(".pdf"):
+                return render_template("index.html", error="File must be a PDF."), 400
+            text = extract_pdf_text(pdf_file)
+        elif url:
+            text = get_article_content(url)
+        else:
+            return render_template("index.html", error="Provide a URL or a PDF."), 400
+
+        if not text:
+            return render_template("index.html", error="No text could be extracted."), 400
+
+        audio_file = text_to_speech(text)
+        return send_file(audio_file, as_attachment=True)
+    except requests.RequestException as e:
+        return render_template("index.html", error=f"Could not fetch URL: {e}"), 502
+    except Exception as e:
+        return render_template("index.html", error=f"Conversion failed: {e}"), 500
+
+
+if __name__ == "__main__":
+    app.run(debug=os.environ.get("FLASK_DEBUG") == "1")

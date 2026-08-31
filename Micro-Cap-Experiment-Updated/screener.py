@@ -19,6 +19,8 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 
+from trading_script import last_completed_session
+
 # ---------------------------------------------------------------------------
 # Universe fetching (Finviz → cache fallback)
 # ---------------------------------------------------------------------------
@@ -287,6 +289,21 @@ def _batch_download(tickers: list[str], start: datetime, end: datetime) -> dict[
         done = min(i + BATCH_SIZE, len(tickers))
         if done % 100 == 0 or done == len(tickers):
             print(f"    ... {done}/{len(tickers)} tickers fetched")
+
+    # Drop any bar for a session that has not closed yet. Running during market
+    # hours otherwise feeds a PARTIAL day into every signal: `volume.iloc[-1]`
+    # becomes a few minutes of trading against a 20-day average, collapsing
+    # volume_ratio (2026-08-31: every candidate scored 0.10-0.38x, versus
+    # 1.2-8.3x on the same screen run pre-open), and momentum/SMA/BBW all read
+    # off an intraday price rather than a close.
+    cutoff = last_completed_session()
+    for tk, hist in list(result.items()):
+        trimmed = hist[hist.index.tz_localize(None) <= cutoff] if hist.index.tz is not None \
+            else hist[hist.index <= cutoff]
+        if trimmed.empty:
+            result.pop(tk)
+        else:
+            result[tk] = trimmed
 
     return result
 
