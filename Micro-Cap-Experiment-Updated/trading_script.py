@@ -1337,6 +1337,30 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
     benchmarks = load_benchmarks()  # reads tickers.json or returns defaults
     benchmark_entries = [{"ticker": t} for t in benchmarks]
 
+    # Prior-session closes taken from our own ledger. The vendor intermittently
+    # omits a session for individual tickers, and `iloc[-2]` then silently reaches
+    # back an extra day and reports a % change against the wrong session with no
+    # error. 2026-08-31: TILE and ATRC had no 8/28 bar (CADL, WWW and SPY did),
+    # which reported CADL as -4.95% on a day it closed unchanged and WWW as
+    # -0.15% on a day it fell -3.00%. The CSV records what each holding actually
+    # closed at, so prefer it whenever the vendor's second-to-last bar is not the
+    # session we expect.
+    prev_close_map: dict[str, float] = {}
+    expected_prev: pd.Timestamp | None = None
+    try:
+        _hist = pd.read_csv(PORTFOLIO_CSV)
+        _hist["Date"] = pd.to_datetime(_hist["Date"], format="mixed", errors="coerce")
+        _prior = _hist[(_hist["Ticker"].astype(str).str.upper() != "TOTAL")
+                       & (_hist["Date"] < pd.Timestamp(end_d))]
+        if not _prior.empty:
+            expected_prev = _prior["Date"].max().normalize()
+            for _, _r in _prior[_prior["Date"] == expected_prev].iterrows():
+                _px = pd.to_numeric(_r.get("Current Price"), errors="coerce")
+                if pd.notna(_px) and float(_px) > 0:
+                    prev_close_map[str(_r["Ticker"]).upper()] = float(_px)
+    except Exception:
+        prev_close_map, expected_prev = {}, None
+
     for stock in portfolio_dict + benchmark_entries:
         ticker = str(stock["ticker"]).upper()
         try:
@@ -1348,6 +1372,34 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
             price = float(data["Close"].iloc[-1])
             last_price = float(data["Close"].iloc[-2])
             volume = int(data["Volume"].iloc[-1])
+
+            prior_bar = pd.Timestamp(data.index[-2])
+            prior_bar = (prior_bar.tz_localize(None) if prior_bar.tz is not None
+                         else prior_bar).normalize()
+            if expected_prev is not None and prior_bar != expected_prev:
+                if ticker in prev_close_map:
+                    logger.warning(
+                        "%s: vendor's prior bar is %s but the last recorded session is %s "
+                        "- using the ledger close $%.2f for %% change (was $%.2f)",
+                        ticker, prior_bar.date(), expected_prev.date(),
+                        prev_close_map[ticker], last_price)
+                    last_price = prev_close_map[ticker]
+                else:
+                    # Benchmarks and macro tickers have no ledger entry to fall back
+                    # on. If the expected session is present in the fetched frame at
+                    # another position, use it; otherwise the vendor genuinely dropped
+                    # it and the % change would be measured against the wrong day.
+                    idx = pd.DatetimeIndex(data.index)
+                    if idx.tz is not None:
+                        idx = idx.tz_localize(None)
+                    match = data.loc[idx.normalize() == expected_prev, "Close"]
+                    if not match.empty:
+                        last_price = float(match.iloc[-1])
+                    else:
+                        logger.warning(
+                            "%s: no bar for the expected prior session %s; %% change is "
+                            "measured against %s and may be misleading",
+                            ticker, expected_prev.date(), prior_bar.date())
 
             percent_change = ((price - last_price) / last_price) * 100
             role = _get_ticker_role(ticker, holdings_set)

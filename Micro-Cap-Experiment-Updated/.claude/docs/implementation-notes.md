@@ -526,3 +526,37 @@ reusable as prices fall, and that ratchet -- not the $14 -- is the reason the ru
 |------|--------|
 | `Start Your Own/portfolio_rules.md` | Added the Week 50 cash-floor amendment (15% -> 8%) and the Week 51 one-time stop-restoration authorization, with scope and limits |
 | `Weekly Deep Research (MD)/Week 51 Full.md`, `Week 51 Summary.md`, `(PDF)/Week 51.pdf` | Revised from "no orders" to three stop-modification orders |
+
+---
+
+## 2026-08-31 (c) — % change anchored to the ledger, not the vendor's second-to-last bar
+
+The daily summary reported wrong day-over-day percentages for three of five holdings:
+CADL as **-4.95% on a day it closed exactly unchanged**, WWW as -0.15% when it fell -3.00%,
+TILE as +0.08% when it fell -1.71%, ATRC as -1.87% when it fell -0.39%. All five *closes*
+were correct; only the percentages were wrong, so the CSV, equity and P&L were unaffected.
+
+Cause: `% change` was computed as `data["Close"].iloc[-2]` — the vendor's second-to-last
+bar, whatever date that happens to be. yfinance returned **no 2026-08-28 bar for TILE, ATRC
+or CADL** on that fetch, although 8/28 was a confirmed NYSE session and SPY/WWW did have it,
+so `iloc[-2]` silently reached back to 8/27. Nothing raised an error.
+
+The gap is also **not stable across requests**: two consecutive runs of the same script
+returned SPY at -0.53% then -0.30%, and IWM at -0.62% then -1.96%, because a different set
+of tickers was missing the 8/28 bar each time.
+
+Fix: for holdings, the prior close now comes from `chatgpt_portfolio_update.csv` — our own
+system of record, browser-confirmed when written — whenever the vendor's second-to-last bar
+is not the last session we recorded. For benchmarks and macro tickers, which have no ledger
+entry, the expected session is looked up by date within the fetched frame; if it is genuinely
+absent a warning is logged rather than silently measuring against the wrong day. Re-running
+reproduces all five browser-verified percentages exactly and the benchmarks are stable.
+
+This is the third defect of the same family, after the weekend staleness gate (08-24) and the
+screener partial-bar bug (08-31a): **code that assumes a positional index into vendor price
+history corresponds to the calendar session it ought to.** Prefer date-based lookups and our
+own recorded values over `iloc[-1]` / `iloc[-2]`.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | Build `prev_close_map` / `expected_prev` from the portfolio CSV; use them in the price/volume loop when the vendor's prior bar is not the expected session; date-match fallback plus warning for benchmarks |
