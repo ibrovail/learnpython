@@ -811,6 +811,15 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
 
         if stop_triggered:
             default_exec = stop_lim if stop_lim and stop_lim > 0 else stop
+            # A sell stop-limit executes at the limit price OR BETTER, so it can
+            # never fill below the session's low. When the limit sits under the
+            # low the order still filled -- somewhere between the low and the
+            # trigger -- and defaulting to the limit would book a price the stock
+            # never traded at. 2026-09-01: WWW's $19.15 limit was logged against a
+            # $19.24 low, overstating the loss by up to $0.45 across 3 shares.
+            limit_unreachable = default_exec < l
+            if limit_unreachable:
+                default_exec = float(l)
             print(f"\n--- STOP TRIGGERED: {ticker} ---")
             print(f"  Stop trigger   : ${stop:.2f}")
             if stop_lim != stop:
@@ -818,6 +827,12 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
             else:
                 print(f"  Stop-limit     : not set (defaulting to stop ${stop:.2f})")
             print(f"  Today's range  : ${l:.2f} - ${h:.2f}  |  Open: ${o:.2f}")
+            if limit_unreachable:
+                print(f"  NOTE: the stop-limit ${stop_lim:.2f} is BELOW today's low ${l:.2f}, so the")
+                print(f"        stock never traded there. A sell limit fills at its price or better,")
+                print(f"        so the real fill is between ${l:.2f} and the ${stop:.2f} trigger.")
+                print(f"        Defaulting to ${default_exec:.2f} (the low) -- enter the broker's")
+                print(f"        actual fill if you have it.")
             while True:
                 confirm = _input(
                     f"Did {ticker} fill at the stop-limit ${default_exec:.2f}? "

@@ -560,3 +560,29 @@ own recorded values over `iloc[-1]` / `iloc[-2]`.
 | File | Change |
 |------|--------|
 | `trading_script.py` | Build `prev_close_map` / `expected_prev` from the portfolio CSV; use them in the price/volume loop when the vendor's prior bar is not the expected session; date-match fallback plus warning for benchmarks |
+
+---
+
+## 2026-09-01 — Stop-fill default could book a price the stock never traded at
+
+WWW's stop fired: trigger $19.30, stop-limit $19.15, session range $19.24-$20.11. The script
+proposed — and the piped run accepted — a fill of **$19.15**, which is below the day's low.
+The stock never traded there.
+
+A sell stop-limit executes at its limit price *or better*. Once the $19.30 trigger was hit,
+the resting sell limit at $19.15 met a market around $19.24-19.30 and filled above the limit.
+Defaulting to the limit therefore overstated the loss by up to $0.45 across 3 shares
+(-$5.85 logged vs -$5.58 to -$5.40 realistic).
+
+Fix: when the stop-limit sits below the session low, the default fill becomes the low and the
+prompt explains that the limit was unreachable and the true fill lies between the low and the
+trigger, inviting the broker's actual number. The default can no longer be a price outside
+the day's range.
+
+Related: this run also exercised the `_input()` EOF guard added 2026-08-24 — the piped input
+ran out at the fill-confirmation prompt, and the run completed the portfolio save instead of
+aborting mid-write.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | `limit_unreachable` check in the stop-trigger branch; default fill clamped to the session low with an explanatory note |
