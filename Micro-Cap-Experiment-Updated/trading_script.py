@@ -838,7 +838,21 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
                     f"Did {ticker} fill at the stop-limit ${default_exec:.2f}? "
                     f"Enter 'y' to confirm, or type the actual fill price: "
                 ).strip().lower()
-                if confirm == "y" or _STDIN_EOF:
+                if _STDIN_EOF:
+                    # This prompt exists so the BROKER's real fill enters the ledger.
+                    # Auto-answering it from an exhausted pipe books a guessed trade
+                    # price as fact -- which is how WWW came to be logged at $19.15
+                    # on 2026-09-01, below that session's $19.24 low. Refuse, before
+                    # anything is written for this ticker, and say how to proceed.
+                    raise SystemExit(
+                        f"\n*** STOP TRIGGERED for {ticker} and no fill price was supplied. ***\n"
+                        f"    Trigger ${stop:.2f} | stop-limit ${stop_lim:.2f} | "
+                        f"session range ${l:.2f}-${h:.2f}\n"
+                        f"    Nothing has been written. Re-run and provide the broker's actual\n"
+                        f"    fill price at this prompt (pipe it, or run interactively).\n"
+                        f"    A fill price is a fact from the broker, not a default to assume."
+                    )
+                if confirm == "y":
                     exec_price = round(default_exec, 2)
                     break
                 try:

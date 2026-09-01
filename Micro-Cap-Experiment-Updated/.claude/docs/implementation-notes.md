@@ -586,3 +586,25 @@ aborting mid-write.
 | File | Change |
 |------|--------|
 | `trading_script.py` | `limit_unreachable` check in the stop-trigger branch; default fill clamped to the session low with an explanatory note |
+
+---
+
+## 2026-09-01 (b) — the stop-fill prompt must never be auto-answered
+
+Correcting the 2026-08-24 `_input()` EOF guard. That guard made every prompt degrade to an
+empty response once piped stdin ran out, so a run could finish and save instead of aborting
+mid-write. Applied to the stop-fill confirmation, it did something much worse than crash: it
+**answered, on the user's behalf, the one question whose answer is a fact only the broker
+has.** WWW was logged at $19.15 — the stop-limit — on a session whose low was $19.24.
+
+The prompt exists precisely so the real fill enters the ledger. It is now exempt from the EOF
+guard: on exhausted stdin it raises `SystemExit` with the trigger, limit and session range,
+before anything is written for that ticker, and states that the fill must be supplied.
+
+**Workflow rule that follows:** before running `run daily` with piped input, check whether any
+holding's stop sits inside the session's range. If one does, obtain the broker's fill price
+from the user *first* and pipe it — never let the prompt fall through to a default.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | Stop-fill confirmation raises `SystemExit` on EOF instead of accepting `default_exec`; other prompts keep the EOF degradation |
