@@ -64,6 +64,12 @@ required +2.79%, so the sole question worth acting on was whether those position
   the rule exists, and it is why this is bounded to one adjustment rather than a standing
   permission.
 
+**Superseded 2026-09-02.** This ad-hoc authorization has been replaced by two standing rules
+under *Risk Control* — the **anti-ratchet minimum** on raises and the **mechanical, once-per-
+position restoration**. A conviction-gated version was considered and **rejected**: conviction
+peaks on losers, regenerates at every new low, and would be certified by the same party that
+chose the position. The outcome of this Week 51 exception is graded honestly in that section.
+
 ---
 
 ## Budget
@@ -104,6 +110,63 @@ required +2.79%, so the sole question worth acting on was whether those position
 ## Risk Control
 
 - Maintain or set stop-losses on ALL long positions (default: max(1.5×ATR(14), 10% below entry)).
+- **Raising a stop — anti-ratchet minimum.** Do **not** raise a stop unless the raise is
+  **≥0.5×ATR(14)** *and* the new level still leaves **≥1.5×ATR** of room below the reference
+  price. Both conditions, every time.
+  - *Why:* small trailing raises bank trivial profit while measurably increasing stop-out
+    probability, and because a stop can never be lowered afterwards, the cost is permanent.
+    2026-08-27: ATRC's stop was raised $45.85 → $46.30 — **$1.35** of extra locked profit on
+    3 shares — and by 8/31 the position sat **0.38×ATR** from being stopped out of the book's
+    best thesis. The same session's report called the raise poor value while making it.
+  - A raise that fails either test is **declined, not reduced**. Wait for the price to advance
+    enough that a qualifying raise exists.
+
+- **Stop restoration — mechanical, once per position.** If a stop comes to sit **below
+  1.5×ATR(14)** of the current price **through price movement alone** — never through
+  tightening — it may be reset **once per position, for the life of the experiment**, to a
+  level computed at **1.75×ATR** below the reference price. Never lower than that formula,
+  never a second time.
+  - This is the **sole exception** to "never lower a stop," and it is deliberately mechanical:
+    it either drifted below the band or it did not. **Conviction, thesis strength, analyst
+    targets and unrealised P&L are explicitly NOT inputs.** The restored level comes from the
+    formula, not from judgment about the position.
+  - The restored level must still pass the standard **range check** (below the most recent
+    session's low). Where the formula and the range check disagree, the range check wins and
+    the level goes below the low.
+  - *Why conviction is excluded:* conviction peaks on losers. WWW carried a Buy rating and a
+    price target whose upside **widened from +16% to +23% as the stock fell** — it would have
+    scored *higher* on any conviction test at $19.73 than at entry, and a conviction gate
+    would have funded the entire slide to −8.6%. As price falls, both the ATR band and the
+    valuation case regenerate, so a discretionary version has no stopping point.
+  - **Honest record of the one time this was used** (Week 51, 2026-08-31, as an ad-hoc
+    suspension before this rule existed): of the three restorations, **two were unnecessary**
+    — ATRC's old $46.30 stop was never touched (min low $46.61) and PAR's $17.50 was never
+    approached (min low $18.28), together carrying **$10.80** of extra risk for nothing. The
+    third, TILE, did prevent a stop-out at $37.10 (+15.6%) but the position then traded to
+    $36.85 (+14.8%), i.e. **−$1.00**. Net effect through 2026-09-02: **−$1.00 realised against
+    $14.20 of additional risk carried.** The reasoning was sound; the outcome was not. Treat
+    this exception as a narrow safety valve, not a tool.
+
+- **Anti-ratchet, back-tested against every raise actually made** (Aug 24 – Sep 2). It blocks
+  the churn and permits the substance, which is the whole intent:
+
+  | Date | Raise | Size | Room left | Verdict |
+  |---|---|---|---|---|
+  | 08-24 | ATRC $44.20→$45.85 | 0.98×ATR | 1.86×ATR | allowed |
+  | 08-24 | PAR $16.50→$17.50 | 0.98×ATR | 1.99×ATR | allowed |
+  | 08-25 | CADL $12.00→$12.19 | 0.25×ATR | 1.88×ATR | **blocked** |
+  | 08-27 | ATRC $45.85→$46.30 | 0.26×ATR | 1.75×ATR | **blocked** |
+  | 08-27 | CADL $12.19→$12.35 | 0.18×ATR | 1.61×ATR | **blocked** |
+  | 09-02 | ATRC $44.35→$48.50 | 2.29×ATR | 2.25×ATR | allowed |
+
+  Had the rule been in force, ATRC would have entered 8/31 with a **$45.85** stop rather than
+  $46.30 — **0.90×ATR** from the price instead of 0.38×ATR. Still inside the band, so the
+  restoration would still have been available, but the position would never have come within
+  31 cents of being stopped out of the book's best thesis.
+
+- **Restoration used to date:** ATRC, PAR, TILE (all 2026-08-31). **None of the three is
+  eligible again.** CADL and WWW never used theirs.
+
 - **Binary event stop override:** for positions held through a date-certain binary catalyst (see definition in Entry Requirements), the stop-loss may be set at the nearest major technical support level (200-day SMA, prior selloff floor, key horizontal support) rather than the standard ATR/percentage formula, provided: (a) the wider stop still results in ≤5% portfolio risk (or ≤3.75% if the SMA waiver was used for entry), (b) the override rationale is documented in the weekly report, and (c) the override automatically expires when the event resolves — see post-catalyst reassessment.
 - **Position sizing (risk-per-trade):** size so that hitting the stop costs no more than 5% of portfolio equity:
   ```

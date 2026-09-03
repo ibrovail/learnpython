@@ -608,3 +608,39 @@ from the user *first* and pipe it — never let the prompt fall through to a def
 | File | Change |
 |------|--------|
 | `trading_script.py` | Stop-fill confirmation raises `SystemExit` on EOF instead of accepting `default_exec`; other prompts keep the EOF degradation |
+
+---
+
+## 2026-09-02 (b) — Two standing stop rules replace the ad-hoc Week 51 suspension
+
+The user proposed allowing stops to be lowered "if there is enough conviction." That was
+evaluated against this book's own record and **rejected**, in favour of two mechanical rules
+now in `portfolio_rules.md` under *Risk Control*.
+
+**Why conviction fails as a gate.** It peaks on losers: WWW carried a Buy rating and a price
+target whose upside *widened from +16% to +23% as the stock fell*, so it would have scored
+higher on any conviction test at $19.73 than at entry — a conviction gate funds the whole
+slide. As price falls, both the ATR band and the valuation case regenerate, so the exception
+has no stopping point; and the party certifying conviction is the same one that chose the
+position, under drawdown.
+
+**Grading the one time we did lower stops** (Week 51, 8/31): two of the three restorations
+were unnecessary — ATRC's old $46.30 was never touched (min low $46.61) and PAR's $17.50 was
+never approached (min low $18.28), carrying $10.80 of extra risk for nothing. TILE's did
+prevent a stop-out at $37.10 (+15.6%) but the position then traded to $36.85 (+14.8%).
+Net **−$1.00 realised against $14.20 of added risk**. Notably the case argued most forcefully
+at the time — ATRC — was the one that mattered least.
+
+**Rule 1, anti-ratchet:** no raise unless it is ≥0.5×ATR *and* leaves ≥1.5×ATR of room.
+Back-tested against all six raises made Aug 24 – Sep 2: it blocks the three sub-0.3×ATR
+raises (including the 08-27 ATRC raise that banked $1.35 and left the position 0.38×ATR from
+its stop four sessions later) and permits the three substantial ones.
+
+**Rule 2, mechanical restoration:** a stop that drifts below 1.5×ATR *through price movement
+alone* may be reset once per position, for the life of the experiment, to a formula 1.75×ATR
+level — subject to the usual range check, with the range check winning any conflict.
+ATRC, PAR and TILE have each used theirs; CADL and WWW have not.
+
+| File | Change |
+|------|--------|
+| `Start Your Own/portfolio_rules.md` | Anti-ratchet minimum and mechanical restoration under *Risk Control*, with the back-test and an honest grading of the Week 51 outcome; Week 51 amendment marked superseded |
