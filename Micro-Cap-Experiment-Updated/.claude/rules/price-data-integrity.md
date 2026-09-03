@@ -63,6 +63,38 @@ it is a structural limitation of the tool.
 To get a live quote: `preview_start` / `navigate` to a quote page
 (e.g. `https://www.cnbc.com/quotes/TICKER`), then `get_page_text`.
 
+## Unexplained move? A press wire cannot explain an analyst-driven one
+
+When a holding moves materially and the cause is not obvious, **the press-release wire and
+the quote page's own feed are not sufficient** — they will often show nothing, and "nothing
+found" then gets mistaken for "no driver."
+
+- `stocktitan.net` is a **company press-release wire**. Analyst upgrades, downgrades and
+  price-target changes are *third-party* actions and never appear there. Searching it for the
+  cause of an analyst-driven move returns a guaranteed false negative.
+- `stockanalysis.com`'s feed does carry TheFly analyst items, but **lags by hours**.
+
+**So for any unexplained move, check an analyst-action source explicitly** before concluding
+the driver is unknown:
+- `investing.com/news/analyst-ratings/` (search the ticker)
+- `benzinga.com` movers columns — these name the analyst, firm, old and new target
+- a dated web search for "TICKER price target" restricted to that day
+
+**A same-day jump in the consensus price target is itself the tell.** If a quote page's
+consensus PT moves materially in one session, an analyst acted — go find who and why, and
+read the actual note.
+
+- Reason: 2026-09-02 — ATRC closed **+7.50%** at a 52-week high on 2× volume. The StockTitan
+  wire showed nothing since 8/25 and the quote-page feed's latest item was 6 days old, so the
+  daily review recorded the driver as "unestablished" while noting the consensus PT had
+  jumped $49.56 → $51.67 in a day. The actual cause was **Needham raising its target to $64
+  from $45 (Buy, Mike Matson)** on the BoxX-NoAF trial. Reading the note changed the
+  interpretation materially: the trial's **30-day data does not arrive until H1 2027**, long
+  after the experiment ends, and Needham attributed the raise to **"peer multiple expansion"**
+  rather than new company data — making the move a sentiment re-rating on a distant catalyst,
+  not a fundamental step-change. **Knowing *why* a position moved changes what the stop should
+  do about it.**
+
 ## Timestamp requirement
 
 Before using any non-close price in analysis or an order, the quote must show

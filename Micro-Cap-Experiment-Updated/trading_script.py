@@ -439,6 +439,67 @@ def _weekend_safe_range(period: str | None, start: Any, end: Any) -> tuple[pd.Ti
     end_ts = (end_trading + pd.Timedelta(days=1)).normalize()
     return start_ts, end_ts
 
+def _has_usable_close(df: Any) -> bool:
+    """True only if the frame has rows AND its latest bar carries a real close.
+
+    The fallback chain in `download_price_data` originally advanced only on an
+    EMPTY frame. But a vendor can return a session's open/high/low/volume hours
+    before the close settles, and such a frame is not empty -- so the partial
+    data was accepted and the Stooq fallbacks were never tried, handing callers
+    a NaN price. 2026-09-02: Yahoo served OHLV for every ticker including SPY
+    with a null close at 21:11 ET, and the daily summary rendered every row as
+    "nan". Treat a missing close as missing data.
+    """
+    if not isinstance(df, pd.DataFrame) or df.empty:
+        return False
+    for col in ("Close", "Adj Close"):
+        if col in df.columns:
+            s = df[col].dropna()
+            if not s.empty:
+                return True
+    return False
+
+
+def _repair_tail_close(df: Any, ticker: str, **kwargs: Any) -> Any:
+    """Fill a final bar that arrived without a close, or drop it.
+
+    Yahoo's multi-day responses can carry an unsettled last bar: open/high/low/
+    volume present, close null. The SAME session requested as a single day comes
+    back complete. 2026-09-02 at 21:11 ET, a 5-day request for ATRC ended
+    [48.35, 48.92, NaN] while a one-day request returned the real 52.59 close.
+    Left alone, that NaN becomes the day's price everywhere downstream.
+
+    Re-request the final session on its own and splice the close in. If that also
+    fails, drop the incomplete bar so callers fall back to the last real close
+    rather than arithmetic on NaN.
+    """
+    if not isinstance(df, pd.DataFrame) or df.empty or "Close" not in df.columns:
+        return df
+    if pd.notna(df["Close"].iloc[-1]):
+        return df
+
+    last_day = pd.Timestamp(df.index[-1]).normalize()
+    if last_day.tz is not None:
+        last_day = last_day.tz_localize(None)
+    try:
+        one = _yahoo_download(ticker, start=last_day,
+                              end=last_day + pd.Timedelta(days=1), **kwargs)
+        one = _normalize_ohlcv(_to_datetime_index(one)) if one is not None else None
+        if isinstance(one, pd.DataFrame) and not one.empty and pd.notna(one["Close"].iloc[-1]):
+            for col in df.columns:
+                if col in one.columns:
+                    df.iloc[-1, df.columns.get_loc(col)] = one[col].iloc[-1]
+            logger.info("%s: repaired the %s bar with a single-session refetch",
+                        ticker, last_day.date())
+            return df
+    except Exception as exc:
+        logger.warning("%s: tail repair for %s failed (%s)", ticker, last_day.date(), exc)
+
+    logger.warning("%s: no close available for %s; dropping the incomplete bar",
+                   ticker, last_day.date())
+    return df.iloc[:-1]
+
+
 def download_price_data(ticker: str, **kwargs: Any) -> FetchResult:
     """
     Robust OHLCV fetch with multi-stage fallbacks:
@@ -461,17 +522,21 @@ def download_price_data(ticker: str, **kwargs: Any) -> FetchResult:
 
     # ---------- 1) Yahoo (date-bounded) ----------
     df_y = _yahoo_download(ticker, start=s, end=e, **kwargs)
-    if isinstance(df_y, pd.DataFrame) and not df_y.empty:
-        return FetchResult(_normalize_ohlcv(_to_datetime_index(df_y)), "yahoo")
+    if _has_usable_close(df_y):
+        # Normalize first: the repair indexes single columns, which a MultiIndex
+        # frame would return as a DataFrame.
+        df_y = _repair_tail_close(_normalize_ohlcv(_to_datetime_index(df_y)), ticker, **kwargs)
+        if _has_usable_close(df_y):
+            return FetchResult(df_y, "yahoo")
 
     # ---------- 2) Stooq via pandas-datareader ----------
     df_s = _stooq_download(ticker, start=s, end=e)
-    if isinstance(df_s, pd.DataFrame) and not df_s.empty:
+    if _has_usable_close(df_s):
         return FetchResult(_normalize_ohlcv(_to_datetime_index(df_s)), "stooq-pdr")
 
     # ---------- 3) Stooq direct CSV ----------
     df_csv = _stooq_csv_download(ticker, s, e)
-    if isinstance(df_csv, pd.DataFrame) and not df_csv.empty:
+    if _has_usable_close(df_csv):
         return FetchResult(_normalize_ohlcv(_to_datetime_index(df_csv)), "stooq-csv")
 
     # ---------- 4) Proxy indices if applicable ----------
@@ -479,7 +544,7 @@ def download_price_data(ticker: str, **kwargs: Any) -> FetchResult:
     proxy = proxy_map.get(ticker)
     if proxy:
         df_proxy = _yahoo_download(proxy, start=s, end=e, **kwargs)
-        if isinstance(df_proxy, pd.DataFrame) and not df_proxy.empty:
+        if _has_usable_close(df_proxy):
             return FetchResult(_normalize_ohlcv(_to_datetime_index(df_proxy)), f"yahoo:{proxy}-proxy")
 
     # ---------- Nothing worked ----------
@@ -789,6 +854,20 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
         h = float(data["High"].iloc[-1])
         l = float(data["Low"].iloc[-1])
         c = float(data["Close"].iloc[-1])
+
+        # A missing close is NOT a zero and NOT a reason to carry on. The vendor
+        # can publish O/H/L/V for a session hours before the close lands, and a
+        # NaN close would otherwise flow straight into the ledger as the day's
+        # price, poisoning Total Value, PnL and every metric derived from the
+        # equity series. Refuse before anything is written. (2026-09-02: all six
+        # tickers including SPY had OHLV but a NaN close at 21:11 ET.)
+        if np.isnan(c):
+            raise SystemExit(
+                f"\n*** {ticker}: the vendor has no CLOSE for {pd.Timestamp(data.index[-1]).date()} yet. ***\n"
+                f"    It published open/high/low/volume but not the close, which happens\n"
+                f"    when settlement data lags. Nothing has been written.\n"
+                f"    Re-run once the close is available; do not record a session without one."
+            )
         if np.isnan(o):
             o = c
 
