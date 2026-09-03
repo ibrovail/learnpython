@@ -644,3 +644,36 @@ ATRC, PAR and TILE have each used theirs; CADL and WWW have not.
 | File | Change |
 |------|--------|
 | `Start Your Own/portfolio_rules.md` | Anti-ratchet minimum and mechanical restoration under *Risk Control*, with the back-test and an honest grading of the Week 51 outcome; Week 51 amendment marked superseded |
+
+---
+
+## 2026-09-03 — Anti-ratchet: floor-vs-room boundary, and the Week 51 grade closes out
+
+Two additions to the stop rules written yesterday.
+
+**The 1.5×ATR collision.** The trailing-stop floor is `max(1.5×ATR, 15% below the rolling
+high)` and the anti-ratchet minimum requires ≥1.5×ATR of room — the same number. Raising *to*
+the floor therefore always lands exactly on the boundary, passing with zero margin or failing
+on floating-point. Recorded the resolution: compute the candidate at the **1.75×ATR** level
+from `entry-discipline.md`, then apply the 0.5×ATR size test to that. The floor is the minimum
+a stop may occupy, not the level to raise it to.
+
+First live test of the rule, same day, and it held: ATRC's raise to $48.94 would have been
+0.22×ATR and PAR's to $17.41 0.42×ATR — both declined. Both would have been made under the old
+regime, and both are the same size as the 08-27 ATRC raise (0.26×ATR) that left that position
+0.38×ATR from a stop-out four sessions later.
+
+**Week 51's grade is now final.** TILE stopped out 2026-09-03 at $36.24 (+12.9%). Without the
+restoration it would have stopped on 09-01 at $37.10 (+15.6%) — so the restoration delayed the
+exit by three sessions and cost 2.7pp, about $3.44. With ATRC's and PAR's restorations never
+needed, the exception finishes at **−$3.44 realised against $14.20 of risk carried**.
+
+**Eligibility is mechanical; use is not.** Also recorded, prompted by CADL qualifying today
+(stop set at 1.61×ATR on 8/27, drifted to 0.71×ATR on price alone, allowance unused) and being
+declined: the formula level of $11.45 converts a locked +8.0% into +0.2% to buy room for a
+catalyst (CAN-2409 BLA, Q4 2026) that falls outside the experiment. Room is worth paying for
+only when something can happen inside the runway to use it.
+
+| File | Change |
+|------|--------|
+| `Start Your Own/portfolio_rules.md` | Floor-vs-room note with worked example; final Week 51 grade including TILE's exit; permissive-not-obligatory clause with the CADL case |

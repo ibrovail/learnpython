@@ -120,6 +120,22 @@ chose the position. The outcome of this Week 51 exception is graded honestly in 
     best thesis. The same session's report called the raise poor value while making it.
   - A raise that fails either test is **declined, not reduced**. Wait for the price to advance
     enough that a qualifying raise exists.
+  - **Target the 1.75×ATR level, not the trailing floor.** The trailing-stop floor is defined
+    at `max(1.5×ATR, 15% below the rolling high)`, and this rule requires ≥1.5×ATR of room —
+    the *same number*. So raising **to** the floor always lands exactly on the boundary, where
+    it either fails on floating-point or passes with zero margin. Compute the candidate level
+    at **1.75×ATR** below the reference price (the target in `entry-discipline.md`), then apply
+    the 0.5×ATR size test to that level. The floor is the minimum a stop may sit at, not the
+    level to raise it to.
+  - *Worked example, 2026-09-03 — both raises correctly declined:*
+
+    | | Price | ATR | Stop | 1.75×ATR level | Raise size | Verdict |
+    |---|---|---|---|---|---|---|
+    | ATRC | $52.46 | 2.010 | $48.50 | $48.94 | **0.22×ATR** | blocked |
+    | PAR | $18.90 | 0.850 | $17.05 | $17.41 | **0.42×ATR** | blocked |
+
+    Both would have been made under the old regime. The 8/27 ATRC raise that created the
+    0.38×ATR trap was 0.26×ATR — the same size as these.
 
 - **Stop restoration — mechanical, once per position.** If a stop comes to sit **below
   1.5×ATR(14)** of the current price **through price movement alone** — never through
@@ -142,10 +158,17 @@ chose the position. The outcome of this Week 51 exception is graded honestly in 
     suspension before this rule existed): of the three restorations, **two were unnecessary**
     — ATRC's old $46.30 stop was never touched (min low $46.61) and PAR's $17.50 was never
     approached (min low $18.28), together carrying **$10.80** of extra risk for nothing. The
-    third, TILE, did prevent a stop-out at $37.10 (+15.6%) but the position then traded to
-    $36.85 (+14.8%), i.e. **−$1.00**. Net effect through 2026-09-02: **−$1.00 realised against
-    $14.20 of additional risk carried.** The reasoning was sound; the outcome was not. Treat
-    this exception as a narrow safety valve, not a tool.
+    third, TILE, did prevent a stop-out at $37.10 (+15.6%) — but only delayed it: TILE stopped
+    out on **2026-09-03 at $36.24 (+12.9%)**, so the restoration **cost 2.7 percentage points,
+    about $3.44**. Final tally: **−$3.44 realised against $14.20 of additional risk carried**,
+    with two of the three restorations never needed at all. The reasoning was sound; the
+    outcome was not. Treat this exception as a narrow safety valve, not a tool.
+  - **Eligibility is mechanical; using it is not.** The rule is permissive — a qualifying stop
+    *may* be reset, not *must* be. 2026-09-03: CADL qualified (stop set at 1.61×ATR on 8/27,
+    drifted to 0.71×ATR on price alone, allowance unused) and the restoration was **declined**,
+    because the formula level of $11.45 converts a locked **+8.0% into +0.2%** to buy room for
+    a thesis whose only catalyst (the CAN-2409 BLA, Q4 2026) falls outside the experiment.
+    Room is worth paying for only when something can happen inside the runway to use it.
 
 - **Anti-ratchet, back-tested against every raise actually made** (Aug 24 – Sep 2). It blocks
   the churn and permits the substance, which is the whole intent:
