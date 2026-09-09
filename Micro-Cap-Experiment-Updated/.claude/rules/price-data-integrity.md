@@ -95,6 +95,51 @@ read the actual note.
   not a fundamental step-change. **Knowing *why* a position moved changes what the stop should
   do about it.**
 
+## Unexplained move: check FOUR categories, not one
+
+Three separate misses (2026-09-02 ATRC, 2026-09-08 PAR) came from checking a source that
+**structurally could not contain the answer**, then reporting "no news." A move has four
+possible drivers and each lives somewhere different:
+
+| Driver | Where it lives | What will NOT show it |
+|---|---|---|
+| Company announcement | `stocktitan.net`, press wire | analyst/insider sources |
+| **Analyst action** | `investing.com/news/analyst-ratings/`, Benzinga movers | **press wire — never carries third-party actions** |
+| **SEC filings — Form 4 insider transactions, 8-K, 13D/G** | SEC EDGAR; `marketbeat.com/instant-alerts/`; the quote page's **Filings** tab | **press wire AND the news feed AND the consensus-PT test** |
+| Sector / macro / no cause | benchmark and peer moves | any single-name source |
+
+**Check all four before writing "no news."** "I looked and found nothing" is only meaningful
+if you looked somewhere the thing could have been.
+
+**Discovery tool that works for this** — `perplexity.ai` with an explicit, dated, category-
+naming prompt. The pattern that found the PAR filing:
+
+> "What news and SEC Form 4 filings broke today (Sept 8, 2026) for PAR Technology ($PAR)?
+> Include insider sales, automatic tax sell-to-cover transactions, and intraday price action."
+
+Name the date, name the ticker, and **name the categories** — including the boring ones. Then
+**browser-verify whatever it surfaces** (it returns links; open them). Perplexity is discovery,
+same status as WebSearch; the browser still supplies the facts.
+
+**Weigh an insider sale before treating it as a cause.** Compute the shares sold as a share of
+the session's volume and the dollar value against market cap. 2026-09-08: PAR's Form 4 was
+**653 shares ($12,596) — 0.07% of a 950,210-share session** on a $760M company, executed under
+a **pre-arranged Rule 10b5-1 plan to cover tax withholding on vested equity.** That is the
+least informative insider category and **cannot** move a stock 7%. Finding the filing was
+correct; attributing the move to it would not have been. Report what a filing is *and* whether
+it is numerically capable of explaining what happened.
+
+## Consensus price target hides dispersion — pull the individual targets
+
+A single consensus PT can conceal analysts sitting *below* the market. Before leaning on
+"PT $X, +Y% upside" for a position of consequence, pull the per-firm list
+(`marketbeat.com`, or the quote page's Forecast tab) and state the **range and the split**.
+
+- Reason: 2026-09-08 — PAR's consensus of **$25.31 (+37.6%)** was quoted in daily reviews for
+  three weeks. The underlying spread was **$16 to $30 with 5 Buy / 2 Hold / 1 Sell**, and
+  **UBS and RBC both sat at $16 — below the market price** — on the book's largest position.
+  The average was accurate and the picture it painted was not.
+
 ## Timestamp requirement
 
 Before using any non-close price in analysis or an order, the quote must show
