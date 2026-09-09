@@ -1260,7 +1260,8 @@ If this is a mistake, enter 1, or hit Enter."""
         "Date": today, "Ticker": ticker,
         "Shares Bought": "", "Buy Price": "",
         "Cost Basis": cost_basis, "PnL": pnl,
-        "Reason": f"MANUAL SELL {'MARKET' if market_order else 'LIMIT'} - {reason}",
+        "Reason": (f"MANUAL SELL {'MARKET' if market_order else 'LIMIT'}"
+                   + (f" - {reason}" if reason else " - Filled")),
         "Shares Sold": shares_sold,
         "Sell Price": exec_price,
     }
@@ -1289,7 +1290,10 @@ If this is a mistake, enter 1, or hit Enter."""
         )
 
     cash += shares_sold * exec_price
-    print(f"Manual SELL LIMIT for {ticker} filled at ${exec_price:.2f} ({fetch.source}).")
+    # Label must match what goes in the ledger; hardcoding LIMIT made a market
+    # sell print "SELL LIMIT" while the trade log recorded "MANUAL SELL MARKET".
+    print(f"Manual SELL {'MARKET' if market_order else 'LIMIT'} for {ticker} "
+          f"filled at ${exec_price:.2f} ({fetch.source}).")
     return cash, chatgpt_portfolio
 
 
