@@ -43,7 +43,10 @@ _PROHIBITED_TICKERS = frozenset({
     # firearms & ammunition
     "RGR", "SWBI", "POWW", "AOUT",
     # payday, pawn and high-cost subprime consumer lenders
-    "CURO", "ENVA", "OPRT", "WRLD", "RM", "EZPW", "FCFS", "ELVT",
+    # OPFI added 2026-09-14: OppLoans installment credit for consumers "turned away
+    # by mainstream options" -- caught by the manual Credit Services review, which is
+    # why that industry is flagged rather than trusted to this list.
+    "CURO", "ENVA", "OPRT", "WRLD", "RM", "EZPW", "FCFS", "ELVT", "OPFI",
 })
 # Industries that contain prohibited businesses alongside legitimate ones. Not
 # auto-excluded -- any name from these reaching the watchlist is flagged so it is

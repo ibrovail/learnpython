@@ -747,3 +747,21 @@ accepted as the conservative reading of the user's rule.
 | `.claude/rules/analysis-workflow.md` | Prohibited-business check as the first PRV-gate step |
 | `screener.py` | `_PROHIBITED_INDUSTRIES`, `_PROHIBITED_TICKERS`, `_REVIEW_INDUSTRIES`; exclusion filter in validation |
 | `Weekly Deep Research (MD)/Week 53 Full.md`, `Summary.md`, `(PDF)/Week 53.pdf` | CXW withdrawn; allocation and constraints restated without it |
+
+---
+
+## 2026-09-14 (c) — OPFI added to the prohibited blocklist
+
+While testing whether the top-15 cutoff was hiding candidates, OPFI (OppFi) surfaced at composite
+rank #43 and passed every CSV-computable filter and the entry-discipline checks. Its quote page
+describes installment loans through OppLoans for consumers "turned away by mainstream options"
+(industry: Credit Services) — high-cost subprime lending, a prohibited business. It was not on
+`_PROHIBITED_TICKERS`.
+
+This is the case the design anticipated: the blocklist is hand-maintained and will miss names,
+which is why Credit Services and Security & Protection Services are flagged for manual review at
+the PRV gate rather than trusted to the list. The manual check caught it; the ticker is now listed.
+
+| File | Change |
+|------|--------|
+| `screener.py` | `OPFI` added to `_PROHIBITED_TICKERS` |
