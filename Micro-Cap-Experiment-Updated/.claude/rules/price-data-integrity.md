@@ -140,6 +140,31 @@ A single consensus PT can conceal analysts sitting *below* the market. Before le
   **UBS and RBC both sat at $16 — below the market price** — on the book's largest position.
   The average was accurate and the picture it painted was not.
 
+## Date an event from price history, not from a search summary
+
+A search result's summary will attach a date to an event it did not read carefully. **Before
+weighing any reported price event** ("stock plunged 16% on…"), find it in the ticker's own
+daily returns — a 12-month scan for single-day moves ≥7% dates it independently of any article.
+
+- Reason: 2026-09-14 — a WebSearch summary described GEO −16% / CXW −11% on an ICE-insourcing
+  report as an **"August 2026 selloff."** Neither stock showed any such drop in its last six
+  weekly closes. The price scan placed it at **Feb 12–20, 2026**; the underlying article was
+  dated **Feb 24, 2026**. The difference decided the trade: an active thesis break versus a
+  seven-month-old event after which both stocks set new 52-week highs.
+- Corollary: "in recent weeks" inside an article means recent *to the article's publication
+  date*. Open the page and read the byline date before treating the phrase as current.
+
+## Ex-dividend dates come from the dividend-history table
+
+Use a dividend-history table that shows **ex-date, record date and pay date together**
+(`stockanalysis.com/stocks/TICKER/dividend/`, S&P Global data). **Do not use yfinance's
+`Ticker.calendar` "Ex-Dividend Date" field** as the sole source.
+
+- Reason: 2026-09-14 — yfinance's calendar gave VTS an ex-date of **Sep 14**; the dividend table
+  showed **ex-date Sep 15, record date Sep 15, pay date Sep 30**, $0.4375. Acting on the wrong day
+  misplaces a known mechanical price drop by a full session. Also check the **pay date** against
+  the experiment's end: a dividend paid after the finish is a price drop the ledger never credits.
+
 ## Timestamp requirement
 
 Before using any non-close price in analysis or an order, the quote must show

@@ -85,6 +85,23 @@ Screener composite score (momentum + volume + volatility-squeeze) identifies *ca
 
 Conviction rating starts at 2/5 for any screener pick and can only rise on the strength of independent web-research evidence, not the screener score itself.
 
+## Deal-Pinned Stocks Cannot Generate Short-Horizon Return
+
+A stock trading under a pending acquisition is pinned near the deal price and cannot move
+meaningfully inside a short window, whatever its screener score. **Before evaluating any
+candidate for a hold of ≤10 sessions, reject it if all three hold:**
+1. **ATR(14) below ~0.5% of price**, and
+2. **20-day momentum within ±1%**, and
+3. the price sits **above** the consensus analyst target, or the session range is a few cents.
+
+Confirm on the quote page (a 0.00% close in a pennies-wide range is decisive), then drop it
+without further research.
+
+- Reason: 2026-09-14 — BZH, UTZ and DV all ranked in the top 15 with ATRs of **0.28–0.34%** and
+  ~0% momentum. BZH — a **beta-2.18** homebuilder — closed **0.00%** in an **8-cent range**
+  ($33.25–$33.33) while trading 17% above its $27.50 analyst target: pinned. A low-volatility
+  factor in the screener actively *rewards* this pattern, so it will recur.
+
 ## Stop-Placement Surfacing
 
 The **weekend deep research report** may include the reminder "Place this stop with your broker before the next market open" in a BUY recommendation, since at that stage the order has not yet been placed.

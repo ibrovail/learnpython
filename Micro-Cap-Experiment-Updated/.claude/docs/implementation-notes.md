@@ -677,3 +677,31 @@ only when something can happen inside the runway to use it.
 | File | Change |
 |------|--------|
 | `Start Your Own/portfolio_rules.md` | Floor-vs-room note with worked example; final Week 51 grade including TILE's exit; permissive-not-obligatory clause with the CADL case |
+
+---
+
+## 2026-09-14 — Three rules from the Week 53 research session
+
+Rules added after three corrections caught while vetting the final week's candidate (CXW):
+
+1. **Date events from price history, not search summaries** (`price-data-integrity.md`). A
+   WebSearch summary labelled the GEO/CXW ICE-insourcing selloff "August 2026"; a 12-month
+   daily-return scan placed it at Feb 12–20, 2026, matching a Feb 24 article. That distinction
+   turned a would-be thesis break into seven-month-old news followed by new highs.
+2. **Ex-dividend dates from the dividend-history table** (`price-data-integrity.md`). yfinance's
+   `Ticker.calendar` gave VTS an ex-date of Sep 14; the S&P Global table showed Sep 15 with
+   record date Sep 15 and pay date Sep 30. Check pay date against the experiment end — a dividend
+   paid after the finish is a price drop the ledger never credits.
+3. **Deal-pinned screen** (`entry-discipline.md`). ATR < ~0.5%, 20-day momentum within ±1%, and
+   price above the analyst target (or a pennies-wide range) marks a stock pinned to an
+   acquisition price. BZH, UTZ and DV all ranked top-15; BZH closed 0.00% in an 8-cent range at
+   beta 2.18. The screener's low-volatility factor rewards this pattern, so it will recur.
+
+Also recorded in the Week 53 report: CXW's stockanalysis forward P/E of 2.11 traces to a
+FY2026 net-income misentry ($1.50B vs $116.5M prior year); real forward P/E on adjusted EPS ~20.8×.
+
+| File | Change |
+|------|--------|
+| `.claude/rules/price-data-integrity.md` | Event-dating from price history; ex-dividend source |
+| `.claude/rules/entry-discipline.md` | Deal-pinned stock screen |
+| `Weekly Deep Research (MD)/Week 53 Full.md`, `Week 53 Summary.md`, `(PDF)/Week 53.pdf` | Week 53 deliverables |
