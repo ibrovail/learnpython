@@ -46,7 +46,7 @@ Retrieved **2026-09-14, 07:03–07:55 AM EDT**, pre-market. Holdings priced at s
 
 ## 3. CURRENT PORTFOLIO ASSESSMENT
 
-**Equity $733.51 · S&P-equivalent $768.52 · Gap −4.56% · Cash $259.33 (35.4%) · TWR alpha +0.55%**
+**Equity $733.51 · S&P-equivalent $768.52 · Gap −4.56% · Cash $259.33 (35.4%) · TWR alpha +1.11%** *(corrected 9/14 from +0.55% — the S&P leg of TWR started a session early; the gap was unaffected)*
 **Regime: RISK-OFF** — IWM $288.89, below its 50-day SMA (−2.96% as of 9/10).
 
 | Ticker | Role | Avg Cost | Close 9/11 | P&L | Stop | Conviction | Status |

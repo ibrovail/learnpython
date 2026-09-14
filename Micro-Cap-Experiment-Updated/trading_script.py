@@ -597,6 +597,24 @@ def log_capital_injection(amount: float) -> None:
     df.to_csv(CAPITAL_INJECTIONS_CSV, index=False)
     logger.info("Successfully wrote CSV file: %s", CAPITAL_INJECTIONS_CSV)
 
+def _load_experiment_config() -> dict[str, Any]:
+    """Read "experiment_config.json" from the data directory.
+
+    Keys: "end_date" / "total_weeks" (horizon; null = ongoing process) and
+    "benchmark_base_date" (performance metrics measured from that session's close).
+    A missing or unreadable file returns {} so every caller falls back to defaults.
+    """
+    cfg_file = Path(DATA_DIR) / "experiment_config.json"
+    if not cfg_file.exists():
+        return {}
+    try:
+        cfg = json.loads(cfg_file.read_text(encoding="utf-8"))
+        return cfg if isinstance(cfg, dict) else {}
+    except Exception:
+        logger.warning("experiment_config.json unreadable — using defaults")
+        return {}
+
+
 def load_capital_injections() -> pd.DataFrame:
     """Load all capital injections, returning empty DataFrame if file doesn't exist."""
     if not CAPITAL_INJECTIONS_CSV.exists():
@@ -1331,6 +1349,9 @@ class PortfolioMetrics:
     twr: float = np.nan
     twr_spx: float = np.nan
     twr_alpha: float = np.nan
+    # First session of the measurement window: the benchmark base date when one is
+    # configured, otherwise the first ledger date.
+    metrics_base_date: str = ""
 
 
 def _get_ticker_role(ticker: str, holdings_set: set[str]) -> str:
@@ -1380,11 +1401,14 @@ def _print_risk_metrics(
     sharpe_annual: float, sortino_annual: float,
     beta: float, alpha_annual: float, r2: float,
     twr: float = np.nan, twr_spx: float = np.nan, twr_alpha: float = np.nan,
+    base_date: str = "",
 ) -> None:
     """Print the <risk_metrics> table."""
     print("<risk_metrics>")
     print("| Metric                        | Value     | Note                    |")
     print("|-------------------------------|-----------|-------------------------|")
+    if base_date:
+        print(f"| {'Measured From (close)':<29} | {base_date:>9} | {'all metrics below':<23} |")
 
     mdd_val = _fmt_pct(max_drawdown * 100) if not (max_drawdown is None or (isinstance(max_drawdown, float) and np.isnan(max_drawdown))) else "N/A"
     mdd_note = f"on {mdd_date}" if mdd_date and mdd_date != "N/A" else ""
@@ -1418,7 +1442,7 @@ def _print_risk_metrics(
     print("</risk_metrics>")
 
 
-def _print_portfolio_snapshot_table(final_equity: float, dollar_weighted_spx: float, cash: float) -> None:
+def _print_portfolio_snapshot_table(final_equity: float, dollar_weighted_spx: float, cash: float, base_date: str = "") -> None:
     """Print the <portfolio_snapshot> table (equity/S&P/cash)."""
     print("<portfolio_snapshot>")
     print("| Metric              | Value     |")
@@ -1426,6 +1450,8 @@ def _print_portfolio_snapshot_table(final_equity: float, dollar_weighted_spx: fl
     print(f"| {'Portfolio Equity':<19} | {_fmt_currency(final_equity):>9} |")
     spx_val = _fmt_currency(dollar_weighted_spx) if not (dollar_weighted_spx is None or (isinstance(dollar_weighted_spx, float) and np.isnan(dollar_weighted_spx))) else "N/A"
     print(f"| {'S&P Equivalent':<19} | {spx_val:>9} |")
+    if base_date:
+        print(f"| {'Benchmark Base':<19} | {base_date:>9} |")
     print(f"| {'Cash Balance':<19} | {_fmt_currency(cash):>9} |")
     print("</portfolio_snapshot>")
 
@@ -1543,6 +1569,28 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
     equity_series = totals.set_index("Date")["Total Equity"].astype(float).sort_index()
     experiment_start_date = str(equity_series.index.min().date())
 
+    # Benchmark re-base. When experiment_config.json sets "benchmark_base_date",
+    # every performance metric below -- drawdown, Sharpe/Sortino, CAPM, TWR and the
+    # dollar-weighted S&P-equivalent -- is measured from that session's close, which
+    # becomes the starting equity; capital injected on or before it is already in
+    # that equity. experiment_start_date keeps the first ledger date because it
+    # anchors week numbering and the default horizon.
+    # 2026-09-14: the 52-week experiment closed at the 2026-09-11 close (gap -4.56%)
+    # and the indefinite phase keeps its own scoreboard from there.
+    base_date: Optional[pd.Timestamp] = None
+    _base_cfg = _load_experiment_config().get("benchmark_base_date")
+    if _base_cfg:
+        _base = pd.Timestamp(_base_cfg).normalize()
+        _window = equity_series[equity_series.index.normalize() >= _base]
+        if not _window.empty and _window.index.min().normalize() == _base:
+            equity_series = _window
+            base_date = _base
+        else:
+            logger.warning(
+                "benchmark_base_date %s has no TOTAL row in the ledger - measuring "
+                "from the first ledger date instead", _base.date())
+    metrics_base_date = str(equity_series.index.min().date())
+
     # --- Max Drawdown ---
     running_max = equity_series.cummax()
     drawdowns = (equity_series / running_max) - 1.0
@@ -1561,15 +1609,11 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
     else:
         mdd_date_str = str(mdd_date)
 
-    if n_days < 2:
-        return PortfolioMetrics(
-            price_volume_rows=price_volume_rows,
-            max_drawdown=max_drawdown, mdd_date_str=mdd_date_str,
-            sharpe_annual=np.nan, sortino_annual=np.nan,
-            beta=np.nan, alpha_annual=np.nan, r2=np.nan,
-            final_equity=final_equity, dollar_weighted_spx=np.nan,
-            experiment_start_date=experiment_start_date,
-        )
+    # No early return on a short window: right after a benchmark re-base the
+    # S&P-equivalent and TWR are meaningful from the first session, but annualized
+    # ratios are not -- a five-session window produced a Sharpe of -8.3 and a CAPM
+    # alpha of -86%. Sharpe/Sortino/CAPM stay N/A until min_obs daily returns.
+    min_obs = 20
 
     # Risk-free config
     rf_annual = 0.045
@@ -1595,13 +1639,15 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
         period_return = float('nan')
 
     # Sharpe / Sortino
-    sharpe_annual = ((mean_daily - rf_daily) / std_daily) * np.sqrt(252) if std_daily > 0 else np.nan
-    sortino_annual = ((mean_daily - rf_daily) / downside_std) * np.sqrt(252) if downside_std and downside_std > 0 else np.nan
+    sharpe_annual = ((mean_daily - rf_daily) / std_daily) * np.sqrt(252) if n_days >= min_obs and std_daily > 0 else np.nan
+    sortino_annual = ((mean_daily - rf_daily) / downside_std) * np.sqrt(252) if n_days >= min_obs and downside_std and downside_std > 0 else np.nan
 
     # -------- Dollar-Weighted S&P 500 Benchmark --------
     starting_equity = float(equity_series.iloc[0])
 
     injections = load_capital_injections()
+    if base_date is not None and not injections.empty:
+        injections = injections[injections["Date"].dt.normalize() > base_date].reset_index(drop=True)
     total_capital_invested = starting_equity
     if not injections.empty:
         total_capital_invested += injections["Amount"].sum()
@@ -1661,7 +1707,7 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
         mkt_ret = spx_capm["Close"].astype(float).pct_change().dropna()
 
         common_idx = r.index.intersection(list(mkt_ret.index))
-        if len(common_idx) >= 2:
+        if len(common_idx) >= min_obs:
             rp = (r.reindex(common_idx).astype(float) - rf_daily)
             rm = (mkt_ret.reindex(common_idx).astype(float) - rf_daily)
 
@@ -1712,6 +1758,10 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
     # for a TWR comparison.
     if not spx.empty:
         _spx_close = spx["Close"].astype(float).dropna()
+        # The fetch starts a calendar day before the window so the first session is
+        # never missed; when that day was itself a session (a re-base on a Friday
+        # pulls Thursday's bar) the S&P return would start a session early.
+        _spx_close = _spx_close[_spx_close.index >= equity_series.index.min().normalize()]
         if len(_spx_close) >= 2:
             twr_spx = float(_spx_close.iloc[-1] / _spx_close.iloc[0] - 1.0)
     if not (isinstance(twr, float) and np.isnan(twr)) and not (isinstance(twr_spx, float) and np.isnan(twr_spx)):
@@ -1725,6 +1775,7 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
         final_equity=final_equity, dollar_weighted_spx=dollar_weighted_spx,
         experiment_start_date=experiment_start_date,
         twr=twr, twr_spx=twr_spx, twr_alpha=twr_alpha,
+        metrics_base_date=metrics_base_date,
     )
 
 
@@ -1804,16 +1855,11 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
         pd.Timestamp(metrics.experiment_start_date) + pd.Timedelta(days=364)
         if metrics.experiment_start_date else None
     )
-    _cfg_file = Path(DATA_DIR) / "experiment_config.json"
-    if _cfg_file.exists():
-        try:
-            _cfg = json.loads(_cfg_file.read_text(encoding="utf-8"))
-            if "total_weeks" in _cfg:
-                total_weeks = _cfg["total_weeks"]  # int, or None for ongoing
-            if "end_date" in _cfg:
-                horizon_end = pd.Timestamp(_cfg["end_date"]) if _cfg["end_date"] else None
-        except Exception:
-            logger.warning("experiment_config.json unreadable — using default horizon")
+    _cfg = _load_experiment_config()
+    if "total_weeks" in _cfg:
+        total_weeks = _cfg["total_weeks"]  # int, or None for ongoing
+    if "end_date" in _cfg:
+        horizon_end = pd.Timestamp(_cfg["end_date"]) if _cfg["end_date"] else None
 
     print("\n<weekly_context>")
     print(f"<date>{today_formatted}</date>")
@@ -1842,12 +1888,13 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
         metrics.sharpe_annual, metrics.sortino_annual,
         metrics.beta, metrics.alpha_annual, metrics.r2,
         metrics.twr, metrics.twr_spx, metrics.twr_alpha,
+        metrics.metrics_base_date,
     )
     print("</market_data>")
     print()
 
     # -------- Portfolio Snapshot (replaces <cash_balance>) --------
-    _print_portfolio_snapshot_table(metrics.final_equity, metrics.dollar_weighted_spx, cash)
+    _print_portfolio_snapshot_table(metrics.final_equity, metrics.dollar_weighted_spx, cash, metrics.metrics_base_date)
     print()
 
     # -------- Capital Injection (planned for coming week) --------
@@ -2015,12 +2062,13 @@ def _print_xml_summary(
         metrics.sharpe_annual, metrics.sortino_annual,
         metrics.beta, metrics.alpha_annual, metrics.r2,
         metrics.twr, metrics.twr_spx, metrics.twr_alpha,
+        metrics.metrics_base_date,
     )
     print("</market_data>")
     print()
 
     # -------- Portfolio Snapshot --------
-    _print_portfolio_snapshot_table(metrics.final_equity, metrics.dollar_weighted_spx, cash)
+    _print_portfolio_snapshot_table(metrics.final_equity, metrics.dollar_weighted_spx, cash, metrics.metrics_base_date)
     print()
 
     # -------- Holdings --------

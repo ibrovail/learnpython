@@ -765,3 +765,44 @@ the PRV gate rather than trusted to the list. The manual check caught it; the ti
 | File | Change |
 |------|--------|
 | `screener.py` | `OPFI` added to `_PROHIBITED_TICKERS` |
+
+---
+
+## 2026-09-14 (d) — Benchmark re-base for the indefinite phase; TWR S&P start-session fix
+
+The user closed the 52-week experiment at the 2026-09-11 close and continued the portfolio
+indefinitely with its own scoreboard. `experiment_config.json` gains `benchmark_base_date`. When
+set, `_compute_portfolio_metrics` starts the equity series at that session (which must have a
+TOTAL row; otherwise it warns and uses the full ledger), drops capital injections dated on or
+before it (already inside the base equity), and measures drawdown, Sharpe/Sortino, CAPM, TWR and
+the dollar-weighted S&P-equivalent from there. `experiment_start_date` stays the first ledger
+date, so week numbering and the default horizon are unchanged. Both the risk-metrics and snapshot
+tables print the base date. Config reading moved into `_load_experiment_config()`, shared with
+the weekend horizon code.
+
+Two defects surfaced while verifying:
+
+1. **TWR's S&P leg started a session early.** The S&P fetch begins a calendar day before the
+   window so the first session is never missed. The ledger opens on Friday 2025-09-19, so
+   Thursday's bar was included and `twr_spx` measured from 9/18. S&P 9/18→9/11 = +15.46% vs
+   9/19→9/11 = +14.89%, which exactly accounts for the printed **+0.55%** TWR alpha — the true
+   52-week figure is **+1.11%**. The dollar-weighted S&P-equivalent (the gap) used an exact `loc`
+   on the start date and was never affected. Every TWR alpha reported since inception was
+   understated by the first session's S&P move.
+2. **The `n_days < 2` early return** would have printed the gap as N/A on the first daily after a
+   re-base, so it was removed. Annualized ratios over a handful of sessions are noise — a
+   5-session test window printed Sharpe −8.3 and CAPM alpha −86% — so Sharpe, Sortino and CAPM
+   now require 20 daily returns.
+
+Verified: with no base the full ledger reproduces equity $733.51, S&P-equivalent $768.52, gap
+−4.56%. Base 9/04 matches a hand calculation ($772.00 × 7656.98 / 7718.60 = $765.84; S&P −0.80%).
+Base 9/11 gives gap 0 and TWR 0. A Saturday base warns and falls back.
+
+**Open:** the Strategic Pivot readout's full-window S&P (+14.87%, 9/19→9/09) does not match a
+recomputation (+14.59%; +15.14% from 9/18) — reconcile it in the final 52-week readout.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | `_load_experiment_config()`; re-base slice + injection filter in `_compute_portfolio_metrics`; S&P TWR series sliced to the window start; early return removed, `min_obs = 20` for ratios/CAPM; `metrics_base_date` on `PortfolioMetrics`, printed in both tables |
+| `Start Your Own/experiment_config.json` | `benchmark_base_date: "2026-09-11"` |
+| `Start Your Own/portfolio_rules.md`, `Weekly Deep Research (MD)/Week 53 Full.md`, `Summary.md`, `(PDF)/Week 53.pdf` | TWR alpha corrected +0.55% → +1.11% |

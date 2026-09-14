@@ -9,7 +9,7 @@ These rules govern all analysis — daily and weekend. Read this file before beg
 **The 52-week experiment is closed as of the 2026-09-11 close.** The portfolio continues as an ongoing live process with no end date. Decisions:
 
 - **Horizon:** `experiment_config.json` → `end_date` and `total_weeks` set to `null`. With no runway to plan against, catalysts are judged against the full **60-day** window in the Allocation Framework, not an experiment end date.
-- **Benchmark gap re-based at the 2026-09-11 close.** The 52-week result — equity **$733.51** vs S&P-equivalent **$768.52**, **gap −4.56%**, TWR alpha +0.55% — is recorded in the final readout and does not carry forward. The indefinite phase keeps its own scoreboard from that date.
+- **Benchmark gap re-based at the 2026-09-11 close.** The 52-week result — equity **$733.51** vs S&P-equivalent **$768.52**, **gap −4.56%**, TWR alpha **+1.11%** (first printed as +0.55%: the S&P leg of TWR started one session early, on 2025-09-18; fixed 2026-09-14 — the gap was unaffected) — is recorded in the final readout and does not carry forward. The indefinite phase keeps its own scoreboard from that date.
 - **Cash floor reverted 8% → 15%.** The Week 50 cut existed only because the runway was short.
 - **Week 49 final-stretch amendments retained** — healthcare cap of 3, $5Bn ceiling, adding to winners. The deadline prompted them, but none adds risk over a longer horizon.
 - **Retired:** the hold-through-the-close endgame directive, and the pre-committed ATRC 1-share partial at $54.88, whose rationale (BoxX-NoAF data falling outside the runway) no longer holds. ATRC's partial is governed by the standard deferral criteria, re-checked each weekend.

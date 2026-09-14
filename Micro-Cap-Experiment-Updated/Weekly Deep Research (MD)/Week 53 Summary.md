@@ -1,7 +1,7 @@
 # Week 53 — Thesis Review Summary (FINAL WEEK)
 
 **Date:** 2026-09-14 | **5 sessions remain** | **Posture:** Aggressive — deploy the cash, but only into a name that clears every filter
-Equity $733.51 · Cash $259.33 (35.4%) · **Gap −4.56%** · TWR alpha +0.55% · Regime RISK-OFF
+Equity $733.51 · Cash $259.33 (35.4%) · **Gap −4.56%** · TWR alpha +1.11% (corrected 9/14 from +0.55% — S&P leg started a session early) · Regime RISK-OFF
 
 > **⚠️ REVISED 2026-09-14 — CXW WITHDRAWN.** CoreCivic operates prisons and immigration detention centers, a prohibited business. No replacement; cash held at $259.33. The conditional ATRC partial is also cancelled (indefinite horizon). No orders remain. The exclusion is now enforced in the rules, the PRV gate and the screener.
 

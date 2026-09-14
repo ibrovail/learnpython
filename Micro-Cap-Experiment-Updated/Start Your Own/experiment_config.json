@@ -1,5 +1,6 @@
 {
-  "_comment": "Experiment horizon. Set end_date and total_weeks to null to run as an ongoing process with no fixed end (week label becomes 'Week N (ongoing live process)' and the runway line reports 'ongoing'). Delete this file to restore defaults (first ledger date + 364 days, 52 weeks).",
+  "_comment": "Experiment horizon and scoreboard. Set end_date and total_weeks to null to run as an ongoing process with no fixed end (week label becomes 'Week N (ongoing live process)' and the runway line reports 'ongoing'). benchmark_base_date measures every performance metric (gap vs S&P-equivalent, TWR, drawdown, Sharpe, CAPM) from that session's close; null = from the first ledger date. 2026-09-11 = close of the 52-week experiment (final gap -4.56%, TWR alpha +1.11%). Delete this file to restore defaults (first ledger date + 364 days, 52 weeks, no re-base).",
   "end_date": null,
-  "total_weeks": null
+  "total_weeks": null,
+  "benchmark_base_date": "2026-09-11"
 }
