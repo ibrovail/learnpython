@@ -89,10 +89,10 @@ chose the position. The outcome of this Week 51 exception is graded honestly in 
 
 ## Universe
 
-- U.S.-listed common stocks: nano-cap to small-cap (market cap up to $2Bn).
-- Allow up to $2Bn market cap for plays.
+- U.S.-listed common stocks: nano-cap to small-cap, **market cap up to $5Bn** (raised from $2Bn by the Week 49 amendment above; `screener.py` enforces `MAX_MARKET_CAP = 5e9`).
 - Allowed exchanges: NYSE, NASDAQ, NYSE American.
-- Existing positions above $2Bn may be held or sold; no new shares may be added.
+- Existing positions above **$5Bn** may be held or sold; no new shares may be added.
+- *Corrected 2026-09-14:* this section still read $2Bn after the ceiling was amended to $5Bn in Week 49, contradicting the amendment block. Read literally it would have barred adding to ATRC (~$2.7B market cap) and rejected valid $2–5Bn candidates.
 
 ---
 
