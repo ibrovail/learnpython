@@ -3,14 +3,14 @@
 **Date:** 2026-09-14 | **5 sessions remain** | **Posture:** Aggressive — deploy the cash, but only into a name that clears every filter
 Equity $733.51 · Cash $259.33 (35.4%) · **Gap −4.56%** · TWR alpha +0.55% · Regime RISK-OFF
 
-> **⚠️ REVISED 2026-09-14 — CXW WITHDRAWN.** CoreCivic operates prisons and immigration detention centers, a prohibited business. No replacement; cash held at $259.33. The only remaining order is the conditional ATRC partial. The exclusion is now enforced in the rules, the PRV gate and the screener.
+> **⚠️ REVISED 2026-09-14 — CXW WITHDRAWN.** CoreCivic operates prisons and immigration detention centers, a prohibited business. No replacement; cash held at $259.33. The conditional ATRC partial is also cancelled (indefinite horizon). No orders remain. The exclusion is now enforced in the rules, the PRV gate and the screener.
 
 ---
 
 ## Per-Position Thesis
 
-**ATRC (AtriCure) — KEEP, partial pending | Conviction 5/5**
-**+59.0%** at $54.54 — the experiment's defining position. It crossed the **+60% partial trigger ($54.88)** intraday at $55.16 and closed $0.34 short of it. **If it closes at or above $54.88, sell 1 of 3 shares.** The four deferral criteria technically hold, but the argument against deferring a third time is stronger: the consensus target of $51.67 now sits *below* the price, BTIG/Piper/Needham's $55–$64 targets rest on a BoxX-NoAF readout that lands in H1 2027, and five sessions give the stock more room to disappoint than to re-rate again. The stop at $50.30 locks +46.6%.
+**ATRC (AtriCure) — KEEP | Conviction 5/5** *(forced partial cancelled — indefinite horizon)*
+**+59.0%** at $54.54 — the experiment's defining position. It crossed the **+60% partial trigger ($54.88)** intraday at $55.16 and closed $0.34 short of it. ~~If it closes at or above $54.88, sell 1 of 3 shares.~~ **Cancelled** when the portfolio moved to an indefinite horizon: BoxX-NoAF data (H1 2027) is now inside the horizon, and all four deferral criteria hold. The four deferral criteria technically hold, but the argument against deferring a third time is stronger: the consensus target of $51.67 now sits *below* the price, BTIG/Piper/Needham's $55–$64 targets rest on a BoxX-NoAF readout that lands in H1 2027, and five sessions give the stock more room to disappoint than to re-rate again. The stop at $50.30 locks +46.6%.
 
 **VTS (Vitesse Energy) — KEEP | Conviction 4/5**
 +5.1% at $18.76, and doing exactly what it was bought for: low-volatility ballast (ATR 2.2%, beta 0.63) on a verified, rising oil driver, with WTI above $100. **It goes ex-dividend tomorrow, Tuesday Sept 15** — confirmed from the S&P Global dividend table after yfinance's calendar briefly suggested today. Expect ~$0.44 off the price with no ledger credit; the payment arrives Sept 30, after the finish. The $17.50 stop was sized to keep ~1.7×ATR through that drop.

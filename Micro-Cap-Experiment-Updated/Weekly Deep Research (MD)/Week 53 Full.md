@@ -6,7 +6,7 @@
 ---
 
 > ## ⚠️ REVISED 2026-09-14 — CXW ORDER WITHDRAWN. DO NOT PLACE IT.
-> **CoreCivic operates prisons and immigration detention centers, which are on the prohibited-business list.** It passed every quantitative filter below and should never have reached a recommendation; the exclusion had not been written into the rules or the screener. **No replacement:** no other candidate on this week's screen passed on fundamentals (§4). **The $259.33 stays in cash.** The only remaining order is the **conditional ATRC partial** (§6, Order 2). The CXW analysis is retained below as a record of what was done, not as a recommendation. The exclusion is now enforced in `portfolio_rules.md`, the PRV gate and `screener.py`.
+> **CoreCivic operates prisons and immigration detention centers, which are on the prohibited-business list.** It passed every quantitative filter below and should never have reached a recommendation; the exclusion had not been written into the rules or the screener. **No replacement:** no other candidate on this week's screen passed on fundamentals (§4). **The $259.33 stays in cash.** **The conditional ATRC partial is also cancelled** — the portfolio moved to an indefinite horizon, removing the reason for it (§6). **No orders remain.** The CXW analysis is retained below as a record of what was done, not as a recommendation. The exclusion is now enforced in `portfolio_rules.md`, the PRV gate and `screener.py`.
 
 ---
 
@@ -116,7 +116,7 @@ Weekly closes over five weeks: **CXW rising (0 down-weeks, +6.4%)**; **GEO down 
 ## 5. PORTFOLIO ACTIONS
 
 **Keep:** ATRC (5/5), VTS (4/5), PAR (3/5).
-**Trim:** **ATRC — 1 share, conditional** on a close ≥ $54.88 (§6, Order 2).
+**Trim:** ~~ATRC — 1 share, conditional on a close ≥ $54.88~~ **cancelled** (indefinite horizon; the standard deferral criteria now govern).
 **Initiate:** **none.** CXW withdrawn — prohibited business. No other candidate passed on fundamentals; cash held.
 **Add to / Exit:** none. No stop changes available: ATRC's next raise fails the anti-ratchet, PAR's floor sits below its stop, VTS was raised on 9/10.
 
@@ -128,13 +128,9 @@ Weekly closes over five weeks: **CXW rising (0 down-weeks, +6.4%)**; **GEO down 
 
 **Do not place.** CoreCivic is a prison and immigration-detention operator, a prohibited business. No replacement order.
 
-### Order 2 — CONDITIONAL: SELL 1 ATRC
+### ~~Order 2 — CONDITIONAL: SELL 1 ATRC~~ — CANCELLED
 
-- **Action:** SELL (partial profit, +60% tier)
-- **Ticker:** ATRC · **Shares:** 1 of 3
-- **Trigger:** **only if ATRC closes at or above $54.88**
-- **Execution:** at the next session — cancel the existing stop, place a DAY limit sell for 1 share at or above the prior close, then **re-place the stop on the remaining 2 shares at $50.30 / $50.15**
-- **Rationale:** consensus PT $51.67 is below the price and the BoxX-NoAF catalyst is H1 2027 — banking a third of the book's best position is worth more than the remaining upside over five sessions. Scale: +$4.24 if ATRC then stops out, −$5.46 if it runs to $60.
+**Cancelled 2026-09-14** when the portfolio moved to an indefinite horizon. The partial was pre-committed only because BoxX-NoAF's 30-day data (H1 2027) fell outside the Sept 18 runway; with no end date that reasoning no longer holds. All four deferral criteria hold, so the **$50.30 stop — locking +46.6% — is the risk control**, and the criteria are re-checked each weekend. This order was conditional and never placed at the broker; nothing to cancel there.
 
 ---
 
@@ -167,7 +163,7 @@ All under 30% ✓ · Cash above the 8% floor ✓ · Sectors: Technology 1, Healt
 
 | Holding | Watch | Trigger |
 |---|---|---|
-| **ATRC** | Close vs **$54.88** | Close ≥ $54.88 → sell 1 share next session; stop stays $50.30 on the rest |
+| **ATRC** | +60% deferral criteria, re-checked each weekend | Stop $50.30 locks +46.6% — the risk control (forced partial cancelled) |
 | **PAR** | 1.06×ATR from stop; restoration spent | Stop $17.05 |
 | **VTS** | **Ex-dividend Tuesday Sept 15** (~$0.44 drop, no ledger credit); oil above $100 | Do not misread the ex-div drop; a sharp oil reversal is the real risk |
 | Book | RISK-OFF regime; XLI's four-week slide | — |
@@ -202,7 +198,7 @@ All under 30% ✓ · Cash above the 8% floor ✓ · Sectors: Technology 1, Healt
 | PT dispersion | ✅ all Buy, lowest target +14.5% |
 | Thesis-input freshness | ✅ negative items dated Feb 2026 and priced; newest evidence supportive |
 
-**Constraint rows above referencing CXW are void following the withdrawal. The CXW recommendation FAILED the prohibited-business exclusion, which was not checked at the time. Remaining: one conditional order (ATRC partial).**
+**Constraint rows above referencing CXW are void following the withdrawal. The CXW recommendation FAILED the prohibited-business exclusion, which was not checked at the time. No orders remain; the ATRC conditional partial was cancelled.**
 
 ---
 
