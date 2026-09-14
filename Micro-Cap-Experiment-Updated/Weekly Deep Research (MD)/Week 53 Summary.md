@@ -3,6 +3,8 @@
 **Date:** 2026-09-14 | **5 sessions remain** | **Posture:** Aggressive — deploy the cash, but only into a name that clears every filter
 Equity $733.51 · Cash $259.33 (35.4%) · **Gap −4.56%** · TWR alpha +0.55% · Regime RISK-OFF
 
+> **⚠️ REVISED 2026-09-14 — CXW WITHDRAWN.** CoreCivic operates prisons and immigration detention centers, a prohibited business. No replacement; cash held at $259.33. The only remaining order is the conditional ATRC partial. The exclusion is now enforced in the rules, the PRV gate and the screener.
+
 ---
 
 ## Per-Position Thesis
@@ -16,8 +18,8 @@ Equity $733.51 · Cash $259.33 (35.4%) · **Gap −4.56%** · TWR alpha +0.55% �
 **PAR (PAR Technology) — KEEP | Conviction 3/5 (reduced)**
 −5.5% at $18.00, recovered off its stop to 1.06×ATR after testing it all week. Revenue growth (+18.8%) remains the best in the book, but the analyst picture is split — targets from $16 to $30, with UBS and RBC both at $16 — and its restoration allowance is spent. Conviction trimmed to reflect that dispersion rather than the headline average.
 
-**CXW (CoreCivic) — INITIATE | Conviction 4/5**
-**5 shares, limit $34.93, stop $32.85/$32.70.**
+**CXW (CoreCivic) — ~~INITIATE~~ WITHDRAWN: prohibited business (prisons & detention)**
+~~5 shares, limit $34.93, stop $32.85/$32.70~~ — **do not place.** Analysis below retained as a record only.
 The only name on the weakest screen of the final stretch that clears every filter. Revenue **+24.3%**, EPS **+31.8%**, beta **0.60**, no earnings until November. **All five covering analysts rate it Buy, and the *lowest* target — $40 — is +14.5% above the price**; StoneX maintained $45 on Sept 11. The catalyst that satisfies the RISK-OFF filter is a **$500M accelerated share repurchase, about 14.5% of market cap**, with a bank buying stock through our window.
 **The thesis rests on federal detention policy, and it was verified rather than assumed.** Discovery turned up alarming items — ICE buying warehouses to own its capacity, a spending bill cutting 5,500 beds, a report of a 16%/11% private-prison selloff. **Every one dated to early 2026 once opened**, and price history placed the selloff in February, after which GEO and CXW both set new 52-week highs (Aug 26 and Sept 8). The newest dated evidence is supportive: GEO's new five-year ICE contracts in early August and the Sept 11 target maintenance.
 **Bear case:** ICE's insourcing shift is structural and ongoing, with a Sept 30 deadline; a fresh headline could gap CXW as February's did (−10.3% in a day), and a stop cannot bound a gap — that tail is ~$18, 2.45% of equity. It was bought at a 52-week high, in a sector down four weeks. And its role is modest: it replaces idle cash with a low-beta, buyback-supported position; it will not close the gap.

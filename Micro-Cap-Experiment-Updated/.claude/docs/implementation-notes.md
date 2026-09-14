@@ -705,3 +705,45 @@ FY2026 net-income misentry ($1.50B vs $116.5M prior year); real forward P/E on a
 | `.claude/rules/price-data-integrity.md` | Event-dating from price history; ex-dividend source |
 | `.claude/rules/entry-discipline.md` | Deal-pinned stock screen |
 | `Weekly Deep Research (MD)/Week 53 Full.md`, `Week 53 Summary.md`, `(PDF)/Week 53.pdf` | Week 53 deliverables |
+
+---
+
+## 2026-09-14 (b) — Prohibited businesses enforced in rules, PRV gate and screener
+
+**What happened.** The Week 53 report recommended buying CXW (CoreCivic). It passed every
+quantitative filter — revenue +24.3%, all five analysts Buy, a $500M buyback, a verified policy
+driver — and CoreCivic operates private prisons and immigration detention centers, which the user
+never invests in. The exclusion existed only in the user's head; the user rejected the order
+before execution.
+
+**The audit found a wider gap.** `portfolio_rules.md` already listed "Defence companies" and
+"Israeli-affiliated companies," but `screener.py` filtered only security *types* (ETF, SPAC,
+ADR...). Nothing in code enforced any ethical exclusion, so a defence name could have ranked
+exactly as CXW did, caught only if manual review happened to notice.
+
+**Changes.**
+1. `portfolio_rules.md` Exclusions split into *Security types* and *Prohibited businesses*:
+   prisons/detention, weapons/defence/firearms, predatory lending, Israeli-affiliated. Records
+   what is explicitly **not** prohibited (fossil fuels, tobacco, gambling, alcohol, cannabis,
+   adult entertainment) so future sessions don't over-exclude — VTS stays eligible.
+2. `analysis-workflow.md` PRV gate: the prohibited-business check is now the **first** item,
+   before any other research, so a failing name costs no analysis.
+3. `screener.py`: `_PROHIBITED_INDUSTRIES` hard-excludes Aerospace & Defense;
+   `_PROHIBITED_TICKERS` blocks CXW, GEO, firearms makers (RGR, SWBI, POWW, AOUT) and
+   payday/pawn/subprime lenders (ENVA, OPRT, WRLD, RM, EZPW, FCFS, plus delisted CURO/ELVT).
+   `_REVIEW_INDUSTRIES` (Security & Protection Services, Credit Services) is deliberately **not**
+   auto-excluded — both mix prohibited and legitimate firms — and relies on the PRV-gate check.
+4. User memory `user_prohibited_investments.md` so the list persists across sessions.
+
+**Limits, stated plainly.** Israeli affiliation cannot be derived from an industry label and has
+no code enforcement — it remains a per-name check. The ticker blocklist is hand-maintained and
+will miss names it doesn't list; the PRV-gate check is the real control, the screener a backstop.
+Excluding all of Aerospace & Defense will also drop some purely commercial aerospace suppliers —
+accepted as the conservative reading of the user's rule.
+
+| File | Change |
+|------|--------|
+| `Start Your Own/portfolio_rules.md` | Prohibited-business list, enforcement notes, explicit non-prohibited categories |
+| `.claude/rules/analysis-workflow.md` | Prohibited-business check as the first PRV-gate step |
+| `screener.py` | `_PROHIBITED_INDUSTRIES`, `_PROHIBITED_TICKERS`, `_REVIEW_INDUSTRIES`; exclusion filter in validation |
+| `Weekly Deep Research (MD)/Week 53 Full.md`, `Summary.md`, `(PDF)/Week 53.pdf` | CXW withdrawn; allocation and constraints restated without it |

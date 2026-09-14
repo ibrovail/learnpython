@@ -30,6 +30,26 @@ from trading_script import last_completed_session
 _EXCLUDED_TYPES = ("EXCHANGE TRADED FUND", "ETF", "ETN", "CLOSED-END", "CLOSED END", "SHELL COMPAN", "SPAC", "ADR")
 _EXCLUDED_TICKER_SUFFIX = r"(?:-U|-UN|-WS|-R|\.U|\.WS)$"
 
+# Prohibited businesses (portfolio_rules.md -> Exclusions). Whole industries are
+# excluded only where the industry is itself prohibited; tickers catch prohibited
+# names whose industry label also covers legitimate businesses.
+# 2026-09-14: CXW, a private prison operator, ranked and was recommended because
+# nothing here filtered it -- and the long-standing defence exclusion was never
+# enforced in code either.
+_PROHIBITED_INDUSTRIES = ("AEROSPACE & DEFENSE",)
+_PROHIBITED_TICKERS = frozenset({
+    # prisons & immigration detention
+    "CXW", "GEO",
+    # firearms & ammunition
+    "RGR", "SWBI", "POWW", "AOUT",
+    # payday, pawn and high-cost subprime consumer lenders
+    "CURO", "ENVA", "OPRT", "WRLD", "RM", "EZPW", "FCFS", "ELVT",
+})
+# Industries that contain prohibited businesses alongside legitimate ones. Not
+# auto-excluded -- any name from these reaching the watchlist is flagged so it is
+# checked by hand before a recommendation (analysis-workflow.md PRV gate).
+_REVIEW_INDUSTRIES = ("SECURITY & PROTECTION", "CREDIT SERVICES")
+
 # Universe ceiling (portfolio_rules.md). Raised 2026-08-15 from $2B to $5B for the
 # experiment's final stretch — the $2B cap plus the sector caps were structurally
 # blocking the field (Week 48: 8 of 15 candidates excluded, none investable).
@@ -167,6 +187,18 @@ def _validate_enriched(df: pd.DataFrame) -> pd.DataFrame:
             text = df[col].astype(str).str.upper()
             df = df[~text.str.contains("|".join(_EXCLUDED_TYPES), na=False)]
     df = df[~df["ticker"].astype(str).str.upper().str.contains(_EXCLUDED_TICKER_SUFFIX, regex=True, na=False)]
+
+    # Prohibited businesses: blocklisted tickers and wholly-prohibited industries.
+    _tick = df["ticker"].astype(str).str.upper()
+    _prohibited = _tick.isin(_PROHIBITED_TICKERS)
+    if "industry" in df.columns:
+        _ind = df["industry"].astype(str).str.upper()
+        for _name in _PROHIBITED_INDUSTRIES:
+            _prohibited |= _ind.str.contains(_name, regex=False, na=False)
+    if _prohibited.any():
+        print(f"  Prohibited businesses: removed {int(_prohibited.sum())} "
+              f"(prisons/detention, defence & firearms, predatory lending)")
+    df = df[~_prohibited]
 
     if {"price", "latest_price"}.issubset(df.columns):
         both = df["price"].notna() & df["latest_price"].notna() & (df["price"] > 0)

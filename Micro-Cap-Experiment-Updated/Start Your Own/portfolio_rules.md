@@ -98,12 +98,23 @@ chose the position. The outcome of this Week 51 exception is graded honestly in 
 
 ## Exclusions
 
+**Security types**
 - OTC / pink sheets
 - ETFs, ETNs, closed-end funds, SPACs
 - Rights, warrants, units, preferred shares, ADRs
 - Bankrupt or halted issuers
-- Defence companies
-- Israeli-affiliated companies
+
+**Prohibited businesses — never recommend, regardless of screen rank or fundamentals**
+- **Prisons and detention centers** — private corrections and immigration-detention operators (e.g. CXW, GEO)
+- **Weapons, defence and firearms** — defence contractors, arms makers, gun and ammunition companies
+- **Predatory lending** — payday lenders, pawn lenders, high-cost subprime installment credit
+- **Israeli-affiliated companies**
+
+*Not* prohibited (confirmed with the user 2026-09-14): fossil fuels, tobacco, gambling, alcohol, cannabis, adult entertainment.
+
+**Enforcement.** `screener.py` hard-excludes the **Aerospace & Defense** industry and a ticker blocklist of known prison, firearms and predatory-lending names. Two industries mix prohibited and legitimate businesses — **Security & Protection Services** (prison operators alongside alarm companies) and **Credit Services** (payday lenders alongside mainstream credit) — and are **not** auto-excluded: any candidate in them must be checked by hand. **Israeli affiliation cannot be screened by industry** and must be checked per name. **Every candidate is checked against this list at the PRV gate, before a recommendation is written** (`analysis-workflow.md`).
+
+- Reason: 2026-09-14 — **CXW (CoreCivic, private prisons and ICE detention) passed every quantitative filter and was recommended as the Week 53 buy.** The prison exclusion had never been written into this file or the screener, so nothing stopped it; the user rejected it before execution. The audit that followed found the *pre-existing* exclusions were unenforced too — "Defence companies" and "Israeli-affiliated companies" were listed here, but the screener filtered only security types, so a defence name could have ranked exactly as CXW did.
 
 ---
 

@@ -33,6 +33,13 @@ all of them):
 | Day range, volume, market cap | Range check inputs; volume validates whether a quote is meaningful |
 
 **Also required, same gate:**
+- **⛔ Prohibited-business check — first, before anything else.** Confirm the company is not a
+  prison/detention operator, a weapons/defence/firearms business, a predatory lender, or
+  Israeli-affiliated (`portfolio_rules.md` → *Exclusions*). The quote page's **Industry** field
+  is the starting point; **Security & Protection Services** and **Credit Services** require
+  reading what the company actually does. A name that fails is dropped without further
+  research, however well it scores. Origin: 2026-09-14, CXW recommended despite being a
+  private prison operator.
 - **Extended-hours volume**, when quoting a pre/post-market price. A 332-share print is
   not a price (PAR, 2026-08-17). Report volume alongside the timestamp or don't use the quote.
 - **Live news-feed check** (`stocktitan.net/news/TICKER/`) for any recommendation, to

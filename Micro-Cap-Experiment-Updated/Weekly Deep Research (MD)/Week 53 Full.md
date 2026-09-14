@@ -5,6 +5,11 @@
 
 ---
 
+> ## ⚠️ REVISED 2026-09-14 — CXW ORDER WITHDRAWN. DO NOT PLACE IT.
+> **CoreCivic operates prisons and immigration detention centers, which are on the prohibited-business list.** It passed every quantitative filter below and should never have reached a recommendation; the exclusion had not been written into the rules or the screener. **No replacement:** no other candidate on this week's screen passed on fundamentals (§4). **The $259.33 stays in cash.** The only remaining order is the **conditional ATRC partial** (§6, Order 2). The CXW analysis is retained below as a record of what was done, not as a recommendation. The exclusion is now enforced in `portfolio_rules.md`, the PRV gate and `screener.py`.
+
+---
+
 ## 1. RESTATED RULES
 
 - US-listed common stock, market cap ≤ $5B. No ETFs, CEFs/BDCs, SPACs, ADRs, units/warrants.
@@ -64,7 +69,6 @@ Retrieved **2026-09-14, 07:03–07:55 AM EDT**, pre-market. Holdings priced at s
 
 | Ticker | Sector | Revenue | Rating / PT | Verdict |
 |---|---|---|---|---|
-| **CXW** | Industrials | **+24.3%** | **Strong Buy, $41.80 (+19.7%)** | ✅ **BUY** |
 | BRBS | Financials | **−13.2%** | no coverage | ❌ shrinking revenue |
 | NMAX | Comm. Services | +11.1% | Buy, $18.50 | ❌ lossmaking, fwd PE 111, ATR 4.97%, no beta history |
 | LFST | Healthcare | +20.4% | Buy, **$14.20 (+9.5%)** | ❌ thin upside, at 52-wk high, $4.96B at the cap |
@@ -75,7 +79,9 @@ Retrieved **2026-09-14, 07:03–07:55 AM EDT**, pre-market. Holdings priced at s
 
 **On the deal-pin finding.** BZH is a beta-2.18 homebuilder that closed **0.00%** in an **8-cent daily range** ($33.25–$33.33) while trading 17% *above* its analyst target — the signature of a stock pinned to an acquisition price. UTZ and DV share its ~0.3% ATR with near-zero momentum. A pinned stock cannot generate return in five sessions regardless of the deal's merits.
 
-### Selected: CXW — CoreCivic | Conviction 4/5
+### ~~Selected~~ WITHDRAWN: CXW — CoreCivic
+
+> **Withdrawn — prohibited business (prisons and immigration detention).** Analysis retained as a record only.
 
 **PRV (9/11 close):** $34.93, market cap $3.45B, 52-week range $15.74–35.30 (new high **$35.05 on Sept 8**). Revenue TTM **$2.48B, +24.3%**; net income $127.9M; EPS $1.25 **+31.8%**. Beta **0.60**. ATR **3.37%**. ADV **$57.8M**. Next earnings **Nov 4** — outside the window.
 
@@ -111,26 +117,16 @@ Weekly closes over five weeks: **CXW rising (0 down-weeks, +6.4%)**; **GEO down 
 
 **Keep:** ATRC (5/5), VTS (4/5), PAR (3/5).
 **Trim:** **ATRC — 1 share, conditional** on a close ≥ $54.88 (§6, Order 2).
-**Initiate:** **CXW, 5 shares.**
+**Initiate:** **none.** CXW withdrawn — prohibited business. No other candidate passed on fundamentals; cash held.
 **Add to / Exit:** none. No stop changes available: ATRC's next raise fails the anti-ratchet, PAR's floor sits below its stop, VTS was raised on 9/10.
 
 ---
 
 ## 6. EXACT ORDERS
 
-### Order 1 — BUY CXW
+### ~~Order 1 — BUY CXW~~ — WITHDRAWN
 
-- **Action:** BUY
-- **Ticker:** CXW — CoreCivic (NYSE)
-- **Shares:** 5
-- **Order Type:** LIMIT
-- **Limit Price:** **$34.93**
-- **Time in Force:** DAY
-- **Intended Execution:** 2026-09-14
-- **Stop Loss:** **$32.85** — 1.77×ATR below entry; the wider of 1.75×ATR and the most recent swing low ($33.73); below the 5-day low of $33.15
-- **Stop Limit:** **$32.70**
-- **Special Instructions:** The limit equals the **last verified price — the $34.93 close, Sept 11, 4:00 PM EDT**. The 4:00 AM "pre-market $35.45" mirrored Friday's change with no volume and was not used. **Re-verify a live pre-market quote with volume around 9:25 AM.** **Do not chase above $35.50** (above the $35.30 52-week high). **Skip if it opens below $33.15** (5-day low), which would break the setup.
-- **Rationale:** The only candidate clearing every filter — revenue +24.3%, all five analysts Buy with the lowest target +14.5% above market, an active $500M buyback worth 14.5% of market cap, beta 0.60, no earnings in the window, driver verified not reversing.
+**Do not place.** CoreCivic is a prison and immigration-detention operator, a prohibited business. No replacement order.
 
 ### Order 2 — CONDITIONAL: SELL 1 ATRC
 
@@ -144,18 +140,17 @@ Weekly closes over five weeks: **CXW rising (0 down-weeks, +6.4%)**; **GEO down 
 
 ## 7. RISK AND LIQUIDITY CHECKS
 
-**Post-trade allocation** (CXW 5 × $34.93 = $174.65):
+**Allocation — unchanged, no purchase** (9/11 closes):
 
 | Holding | Value | % Equity |
 |---|---|---|
 | PAR | $198.00 | 27.0% |
-| **CXW (new)** | **$174.65** | **23.8%** |
 | ATRC | $163.62 | 22.3% |
 | VTS | $112.56 | 15.3% |
-| Cash | $84.68 | 11.5% |
+| Cash | $259.33 | 35.4% |
 | **TOTAL** | **$733.51** | 100% |
 
-All under 30% ✓ · Cash above the 8% floor ($58.68) ✓ · **Sectors:** Technology 1, Healthcare 1, Energy 1, Industrials 1 ✓
+All under 30% ✓ · Cash above the 8% floor ✓ · Sectors: Technology 1, Healthcare 1, Energy 1 ✓
 
 **Risk if stopped:**
 
@@ -164,11 +159,7 @@ All under 30% ✓ · Cash above the 8% floor ($58.68) ✓ · **Sectors:** Techno
 | ATRC | 3 | $54.54 − $50.30 | $12.72 | 1.73% |
 | PAR | 11 | $18.00 − $17.05 | $10.45 | 1.42% |
 | VTS | 6 | $18.76 − $17.50 | $7.56 | 1.03% |
-| **CXW** | 5 | $34.93 − $32.85 | **$10.40** | **1.42%** |
-| **Aggregate** | | | **$41.13** | **5.61%** |
-
-**CXW gap tail (not captured by the stop):** a repeat of February's −10.3% day costs **~$18.00 (2.45% of equity)**.
-**Liquidity:** a $175 order against $57.8M ADV is immaterial.
+| **Aggregate** | | | **$30.73** | **4.19%** |
 
 ---
 
@@ -177,7 +168,6 @@ All under 30% ✓ · Cash above the 8% floor ($58.68) ✓ · **Sectors:** Techno
 | Holding | Watch | Trigger |
 |---|---|---|
 | **ATRC** | Close vs **$54.88** | Close ≥ $54.88 → sell 1 share next session; stop stays $50.30 on the rest |
-| **CXW** | **ICE facility / insourcing headlines**; the DRI's Sept 30 deadline | A −5% session with an ICE headline is a thesis event — reassess same day, don't wait for the stop |
 | **PAR** | 1.06×ATR from stop; restoration spent | Stop $17.05 |
 | **VTS** | **Ex-dividend Tuesday Sept 15** (~$0.44 drop, no ledger credit); oil above $100 | Do not misread the ex-div drop; a sharp oil reversal is the real risk |
 | Book | RISK-OFF regime; XLI's four-week slide | — |
@@ -194,7 +184,7 @@ All under 30% ✓ · Cash above the 8% floor ($58.68) ✓ · **Sectors:** Techno
 
 ## 10. CONFIRM CASH AND CONSTRAINTS
 
-**Cash: $259.33 → $84.68** after CXW — **11.5% of equity, above the 8% floor.**
+**Cash: $259.33 — unchanged, 35.4% of equity.** CXW withdrawn (prohibited business); no purchase made.
 
 | Constraint | Status |
 |---|---|
@@ -212,7 +202,7 @@ All under 30% ✓ · Cash above the 8% floor ($58.68) ✓ · **Sectors:** Techno
 | PT dispersion | ✅ all Buy, lowest target +14.5% |
 | Thesis-input freshness | ✅ negative items dated Feb 2026 and priced; newest evidence supportive |
 
-**All constraints satisfied. One order plus one conditional order.**
+**Constraint rows above referencing CXW are void following the withdrawal. The CXW recommendation FAILED the prohibited-business exclusion, which was not checked at the time. Remaining: one conditional order (ATRC partial).**
 
 ---
 
