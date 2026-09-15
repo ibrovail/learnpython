@@ -85,17 +85,25 @@ Screener composite score (momentum + volume + volatility-squeeze) identifies *ca
 
 Conviction rating starts at 2/5 for any screener pick and can only rise on the strength of independent web-research evidence, not the screener score itself.
 
+**The screener pre-applies these gates as a backstop, not a substitute** (since 2026-09-14): prohibited businesses, deal-pinned, >40% above the 50-day / >20% above the 20-day SMA, days 1–3 of a >10% breakout, post-earnings jump, shrinking revenue (Finviz Sales Q/Q < 0) and liquidity — all *before* ranking, so the list is not filled with names that fail by hand. The gates run on Finviz/yfinance data, and a gate whose input is missing passes the name, so **every check above is still run on the quote page.** A `REVIEW` flag marks industries mixing prohibited and permitted businesses. The thresholds live in `screener.py` constants — change the rule here first, then the constant.
+
 ## Deal-Pinned Stocks Cannot Generate Short-Horizon Return
 
 A stock trading under a pending acquisition is pinned near the deal price and cannot move
-meaningfully inside a short window, whatever its screener score. **Before evaluating any
-candidate for a hold of ≤10 sessions, reject it if all three hold:**
-1. **ATR(14) below ~0.5% of price**, and
-2. **20-day momentum within ±1%**, and
-3. the price sits **above** the consensus analyst target, or the session range is a few cents.
-
-Confirm on the quote page (a 0.00% close in a pennies-wide range is decisive), then drop it
+meaningfully inside a short window, whatever its screener score. **Reject any candidate whose
+ATR(14) is below 0.75% of price.** That one test is sufficient. Confirm the cause on the quote
+page's news feed (a cash deal price the stock trades just under is decisive), then drop it
 without further research.
+
+- **Why ATR alone (revised 2026-09-14, same day as written):** the first version required three
+  conditions together — ATR below ~0.5%, 20-day momentum within ±1%, and price above the analyst
+  target or a pennies-wide range. On that evening's gated screen it let two confirmed all-cash
+  takeover targets through and ranked them **#1 and #2**: **DV** (Nielsen at $13.60; momentum
+  +1.65%, just outside ±1%) and **PAYO** (Nuvei at $7.40; analyst target 3.6% above the price —
+  the targets had reset to the deal price, not above it). Across the 1,191-stock universe the
+  1st-percentile ATR was 0.35% and the 2nd percentile 1.45%; all 16 stocks under 0.8% had a
+  pinned profile (the highest was 0.45%). A small cap that is free to move does not trade that
+  quietly, so the extra conditions only created ways for a real deal target to slip through.
 
 - Reason: 2026-09-14 — BZH, UTZ and DV all ranked in the top 15 with ATRs of **0.28–0.34%** and
   ~0% momentum. BZH — a **beta-2.18** homebuilder — closed **0.00%** in an **8-cent range**

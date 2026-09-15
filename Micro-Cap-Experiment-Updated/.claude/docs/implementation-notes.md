@@ -806,3 +806,73 @@ recomputation (+14.59%; +15.14% from 9/18) — reconcile it in the final 52-week
 | `trading_script.py` | `_load_experiment_config()`; re-base slice + injection filter in `_compute_portfolio_metrics`; S&P TWR series sliced to the window start; early return removed, `min_obs = 20` for ratios/CAPM; `metrics_base_date` on `PortfolioMetrics`, printed in both tables |
 | `Start Your Own/experiment_config.json` | `benchmark_base_date: "2026-09-11"` |
 | `Start Your Own/portfolio_rules.md`, `Weekly Deep Research (MD)/Week 53 Full.md`, `Summary.md`, `(PDF)/Week 53.pdf` | TWR alpha corrected +0.55% → +1.11% |
+
+---
+
+## 2026-09-14 (e) — Screener Phase 1: rules first, ranking second
+
+The screener ranked the whole universe on the 40/30/30 momentum / volume / squeeze composite,
+cut the top 15, and the entry rules were applied by hand afterwards. On the Week 53 screen only
+5 of the 15 survived, 8 had moved less than 1% in 20 sessions, and the strongest momentum names
+sat at #37–#48, below the cutoff. Phase 1 fixes the pipeline and leaves the factor weights alone
+— the factor study (Phase 2) decides those.
+
+- **Hard gates before ranking** (`apply_gates`): low data confidence, incomplete signals,
+  <$500K/day, deal-pinned (ATR(14) < 0.75%), >40% above the 50-day or >20% above the 20-day SMA,
+  days 1–3 of a >10% breakout, post-earnings jump (≤3 sessions after the reaction session and >5%
+  above the lower of the pre- and post-print closes), shrinking revenue (Finviz Sales Q/Q < 0). A
+  gate whose input is missing passes the name — the PRV gate re-checks on the quote page.
+  Percentile ranks are computed among survivors only.
+- **Finviz custom view** replaces Overview, adding company, P/E, forward P/E, EPS and Sales Q/Q,
+  insider and institutional transactions, short float, quarter/half performance, beta,
+  distance from the 52-week high, analyst recommendation, target price and earnings date.
+- **Lookback 60 → 110 calendar days.** At ~40 sessions the 50-day SMA had never computed:
+  `above_sma50` was absent from every watchlist, so the 50-day rule was never enforced here.
+- **Output:** top 50 survivors, at most 6 per sector (11 sectors × 3 = 33 cannot fill 50 slots).
+  `review_flag` marks Security & Protection and Credit Services — `_REVIEW_INDUSTRIES` had been
+  defined but never used. The full gated universe is saved to
+  `screener_history/screen_<session>.csv`, Finviz fundamentals included: yfinance has no
+  point-in-time fundamentals, so these files are the only record of what the numbers were.
+- **Weekend prompt:** watchlist printing moved into `_print_screener_watchlist()`, shows the gate
+  and fundamental columns, and prints a visible error for a malformed watchlist instead of
+  skipping it silently.
+
+**Three defects found while testing:**
+
+1. **Truncated universe accepted.** `Custom.screener_view` defaults to `limit=-1`, which the base
+   pager reads as exhausted after page 1. The first live run got 20 stocks, accepted them, and
+   overwrote the 1,572-stock `universe_cache.csv` (restored from git). Fixed by passing `limit`;
+   a fetch smaller than half the cached universe is now treated as truncated and the cache kept.
+2. **Deal-pinned rule too narrow.** As first written that morning (ATR below ~0.5% AND 20-day
+   momentum within ±1% AND price above target or a tiny range), it let two confirmed all-cash
+   takeover targets through as **#1 and #2**: DV (Nielsen, $13.60) and PAYO (Nuvei, $7.40). ATR
+   alone separates cleanly: all 16 stocks under 0.8% had a pinned profile (highest 0.45%), nothing
+   traded between 0.45% and 0.90%, and the universe's 2nd-percentile ATR was 1.45%. Rule and gate
+   changed to ATR < 0.75%.
+3. **Post-earnings reference close.** The rule names the post-print close, but its origin case
+   (ARLO, bought below the post-print close yet +12% above the pre-print close) only fails against
+   the pre-print close. The gate uses the lower of the two, which catches both readings.
+
+**Verified:** offline tests on synthetic stocks for every gate (including a DV-like pinned case),
+survivor-only ranking invariance, the sector cap, the review flag, and earnings-date and percent
+parsing; display tests for new-format, old-format, malformed and missing watchlists.
+**Live run (2026-09-14 close, 2m10s):** 1,568 stocks from Finviz → 1,193 after validation →
+gates removed 379 (shrinking revenue 328, illiquid 27, >40% above the 50-day 20, >20% above the
+20-day 19, deal-pinned 16, fresh breakout 10, post-earnings jump 6, data 4; a stock can fail
+several) → **814 survivors** → 50 listed, at most 6 per sector. All 16 pinned names were gated,
+DV, PAYO and WEAV included; the lowest ATR left on the watchlist is 1.62%. BZH, UTZ, VREX,
+DBRG, CBZ and RAMP — the near-motionless names that crowded the Week 53 top 15 — are gone;
+BRBS and MYGN fail on shrinking revenue. The 50-day distance now populates for 1,185 of 1,193.
+
+**Open for Phase 2:** the "squeeze" factor is still cross-sectional low volatility and lifts quiet
+names; the shrinking-revenue gate is literal (a −0.09% quarter counts) and removes about a
+quarter of the universe; volume ratio is still one session; option 3's timing modes wait on the
+factor study.
+
+| File | Change |
+|------|--------|
+| `screener.py` | Finviz custom view + `_finviz_number`; truncated-fetch guard; 110-day lookback; SMA distance, ATR%, breakout age, earnings reaction signals; `apply_gates`; survivor-only ranking with sector cap; `_save_history`; `--top-n 50`, `--max-per-sector` |
+| `trading_script.py` | `_print_screener_watchlist()` — new columns, gate notes, visible error on a malformed file |
+| `Makefile`, `README_CLAUDE.md` | `--top-n 50`; pipeline and history-file description |
+| `.claude/rules/entry-discipline.md` | Deal-pinned = ATR(14) < 0.75% (revised with the DV/PAYO evidence); screener gates are a backstop, not a substitute |
+| `Start Your Own/watchlist.csv`, `universe_cache.csv`, `screener_history/screen_2026-09-14.csv` | First gated screen |

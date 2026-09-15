@@ -45,11 +45,11 @@ RISK ?=
 POSITIONS ?=
 
 screen:
-	venv/bin/python screener.py --data-dir "Start Your Own" --top-n 15
+	venv/bin/python screener.py --data-dir "Start Your Own" --top-n 50
 
 weekend:
 	@echo "Running screener..."
-	@venv/bin/python screener.py --data-dir "Start Your Own" --top-n 15 || \
+	@venv/bin/python screener.py --data-dir "Start Your Own" --top-n 50 || \
 	echo "⚠️  Screener failed — proceeding with cached watchlist (if available)."
 	@venv/bin/python trading_script.py --data-dir "Start Your Own" --check-data-current --log-level ERROR || \
 	(echo "⚠️  Portfolio data is not current for the last trading day. Ask Claude to 'run daily' first, then 'run weekend'." && exit 1)

@@ -99,7 +99,7 @@ The quantitative screener (`screener.py`) scans the full micro/small-cap univers
 2. Enriches with 30-day yfinance price/volume history
 3. Calculates signals: 20-day momentum, volume breakout ratio, relative strength vs IWM, Bollinger Band width
 4. Ranks by composite score: 40% momentum + 30% volume breakout + 30% volatility squeeze
-5. Outputs top 15 candidates to `Start Your Own/watchlist.csv`
+5. Applies the hard gates (prohibited businesses, deal-pinned, distance from 20/50-day SMA, fresh breakout, post-earnings jump, shrinking revenue, liquidity) **before** ranking, then outputs the top 50 survivors (max 6 per sector) to `Start Your Own/watchlist.csv` and the full gated universe to `Start Your Own/screener_history/screen_YYYY-MM-DD.csv`
 
 **Allocation Framework** (see `portfolio_rules.md`):
 - **Catalyst plays**: max 1 position, 15% equity (binary events like PDUFAs)
@@ -116,7 +116,8 @@ The quantitative screener (`screener.py`) scans the full micro/small-cap univers
 | `Start Your Own/daily_analysis_prompt.md` | Daily 6-section output format + weekend session directive questions |
 | `Start Your Own/weekend_summary.md` | Weekend deep research prompt — updated by `make weekend` |
 | `screener.py` | Quantitative screener: Finviz universe → yfinance signals → ranked watchlist CSV |
-| `Start Your Own/watchlist.csv` | Screener output — top 15 candidates ranked by composite score |
+| `Start Your Own/watchlist.csv` | Screener output — top 50 gate survivors ranked by composite score (max 6 per sector) |
+| `Start Your Own/screener_history/` | Every screen's full universe with signals, fundamentals, gate results and scores — the dataset for factor research |
 | `inject_last_thesis.py` | Injects previous week's thesis into `weekend_summary.md` |
 | `generate_pdf.py` | Converts markdown reports to PDF (requires `fpdf2`) |
 | `Weekly Deep Research (MD)/` | All weekly analysis files (Full + Summary) |

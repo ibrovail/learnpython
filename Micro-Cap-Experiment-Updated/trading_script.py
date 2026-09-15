@@ -1779,6 +1779,54 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
     )
 
 
+def _print_screener_watchlist(data_dir: Path) -> None:
+    """Print the <screener_watchlist> block for the weekend prompt, if a watchlist exists."""
+    watchlist_path = data_dir / "watchlist.csv"
+    if not watchlist_path.exists():
+        return
+    try:
+        wl = pd.read_csv(watchlist_path)
+        if wl.empty:
+            return
+        gen_date = datetime.fromtimestamp(watchlist_path.stat().st_mtime).strftime("%Y-%m-%d")
+        cols = [c for c in ["rank", "ticker", "sector", "latest_price", "market_cap",
+                            "momentum_20d", "volume_ratio", "bb_width", "pct_vs_sma50",
+                            "atr_pct", "sales_qq", "target_upside", "recom", "earnings",
+                            "review_flag", "composite_score"] if c in wl.columns]
+        if "ticker" not in cols:
+            raise ValueError(f"no ticker column (columns: {', '.join(map(str, wl.columns[:6]))})")
+        display = wl[cols].copy()
+        if "market_cap" in display.columns:
+            display["market_cap"] = display["market_cap"].apply(
+                lambda v: f"${v/1e6:.0f}M" if pd.notna(v) and v < 1e9 else (f"${v/1e9:.1f}B" if pd.notna(v) else "N/A"))
+        if "review_flag" in display.columns:
+            display["review_flag"] = display["review_flag"].fillna("")
+        table = display.to_markdown(index=False)
+    except Exception as e:
+        # A malformed watchlist used to be skipped silently -- indistinguishable in the
+        # prompt from no screen having run at all.
+        print(f'<screener_watchlist error="watchlist.csv unreadable: {type(e).__name__}: {e}" />')
+        print()
+        return
+
+    print(f'<screener_watchlist generated="{gen_date}" candidates="{len(wl)}">')
+    print(table)
+    print("</screener_watchlist>")
+    print()
+    print("**Screener Integration:**")
+    print("- Every candidate has already passed the screener's hard gates: prohibited businesses, "
+          "deal-pinned, >40% above the 50-day or >20% above the 20-day SMA, days 1-3 of a >10% "
+          "breakout, post-earnings jump, shrinking revenue (Sales Q/Q < 0), liquidity. Gates run on "
+          "Finviz-level data — the PRV gate (browser quote page) still applies to every name.")
+    print("- `review_flag` = industry that mixes prohibited and permitted businesses: read what the "
+          "company does before any research.")
+    print("- Evaluate AT LEAST the top 5 screener candidates before selecting (discover via "
+          "WebSearch, verify on the browser quote page).")
+    print("- For each screener candidate not selected, state why in one line.")
+    print("- Respect the sector cap: max 2 positions in the same GICS sector.")
+    print()
+
+
 def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]], cash: float, planned_injection: float | None = None, session_directives: dict[str, str] | None = None) -> None:
     """Print weekend summary in XML format for deep research sessions.
 
@@ -1911,32 +1959,7 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
     print()
 
     # -------- Screener Watchlist (if available) --------
-    _watchlist_path = Path(DATA_DIR) / "watchlist.csv"
-    if _watchlist_path.exists():
-        try:
-            _wl = pd.read_csv(_watchlist_path)
-            if not _wl.empty:
-                _gen_date = datetime.fromtimestamp(_watchlist_path.stat().st_mtime).strftime("%Y-%m-%d")
-                print(f'<screener_watchlist generated="{_gen_date}" candidates="{len(_wl)}">')
-                # Print as markdown table
-                _wl_cols = [c for c in ["rank", "ticker", "sector", "latest_price", "market_cap",
-                            "momentum_20d", "momentum_5d", "volume_ratio", "rs_vs_iwm",
-                            "bb_width", "above_sma20", "above_sma50", "data_confidence",
-                            "composite_score"] if c in _wl.columns]
-                _display = _wl[_wl_cols].copy()
-                if "market_cap" in _display.columns:
-                    _display["market_cap"] = _display["market_cap"].apply(
-                        lambda v: f"${v/1e6:.0f}M" if pd.notna(v) and v < 1e9 else (f"${v/1e9:.1f}B" if pd.notna(v) else "N/A"))
-                print(_display.to_markdown(index=False))
-                print("</screener_watchlist>")
-                print()
-                print("**Screener Integration:**")
-                print("- Evaluate AT LEAST the top 5 screener candidates via WebSearch before selecting.")
-                print("- For each screener candidate not selected, state why in one line.")
-                print("- Respect the sector cap: max 2 positions in the same GICS sector.")
-                print()
-        except Exception:
-            pass  # Watchlist missing or malformed — skip silently
+    _print_screener_watchlist(Path(DATA_DIR))
 
     # -------- Holdings --------
     print(f'<holdings date="{friday_iso}">')
