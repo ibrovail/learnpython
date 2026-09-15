@@ -1,0 +1,3 @@
+# Raw inputs are reproducible: universe/watchlist snapshots come from git history and
+# prices from yfinance (factor_study.py rebuilds both). Only code and results are tracked.
+data/
