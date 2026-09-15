@@ -876,3 +876,43 @@ factor study.
 | `Makefile`, `README_CLAUDE.md` | `--top-n 50`; pipeline and history-file description |
 | `.claude/rules/entry-discipline.md` | Deal-pinned = ATR(14) < 0.75% (revised with the DV/PAYO evidence); screener gates are a backstop, not a substitute |
 | `Start Your Own/watchlist.csv`, `universe_cache.csv`, `screener_history/screen_2026-09-14.csv` | First gated screen |
+
+---
+
+## 2026-09-14 (f) — Screener Phase 2: pre-registered factor study
+
+Tested whether the screener's composite (40% 20-day momentum / 30% one-session volume ratio / 30%
+Bollinger squeeze) and nine candidate signals rank future returns. Decision rules were committed
+before any result (`6c28378`); the script and raw output were committed before interpretation
+(`02ddb4d`). `research/factor_study.py` rebuilds point-in-time universes from the 19 committed
+`universe_cache.csv` snapshots, recomputes every signal at 21 Friday formation dates (2026-04-17 →
+2026-09-04) on adjusted yfinance prices, applies the price-computable Phase 1 gates, and measures
+per-date rank IC at 5/10/20 sessions with Newey-West t-statistics.
+
+**Pre-registered outcome (10 sessions):** `vol_ratio`, `low_vol`, `near_high`, `vol_5_50`,
+`squeeze` and `vs_sma50` pass; `mom20` unproven (t 1.24) and removed; `mom5`, both 60-session
+momentum signals and own-history squeeze dropped; no timing modes, so option 3 is not supported;
+every gate confirmed.
+
+**Post-hoc diagnostics** (`research/factor_diagnostics.py`) qualify it. The survivors' median
+stock fell while their mean rose. Signals mainly flag losers, with quintile mean spreads near zero.
+`squeeze` holds no information beyond low volatility (partial IC −0.001), and nor, nearly, does the
+current composite. Volume is the only ingredient with independent, direction-independent
+information. Most skill appears in weeks the median fell. The practical top-15 edge is under 1pp
+per 10 sessions. The delivered watchlists beat the universe by more (+2.25pp mean over 10 sessions)
+than the rebuilt composite does — unexplained, open for Phase 4. A deduplicated four-signal
+composite scored best in-sample but was chosen post hoc on a near-tie, so it is tracked rather
+than adopted.
+
+Two pre-registered metrics compared a group mean with a population median, which flatters the
+group in right-skewed data; unbiased versions were added, and `.claude/rules/research-methods.md`
+records the lesson.
+
+| File | Change |
+|------|--------|
+| `research/factor_study.py` | Pre-registered study: snapshots → point-in-time universes, signals, gates, rank IC, verdicts |
+| `research/factor_diagnostics.py` | Post-hoc checks: skew, quintiles, winsorized and partial IC, direction, unbiased top-N and watchlists, redundancy, composites side by side |
+| `research/output/*.csv` | All results |
+| `research/.gitignore` | Raw snapshots and price cache excluded (reproducible from git and yfinance) |
+| `Experiment Details/Screener Factor Study — Phase 2.md` (+ PDF) | Pre-registration (Part 1) and results (Part 2) |
+| `.claude/rules/research-methods.md` | New: pre-register, like-with-like comparisons, never rank IC alone, redundancy, partial IC, direction split |
