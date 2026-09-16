@@ -97,8 +97,8 @@ The quantitative screener (`screener.py`) scans the full micro/small-cap univers
 **How it works:**
 1. Pulls ~1,000 stocks from Finviz (market cap ≤$2B, price ≥$1, ADV ≥$500K)
 2. Enriches with 30-day yfinance price/volume history
-3. Calculates signals: 20-day momentum, volume breakout ratio, relative strength vs IWM, Bollinger Band width
-4. Ranks by composite score: 40% momentum + 30% volume breakout + 30% volatility squeeze
+3. Calculates signals: 20-day and 5-day momentum, 1-day and 5/50-day volume ratios, relative strength vs IWM, Bollinger Band width, 20-day return volatility, distance from the 60-day high, distance above the 20- and 50-day SMAs, ATR%, breakout age, post-earnings reaction
+4. Ranks by composite score (since 2026-09-15): the equal-weighted ranks of low volatility, proximity to the 60-day high, Bollinger squeeze, 5/50-day volume, 1-day volume ratio and distance above the 50-day SMA — the six signals that passed the Phase 2 factor study (`Experiment Details/Screener Factor Study — Phase 2.md`). 20-day momentum is reported but no longer scored: it showed no ranking skill. The legacy and deduplicated scores are recorded in `screener_history/` for an out-of-sample comparison
 5. Applies the hard gates (prohibited businesses, deal-pinned, distance from 20/50-day SMA, fresh breakout, post-earnings jump, shrinking revenue, liquidity) **before** ranking, then outputs the top 50 survivors (max 6 per sector) to `Start Your Own/watchlist.csv` and the full gated universe to `Start Your Own/screener_history/screen_YYYY-MM-DD.csv`
 
 **Allocation Framework** (see `portfolio_rules.md`):

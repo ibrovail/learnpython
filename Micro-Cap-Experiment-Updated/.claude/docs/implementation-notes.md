@@ -916,3 +916,37 @@ records the lesson.
 | `research/.gitignore` | Raw snapshots and price cache excluded (reproducible from git and yfinance) |
 | `Experiment Details/Screener Factor Study — Phase 2.md` (+ PDF) | Pre-registration (Part 1) and results (Part 2) |
 | `.claude/rules/research-methods.md` | New: pre-register, like-with-like comparisons, never rank IC alone, redundancy, partial IC, direction split |
+
+---
+
+## 2026-09-15 — Screener Phase 3: the Phase 2 composite goes live
+
+`composite_score` is now the **equal-weighted percentile ranks of `low_vol`, `near_high`,
+`squeeze` (inverted Bollinger width), `vol_5_50`, `vol_ratio` and `vs_sma50`** — the six signals
+that passed the pre-registered Phase 2 test — computed among gate survivors only. **20-day
+momentum is no longer scored**: it showed no ranking skill (IC 0.031, t 1.24 at 10 sessions) and
+is 0.77 correlated with `vs_sma50`, which is in. It is still reported in the watchlist.
+
+Three new signals in `_calculate_signals`: `low_vol` (negative 20-session return σ, so calmer
+ranks higher), `near_high` (distance from the 60-session high) and `vol_5_50` (5- vs 50-session
+average volume). The "incomplete signals" gate now requires all six composite inputs, so a stock
+without 60 sessions of history is not ranked rather than ranked on partial data.
+
+**Shadow scores** `composite_legacy` (the replaced 40/30/30 score) and `composite_dedup`
+(`low_vol`, `vol_5_50`, `vol_ratio`, `vs_sma50` — best in-sample but chosen post hoc on a
+near-tie) are computed and saved with every screen. They never order the watchlist; they exist so
+Phase 4 can compare all three on screens none of them was chosen on.
+
+**Verified on the 2026-09-15 close** (2m07s): 1,568 universe → 1,190 evaluated → **807 survivors**
+→ 50 listed. The new signals populate for 1,180–1,188 of 1,190 rows; the incomplete-signals gate
+rose from 2 to 10 (names under 60 sessions, as intended); shadow scores present for all 807
+survivors. The new score is rank-correlated 0.85 with the old one and 0.91 with the dedup
+version, and 27 of the new top 50 were in the previous evening's old-composite top 50. The
+ticker-identity check dropped 4 rows (0.3%, far below the 30% corruption alarm).
+
+| File | Change |
+|------|--------|
+| `screener.py` | `COMPOSITE_INPUTS`; `low_vol` / `near_high` / `vol_5_50` signals; equal-weight composite; `composite_legacy` and `composite_dedup`; watchlist columns and printed table (V5/50 and Near% replace BBW) |
+| `trading_script.py` | Weekend prompt: `vol_5_50` and `near_high` columns, and a description of the new score |
+| `.claude/rules/entry-discipline.md`, `README_CLAUDE.md` | New composite definition plus the measured-edge caveat (top 15 beats survivors by <1pp per 10 sessions, mostly defensively) |
+| `Experiment Details/Screener Factor Study — Phase 2.md` | Part 3: what was implemented, and the open question about how `portfolio_rules.md` defines momentum/technical plays |

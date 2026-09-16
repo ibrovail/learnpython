@@ -76,7 +76,7 @@ current data. If sources disagree or the latest data is unavailable, mark it
 
 ## Screener Score is Sourcing, Not Conviction
 
-Screener composite score (momentum + volume + volatility-squeeze) identifies *candidates* but does NOT confer fundamental conviction. Apply the full 5-step verification to every screener pick — **step 1 requires the browser quote page (PRV gate, `analysis-workflow.md`), not WebSearch**:
+Screener composite score — since 2026-09-15 the equal-weighted ranks of low volatility, proximity to the 60-day high, Bollinger squeeze, 5/50-day volume, 1-day volume ratio and distance above the 50-day SMA (the six signals that passed the Phase 2 factor study; 20-day momentum is reported but no longer scored) — identifies *candidates* but does NOT confer fundamental conviction. **Its measured edge is small and mostly defensive:** the top 15 beat the surviving universe by under 1pp per 10 sessions, largely by avoiding volatile losers rather than by finding winners. Apply the full 5-step verification to every screener pick — **step 1 requires the browser quote page (PRV gate, `analysis-workflow.md`), not WebSearch**:
 1. **Fundamental quality — from the live quote page**: TTM revenue **and growth %**, TTM EPS/net income, forward P/E vs trailing, analyst rating + price target, 52-week range position, beta. *Shrinking revenue is the single strongest disqualifier this book has found* (TDAY −8.3% YoY → exited; FOXF −4.5% with TTM EPS −$7.14 → withdrawn; PAR +18.8% → bought).
 2. Catalyst durability over the chosen timing window
 3. **Thesis-input freshness** — identify the thesis's time-varying driver(s) and verify each is current and not reversing (see *Thesis-Input Freshness* above). Mandatory for any commodity/rate/FX/subsidy-dependent name.

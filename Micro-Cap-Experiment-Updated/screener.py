@@ -505,6 +505,18 @@ def _calculate_signals(ticker: str, hist: pd.DataFrame | None, iwm_ret_20d: floa
         base["atr_pct"] = round(float(true_range.iloc[-14:].mean()) / last * 100, 3)
         base["last_range_pct"] = round(float(high.iloc[-1] - low.iloc[-1]) / last * 100, 3)
 
+    # Composite signals adopted from the Phase 2 factor study
+    # ("Experiment Details/Screener Factor Study — Phase 2.md"). Each is stored so a HIGHER
+    # value ranks better, which is what score_and_rank assumes.
+    if n >= 21:
+        base["low_vol"] = round(-float(close.pct_change().tail(20).std()) * 100, 4)
+    if n >= 60:
+        sixty_high = float(hist["High"].tail(60).max())
+        if sixty_high > 0:
+            base["near_high"] = round((last / sixty_high - 1) * 100, 2)
+    if n >= 50 and float(volume.tail(50).mean()) > 0:
+        base["vol_5_50"] = round(float(volume.tail(5).mean() / volume.tail(50).mean()), 3)
+
     # Breakout age (entry-discipline.md: avoid days 1-3 of a new 20-day breakout when
     # the move is >+10%). A breakout session closes above the prior 20 closes; the
     # breakout starts at the first session of the latest unbroken run of them, and
@@ -556,6 +568,11 @@ def _calculate_signals(ticker: str, hist: pd.DataFrame | None, iwm_ret_20d: floa
 # Scoring and ranking
 # ---------------------------------------------------------------------------
 
+# Composite inputs, adopted 2026-09-15 from the Phase 2 factor study. The six signals that
+# passed the pre-registered test, equal-weighted on percentile ranks. A stock missing any of
+# them cannot be ranked and fails the "incomplete signals" gate.
+COMPOSITE_INPUTS = ("low_vol", "near_high", "bb_width", "vol_5_50", "volume_ratio", "pct_vs_sma50")
+
 # Gate thresholds mirror .claude/rules/entry-discipline.md -- change them there first.
 MIN_DOLLAR_VOLUME = 500_000
 MAX_PCT_ABOVE_SMA50 = 40.0
@@ -588,7 +605,7 @@ def apply_gates(df: pd.DataFrame) -> pd.DataFrame:
 
     checks = {
         "low data confidence": col("data_confidence").eq("LOW"),
-        "incomplete signals": col("momentum_20d").isna() | col("volume_ratio").isna() | col("bb_width").isna(),
+        "incomplete signals": pd.concat([col(c) for c in COMPOSITE_INPUTS], axis=1).isna().any(axis=1),
         "illiquid (<$500K/day)": col("avg_dollar_volume") < MIN_DOLLAR_VOLUME,
         "deal-pinned": col("atr_pct") < PINNED_MAX_ATR_PCT,
         ">40% above 50-day SMA": col("pct_vs_sma50") > MAX_PCT_ABOVE_SMA50,
@@ -633,17 +650,32 @@ def score_and_rank(df: pd.DataFrame, top_n: int = 50,
 
     # Percentile ranks among survivors only, so gated names cannot shift them
     s = scored.loc[survivors]
+    ranks = {
+        "low_vol": s["low_vol"].rank(pct=True),              # calmer ranks higher
+        "near_high": s["near_high"].rank(pct=True),           # closer to the 60-day high
+        # BB squeeze: LOWER width = TIGHTER = better setup (rank ascending, invert)
+        "squeeze": 1 - s["bb_width"].rank(pct=True),
+        "vol_5_50": s["vol_5_50"].rank(pct=True),
+        "vol_ratio": s["volume_ratio"].rank(pct=True),
+        "vs_sma50": s["pct_vs_sma50"].rank(pct=True),
+    }
+    for name, r in ranks.items():
+        scored.loc[survivors, f"rank_{name}"] = r
     scored.loc[survivors, "mom_rank"] = s["momentum_20d"].rank(pct=True)
-    scored.loc[survivors, "vol_rank"] = s["volume_ratio"].rank(pct=True)
-    # BB squeeze: LOWER width = TIGHTER = better setup (rank ascending, invert)
-    scored.loc[survivors, "bb_rank"] = 1 - s["bb_width"].rank(pct=True)
 
-    # Composite: 40% momentum, 30% volume breakout, 30% volatility squeeze
-    scored["composite_score"] = (
-        0.40 * scored["mom_rank"]
-        + 0.30 * scored["vol_rank"]
-        + 0.30 * scored["bb_rank"]
-    ).round(4)
+    # Composite: the six signals that passed the Phase 2 pre-registered test, equal-weighted.
+    # 20-day momentum is no longer scored -- it showed no ranking skill over 5/10/20 sessions
+    # (IC 0.031, t 1.24 at 10 sessions), and it is 0.77 correlated with vs_sma50, which is in.
+    scored["composite_score"] = (sum(ranks.values()) / len(ranks)).round(4)
+
+    # Shadow scores -- recorded for the Phase 4 out-of-sample comparison, never used to order
+    # the watchlist. "legacy" is the composite this replaced; "dedup" drops the near-duplicates
+    # (squeeze ~ low_vol 0.80, near_high ~ vs_sma50 0.75) and scored best in-sample, but its
+    # signal set was chosen after seeing the data, so it has to prove itself on fresh screens.
+    scored["composite_legacy"] = (0.40 * scored["mom_rank"] + 0.30 * ranks["vol_ratio"]
+                                  + 0.30 * ranks["squeeze"]).round(4)
+    scored["composite_dedup"] = ((ranks["low_vol"] + ranks["vol_5_50"]
+                                  + ranks["vol_ratio"] + ranks["vs_sma50"]) / 4).round(4)
 
     # Sector cap on the list so one hot sector cannot crowd it out. The book holds at
     # most 2 per sector (3 healthcare), but 11 sectors x 3 = 33 cannot fill 50 slots,
@@ -684,10 +716,10 @@ def format_watchlist(df: pd.DataFrame, data_dir: Path) -> str:
     # Columns for output
     out_cols = [
         "rank", "ticker", "company", "sector", "industry", "latest_price", "market_cap",
-        "momentum_20d", "momentum_5d", "volume_ratio", "rs_vs_iwm", "bb_width",
-        "pct_vs_sma20", "pct_vs_sma50", "atr_pct", "sales_qq", "eps_qq", "fwd_pe",
-        "recom", "target_upside", "beta", "earnings", "short_float", "review_flag",
-        "data_confidence", "composite_score",
+        "momentum_20d", "momentum_5d", "volume_ratio", "vol_5_50", "rs_vs_iwm", "bb_width",
+        "low_vol", "near_high", "pct_vs_sma20", "pct_vs_sma50", "atr_pct", "sales_qq",
+        "eps_qq", "fwd_pe", "recom", "target_upside", "beta", "earnings", "short_float",
+        "review_flag", "data_confidence", "composite_score", "composite_legacy", "composite_dedup",
     ]
     available = [c for c in out_cols if c in df.columns]
     out = df[available].copy()
@@ -711,7 +743,8 @@ def format_watchlist(df: pd.DataFrame, data_dir: Path) -> str:
         return "n/a".rjust(width) if v is None or pd.isna(v) else format(v, fmt).rjust(width)
 
     header = (f"  {'Rk':>3} {'Ticker':<7} {'Sector':<16} {'Price':>8} {'Mkt Cap':>8} {'Mom20d':>7} "
-              f"{'VolRat':>6} {'BBW':>6} {'vs50d':>7} {'ATR%':>5} {'SalesQ':>7} {'Upside':>7} {'Score':>6}  Flag")
+              f"{'VolRat':>6} {'V5/50':>6} {'Near%':>6} {'vs50d':>7} {'ATR%':>5} {'SalesQ':>7} "
+              f"{'Upside':>7} {'Score':>6}  Flag")
     lines.append(header)
     lines.append("  " + "-" * (len(header) - 2))
 
@@ -724,7 +757,8 @@ def format_watchlist(df: pd.DataFrame, data_dir: Path) -> str:
             f"{str(r.get('market_cap_display', 'N/A')):>8} "
             f"{_cell(r.get('momentum_20d'), '+.1f', 6)}% "
             f"{_cell(r.get('volume_ratio'), '.1f', 5)}x "
-            f"{_cell(r.get('bb_width'), '.3f', 6)} "
+            f"{_cell(r.get('vol_5_50'), '.1f', 5)}x "
+            f"{_cell(r.get('near_high'), '+.1f', 5)}% "
             f"{_cell(r.get('pct_vs_sma50'), '+.1f', 6)}% "
             f"{_cell(r.get('atr_pct'), '.1f', 5)} "
             f"{_cell(r.get('sales_qq'), '+.1f', 6)}% "

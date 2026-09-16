@@ -1790,7 +1790,7 @@ def _print_screener_watchlist(data_dir: Path) -> None:
             return
         gen_date = datetime.fromtimestamp(watchlist_path.stat().st_mtime).strftime("%Y-%m-%d")
         cols = [c for c in ["rank", "ticker", "sector", "latest_price", "market_cap",
-                            "momentum_20d", "volume_ratio", "bb_width", "pct_vs_sma50",
+                            "momentum_20d", "volume_ratio", "vol_5_50", "near_high", "pct_vs_sma50",
                             "atr_pct", "sales_qq", "target_upside", "recom", "earnings",
                             "review_flag", "composite_score"] if c in wl.columns]
         if "ticker" not in cols:
@@ -1818,6 +1818,11 @@ def _print_screener_watchlist(data_dir: Path) -> None:
           "deal-pinned, >40% above the 50-day or >20% above the 20-day SMA, days 1-3 of a >10% "
           "breakout, post-earnings jump, shrinking revenue (Sales Q/Q < 0), liquidity. Gates run on "
           "Finviz-level data — the PRV gate (browser quote page) still applies to every name.")
+    print("- `composite_score` (since 2026-09-15) = equal-weight ranks of low volatility, proximity to "
+          "the 60-day high, Bollinger squeeze, 5/50-day volume, 1-day volume ratio and distance above "
+          "the 50-day SMA — the six signals that passed the Phase 2 factor study. 20-day momentum is "
+          "reported but no longer scored (no measurable ranking skill). The measured edge is small and "
+          "mostly defensive, so rank is sourcing, never conviction.")
     print("- `review_flag` = industry that mixes prohibited and permitted businesses: read what the "
           "company does before any research.")
     print("- Evaluate AT LEAST the top 5 screener candidates before selecting (discover via "

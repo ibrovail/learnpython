@@ -256,3 +256,25 @@ changed twice mid-sample.
 **Next:** Phase 3 implements the adopted composite and the shadow scores. Phase 4 re-runs this
 study on the saved screens — including the Finviz fundamentals saved since 2026-09-14 — after about
 12 more weekly screens.
+
+---
+
+## Part 3 — Implemented (2026-09-15)
+
+- **`composite_score`** is now the equal-weighted percentile ranks of `low_vol`, `near_high`,
+  `squeeze` (inverted Bollinger width), `vol_5_50`, `vol_ratio` and `vs_sma50`, computed among
+  gate survivors only. **20-day momentum is no longer scored**; it is still reported.
+- **New signals** in `screener.py`: `low_vol` (negative 20-session return σ, so calmer ranks
+  higher), `near_high` (distance from the 60-session high) and `vol_5_50` (5- vs 50-session
+  average volume). The "incomplete signals" gate now requires all six composite inputs, so a
+  stock without 60 sessions of history is not ranked.
+- **Shadow scores** `composite_legacy` (the replaced 40/30/30 score) and `composite_dedup` (the
+  four-signal version) are computed and saved with every screen. They never order the watchlist —
+  they exist so Phase 4 can compare all three on screens none of them was chosen on.
+- **Unchanged:** every gate, the sector cap, the top-50 output, the regime filter, and the rule
+  that screener rank is sourcing rather than conviction.
+
+**Open for the weekend review:** `portfolio_rules.md` still defines momentum/technical plays as
+"entry based on momentum, volume confirmation, and technical setup". The study found 20-day
+momentum has no ranking skill in this universe over 5–20 sessions, so that definition deserves a
+second look — a strategy question for the user, not a screener change.
