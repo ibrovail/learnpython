@@ -1,7 +1,9 @@
-"""Phase 2 screener factor study: rank IC of screener signals on point-in-time universes.
+"""Screener factor study: rank IC of screener signals on point-in-time universes.
 
-Pre-registered in "Experiment Details/Screener Factor Study — Phase 2.md" (Part 1), committed
-before this script first ran. The verdicts it prints apply those rules mechanically.
+Phase 2 pre-registered in "Experiment Details/Screener Factor Study — Phase 2.md" (Part 1).
+Phase 3.5 extends it to 40- and 60-session horizons, pre-registered in
+"Experiment Details/Horizon Factor Study — Phase 3.5.md" (Part 1), committed before this
+script was run at those horizons. The verdicts it prints apply those rules mechanically.
 
 Inputs (research/data/, gitignored -- rebuilt from git history and yfinance):
   universe_commits.txt, watchlist_commits.txt   one "<sha>|<committer ISO time>" per line
@@ -30,11 +32,17 @@ sys.path.insert(0, str(ROOT.parent))
 import screener as scr  # noqa: E402  -- exclusion lists, ticker repair, gate thresholds
 
 DATA, OUT = ROOT / "data", ROOT / "output"
-PRICE_START, PRICE_END = "2025-11-03", "2026-09-15"   # end is exclusive
+PRICE_START, PRICE_END = "2025-11-03", "2026-09-18"   # end is exclusive
 FIRST_FORMATION = pd.Timestamp("2026-04-17")
-HORIZONS = (5, 10, 20)
-NW_LAGS = {5: 0, 10: 1, 20: 3}   # weekly formation dates overlap the 10- and 20-session horizons
-PRIMARY = 10
+HORIZONS = (5, 10, 20, 40, 60)
+# Weekly formation dates overlap every horizon beyond 5 sessions. Phase 2 used 0/1/3 for
+# 5/10/20 and those are kept unchanged for continuity. Phase 3.5 pre-registers ceil(h/5) for
+# the new horizons: at 40 and 60 sessions consecutive observations share 7 of 8 and 11 of 12
+# of their forward windows, so Phase 2's lag structure would badly overstate t-statistics.
+NW_LAGS = {5: 0, 10: 1, 20: 3, 40: 8, 60: 12}
+PRIMARY = 40                     # Phase 3.5 rule 1: the midpoint of the adopted 40-60 hold
+CONTINUITY = (5, 10, 20)         # reported, but cannot trigger a decision rule
+MIN_DATES = 8                    # Phase 3.5 rule 10: below this a horizon is descriptive only
 MIN_NAMES = 30                   # fewer names with data on a date -> no IC for that date
 BATCH = 100
 SIGNALS = ["mom20", "vol_ratio", "squeeze", "composite",
@@ -250,7 +258,7 @@ def quintile_spread(x: pd.Series, y: pd.Series) -> float:
 
 
 def verdict(mean_ic: float, t: float, hit: float) -> str:
-    """Pre-registered rules 2-4 (10-session horizon)."""
+    """Pre-registered rules 2-4, applied at PRIMARY."""
     if np.isnan(mean_ic) or np.isnan(t):
         return "NO DATA"
     if mean_ic > 0 and t >= 2.0 and hit >= 0.60:
@@ -376,6 +384,11 @@ def main() -> None:
     print(pd.DataFrame(cover_rows).to_string(index=False))
     for h in HORIZONS:
         t = summary[summary["horizon"] == h].sort_values("nw_t", ascending=False)
+        _n = int(t["dates"].max()) if not t.empty else 0
+        _tag = ("  [PRIMARY]" if h == PRIMARY else ("  [continuity only]" if h in CONTINUITY else ""))
+        if _n < MIN_DATES:
+            _tag += f"  [DESCRIPTIVE ONLY -- {_n} dates < {MIN_DATES} (rule 10)]"
+        print(f"(horizon {h}: {_n} dates{_tag})")
         print(f"\n=== Rank IC among gate survivors, {h}-session forward return ===")
         print(t[["signal", "dates", "mean_ic", "nw_t", "hit_rate", "mean_ic_eligible", "q5_q1", "mean_names"]
                 + (["verdict_10d"] if h == PRIMARY else [])].round(3).to_string(index=False))
