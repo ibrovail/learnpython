@@ -88,10 +88,14 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   standing manual, history split to `Experiment Details/Rules Amendment History.md`. Found in
   passing: raw-equity max drawdown understated the true figure by **12.3 points** (−24.99% vs
   −37.26%).
-- **In progress**: **Phase 3.5** — pre-registration committed (`9f47b4a`) before any result;
-  tests whether the six composite signals hold at **40/60 sessions**, the horizon just adopted.
-  Phase 2 measured 10 sessions only. Runs on existing reconstructed universes (April–June dates
-  already carry full forward data), so it does not wait for Phase 4.
+- **Complete**: **Phase 3.5 reported** (`9f47b4a` pre-reg → `afbf106` raw → interpretation).
+  **All six composite signals retain support at 40 sessions; the composite stands (rule 5).**
+  Screener edge rises with horizon — top-50 excess **+0.78pp at 10 sessions → +5.57pp at 40 →
+  +6.99pp at 60** — and Phase 2's quintile-spread weakness reverses. **But the study's own
+  sample-size floor was mis-specified**: it counted raw dates, when overlapping weekly windows
+  give an effective n of **1.75 at 40 sessions and 0.83 at 60**, so the t-statistics (up to 14.8)
+  are not trustworthy. Verdict: *no evidence of breakdown at the adopted horizon*, not
+  confirmation. `mom20` passes at 40s but stays out of the composite per pre-registered rule 8.
 - **Position**: **ATRC 3 sh +66.6%** ($57.14), stop **$53.40 / $53.25**. Equity **$724.44**, cash
   **$553.02 (76.3%)**, regime RISK-OFF. **47 sessions held — 60-session re-underwrite due in ~13
   sessions.** Current drawdown from the re-based peak −1.67%, clear of the breaker.

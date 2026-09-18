@@ -130,5 +130,167 @@ structure at these horizons would be badly overstated, and is not reported.
 
 ## Part 2 — Results
 
-*Not yet run. To be filled after the study executes, with raw output committed before
-interpretation.*
+*Run 2026-09-17. Pre-registration committed as `9f47b4a` before any 40/60-session result was
+computed; the extended script and raw output committed as `afbf106` before this interpretation.
+Everything under "Post-hoc" was written after seeing the results and is labelled as such.*
+
+### Data as run
+
+- **21 formation dates** (2026-04-17 → 2026-09-04) from **20 universe snapshots**.
+- **2,370 of 2,421 tickers priced** (2025-11-03 → 2026-09-17).
+- Dates with full forward data: 21 at 5 sessions, 20 at 10, 18 at 20, **14 at 40**, **10 at 60**.
+- Forward-return coverage among survivors is 99.7–100% on every date that has data, so
+  survivorship bias is negligible.
+- **Regime: every one of the 14 dates at 40 sessions is RISK-ON.** As the pre-registration
+  predicted, this study says nothing about the RISK-OFF question.
+
+### The pre-registered verdict
+
+**Rule 2 applied at 40 sessions — all six adopted signals retain support:**
+
+| Signal | Mean IC | NW t | IC > 0 | Verdict |
+|---|---|---|---|---|
+| `low_vol` | 0.182 | 5.29 | 100% | **RETAINS** |
+| `near_high` | 0.144 | 14.77 | 100% | **RETAINS** |
+| `squeeze` | 0.130 | 3.88 | 93% | **RETAINS** |
+| `vol_ratio` | 0.101 | 5.78 | 86% | **RETAINS** |
+| `vol_5_50` | 0.094 | 6.62 | 93% | **RETAINS** |
+| `vs_sma50` | 0.054 | 4.04 | 93% | **RETAINS** |
+| `composite` (legacy 40/30/30) | 0.131 | 5.52 | 100% | retains |
+| `vs_sma20` | 0.103 | 5.96 | 93% | retains (not in composite) |
+| `mom20` | 0.068 | 6.41 | 93% | **retains — see rule 8** |
+| `mom5` | 0.061 | 2.73 | 79% | retains (not in composite) |
+| `mom60_skip5` | −0.020 | −0.74 | 29% | LOSES |
+| `mom60_riskadj` | −0.027 | −0.95 | 21% | LOSES |
+| `squeeze_own` | −0.039 | −2.81 | 29% | LOSES |
+
+**6 of 6 retain support → rule 5 applies: the composite stands.** No horizon-mismatch is
+declared. Rules 6 and 7 are not triggered.
+
+**Rule 8 — momentum re-test.** `mom20` fails at 10 sessions (t 1.24) and passes at 40 (t 6.41).
+Per the rule fixed in advance, this is **reported but does not re-enter the composite before
+Phase 4.** Two things argue for that restraint independently: its IC against the *eligible*
+universe is only 0.023 at 40 sessions, and at 60 sessions its eligible IC turns **negative
+(−0.039)**. Both 60-session momentum signals remain negative at every horizon — the reversal
+Phase 2 found is confirmed, not overturned.
+
+**Rule 9 — gates unchanged.** Every gated group still underperformed survivors at 10 sessions:
+>40% above the 50-day **−12.35pp** mean, >20% above the 20-day **−1.99pp**, fresh breakout
+**−1.18pp**. Deal-pinned shows +0.69pp on **11 stock-dates** — too few to mean anything, and its
+median is −0.64pp. No gate changes.
+
+---
+
+### ⚠️ Post-hoc — the pre-registration contained a flaw, and it is the decisive fact
+
+**The t-statistics above are not trustworthy, and the sample-size floor I wrote to catch exactly
+this did not catch it.**
+
+Rule 10 set a floor of **8 formation dates**. At 40 sessions there are 14, and at 60 there are 10,
+so both cleared it. But **the floor counted raw dates, when what matters is how many
+*independent* observations those dates represent.** With weekly formation and an h-session
+forward window, roughly h/5 consecutive dates share the same forward period:
+
+| Horizon | Dates | Overlap | **Effective n** | NW lags | Lags as % of n |
+|---|---|---|---|---|---|
+| 5 | 21 | 1.0× | 21.0 | 0 | 0% |
+| 10 | 20 | 2.0× | 10.0 | 1 | 5% |
+| 20 | 18 | 4.0× | 4.5 | 3 | 17% |
+| **40** | **14** | **8.0×** | **1.75** | 8 | **57%** |
+| **60** | **10** | **12.0×** | **0.83** | 12 | **120%** |
+
+Counted another way — how many genuinely non-overlapping windows fit in the span the formation
+dates cover — there are **2.6 at 40 sessions and 1.7 at 60**. The IC series carries a mean lag-1
+autocorrelation of **+0.42** at 40 sessions, confirming the dependence is real and not an
+artifact of the arithmetic above.
+
+**At 60 sessions the Newey-West lag length (12) exceeds the number of observations (10).** That is
+not a conservative correction; it is an undefined one. The 60-session column should be read as a
+single overlapping episode and nothing more.
+
+This is why `near_high` prints **t = 14.77** on 14 dates and `low_vol` prints **t = 15.30** on 10.
+Those numbers are counting near-duplicate observations as independent evidence. The underlying
+IC series are genuinely tight and positive — `near_high` mean 0.144, sd 0.043, every date above
+zero — but "14 consecutive weekly readings of substantially the same two-month period" is roughly
+**two or three** independent looks, not fourteen.
+
+**The honest verdict, therefore: there is no evidence that the six signals break down at the
+adopted horizon. That is not the same as confirmation, and nothing here should be quoted as
+strong support.** The pre-registered rules were applied mechanically as written, and their
+outcome stands — but their evidential weight is far below what the t-statistics suggest.
+
+*Lesson recorded in `.claude/rules/research-methods.md`: a sample-size floor must be set on
+effective, overlap-adjusted observations, not raw formation dates. This is the same class of
+error as Phase 2's mean-vs-median comparison — a pre-registered metric that looked rigorous and
+silently flattered the result.*
+
+### Post-hoc — findings that do NOT rest on a t-statistic
+
+These are the results worth actually carrying forward. They still sit on overlapping data, but
+they are effect sizes and monotone trends rather than significance claims.
+
+**1. Phase 2's central weakness reverses at longer horizons.** Phase 2's most damaging diagnostic
+was that the quintile spread on **mean** returns was near zero or negative — the signals avoided
+volatile losers without finding winners. That flips with horizon:
+
+| Q5 − Q1, mean returns | 10 sessions | 40 sessions | 60 sessions |
+|---|---|---|---|
+| `low_vol` | −0.5pp | **+5.0pp** | **+11.7pp** |
+| `near_high` | +0.3pp | **+5.2pp** | **+8.3pp** |
+| `squeeze` | −0.9pp | **+3.1pp** | **+10.7pp** |
+| `vol_ratio` | −0.1pp | **+4.4pp** | **+9.1pp** |
+| `composite` | −0.4pp | **+4.3pp** | **+7.8pp** |
+
+**2. The screener's practical edge rises monotonically with horizon.** Top-50 by composite, minus
+the survivor median:
+
+| Horizon | 5 | 10 | 20 | **40** | **60** |
+|---|---|---|---|---|---|
+| Excess | +0.50pp | +0.78pp | +2.85pp | **+5.57pp** | **+6.99pp** |
+| Share of dates positive | 71% | 55% | 78% | **79%** | **100%** |
+
+**This is the most decision-relevant result in the study.** The screener's measured edge at the
+horizon just adopted is roughly **seven times** its edge at the horizon it was tuned for. The
+rules-file caveat that the edge is "under 1pp per 10 sessions" is accurate for 10 sessions and
+materially understates it at 40.
+
+**3. The delivered-watchlist mystery not only persists, it widens.** The watchlists actually
+researched beat the eligible universe by **+2.87pp** at 10 sessions and **+9.19pp at 40**,
+**+11.37pp at 60** — still ahead of the rebuilt composite's top 50 at every horizon. Whatever the
+judgment layer is adding, it compounds with holding period. Unexplained; remains Phase 4's.
+
+**4. `squeeze_own` gets worse the longer you hold it** (t −2.81 at 40, −3.34 at 60). Phase 2's
+decision to drop it is reinforced.
+
+**5. `vs_sma20` looks materially better at the adopted horizon** than at 10 sessions (IC 0.103 vs
+0.042). This bears on a rule changed on 2026-09-17 — see below.
+
+### Consequences
+
+1. **Composite unchanged.** Rule 5. Revisit at Phase 4 with genuinely out-of-sample screens.
+2. **`mom20` stays out of the composite.** Rule 8, reinforced by its negative eligible-universe IC
+   at 60 sessions.
+3. **Gates and the regime filter unchanged.** Rule 9; and this study has no RISK-OFF dates at all,
+   so the RISK-OFF screener allowance keeps its Phase 4 sunset exactly as written.
+4. **The horizon decision is supported, not undermined.** Findings 1 and 2 both point the same
+   way: this signal set works better over 40–60 sessions than over 10.
+5. **`entry-discipline.md`'s measured-edge language is updated** to state the edge by horizon
+   rather than quoting the 10-session figure alone.
+6. **The 20-day SMA downgrade keeps its conclusion but loses part of its stated reason.** On
+   2026-09-17 the hard 20-day SMA entry gate was downgraded to a reported check requiring written
+   justification, on the grounds that `vs_sma20` was rated UNPROVEN by Phase 2. At 40 sessions it
+   tests well. The downgrade still stands — a candidate below its 20-day SMA is not blocked, only
+   argued for — but the rationale is corrected in place rather than left misleading.
+7. **Phase 4 must fix the sample-size rule.** Its floor is to be set on effective observations.
+   On the current cadence, a credible 40-session test needs roughly **80+ weekly formation dates**
+   — about 18 months of screens — or non-overlapping formation dates, which is the cheaper fix.
+
+### Limits
+
+- **Effective n of 1.75 at 40 sessions and 0.83 at 60.** This is the binding limitation and it
+  dominates everything above.
+- All 14 usable dates at 40 sessions are RISK-ON.
+- The six signals were selected on 10-session data from an overlapping sample, so this is a
+  horizon-robustness check on the same period, not out-of-sample validation.
+- The universe definition changed twice mid-window (−25% in July, +55% in August).
+- Fundamentals remain untested.

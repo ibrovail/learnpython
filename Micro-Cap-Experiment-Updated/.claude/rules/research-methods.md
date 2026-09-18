@@ -28,6 +28,21 @@ Rules for any quantitative study of screener signals, gates or strategy performa
 - **Control for low volatility before crediting a signal** (partial IC). The screener's
   "squeeze" had no information beyond low volatility: partial IC −0.001.
 
+- **Set sample-size floors on EFFECTIVE observations, not raw formation dates.** With weekly
+  formation dates and an h-session forward window, roughly `h/5` consecutive dates share the same
+  forward period, so effective n ≈ dates ÷ (h/5). Phase 3.5 pre-registered a floor of 8 *dates*;
+  at 40 sessions its 14 dates were **effective n 1.75**, and at 60 sessions its 10 dates were
+  **0.83** — fewer than one independent observation — yet both cleared the floor. Report effective
+  n beside every t-statistic.
+  - **A Newey-West lag length approaching the sample size is not a conservative correction, it is
+    an undefined one.** Phase 3.5's pre-registered `ceil(h/5)` rule put **12 lags on 10
+    observations** at 60 sessions. Cap lags well below n, and say so when the cap binds.
+  - **Symptom to watch for:** implausibly large t-statistics. Phase 3.5 printed t 14.77 and 15.30
+    on 14 and 10 dates. A t above roughly 5 on a small sample of overlapping windows is evidence
+    of a broken variance estimate, not of a strong signal.
+  - This is the same class of error as the mean-vs-median comparison below: a pre-registered
+    metric that looks rigorous and silently flatters the result.
+
 - **Split results by the direction of the universe's median return.** Phase 2's defensive
   signals had most of their skill in falling-median weeks and almost none in rising ones —
   an average across both hides which kind of week a signal is useful in.

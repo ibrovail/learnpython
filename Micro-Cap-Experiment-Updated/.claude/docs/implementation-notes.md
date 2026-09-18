@@ -1031,3 +1031,53 @@ no injections after 9/11 (correct by construction). `<position_limits>` returns 
 | `trading_script.py` | `max_drawdown_twr`, `current_drawdown_twr` + breaker state; `_sessions_held`, `_ticker_sectors`, `_print_position_limits` wired into both daily and weekend output |
 | `Start Your Own/daily_analysis_prompt.md` | Driver + sessions-held rows; 5%→2% risk budget; playbook rewritten without binaries or partials; breaker line |
 | `CLAUDE.md`, `README_CLAUDE.md` | De-experimented framing; allocation framework rewritten |
+
+---
+
+## 2026-09-17 (b) — Phase 3.5: the composite at the adopted horizon
+
+Pre-registered `9f47b4a`, raw output `afbf106`, both before interpretation. Extended
+`factor_study.py` to 40- and 60-session horizons (PRIMARY=40) on 21 reconstructed point-in-time
+formation dates; 14 carry full 40-session forward data, 10 carry 60.
+
+**Pre-registered outcome: all six adopted signals retain support at 40 sessions → rule 5, the
+composite stands.** `mom20` passes at 40s having failed at 10s, but rule 8 keeps it out of the
+composite before Phase 4 — reinforced by its eligible-universe IC turning negative at 60s. Both
+60-session momentum signals and `squeeze_own` remain negative and get worse with horizon. Gates
+unchanged (rule 9).
+
+**The study found a flaw in its own pre-registration, and it is the decisive fact.** Rule 10 set
+a sample-size floor of 8 formation *dates*. With weekly formation and an h-session window, ~h/5
+consecutive dates share a forward period, so effective n is **1.75 at 40 sessions and 0.83 at
+60** — and the pre-registered Newey-West lag rule put **12 lags on 10 observations** at 60s, which
+is undefined rather than conservative. That is why `near_high` prints t 14.77 on 14 dates. Only
+**2.6 non-overlapping windows** fit the span at 40s (1.7 at 60s), and the IC series carries +0.42
+lag-1 autocorrelation. Verdict recorded as **"no evidence of breakdown," not confirmation.**
+Lesson added to `research-methods.md`: floors on effective observations, lags capped well below n,
+and implausibly large t on small overlapping samples read as a broken variance estimate.
+
+**Findings that do not rest on a t-statistic**, and are the reason the horizon decision looks
+right: top-50 excess over the survivor median rises monotonically **+0.50 → +0.78 → +2.85 →
++5.57 → +6.99pp** across 5/10/20/40/60 sessions (share of dates positive 71→55→78→79→100%), and
+Phase 2's worst diagnostic reverses — mean quintile spreads move from ~0/negative at 10 sessions
+to **+4 to +5pp at 40**. The delivered-watchlist mystery widens rather than closes: researched
+lists beat the universe by **+9.19pp at 40s and +11.37pp at 60s**, still ahead of the rebuilt
+composite. Open for Phase 4.
+
+Two rule notes corrected in place: `entry-discipline.md`'s measured-edge caveat now states the
+edge by horizon, and the 20-day SMA downgrade keeps its conclusion but loses its stated reason
+(`vs_sma20` tests better at 40s than at 10s — the downgrade now rests on the gate being absolute
+and unwaivable, not on the signal failing).
+
+**No RISK-OFF evidence.** All 14 usable 40-session dates are RISK-ON, so the RISK-OFF screener
+allowance keeps its Phase 4 sunset exactly as written.
+
+| File | Change |
+|------|--------|
+| `Experiment Details/Horizon Factor Study — Phase 3.5.md` | Part 2: results, the effective-n flaw, post-hoc findings, consequences |
+| `research/factor_study.py` | Horizons 40/60, NW lags 8/12, PRIMARY=40, rule-10 sample flag |
+| `research/output/*` | Raw results incl. `phase35_console.txt` |
+| `.claude/rules/research-methods.md` | Effective-sample-size rule; lag cap; implausible-t symptom |
+| `.claude/rules/entry-discipline.md` | Measured edge stated by horizon, with the effective-n caveat |
+| `Start Your Own/portfolio_rules.md` | 20-day SMA downgrade rationale corrected |
+| `CLAUDE.md` | Current state |

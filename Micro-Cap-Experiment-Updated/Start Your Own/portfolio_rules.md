@@ -286,8 +286,12 @@ hold or exit at market. Log the assessment in the daily analysis.
   Phase 2 pre-registered test (t 2.21).
 - **Distance from the 20-day SMA — reported, not disqualifying.** Compute and state it for every
   candidate. A candidate below its 20-day SMA requires **written justification**, but is not
-  automatically blocked. `vs_sma20` was rated **UNPROVEN** by Phase 2 (t 1.50, below the 2.0 bar),
-  and an absolute gate should not rest on a signal the study declined to validate.
+  automatically blocked. Phase 2 rated `vs_sma20` **UNPROVEN** (t 1.50, below the 2.0 bar).
+  *Corrected 2026-09-17, same day:* Phase 3.5 found it tests **better at the adopted 40-session
+  horizon** (IC 0.103) than at 10 (0.042). The downgrade stands — below the 20-day SMA is an
+  argument to make, not an automatic block — but it no longer rests on "the signal does not
+  work." It rests on the gate being **absolute and unwaivable** once the binary-catalyst waiver
+  was deleted, which is too rigid for a signal this marginal. Revisit at Phase 4.
 
 ### Entry Requirements
 
