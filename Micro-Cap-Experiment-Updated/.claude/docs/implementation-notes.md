@@ -1081,3 +1081,47 @@ allowance keeps its Phase 4 sunset exactly as written.
 | `.claude/rules/entry-discipline.md` | Measured edge stated by horizon, with the effective-n caveat |
 | `Start Your Own/portfolio_rules.md` | 20-day SMA downgrade rationale corrected |
 | `CLAUDE.md` | Current state |
+
+---
+
+## 2026-09-17 (c) — Non-overlapping formation dates; trigger-based research cadence
+
+**Non-overlapping dates adopted for Phase 4, and they overturn Phase 3.5 Part 2's headline.**
+`nonoverlapping_phases()` partitions formation dates into maximal subsets whose forward windows
+never overlap; within a phase lags are 0 because there is nothing left to correct. At 40 sessions
+that leaves **2 independent observations, not 14** — so 20, 40 and 60 sessions are all descriptive
+only and **no verdict exists at the horizon the book holds**. On observations that are independent,
+individual signals clear t=2.0 at 5 sessions (`low_vol` 2.48, `vol_ratio` 2.22, `near_high` 2.10,
+`squeeze` 2.02) and only `vol_ratio` holds across both phases at 10. **The composite clears t=2.0
+at no horizon.** Not overturned: effect sizes rise monotonically with horizon on non-overlapping
+data too (`low_vol` 0.072 → 0.092 → 0.123 → 0.172) and match the pooled point estimates closely —
+the direction was real, the confidence was an artifact.
+
+**Phase 4 revised:** keeps December, primary horizon moves to **20 sessions** (~8 independent
+observations); 40 sessions deferred to ~March 2027, 60 effectively unreachable (5 obs ~Sept 2027,
+20 obs ~2031). Sample-size floor is now ≥5 *independent* observations.
+
+**Research cadence changed weekly → trigger-based.** The book holds 40–60 sessions, so a weekly
+re-underwrite gave 8–12 chances per holding period to abandon a thesis deliberately given months
+to work; 82 closed trades at a 50% win rate returned −$3.84. `_print_research_trigger()` computes
+the triggers rather than leaving them to judgment — free slot with ≥10% deployable, ≥25%
+deployable cash, a holding at 60 sessions, breaker armed, or a **30-session backstop** so the
+cadence cannot decay into "whenever I feel like it." Regime flip is flagged as analyst-applied.
+**The weekly screen is unchanged** — weekly formation dates are what produce the phases (8 at 40
+sessions vs 2 monthly), and slowing them would remove cross-checks without adding independence.
+
+Known limitation, noted in the code: last-report detection uses file mtime, which a fresh clone or
+worktree checkout resets, disabling only the backstop.
+
+**Verified on the 2026-09-16 ledger:** trigger block returns **DUE** — free slot (1/5) with 61%
+deployable, and deployable cash 61% ≥ 25%.
+
+| File | Change |
+|------|--------|
+| `research/factor_study.py` | `nonoverlapping_phases()`; per-horizon phase table; `ic_nonoverlapping.csv` |
+| `Experiment Details/Horizon Factor Study — Phase 3.5.md` | Part 3 (non-overlapping results, revised conclusion) and Part 4 (Phase 4 scope) |
+| `Start Your Own/portfolio_rules.md` | New *Research cadence — trigger-based* section |
+| `trading_script.py` | `_last_report_date()`, `_print_research_trigger()` |
+| `.claude/rules/analysis-workflow.md` | Step 0: check the trigger before running the report |
+| `.claude/rules/entry-discipline.md` | Measured-edge note corrected to the non-overlapping result |
+| `README_CLAUDE.md`, `CLAUDE.md` | Cadence note; Phase 4 horizon change |

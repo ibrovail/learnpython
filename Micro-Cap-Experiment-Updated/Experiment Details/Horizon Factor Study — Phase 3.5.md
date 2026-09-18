@@ -390,3 +390,36 @@ cross-check against:
 | 40 sessions | **8 phases** | 2 phases |
 
 Weekly formation dates are what made this diagnostic possible at all. Keep them.
+
+---
+
+## Part 4 — Phase 4 scope, revised (decided 2026-09-17)
+
+Phase 4 keeps its **December 2026** date, with its primary horizon changed.
+
+- **Primary horizon: 20 sessions**, where Phase 4 will hold roughly **8 independent
+  non-overlapping observations** — enough to deliver a real verdict under the pre-registered
+  decision rules.
+- **40 and 60 sessions: reported as descriptive only.** 40 sessions reaches 5 independent
+  observations around **March 2027**; a follow-up re-runs the test then. 60 sessions reaches 5
+  around September 2027 and 20 observations not until 2031 — it is effectively out of reach on
+  this dataset and should not be treated as a pending answer.
+- **Verdicts are computed on non-overlapping phases**, lags 0, reported side by side with the
+  spread across phases. The pooled weekly estimate may be shown for continuity but **cannot
+  trigger a decision rule.**
+- **Sample-size floor is now on independent observations: ≥5**, replacing Phase 3.5's floor of 8
+  raw formation dates.
+- **Weekly screens continue.** They are what generate the phases: 4 at a 20-session horizon and 8
+  at 40, against 1 and 2 for a monthly cadence.
+
+**Why 20 sessions is an acceptable proxy for a 40–60 session book.** Effect sizes rise
+monotonically with horizon on non-overlapping data (`low_vol` 0.072 → 0.092 → 0.123 → 0.172
+across 5/10/20/40). A signal that works at 20 sessions is therefore a **conservative lower bound**
+for a longer hold, not a contradiction of it. The gap is acknowledged rather than assumed away,
+and March 2027 closes it.
+
+Phase 4's other three questions are unchanged: the out-of-sample comparison of `composite_score`
+vs `composite_legacy` vs `composite_dedup`, the first test of fundamentals, and the unexplained
+delivered-watchlist gap (which *widened* at longer horizons in Phase 3.5 — +9.19pp at 40 sessions).
+A **pre-registered regime test** is also required, since the RISK-OFF screener allowance sunsets
+on its outcome and Phase 3.5 had no RISK-OFF dates at all.

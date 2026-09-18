@@ -99,6 +99,12 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 - **Position**: **ATRC 3 sh +66.6%** ($57.14), stop **$53.40 / $53.25**. Equity **$724.44**, cash
   **$553.02 (76.3%)**, regime RISK-OFF. **47 sessions held — 60-session re-underwrite due in ~13
   sessions.** Current drawdown from the re-based peak −1.67%, clear of the breaker.
+- **Cadence**: the weekly **screen** is unchanged; the full 10-section report is now
+  **trigger-based** (free slot + capital, ≥25% deployable cash, a holding at 60 sessions, breaker
+  armed, or a 30-session backstop). `trading_script.py` prints `<research_trigger>` with the
+  verdict — currently **DUE** (1 position, 61% deployable). **Phase 4 (Dec) primary horizon moves
+  to 20 sessions**; the 40-session test is deferred to ~March 2027, when it first reaches 5
+  independent observations.
 - **Next**: 9/17 daily after the 4 PM close. Week 54 research can now deploy under RISK-OFF
   (up to 3 catalyst positions at standard sizing, plus half-size defensive screener entries) —
   the previous rules made high cash arithmetically unavoidable. Re-entry bans: PAR ~9/29,

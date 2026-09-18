@@ -239,6 +239,36 @@ to a fresh buy. If it would not be bought today, exit it.
   so a position that drifts sideways indefinitely would otherwise consume a slot forever.
 - `trading_script.py` reports **sessions held** per position so the review triggers visibly.
 
+### Research cadence — trigger-based
+
+**The weekly screen is unchanged.** `screener.py` runs every weekend: it is cheap, and the factor
+research depends on its weekly formation dates (Phase 3.5 Part 3 — weekly dates give 8
+non-overlapping phases to cross-check at a 40-session horizon; monthly would give 2).
+
+**The full 10-section deep-research report is no longer weekly.** It runs when there is something
+to decide. `trading_script.py` prints a `<research_trigger>` block computing these:
+
+| Trigger | Threshold |
+|---|---|
+| Free position slot with capital to fill it | positions < 5 **and** deployable cash ≥ 10% of equity |
+| Idle capital | deployable cash ≥ 25% of equity |
+| Re-underwrite due | any holding at ≥ 60 sessions |
+| Circuit breaker armed | current drawdown ≤ −20% |
+| **Backstop** | **≥ 30 sessions since the last report** |
+
+*Deployable cash = cash − the 15% floor.*
+
+- **One analyst-applied trigger:** a **regime flip** (RISK-ON ↔ RISK-OFF) since the last report.
+  It is judged from the daily regime check, not computed, and is labelled as such in the block.
+- **When not due:** produce a short monitoring note — stops, anything nearing 60 sessions, the
+  breaker line. **Do not re-underwrite theses that nothing has changed for.**
+- *Why:* the book holds for 40–60 sessions, so a weekly re-underwrite offered 8–12 chances per
+  holding period to abandon a thesis deliberately given months to work. The record says that churn
+  cost money — **82 closed trades, 50% win rate, −$3.84 net realised.** Daily monitoring, stop
+  maintenance and earnings reactions are unaffected: those live in the daily, which stays daily.
+- **The 30-session backstop guards** against "trigger-based" decaying into "whenever I feel like
+  it." Research never goes stale indefinitely, however quiet the book is.
+
 ### Post-catalyst reassessment
 
 Within 1 trading day of any dated catalyst resolving: recalculate the stop under the normal

@@ -97,6 +97,22 @@ Do not write "the reaction is a tomorrow event" and defer it, and do not infer "
 
 When the user asks to run the weekend analysis (e.g., "make weekend", "run weekend", "weekend summary"):
 
+### Step 0 — Is a full report due? (check FIRST)
+
+Cadence is **trigger-based** since 2026-09-17, not weekly. The `<research_trigger>` block in the
+script output computes the answer.
+
+- **`<status>DUE</status>`** → proceed with Step 1 and the full 10-section report.
+- **`<status>NOT DUE</status>`** → produce a **short monitoring note** instead: stops, any holding
+  nearing its 60-session re-underwrite, the circuit-breaker line, and anything that changed. Do
+  **not** re-underwrite theses nothing has changed for — that churn is what the cadence change
+  exists to stop.
+- **Override:** run the full report anyway if the regime flipped (RISK-ON ↔ RISK-OFF) since the
+  last one — that trigger is analyst-applied, not computed — or if the user asks.
+
+The **screener still runs every weekend either way.** The factor research needs its weekly
+formation dates; only the report cadence changed.
+
 ### Step 1 — Session Config (ask BEFORE running make weekend)
 
 Ask the 4 session directive questions (defined in `Start Your Own/daily_analysis_prompt.md`):

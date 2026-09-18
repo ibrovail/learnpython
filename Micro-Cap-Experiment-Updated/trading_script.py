@@ -1455,6 +1455,103 @@ def _print_position_limits(portfolio_df: pd.DataFrame) -> None:
     print()
 
 
+def _last_report_date() -> Optional[pd.Timestamp]:
+    """Modification date of the most recent weekly deep-research report."""
+    try:
+        md = Path(__file__).resolve().parent / "Weekly Deep Research (MD)"
+        best_n, best_p = 0, None
+        for q in md.glob("Week *Full.md"):
+            m = re.search(r"Week\s+(\d+)", q.name)
+            if m and int(m.group(1)) >= best_n:
+                best_n, best_p = int(m.group(1)), q
+        if best_p is None:
+            return None
+        return pd.Timestamp(datetime.fromtimestamp(best_p.stat().st_mtime)).normalize()
+    except Exception:
+        return None
+
+
+def _print_research_trigger(portfolio_df, cash: float, equity: float,
+                            current_dd: float = np.nan) -> None:
+    """Decide whether a full deep-research report is due.
+
+    Cadence changed 2026-09-17 from weekly to trigger-based. The book holds for
+    40-60 sessions, so a weekly re-underwrite offered 8-12 chances per holding
+    period to abandon a thesis deliberately given months to work -- and the record
+    (82 closed trades, 50% win rate, -$3.84 net realised) says that churn cost
+    money. The weekly SCREEN is unchanged: it is cheap and the factor research
+    needs its formation dates.
+
+    Triggers are computed here rather than judged, so "trigger-based" cannot decay
+    into "whenever I feel like it". The 30-session backstop is the guard against
+    that: no matter how quiet things are, research never goes stale indefinitely.
+    """
+    POSITION_CEILING, CASH_FLOOR, MIN_POSITION = 5, 0.15, 0.10
+    CASH_TRIGGER, BACKSTOP_SESSIONS, REVIEW_SESSIONS = 0.25, 30, 60
+
+    try:
+        if portfolio_df is not None and not isinstance(portfolio_df, pd.DataFrame):
+            portfolio_df = pd.DataFrame(portfolio_df)
+        tickers = ([str(t).upper() for t in portfolio_df["ticker"].tolist()]
+                   if portfolio_df is not None and not portfolio_df.empty
+                   and "ticker" in portfolio_df.columns else [])
+        deployable = max(0.0, cash - equity * CASH_FLOOR) if equity > 0 else 0.0
+        deployable_pct = deployable / equity if equity > 0 else 0.0
+
+        reasons, blocked = [], []
+        if len(tickers) < POSITION_CEILING and deployable_pct >= MIN_POSITION:
+            reasons.append(f"free slot ({len(tickers)}/{POSITION_CEILING}) with "
+                           f"{deployable_pct:.0%} deployable")
+        elif len(tickers) < POSITION_CEILING:
+            blocked.append(f"free slot but only {deployable_pct:.0%} deployable "
+                           f"(need {MIN_POSITION:.0%})")
+        if deployable_pct >= CASH_TRIGGER:
+            reasons.append(f"deployable cash {deployable_pct:.0%} >= {CASH_TRIGGER:.0%}")
+        for t in tickers:
+            n = _sessions_held(t)
+            if n is not None and n >= REVIEW_SESSIONS:
+                reasons.append(f"{t} at {n} sessions -- re-underwrite due")
+        if not (current_dd is None or (isinstance(current_dd, float) and np.isnan(current_dd))):
+            if current_dd <= -0.20:
+                reasons.append(f"circuit breaker armed (drawdown {current_dd:+.1%})")
+
+        last = _last_report_date()
+        # Limitation: this reads file mtime, which a fresh clone or worktree checkout
+        # resets to the checkout time. There the backstop silently will not fire --
+        # the other triggers still do. Sanity-check the date printed below.
+        if last is None:
+            reasons.append("no prior report found")
+            since = None
+        else:
+            since = int((pd.Timestamp.now().normalize() - last).days * 5 / 7)
+            if since >= BACKSTOP_SESSIONS:
+                reasons.append(f"{since} sessions since last report "
+                               f">= {BACKSTOP_SESSIONS} backstop")
+
+        print("<research_trigger>")
+        print(f"  <cadence>trigger-based since 2026-09-17 (the weekly SCREEN is unchanged)</cadence>")
+        print(f"  <last_report>{last.date() if last is not None else 'none'}"
+              f"{f' ({since} sessions ago)' if since is not None else ''}</last_report>")
+        print(f"  <status>{'DUE' if reasons else 'NOT DUE'}</status>")
+        if reasons:
+            for r in reasons:
+                print(f"  <reason>{r}</reason>")
+        else:
+            print("  <reason>none of the computed triggers fired</reason>")
+            for b in blocked:
+                print(f"  <note>{b}</note>")
+        print("  <analyst_trigger>Also run the full report on a REGIME FLIP since the last "
+              "one (RISK-ON &lt;-&gt; RISK-OFF). That is judged from the daily regime check, "
+              "not computed here.</analyst_trigger>")
+        print("  <if_not_due>Produce a short monitoring note instead: stops, any position "
+              "nearing 60 sessions, and the breaker line. Do not re-underwrite theses that "
+              "nothing has changed for.</if_not_due>")
+        print("</research_trigger>")
+        print()
+    except Exception:
+        return
+
+
 def _get_ticker_role(ticker: str, holdings_set: set[str]) -> str:
     """Determine the role of a ticker for display purposes."""
     ticker_upper = ticker.upper()
@@ -2144,6 +2241,8 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
     print()
 
     _print_position_limits(chatgpt_portfolio)
+    _print_research_trigger(chatgpt_portfolio, cash, metrics.final_equity,
+                            metrics.current_drawdown_twr)
 
     # -------- Last Analyst Thesis (placeholder) --------
     print("<last_analyst_thesis>")

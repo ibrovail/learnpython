@@ -46,6 +46,13 @@ Instead of copying trading script output to ChatGPT, Claude Code acts as the ana
 
 ## Weekend Workflow
 
+**Cadence note (changed 2026-09-17):** the **screener runs every weekend**, but the full
+10-section report is now **trigger-based** — it runs when there is something to decide (free slot
+with capital, ≥25% deployable cash, a holding at 60 sessions, the circuit breaker armed, or 30
+sessions since the last report). The script prints a `<research_trigger>` block with the verdict.
+When not due, Claude produces a short monitoring note instead. Thresholds and rationale are in
+`portfolio_rules.md` → *Research cadence*.
+
 **On Saturday or Sunday:**
 
 1. Tell Claude to run the weekend analysis:
