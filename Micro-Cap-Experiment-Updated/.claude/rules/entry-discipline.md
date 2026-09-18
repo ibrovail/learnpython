@@ -115,10 +115,19 @@ current data. If sources disagree or the latest data is unavailable, mark it
 > sessions, mostly defensive" is accurate for 10 sessions and **understates the edge at the
 > horizon actually used.**
 >
-> **Do not over-read it.** Phase 3.5's effective sample is **1.75 independent observations at 40
-> sessions and 0.83 at 60** — its t-statistics (up to 14.8) count overlapping weekly windows as
-> independent and are not trustworthy. The defensible reading is **"no evidence of breakdown at
-> the adopted horizon,"** not confirmation. Screener rank remains sourcing, not conviction.
+> **Do not over-read it — and the "all six retain support" line above is the pooled estimate, not
+> a verdict.** Re-run on **non-overlapping** formation dates (Phase 3.5 Part 3, the basis adopted
+> for Phase 4), the 40-session horizon has **2 independent observations**, so no verdict is
+> available there at all. On observations that *are* independent, the individual signals clear
+> t = 2.0 at 5 sessions (`low_vol` 2.48, `vol_ratio` 2.22, `near_high` 2.10, `squeeze` 2.02) and
+> only `vol_ratio` holds up across phases at 10 (2.05–2.51). **The composite itself does not clear
+> t = 2.0 at any horizon** on independent data.
+>
+> What survives: the **effect sizes rise monotonically with horizon** on non-overlapping data too
+> (`low_vol` 0.072 → 0.092 → 0.123 → 0.172 across 5/10/20/40 sessions), and they match the pooled
+> point estimates closely. So the direction is real and consistent; the *confidence* was an
+> artifact. Screener rank remains **sourcing, not conviction** — and that framing is now better
+> supported than the edge figures are.
 
 Screener composite score — since 2026-09-15 the equal-weighted ranks of low volatility, proximity to the 60-day high, Bollinger squeeze, 5/50-day volume, 1-day volume ratio and distance above the 50-day SMA (the six signals that passed the Phase 2 factor study; 20-day momentum is reported but no longer scored) — identifies *candidates* but does NOT confer fundamental conviction. **Its measured edge is small and mostly defensive:** the top 15 beat the surviving universe by under 1pp per 10 sessions, largely by avoiding volatile losers rather than by finding winners. Apply the full 5-step verification to every screener pick — **step 1 requires the browser quote page (PRV gate, `analysis-workflow.md`), not WebSearch**:
 1. **Fundamental quality — from the live quote page**: TTM revenue **and growth %**, TTM EPS/net income, forward P/E vs trailing, analyst rating + price target, 52-week range position, beta. *Shrinking revenue is the single strongest disqualifier this book has found* (TDAY −8.3% YoY → exited; FOXF −4.5% with TTM EPS −$7.14 → withdrawn; PAR +18.8% → bought).

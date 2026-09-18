@@ -294,3 +294,99 @@ decision to drop it is reinforced.
   horizon-robustness check on the same period, not out-of-sample validation.
 - The universe definition changed twice mid-window (−25% in July, +55% in August).
 - Fundamentals remain untested.
+
+---
+
+## Part 3 — Non-overlapping formation dates (adopted for Phase 4, 2026-09-17)
+
+*Post-hoc relative to Phase 3.5's pre-registration: this basis was chosen after seeing that the
+pre-registered one was unsound. It is **pre-registered for Phase 4** as of this date.*
+
+### Method
+
+A formation date at session index `i` owns the forward window `[i, i+h)`. Two dates are
+independent only if their indices differ by at least `h`. `nonoverlapping_phases()` greedily
+builds every maximal subset of dates satisfying that, starting from each of the first `h/5`
+dates — so weekly dates yield several **phases**, each internally independent, which between them
+use all the data.
+
+Within a phase, **Newey-West is unnecessary and lags are 0**: there is no overlap left to correct
+for. Phases are *not* independent of each other, so they are reported side by side and never
+pooled. The spread across phases is the point — it shows how much the answer depends on which
+slice was taken.
+
+### Results — and they overturn Part 2's headline
+
+| Horizon | Phases | Indep. obs per phase | `low_vol` mean IC | t range across phases | Verdict |
+|---|---|---|---|---|---|
+| 5 | 1 | **18** | 0.072 | 2.48 | testable |
+| 10 | 2 | **9** | 0.092 | 1.64 – 2.26 | marginal |
+| 20 | 4 | **4** | 0.123 | 1.36 – 2.56 | **descriptive only** |
+| 40 | 5 | **2** | 0.172 | 1.39 – 31.35 | **descriptive only** |
+| 60 | — | **<2** | — | — | **not computable** |
+
+**The 40-session result in Part 2 does not survive.** With honest independence there are **two**
+observations, not fourteen. The t-statistics on two points (up to 31) are meaningless for the
+obvious reason. Per the ≥5-observation threshold now applied, 20, 40 and 60 sessions are all
+**descriptive only — no verdict is available at the horizon the book actually holds.**
+
+**What the pre-registered verdict is worth at horizons that ARE testable:**
+
+| Signal | 5 sessions (18 obs) | 10 sessions (9 obs, 2 phases) |
+|---|---|---|
+| `low_vol` | t **2.48** | t 1.64 – 2.26 |
+| `vol_ratio` | t **2.22** | t **2.05 – 2.51** |
+| `near_high` | t **2.10** | t 1.16 – 1.93 |
+| `squeeze` | t **2.02** | t 1.19 – 1.64 |
+| `vs_sma50` | t 1.58 | t 0.79 – 1.57 |
+| `vol_5_50` | t 1.56 | t **1.94 – 2.89** |
+| **`composite`** | **t 1.29** | **t 0.52 – 1.60** |
+
+**The composite does not clear t = 2.0 at any horizon on independent observations.** Individual
+signals do at 5 sessions; `vol_ratio` is the only one that holds up across both phases at 10 —
+consistent with Phase 2's finding that volume carries the one clearly independent piece of
+information.
+
+### What is NOT overturned
+
+**Effect sizes rise monotonically with horizon on non-overlapping data too**, which is the result
+the horizon decision rested on, and it does not depend on any t-statistic:
+
+`low_vol` mean IC: **0.072 (5s) → 0.092 (10s) → 0.123 (20s) → 0.172 (40s)**.
+`near_high`: 0.062 → 0.076 → 0.099 → 0.135. `composite`: 0.030 → 0.046 → 0.077 → 0.133.
+
+And the point estimates agree closely with Part 2's pooled figures (`low_vol` 0.172 vs 0.182 at
+40 sessions; `near_high` 0.135 vs 0.144). **The direction and magnitude are consistent; only the
+confidence was fictional.** Several signals are positive on *both* 40-session observations.
+
+### When each horizon becomes answerable
+
+Independence needs `k·h` sessions of formation span plus `h` of forward data:
+
+| Horizon | Indep. obs now | 5 obs by | 8 obs by | 20 obs by |
+|---|---|---|---|---|
+| 10 | 9 | *(have)* | *(have)* | 2027-02 |
+| **20** | 4 | **2026-10** | **2026-12** | 2027-11 |
+| 40 | 1–2 | 2027-03 | 2027-09 | 2029-07 |
+| 60 | 0 | 2027-09 | 2028-05 | 2031-02 |
+
+**Consequence for Phase 4 (December 2026): its primary horizon must be 20 sessions**, where it
+will hold ~8 independent observations — enough for a real verdict. 40 sessions stays descriptive
+until roughly **March 2027**, and 60 sessions is effectively out of reach on this dataset.
+
+This does not undermine the 40–60 session holding decision. It means the *research* can only
+validate at 20 sessions for now, and — since effect sizes grow monotonically with horizon —
+20-session evidence is a conservative lower bound for a longer hold, not a contradiction of it.
+
+### Cadence
+
+**Weekly screens are kept.** Independence is set by the calendar span, not the sampling rate, so a
+slower cadence would not add independent observations — it would only remove **phases** to
+cross-check against:
+
+| Horizon | Weekly screens | Monthly screens |
+|---|---|---|
+| 20 sessions | **4 phases** | 1 phase |
+| 40 sessions | **8 phases** | 2 phases |
+
+Weekly formation dates are what made this diagnostic possible at all. Keep them.
