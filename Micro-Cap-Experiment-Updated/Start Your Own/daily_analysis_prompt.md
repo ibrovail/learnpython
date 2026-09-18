@@ -31,6 +31,8 @@ Daily Portfolio Review — [DATE]
    | Unrealised P&L | +/-$X.XX (+/-X.X%)              |
    | Current Stop   | $X.XX trigger / $X.XX limit     |
    | Stop Status    | Not breached — X.X% above stop  |
+   | Primary Driver | [time-varying input the thesis rests on — feeds the driver cap] |
+   | Sessions Held  | N (from <position_limits>) — re-underwrite due at 60 |
 
    Catalyst Research:
    - [Key upcoming event with date, confirmed by ≥2 sources]
@@ -47,7 +49,7 @@ Daily Portfolio Review — [DATE]
    Action: [Raise stop-loss to $X.XX, stop-limit to $X.XX / No change needed]
 
    Add Shares?
-   - Risk budget: $[equity] × 5% = $[amount]
+   - Risk budget: $[equity] × 2% = $[amount]
    - Risk per share at $[entry] entry / $[new stop] stop: $[diff]
    - Formula: $[budget] / $[risk/share] = [N] shares
    - 30% cap: $[equity] × 30% = $[max_value] → [max_shares] shares max total
@@ -83,13 +85,18 @@ Daily Portfolio Review — [DATE]
 ---
 
 5. Post-Event Playbook
-   (Only include when a binary catalyst is ≤10 trading days away)
+   (Only include when a dated non-binary catalyst — or a scheduled earnings print on an
+   existing holding — is ≤10 trading sessions away. Binary-thesis entries are prohibited,
+   so this section never plans a pass/fail wager; it plans the response to a known event.)
 
-   | Scenario      | Action                                          |
-   |---------------|-------------------------------------------------|
-   | Approval      | [e.g., hold through spike; sell 1/3 at +30%]   |
-   | Denial / CRL  | [e.g., execute stop; 10-day re-entry ban]       |
-   | Delay / Other | [e.g., reassess; consider trimming]             |
+   | Scenario      | Action                                                        |
+   |---------------|---------------------------------------------------------------|
+   | Positive      | [hold; recalculate the trailing stop under the standard rule]  |
+   | Negative      | [the stop governs the exit; 10-session re-entry ban if hit]    |
+   | Delay / Other | [post-catalyst reassessment within 1 session; re-rate thesis]  |
+
+   Note: there are no mechanical partial sells. The trailing stop is the only exit
+   (`portfolio_rules.md` → Position Management).
 
 ---
 
@@ -102,6 +109,10 @@ Daily Portfolio Review — [DATE]
    | TOTAL   | —      | —      | $X.XX   | 100%        |
 
    Stop / Stop-Limit: [TICKER] → $X.XX / $X.XX
+
+   Correlated-risk check: sector counts [from <position_limits>, cap 3]; primary drivers
+   [list them — cap 2 per shared driver]
+   Circuit breaker: current drawdown from peak [from <risk_metrics>] — clear / DE-RISK / CASH
 
 ---
 
@@ -128,6 +139,9 @@ Before running the weekend deep research analysis, ask the user these 4 question
 
 **Q4 — Max concurrent positions:**
 > 5 | 6
+
+*(A ceiling, not a target. At 2% risk with 1.75×ATR stops a typical position runs 19–29% of
+equity, so an 85% deployable book fits roughly four.)*
 
 Update `<session_directives>` to include the selected options as active directives (not as comments),
 then proceed immediately to the full 10-section deep research report defined in `weekend_summary.md`.

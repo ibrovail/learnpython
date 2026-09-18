@@ -950,3 +950,84 @@ ticker-identity check dropped 4 rows (0.3%, far below the 30% corruption alarm).
 | `trading_script.py` | Weekend prompt: `vol_5_50` and `near_high` columns, and a description of the new score |
 | `.claude/rules/entry-discipline.md`, `README_CLAUDE.md` | New composite definition plus the measured-edge caveat (top 15 beats survivors by <1pp per 10 sessions, mostly defensively) |
 | `Experiment Details/Screener Factor Study — Phase 2.md` | Part 3: what was implemented, and the open question about how `portfolio_rules.md` defines momentum/technical plays |
+
+---
+
+## 2026-09-17 — Graduation to an indefinite live system
+
+The largest rules revision in the project: **13 decisions, 6 rules deleted, 3 new rules**, plus a
+research study pulled forward three months. Full decision record and reasoning:
+`Experiment Details/Rules Amendment History.md`.
+
+**Why.** The 52-week experiment closed 2026-09-11 and the horizon went `null` on 2026-09-14 — but
+only the *horizon* changed. The rules themselves had been written against a deadline and were
+inherited wholesale. A review found many still shaped by a race with no finish line, and two that
+argued the wrong way outright (the stop-restoration allowance keyed to "the life of the
+experiment", and the CADL precedent declining restoration because a catalyst fell "outside the
+runway" — a runway that no longer exists).
+
+**Decisions.** Horizon 40–60 sessions · universe frozen at $5Bn until Phase 4 · trailing stop is
+the only exit · 60-session written re-underwrite · binary-thesis entries prohibited, catalyst
+window 60→90 days · risk-per-trade 2% · drawdown circuit breaker · driver cap 2 + uniform sector
+cap 3 · initial stop unified at 1.75×ATR · restoration once per *entry* · RISK-OFF catalyst
+capacity 1→3 positions · RISK-OFF screener entries at half size with a Phase 4 sunset · 15% cash
+floor promoted to a standing rule.
+
+**Deleted:** partial profit-taking, the entire partial-deferral apparatus, the binary event stop
+override, pre-catalyst exit orders, the 20-day SMA waiver (its trigger condition became
+impossible), and the 5-day minimum hold.
+
+**The deployment bug this fixes.** Under RISK-OFF the rules froze screener-sourced plays — the only
+bucket with capacity — while capping catalyst plays at 1 position / 15%. Maximum deployment was
+~15% plus existing holdings, so the book's 76.3% cash on 2026-09-16 was **arithmetically
+unavoidable**, not a market judgment.
+
+**Three defects found by critiquing the decision set before implementing:**
+
+1. **"Ban binary events" + "hold for months" would have broken the system.** The rulebook's
+   definition of a date-certain binary catalyst listed **"earnings report date"**; a 40–60 session
+   hold spans at least one print, so the ban as drafted prohibited holding any stock. Split into
+   *binary-thesis entry* (prohibited) vs *holding through a scheduled event* (normal), plus a
+   10-session pre-earnings initiation guard.
+2. **Unifying the stop at 1.75×ATR would have broken the anti-ratchet rule.** The 1.5×/1.75× split
+   is deliberate — floor vs target — and the anti-ratchet test needs headroom between them. Only
+   the *initial entry* stop was genuinely contradictory.
+3. **The drawdown trigger was contaminated by capital injections.** `max_drawdown` ran on raw
+   equity with no injection adjustment, unlike TWR and the S&P-equivalent.
+
+**Verified, and it mattered more than expected.** Against $547.64 of injections into a book that
+started at $142.13, the raw-equity max drawdown reads **−24.99%** while the injection-neutral
+figure is **−37.26%** — a **12.3-point** understatement. The injection-neutral figure reproduces
+exactly the −37.26% the Week 52 strategic readout independently reports, so the daily/weekend
+risk table and the readouts had been printing two different "max drawdowns" on two different
+bases, unreconciled. Both are now shown and labelled.
+
+**A fourth defect, found by running the new metric.** The circuit breaker was first written as
+"peak-to-trough", which reads as *maximum* drawdown — on that basis it fires `CASH` on day one
+(−37.26%, from April 2026). A breaker must trigger on **current** drawdown from the running peak.
+Added `current_drawdown_twr` and the breaker-state column. The peak basis is the **re-based**
+series: on a since-inception peak the book currently sits −18.81% below its 2026-01-08 high, 1.2
+points from the de-risk line, permanently near-armed over a drawdown it has already recovered
++29.4% from.
+
+**Enforcement correction.** The sector cap was described during the review as "enforced in the
+screener." It is not: `--max-per-sector` governs watchlist composition and the screener has no
+knowledge of the portfolio. Both correlated-risk caps are research-time judgments. New
+`<position_limits>` block prints live sector counts, each holding's **sessions held** (so the
+60-session review triggers visibly) and a driver-cap reminder — **surfaced, not gated**.
+
+**Verified on the 2026-09-16 ledger:** all three drawdown rows render; breaker reads `clear of
+breaker` at −1.67% from the re-based peak; raw and injection-neutral agree since there have been
+no injections after 9/11 (correct by construction). `<position_limits>` returns ATRC · Healthcare ·
+**47 sessions held** · re-underwrite not yet due — it falls due in ~13 sessions.
+
+| File | Change |
+|------|--------|
+| `Start Your Own/portfolio_rules.md` | Rewritten as a standing operating manual; amendment blocks removed; new Mandate/Horizon, Drawdown circuit breaker, Correlated-risk, Position Management sections |
+| `Experiment Details/Rules Amendment History.md` | **New.** Full 2026-09-17 decision record, critique findings, and every superseded block preserved verbatim |
+| `Experiment Details/Horizon Factor Study — Phase 3.5.md` | **New.** Pre-registration, committed before any result (`9f47b4a`) |
+| `.claude/rules/entry-discipline.md` | Horizon caveat on the screener edge; distance-from-base rationale re-grounded; 1.5×/1.75× floor-vs-target; pre-print guard; driver naming; Day-1 rationale |
+| `.claude/rules/analysis-workflow.md` | Driver named at the PRV gate; correlated-risk + 60-session re-underwrite steps in the weekend flow |
+| `trading_script.py` | `max_drawdown_twr`, `current_drawdown_twr` + breaker state; `_sessions_held`, `_ticker_sectors`, `_print_position_limits` wired into both daily and weekend output |
+| `Start Your Own/daily_analysis_prompt.md` | Driver + sessions-held rows; 5%→2% risk budget; playbook rewritten without binaries or partials; breaker line |
+| `CLAUDE.md`, `README_CLAUDE.md` | De-experimented framing; allocation framework rewritten |

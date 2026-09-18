@@ -1,6 +1,8 @@
-# Micro-Cap Experiment
+# Micro-Cap Live Portfolio
 
-A live 12-month trading experiment using Claude Code to manage a real-money micro-cap stock portfolio, tracking alpha generation vs. S&P 500 benchmark.
+An indefinite live process using Claude Code to manage a real-money small/micro-cap stock
+portfolio, tracking alpha vs. the S&P 500. The fixed 52-week experiment closed at the
+2026-09-11 close; there is no end date. Holding horizon is **40–60 trading sessions**.
 
 ## Tech Stack
 
@@ -35,7 +37,8 @@ A live 12-month trading experiment using Claude Code to manage a real-money micr
 | File | Purpose |
 |------|---------|
 | `trading_script.py` | Trading engine: portfolio processing (482-741), daily analytics (987-1330), weekend summary (1368-1517) |
-| `Start Your Own/portfolio_rules.md` | Portfolio rules — read before every analysis session |
+| `Start Your Own/portfolio_rules.md` | **Standing** portfolio rules — read before every analysis session |
+| `Experiment Details/Rules Amendment History.md` | Why each rule exists; every dated amendment and its outcome |
 | `Start Your Own/daily_analysis_prompt.md` | Daily 6-section format + weekend directive questions |
 | `Start Your Own/weekend_summary.md` | Weekend deep research prompt (updated by `make weekend`) |
 | `inject_last_thesis.py` | Injects Week N-1 Summary into `<last_analyst_thesis>` block |
@@ -77,9 +80,25 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: **Screener Phase 3 live** — `composite_score` = equal-weighted ranks of `low_vol`, `near_high`, `squeeze`, `vol_5_50`, `vol_ratio`, `vs_sma50`; **20-day momentum no longer scored**; `composite_legacy` and `composite_dedup` saved with every screen for the Phase 4 out-of-sample test (`Experiment Details/Screener Factor Study — Phase 2.md`). **Daily 9/16 backfilled** — Wednesday had been missed
-- **In progress**: **One position left.** ATRC 3 sh **+66.6%** ($57.14), stop **$53.40 / $53.25** (locks +55.7%, 1.75×ATR of room). Equity **$724.44**, cash **$553.02 (76.3%)**, **gap +0.14%**, regime RISK-OFF (IWM 3.94% below its 50-day, widening daily). Both other holdings stopped out on sector moves: **PAR 9/15 at $17.05** (−$22.00; restaurant-tech selloff), **VTS 9/16 at $17.69** (−$0.96; WTI −3.2%, plus ~$2.23 dividend due 9/30)
-- **Next**: **9/17 daily after the 4 PM close** (pre-open Yahoo serves the prior bar — never run it early). Week 54 research must deploy ~$444 of idle cash under RISK-OFF (catalyst-driven only). Re-entry bans: PAR ~9/29, VTS ~9/30. **Open question**: `portfolio_rules.md` still defines momentum/technical plays by momentum, which Phase 2 found has no ranking skill. Pending: final 52-week readout (S&P +14.87% vs +14.59%)
+- **Complete**: **Indefinite-system rules revision (2026-09-17)** — 13 decisions, 6 rules deleted,
+  3 new. Horizon **40–60 sessions**; trailing stop is the **only** exit (partials and the whole
+  deferral apparatus deleted); **binary-thesis entries prohibited**; risk-per-trade **2%**;
+  **drawdown circuit breaker** on the injection-neutral series (−20% de-risk / −30% cash); driver
+  cap 2 + uniform sector cap 3; RISK-OFF capacity raised. `portfolio_rules.md` rewritten as a
+  standing manual, history split to `Experiment Details/Rules Amendment History.md`. Found in
+  passing: raw-equity max drawdown understated the true figure by **12.3 points** (−24.99% vs
+  −37.26%).
+- **In progress**: **Phase 3.5** — pre-registration committed (`9f47b4a`) before any result;
+  tests whether the six composite signals hold at **40/60 sessions**, the horizon just adopted.
+  Phase 2 measured 10 sessions only. Runs on existing reconstructed universes (April–June dates
+  already carry full forward data), so it does not wait for Phase 4.
+- **Position**: **ATRC 3 sh +66.6%** ($57.14), stop **$53.40 / $53.25**. Equity **$724.44**, cash
+  **$553.02 (76.3%)**, regime RISK-OFF. **47 sessions held — 60-session re-underwrite due in ~13
+  sessions.** Current drawdown from the re-based peak −1.67%, clear of the breaker.
+- **Next**: 9/17 daily after the 4 PM close. Week 54 research can now deploy under RISK-OFF
+  (up to 3 catalyst positions at standard sizing, plus half-size defensive screener entries) —
+  the previous rules made high cash arithmetically unavoidable. Re-entry bans: PAR ~9/29,
+  VTS ~9/30.
 
 ## Documentation
 
