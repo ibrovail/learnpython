@@ -225,7 +225,15 @@ setting, not the weaker one: starting at the peak means any −20% decline from 
 
 ### Market regime filter
 
-- **Regime test:** IWM below its 50-day SMA = RISK-OFF. Flag the status in every report.
+- **Regime test — with a ±1% band** (review item D3, 2026-09-19): the regime turns **RISK-OFF** on
+  a close more than **1% below** IWM's 50-day SMA and turns **RISK-ON** on a close more than **1%
+  above** it; inside the band it **holds**. Computed by `trading_script.py` (`<market_regime>`,
+  `regime_history.csv`). Flag the status in every report.
+  - *Why:* the plain close-vs-SMA rule changed regime **17 times in 241 sessions** — six times in
+    eight sessions in late July 2026 as IWM sat on its SMA — and deployment capacity now depends
+    on the regime. The band cut that to **7**, with the share of RISK-OFF days barely moved (22% →
+    20%), and every genuine change was confirmed within **one session** of the plain rule's final
+    cross. It removes noise without slowing real turns.
 - Regime is a **market condition, not a calendar event** — this filter has no expiry and is not
   relaxed by the passage of time.
 - Capacity under each regime is set in the **Allocation Framework** below.
@@ -303,9 +311,7 @@ to decide. `trading_script.py` prints a `<research_trigger>` block computing the
 - **The regime is computed, not looked up** (since 2026-09-19): `trading_script.py` derives it from
   IWM's daily closes and a 50-session simple average, prints `<market_regime>`, and saves every
   session to `regime_history.csv` — which is how the ledger-only trigger detects a flip.
-  *Whipsaw note:* in late July 2026 IWM sat on its SMA and the regime flipped **six times in eight
-  sessions** (7/24–8/03). The trigger compares only the regime at the last report with today, so
-  intermediate flips don't fire it; the regime filter itself has no such damping (open question).
+  Whipsaw: damped by the ±1% band since 2026-09-19 (see *Market regime filter*).
 - **When not due:** produce a short monitoring note — stops, anything nearing 60 sessions, the
   breaker line. **Do not re-underwrite theses that nothing has changed for.**
 - *Why:* the book holds for 40–60 sessions, so a weekly re-underwrite offered 8–12 chances per
@@ -314,6 +320,27 @@ to decide. `trading_script.py` prints a `<research_trigger>` block computing the
   maintenance and earnings reactions are unaffected: those live in the daily, which stays daily.
 - **The 30-session backstop guards** against "trigger-based" decaying into "whenever I feel like
   it." Research never goes stale indefinitely, however quiet the book is.
+
+### Daily monitoring by exception
+
+Adopted 2026-09-19 (review item R6). With 40–60 session holds, re-researching every holding every
+day re-argues unchanged theses and invites churn. `trading_script.py` prints `<holding_review>`,
+marking each holding **FULL** or **LINE**:
+
+| FULL review when… | Why |
+|---|---|
+| it moved **≥1.5×ATR** today | a material move needs its driver found (five-category check) |
+| volume **≥3×** its 20-day average | heavy volume without news is information — ATRC's index-inclusion day was 8.7× |
+| its stop is within **1×ATR** | a stop-out is one ordinary day away |
+| a **stop raise qualifies** | the raise tests pass at the 2.0×ATR target |
+| earnings are possibly within **~15 sessions** | estimated as last report + ~91 days — confirm on the quote page |
+| it was bought **≤3 sessions** ago | 4 of 13 post-pivot losers were closed within a day of entry |
+| the user asks — **"full review TICKER"** | |
+
+Otherwise one line. **Always, for every holding:** the live news-feed check (the script cannot see
+news; anything material upgrades a LINE to FULL) and the earnings-night check. Deliberately *not* a
+daily flag: sessions held — the 60-session re-underwrite is a research-report trigger, and a daily
+countdown would force ten days of full reviews on an unchanged thesis.
 
 ### Post-catalyst reassessment
 

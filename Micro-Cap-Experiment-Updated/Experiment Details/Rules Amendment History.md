@@ -10,6 +10,27 @@ operating manual. The full superseded text is preserved in git at `e838891`.
 
 ---
 
+# 2026-09-19 (e) — R6 and D3 adopted: dailies by exception; a banded regime
+
+**D3 — regime band.** RISK-OFF only on a close more than 1% below IWM's 50-day SMA, RISK-ON only on a
+close more than 1% above; held in between. Recomputed over the full history: regime changes **17 → 7**
+in 241 sessions, RISK-OFF days 22% → 20%, every genuine change confirmed within **one session** of
+the plain rule's final cross. Late July 2026, six flips in eight sessions under the plain rule,
+became two. `regime_history.csv` keeps both `raw_regime` and the banded `regime`. Phase 4's regime
+test uses the rule in force.
+
+**R6 — dailies by exception.** `<holding_review>` marks each holding FULL or LINE. FULL when it moved
+≥1.5×ATR, traded ≥3× average volume, has its stop within 1×ATR, has a qualifying stop raise, may
+report within ~15 sessions (estimated), was bought ≤3 sessions ago, or the user writes "full review
+TICKER". Every holding still gets the live news check and the earnings-night check. Two changes from
+the proposal, made in the critique pass: **sessions held was dropped as a daily flag** (the 60-session
+re-underwrite is a report trigger; a daily countdown would force ten days of full reviews on an
+unchanged thesis), and **"bought ≤3 sessions ago" was added** (4 of 13 post-pivot losers were closed
+within a day of entry). Tested on ATRC as of the 9/18 close: FULL, "volume 8.7× average" — the
+index-inclusion day that four earlier dailies had recorded as having no dated driver.
+
+---
+
 # 2026-09-19 (d) — R2 adopted: a six-section report; the report skill retired
 
 **The report** (`weekend_summary.md` → `<output_format>`): 1 Scoreboard · 2 Deployment (the funnel,

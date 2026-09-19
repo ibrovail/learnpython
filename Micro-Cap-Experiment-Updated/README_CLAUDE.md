@@ -36,7 +36,9 @@ Instead of copying trading script output to ChatGPT, Claude Code acts as the ana
 
 **Daily analysis output (6 sections):**
 1. Market Regime Check — IWM vs its 50-day SMA, computed by the script (`<market_regime>`)
-2. Per-holding review — price, P&L, catalyst research, trailing stop recalculation, add-shares check
+2. Holdings by exception — the script marks each holding FULL or LINE (`<holding_review>`); a full
+   review (catalyst research, stop update, add-shares check) only when flagged or when you write
+   "full review TICKER"; a live news check for every holding either way
 3. New positions — screening or pass with rationale
 4. Final decisions — exact action blocks (BUY / SELL / UPDATE STOP / HOLD)
 5. Post-event playbook — only when a binary catalyst is ≤10 trading days away

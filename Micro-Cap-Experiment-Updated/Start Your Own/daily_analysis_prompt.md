@@ -17,13 +17,26 @@ Daily Portfolio Review — [DATE]
 
    IWM: $[price] | 50-day SMA: $[value] | [±X.XX%] (source: the script's <market_regime> block —
    computed from IWM closes; do not look it up elsewhere)
-   Regime: RISK-ON / RISK-OFF / BORDERLINE
-   Rule applied: [state the specific restriction if RISK-OFF, or "No restrictions" if RISK-ON]
+   Regime: RISK-ON / RISK-OFF [add "held — inside the ±1% band" when <market_regime> says so]
+   Rule applied: [the capacity this regime allows — see Section 3]
 
 ---
 
-2. [TICKER] — Holding Review
-   (Repeat this section once per position)
+2. Holdings — by exception (review item R6, 2026-09-19)
+
+   The script's <holding_review> block marks each holding FULL or LINE. Also treat a holding as
+   FULL if the user's `Run daily:` message says "full review TICKER", or if the news check below
+   turns up anything material.
+
+   **Every holding, every day — the news check:** open its live news feed (browser) and state
+   "nothing new since the last close [timestamp]" or what landed. The script cannot see news.
+
+   **LINE holdings — one line each:**
+   [TICKER] — $X.XX (±X.XX%), P&L ±X.X%, stop $X.XX (X.XX×ATR room), driver unchanged, news: nothing new [time]
+
+   **FULL holdings — the block below, headed by the flag that triggered it:**
+
+   2a. [TICKER] — Full review ([flag from <holding_review>])
 
    | Item           | Detail                          |
    |----------------|---------------------------------|
@@ -54,7 +67,8 @@ Daily Portfolio Review — [DATE]
    not reduced. If the current stop already sits below 1.5×ATR through price movement alone,
    say so and state whether this entry's one restoration is still available.
 
-   Add Shares?
+   Add Shares? (FULL reviews only — and only if a slot and deployable cash exist; routine
+   deployment decisions belong to the research report)
    - Risk budget: $[equity] × 2% = $[amount]
    - Risk per share at $[entry] entry / $[new stop] stop: $[diff]
    - Formula: $[budget] / $[risk/share] = [N] shares

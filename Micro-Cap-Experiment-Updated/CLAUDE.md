@@ -75,6 +75,8 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
    - No changes: `Run daily: no changes`
    - With trades: `Run daily: inject $143.08, buy 17 REPL limit $7.05 stop $5.90/$5.80`
    - Selling: `Run daily: sell 8 RCKT at $5.11`
+   - Optional, any day: `Run daily: no changes, full review ATRC` — forces a full review of a holding
+     the script marked LINE (holdings are reviewed by exception since 2026-09-19)
 2. Claude auto-analyzes the XML output with live web search
 3. Review recommendations; specify any trades in the next `Run daily:` command
 
@@ -103,7 +105,8 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   by the script → `<market_regime>`, `regime_history.csv`, flip trigger (R7); **small-cap** label +
   size control for Phase 4 (R8). **Six-section report** replaces the ten (R2);
   the `weekly-portfolio-report` skill is **retired** (predates every rule; conflicts with four).
-  Under discussion: R6 (daily by exception), regime whipsaw damping.
+  **Dailies by exception** — `<holding_review>` marks FULL/LINE (R6); **regime ±1% band** — 17 → 7
+  regime changes a year, same RISK-OFF share (D3). Nothing left under discussion.
 - **Next**: **Week 54 weekend research — `make trigger` says DUE.** ATRC first: joins the S&P
   SmallCap 600 at Monday's open; any trim must pass the thesis-exit test (would it be bought today
   at this price?). Then deploy ~$444 under RISK-OFF capacity, and log every shortlisted name.

@@ -72,6 +72,16 @@ When `<daily_summary>` XML appears in the conversation, check for skip condition
 
 If neither skip condition applies, **immediately run the daily portfolio analysis without waiting for a prompt.** Follow the 6-section format in `Start Your Own/daily_analysis_prompt.md`.
 
+**Holdings by exception (R6, since 2026-09-19).** The `<holding_review>` block marks each holding
+**FULL** or **LINE**. A FULL review — catalyst research, stop update, add-shares check — is written
+only for a flagged holding: moved ≥1.5×ATR, traded ≥3× average volume, stop within 1×ATR, a
+qualifying stop raise, earnings possibly within ~15 sessions (estimated — confirm on the quote
+page), bought ≤3 sessions ago, or the user wrote "full review TICKER" in the `Run daily:` message.
+A LINE holding gets one line. **Two things run for every holding regardless:** the live news-feed
+check (anything material upgrades it to FULL), and the mandatory earnings-night check below. A
+FULL flag for a move or volume spike is also where the five-category unexplained-move check in
+`price-data-integrity.md` applies — a ≥1.5×ATR move is the working definition of "material".
+
 **Sourcing within the daily** (per `.claude/rules/price-data-integrity.md`):
 - **Regime (IWM close, 50-day SMA, RISK-ON/OFF)** comes from the script's `<market_regime>` block,
   computed from IWM daily closes and saved to `regime_history.csv` (since 2026-09-19). Do NOT look

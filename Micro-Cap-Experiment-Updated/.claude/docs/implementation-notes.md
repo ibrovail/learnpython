@@ -1304,3 +1304,32 @@ name" with "no slot or cash"; the research log's `capacity` code separates them 
 | `generate_pdf.py` | Cursor reset in three branches |
 | `.claude/rules/analysis-workflow.md`, `README_CLAUDE.md`, `Start Your Own/portfolio_rules.md`, `CLAUDE.md` | Six-section references; monitor skeleton |
 | `Experiment Details/Rules Amendment History.md` | 2026-09-19 (d) |
+
+---
+
+## 2026-09-19 (g) — R6 (dailies by exception) and D3 (regime band)
+
+- **D3** — `_update_regime_history()` computes `raw_regime` (close vs SMA) and the banded `regime`
+  (state machine, `REGIME_BAND_PCT = 1.0`), recomputed over the whole fetched window each run
+  because the band is path-dependent. `<market_regime>` states the rule and notes when the regime
+  is being held inside the band. Validated: 17 → 7 changes in 241 sessions; RISK-OFF share 22% →
+  20%; changes confirmed within ≤1 session of the raw rule; banded RISK-OFF since 2026-08-31.
+- **R6** — `_holding_review_rows()` / `_print_holding_review()` in both the daily and weekend
+  output: per-holding ATR(14) (simple mean of true range), move in ATR, volume vs the prior 20
+  sessions, stop room, whether a raise qualifies at the 2.0×ATR target (size test + range check),
+  estimated next earnings (Finviz's last report + 91 days), sessions held → FULL/LINE with reasons.
+  Fails safe: a ticker with no price history is FULL, "review by hand". Tested on the 9/18 close
+  (ATRC FULL, volume 8.7×; numbers match the earlier independent calculation) and on None / empty /
+  list-of-dicts / unknown-ticker inputs.
+- Note for testing: `ASOF_DATE=<a weekday>` treats that day's session as not yet closed; use the
+  following day to evaluate a session's close.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | `REGIME_BAND_PCT`, banded regime, `<market_regime>` rule/hold note; `_holding_review_rows`, `_print_holding_review` + hooks |
+| `Start Your Own/regime_history.csv` | Recomputed; `raw_regime` column added |
+| `Start Your Own/portfolio_rules.md` | Banded regime test; *Daily monitoring by exception* section |
+| `Start Your Own/daily_analysis_prompt.md` | Section 1 band; Section 2 FULL/LINE; add-shares only in FULL |
+| `Start Your Own/weekend_summary.md` | Report section 4 starts from `<holding_review>` |
+| `.claude/rules/analysis-workflow.md`, `CLAUDE.md`, `README_CLAUDE.md` | Daily-by-exception rules; the optional "full review TICKER" phrase |
+| `Experiment Details/…Phase 3.5.md`, `Rules Amendment History.md` | Phase 4 regime definition; 2026-09-19 (e) |

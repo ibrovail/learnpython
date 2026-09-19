@@ -1520,6 +1520,9 @@ def _ledger_trigger_inputs() -> tuple[pd.DataFrame, float, float, float]:
     return holdings, cash, equity, current_dd
 
 
+REGIME_BAND_PCT = 1.0   # D3, 2026-09-19: the regime changes only on a close beyond +-1% of the SMA
+
+
 def _regime_csv() -> Path:
     return Path(DATA_DIR) / "regime_history.csv"
 
@@ -1548,7 +1551,24 @@ def _update_regime_history() -> Optional[dict]:
         new = pd.DataFrame({"date": close.index, "iwm_close": close.values.round(2),
                             "sma50": sma.values.round(2)}).dropna()
         new["pct_vs_sma50"] = ((new["iwm_close"] / new["sma50"] - 1) * 100).round(2)
-        new["regime"] = np.where(new["iwm_close"] >= new["sma50"], "RISK-ON", "RISK-OFF")
+        # raw_regime: the pre-2026-09-19 rule, close vs SMA -- kept for transparency.
+        new["raw_regime"] = np.where(new["iwm_close"] >= new["sma50"], "RISK-ON", "RISK-OFF")
+        # regime: the rule in force since 2026-09-19 (review item D3) -- a +-1% band. It only
+        # turns RISK-OFF on a close more than 1% BELOW the SMA and only turns RISK-ON on a close
+        # more than 1% ABOVE it; inside the band it holds. The raw rule changed regime 17 times
+        # in 241 sessions (six times in eight sessions in late July 2026, as IWM sat on its SMA);
+        # the band cut that to 7 with the share of RISK-OFF days barely moved (22% -> 20%).
+        # Path-dependent, so it is recomputed over the whole fetched window each run.
+        state, banded = None, []
+        for pct, raw in zip(new["pct_vs_sma50"], new["raw_regime"]):
+            if state is None:
+                state = raw
+            elif state == "RISK-ON" and pct < -REGIME_BAND_PCT:
+                state = "RISK-OFF"
+            elif state == "RISK-OFF" and pct > REGIME_BAND_PCT:
+                state = "RISK-ON"
+            banded.append(state)
+        new["regime"] = banded
         path = _regime_csv()
         if path.exists() and path.stat().st_size > 0:
             old = pd.read_csv(path, parse_dates=["date"])
@@ -1598,9 +1618,12 @@ def _print_market_regime(row: Optional[dict]) -> None:
         print(f"  <since>{row['regime']} since {since.date()} ({n} sessions)</since>")
     except Exception:
         pass
-    if abs(pct) < 0.5:
-        print("  <note>Within 0.5% of the SMA — borderline. The rule applies to the binary value "
-              "above; say so in the report.</note>")
+    if abs(pct) <= REGIME_BAND_PCT:
+        print(f"  <note>Inside the ±{REGIME_BAND_PCT:.0f}% band: the regime is HELD from the last "
+              f"decisive close, not re-decided today (close-vs-SMA alone would read "
+              f"{row.get('raw_regime', 'n/a')}).</note>")
+    print(f"  <rule>RISK-OFF after a close more than {REGIME_BAND_PCT:.0f}% below the 50-day SMA; "
+          f"RISK-ON after a close more than {REGIME_BAND_PCT:.0f}% above it; held in between.</rule>")
     print("  <source>trading_script.py — IWM unadjusted daily closes, 50-session simple average. "
           "Do not look this up elsewhere.</source>")
     print("</market_regime>")
@@ -1721,6 +1744,111 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
         print()
     except Exception:
         return
+
+
+def _holding_review_rows(portfolio_df) -> list[dict]:
+    """Per-holding exception flags for the daily (review item R6, 2026-09-19).
+
+    The book holds for 40-60 sessions, so re-researching every holding every day re-argues
+    unchanged theses and invites churn. A holding gets a FULL review only when something
+    happened; otherwise one line. Everything here is computed from price history -- the one
+    thing a script cannot see is news, which is why every holding still gets the live
+    news-feed check regardless of its flag.
+    """
+    try:
+        if portfolio_df is None:
+            return []
+        if not isinstance(portfolio_df, pd.DataFrame):
+            portfolio_df = pd.DataFrame(portfolio_df)
+        if portfolio_df.empty or "ticker" not in portfolio_df.columns:
+            return []
+    except Exception:
+        return []
+    end = last_completed_session()
+    cache = Path(DATA_DIR) / "universe_cache.csv"
+    last_er: dict[str, str] = {}
+    try:
+        if cache.exists():
+            u = pd.read_csv(cache, usecols=["ticker", "earnings"])
+            last_er = {str(t).upper(): str(e) for t, e in zip(u["ticker"], u["earnings"])}
+    except Exception:
+        pass
+    rows = []
+    for _, h in portfolio_df.iterrows():
+        t = str(h["ticker"]).upper()
+        stop = float(h["stop_loss"]) if "stop_loss" in h.index and pd.notna(h["stop_loss"]) else float("nan")
+        r: dict = {"ticker": t, "flags": []}
+        try:
+            df = download_price_data(t, start=end - pd.Timedelta(days=100),
+                                     end=end + pd.Timedelta(days=1), auto_adjust=False, progress=False).df
+            df.index = pd.to_datetime(df.index).tz_localize(None).normalize()
+            df = df[df.index <= end].dropna(subset=["Close"])
+            c, hi, lo, v = (df[k].astype(float) for k in ("Close", "High", "Low", "Volume"))
+            pc = c.shift(1)
+            tr = pd.concat([hi - lo, (hi - pc).abs(), (lo - pc).abs()], axis=1).max(axis=1)
+            atr = tr.rolling(14).mean()
+            a_prev, a_now = float(atr.iloc[-2]), float(atr.iloc[-1])
+            close, low = float(c.iloc[-1]), float(lo.iloc[-1])
+            r.update(close=close, atr=a_now,
+                     move=(close - float(c.iloc[-2])) / a_prev,
+                     volx=float(v.iloc[-1]) / float(v.iloc[-21:-1].mean()),
+                     room=(close - stop) / a_now if stop == stop else float("nan"))
+            cand = close - 2.0 * a_now                       # raise target (R5)
+            r["raise_to"] = cand if (stop == stop and cand - stop >= 0.5 * a_now and cand < low) else None
+            if abs(r["move"]) >= 1.5:
+                r["flags"].append(f"moved {r['move']:+.1f}×ATR")
+            if r["volx"] >= 3.0:
+                r["flags"].append(f"volume {r['volx']:.1f}× average")
+            if r["room"] == r["room"] and r["room"] < 1.0:
+                r["flags"].append(f"stop only {r['room']:.2f}×ATR away")
+            if r["raise_to"] is not None:
+                r["flags"].append(f"stop raise qualifies (to ~${cand:.2f})")
+        except Exception as e:
+            r["flags"].append(f"price history unavailable ({type(e).__name__}) — review by hand")
+        try:  # estimated next report: Finviz's column is the LAST one; add a quarter
+            m = re.match(r"([A-Z][a-z]{2}) (\d{1,2})", last_er.get(t, ""))
+            if m:
+                lr = pd.to_datetime(f"{m.group(1)} {m.group(2)} {end.year}", format="%b %d %Y")
+                if lr > end + pd.Timedelta(days=30):
+                    lr -= pd.DateOffset(years=1)
+                nxt = lr + pd.Timedelta(days=91)
+                n = len(pd.bdate_range(end, nxt)) - 1
+                r["est_earn"] = f"~{nxt.date()} ({n}s, est.)"
+                if -3 <= n <= 15:
+                    r["flags"].append(f"earnings possibly in ~{n} sessions (estimate — confirm on the quote page)")
+        except Exception:
+            pass
+        held = _sessions_held(t)
+        r["held"] = held
+        if held is not None and held <= 3:
+            r["flags"].append(f"new position ({held} sessions)")
+        r["review"] = "FULL" if r["flags"] else "LINE"
+        rows.append(r)
+    return rows
+
+
+def _print_holding_review(portfolio_df) -> None:
+    rows = _holding_review_rows(portfolio_df)
+    if not rows:
+        return
+    f = lambda x, fmt: (fmt.format(x) if isinstance(x, (int, float)) and x == x else "—")
+    print("<holding_review>")
+    print("| Ticker | Close | Move (×ATR) | Volume (×20d) | Stop room (×ATR) | Held | Est. next earnings | Review |")
+    print("|--------|-------|-------------|---------------|------------------|------|--------------------|--------|")
+    for r in rows:
+        print(f"| {r['ticker']:<6} | {f(r.get('close'), '${:.2f}')} | {f(r.get('move'), '{:+.2f}')} | "
+              f"{f(r.get('volx'), '{:.1f}')} | {f(r.get('room'), '{:.2f}')} | {r.get('held') or '—'} | "
+              f"{r.get('est_earn', '—')} | **{r['review']}** |")
+    for r in rows:
+        if r["flags"]:
+            print(f"  <full_review ticker=\"{r['ticker']}\">{'; '.join(r['flags'])}</full_review>")
+    print("  <rule>FULL review (portfolio_rules.md → Daily monitoring by exception) when a holding "
+          "moved ≥1.5×ATR, traded ≥3× its average volume, has its stop within 1×ATR, has a qualifying "
+          "stop raise, may report earnings within ~15 sessions, or was bought ≤3 sessions ago — or "
+          "when the user asks (\"full review TICKER\"). Otherwise ONE LINE. Every holding still gets "
+          "the live news-feed check; news the script cannot see upgrades a LINE to FULL.</rule>")
+    print("</holding_review>")
+    print()
 
 
 def _get_ticker_role(ticker: str, holdings_set: set[str]) -> str:
@@ -2397,6 +2525,7 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
     print()
 
     _print_position_limits(chatgpt_portfolio)
+    _print_holding_review(chatgpt_portfolio)
     _print_research_trigger(chatgpt_portfolio, cash, metrics.final_equity,
                             metrics.current_drawdown_twr)
 
@@ -2561,6 +2690,7 @@ def _print_xml_summary(
     print("</holdings>")
     print()
     _print_position_limits(chatgpt_portfolio)
+    _print_holding_review(chatgpt_portfolio)
 
 
     # -------- Instructions (static) --------

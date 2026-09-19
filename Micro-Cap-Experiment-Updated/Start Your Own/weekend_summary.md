@@ -81,7 +81,8 @@ If there are no orders: "No orders — <reason>."
 One table row per holding (after proposed trades):
 | Ticker | Shares | Price | P&L | Stop (room in ATR) | Sessions held | Primary driver | Status |
 |---|---|---|---|---|---|---|---|
-Write a full paragraph **only** for a holding with: news or a move that needs explaining; a stop
+Start from `<holding_review>`: a holding it marks **FULL** gets a paragraph. Beyond those flags,
+write a full paragraph **only** for a holding with: news or a move that needs explaining; a stop
 action (show the anti-ratchet tests, or restoration eligibility); a thesis-exit case (would it be
 bought today, at this price?); an event within 10 sessions (post-event playbook); or ≥60 sessions
 held (the written re-underwrite). Otherwise "No change — thesis intact" in the Status column is

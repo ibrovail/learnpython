@@ -436,7 +436,10 @@ vs `composite_legacy` vs `composite_dedup`, the first test of fundamentals, and 
 delivered-watchlist gap (*corrected 2026-09-19:* mostly a few lucky early lists — at 40 sessions
 fewer than half the lists beat the universe; see Part 5).
 A **pre-registered regime test** is also required, since the RISK-OFF screener allowance sunsets
-on its outcome and Phase 3.5 had no RISK-OFF dates at all.
+on its outcome and Phase 3.5 had no RISK-OFF dates at all. **The regime definition changed on
+2026-09-19** (D3: a ±1% band around the 50-day SMA instead of a plain close-vs-SMA test).
+Phase 4 tests the rule in force, using `regime_history.csv`'s `regime` column; `raw_regime` keeps
+the old definition for comparison with Phase 2's descriptive regime split.
 
 **Size control (added 2026-09-19).** The ranked top 50 skews to larger companies (9/15: median
 $2.4Bn, 31 of 50 above $2Bn) because `low_vol` rewards calm stocks and larger companies are calmer.
