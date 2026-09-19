@@ -1231,3 +1231,23 @@ places where implementation went slightly beyond the recommendation as written:
 | `Start Your Own/daily_analysis_prompt.md` | One question, 2.0× raise, computed regime, RISK-OFF capacity |
 | `README_CLAUDE.md`, `CLAUDE.md`, `screener.py` | R1/R7/R8 wording |
 | `Experiment Details/…Phase 3.5.md`, `Rules Amendment History.md` | Phase 4 size + research-log scope; 2026-09-19 (b) entry |
+
+---
+
+## 2026-09-19 (d) — R3 earnings pre-filter pointed at the right date
+
+R3 (written hours earlier) told the weekend research to drop names "with an `earnings` date inside
+the next 10 sessions" using the watchlist column. That column is Finviz's **last** report date —
+all 49 dates on the 9/15 screen fell between Jul 20 and Sep 10 — so the filter would have passed
+every name, including one reporting days later. The forward check now uses the **next** earnings
+date on each name's quote page; the column keeps its real job, the post-earnings cooldown.
+Estimating next prints as last + ~91 days, the no-initiation guard will block ~23 of the top 50 on
+10/19, 39 on 10/26 and 25 on 11/02.
+
+Also measured, for the discussion of R3's size: over Weeks 40–53, 97 names were researched and 10
+new names bought — **~9.7 researched per new buy**, 0.71 new buys a week (the ratio mixes "no good
+name" with "no slot or cash"; the research log's `capacity` code separates them from now on).
+
+| File | Change |
+|------|--------|
+| `.claude/rules/analysis-workflow.md` | Step 2 pre-filter: next earnings date from the quote page; column warning; squeeze estimate |

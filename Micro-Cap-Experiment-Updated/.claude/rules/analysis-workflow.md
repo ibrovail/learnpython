@@ -151,9 +151,18 @@ When `<weekly_context>` XML appears in the conversation output, **immediately be
 1. **Shortlist 8–10 candidates from the top 50 — a spread, not the top of the list.** The ranking
    order has no demonstrated skill on independent data (Phase 3.5 Part 3), and the top of the list
    tilts toward larger, calmer names (9/15: median $2.4Bn, 31 of 50 above $2Bn). So:
-   - **Pre-filter from the watchlist columns first** — drop names with an `earnings` date inside
-     the next 10 sessions (no-initiation guard), prohibited names, `REVIEW`-flagged names you
-     cannot clear, and binary-thesis setups. Don't spend research on names that can't be bought.
+   - **Pre-filter first** — drop prohibited names, `REVIEW`-flagged names you cannot clear, and
+     binary-thesis setups. Then check each name's **next** earnings date **on its quote page** and
+     drop any reporting within 10 sessions (no-initiation guard). Don't spend research on names
+     that can't be bought.
+   - ⚠️ **The watchlist's `earnings` column is the LAST report, not the next one.** Finviz shows the
+     previous date until the next is scheduled — on the 9/15 screen all 49 dates fell between
+     Jul 20 and Sep 10. It feeds the post-earnings cooldown ("how long since"), and is useless for
+     the forward guard. *(Corrected 2026-09-19, the same day this rule was written.)*
+   - **Expect a squeeze in mid-October to early November.** Estimating next prints as last + ~91
+     days, the forward guard blocks roughly **23 of the top 50 on 10/19, 39 on 10/26 and 25 on
+     11/02**. Some weekends in that window may not yield a buyable name at all — that is the rule
+     working, not a reason to relax it.
    - **Then shortlist so that:** ≥3 come from ranks 1–15 **and** ≥3 from ranks 16–50; ≥3 different
      GICS sectors; **≥2 below $2Bn market cap.**
    - Use WebSearch to *discover* the story, then **browser-fetch the quote page of every
