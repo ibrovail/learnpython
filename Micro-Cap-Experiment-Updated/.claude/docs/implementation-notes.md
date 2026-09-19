@@ -950,3 +950,21 @@ ticker-identity check dropped 4 rows (0.3%, far below the 30% corruption alarm).
 | `trading_script.py` | Weekend prompt: `vol_5_50` and `near_high` columns, and a description of the new score |
 | `.claude/rules/entry-discipline.md`, `README_CLAUDE.md` | New composite definition plus the measured-edge caveat (top 15 beats survivors by <1pp per 10 sessions, mostly defensively) |
 | `Experiment Details/Screener Factor Study — Phase 2.md` | Part 3: what was implemented, and the open question about how `portfolio_rules.md` defines momentum/technical plays |
+
+
+---
+
+## 2026-09-19 — Index changes added to the unexplained-move check
+
+The unexplained-move rule in `price-data-integrity.md` checked four categories (company
+announcement, analyst action, SEC filings, sector/macro). ATRC's run from $51.52 to $58.10 after
+S&P DJI announced its S&P SmallCap 600 addition (released 2026-09-04, effective 9/21) fell outside
+all four: four dailies reported "no dated driver", and the cause surfaced only when Friday's 8.67M
+shares (8.7× average) — the closing-auction index buy — prompted a search, verified against the
+S&P DJI release. Index changes are now the fifth category, with where to look (S&P DJI press
+releases, the Russell reconstitution list) and when (about two weeks before each quarterly
+rebalance Friday; late June for Russell).
+
+| File | Change |
+|------|--------|
+| `.claude/rules/price-data-integrity.md` | "FOUR categories" → "FIVE"; index-change row in the driver table; ATRC reason |

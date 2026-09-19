@@ -95,7 +95,7 @@ read the actual note.
   not a fundamental step-change. **Knowing *why* a position moved changes what the stop should
   do about it.**
 
-## Unexplained move: check FOUR categories, not one
+## Unexplained move: check FIVE categories, not one
 
 Three separate misses (2026-09-02 ATRC, 2026-09-08 PAR) came from checking a source that
 **structurally could not contain the answer**, then reporting "no news." A move has four
@@ -106,9 +106,10 @@ possible drivers and each lives somewhere different:
 | Company announcement | `stocktitan.net`, press wire | analyst/insider sources |
 | **Analyst action** | `investing.com/news/analyst-ratings/`, Benzinga movers | **press wire — never carries third-party actions** |
 | **SEC filings — Form 4 insider transactions, 8-K, 13D/G** | SEC EDGAR; `marketbeat.com/instant-alerts/`; the quote page's **Filings** tab | **press wire AND the news feed AND the consensus-PT test** |
+| **Index changes** — S&P DJI quarterly rebalance, Russell reconstitution | S&P DJI press releases (`press.spglobal.com`), FTSE Russell announcements | **every single-name source** — the company does not announce it, analysts rarely note it, and no filing is made |
 | Sector / macro / no cause | benchmark and peer moves | any single-name source |
 
-**Check all four before writing "no news."** "I looked and found nothing" is only meaningful
+**Check all five before writing "no news."** "I looked and found nothing" is only meaningful
 if you looked somewhere the thing could have been.
 
 **Discovery tool that works for this** — `perplexity.ai` with an explicit, dated, category-
@@ -120,6 +121,8 @@ naming prompt. The pattern that found the PAR filing:
 Name the date, name the ticker, and **name the categories** — including the boring ones. Then
 **browser-verify whatever it surfaces** (it returns links; open them). Perplexity is discovery,
 same status as WebSearch; the browser still supplies the facts.
+
+- Reason: 2026-09-18 — ATRC rose **+12.8%** in the ten sessions after S&P DJI announced (2026-09-04) its addition to the **S&P SmallCap 600**, effective before the open on 9/21, then traded **8.67M shares (8.7× average)** in Friday's closing auction as index funds bought in. Four daily reviews (9/14–9/17) called the run a "sentiment re-rating with no dated driver": the driver was a published index change that no company wire, analyst feed or filing carries. **Whenever a holding or candidate moves on heavy volume without news, check the S&P DJI quarterly-rebalance release** (announced about two weeks before the third Friday of March, June, September and December) **and the Russell reconstitution list** (late June). An index addition also matters after the fact: forced buying ends at the effective date, and additions often give back part of the pre-inclusion run.
 
 **Weigh an insider sale before treating it as a cause.** Compute the shares sold as a share of
 the session's volume and the dollar value against market cap. 2026-09-08: PAR's Form 4 was

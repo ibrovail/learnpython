@@ -77,9 +77,9 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: **Screener Phase 3 live** — `composite_score` = equal-weighted ranks of `low_vol`, `near_high`, `squeeze`, `vol_5_50`, `vol_ratio`, `vs_sma50`; **20-day momentum no longer scored**; `composite_legacy` and `composite_dedup` saved with every screen for the Phase 4 out-of-sample test (`Experiment Details/Screener Factor Study — Phase 2.md`). **Dailies logged through Friday 9/18**
-- **In progress**: **One position.** ATRC 3 sh **+69.4%** ($58.10). Ledger stop **$53.40 / $53.25**; **$55.27 / $55.12 recommended 9/17 — placement unconfirmed**. Equity **$727.32**, cash **$553.02 (76.0%)**, **gap −0.76%** (cash drag in a rising S&P), regime RISK-OFF. PAR (9/15, $17.05) and VTS (9/16, $17.69) stopped out on sector moves
-- **Next**: **Week 54 weekend research** — deploy ~$444 under RISK-OFF (catalyst-driven only) from the Phase 3 screener. Confirm why ATRC traded **8.67M shares (~5.6× normal) on rebalance Friday**. Re-entry bans: PAR ~9/29, VTS ~9/30. **Open question**: `portfolio_rules.md` defines momentum/technical plays by momentum, which Phase 2 found has no ranking skill. Pending: final 52-week readout (S&P +14.87% vs +14.59%)
+- **Complete**: **Screener Phase 3 live** — `composite_score` = equal-weighted ranks of `low_vol`, `near_high`, `squeeze`, `vol_5_50`, `vol_ratio`, `vs_sma50`; **20-day momentum no longer scored**; legacy and dedup scores saved with every screen for Phase 4 (`Experiment Details/Screener Factor Study — Phase 2.md`). **Dailies logged through Friday 9/18.** Index changes added as a fifth unexplained-move category after the ATRC miss below
+- **In progress**: **One position** — ATRC 3 sh **+69.4%** ($58.10), stop **$55.27 / $55.12** (locks +61.1%, but only **1.28×ATR** of room; restoration used 8/31). **ATRC joins the S&P SmallCap 600 before Monday 9/21's open** (S&P DJI, 9/04): the +12.8% run since the announcement and Friday's 8.67M shares were index demand. Equity **$727.32**, cash **$553.02 (76.0%)**, **gap −0.76%**, regime RISK-OFF
+- **Next**: **Week 54 weekend research** — first decide the **ATRC +60% partial (1 share) before Monday's open**; then deploy ~$444 under RISK-OFF (catalyst-driven only) from the Phase 3 screener. Re-entry bans: PAR ~9/29, VTS ~9/30. **Open question**: `portfolio_rules.md` defines momentum/technical plays by momentum, which Phase 2 found has no ranking skill. Pending: final 52-week readout (S&P +14.87% vs +14.59%)
 
 ## Documentation
 
