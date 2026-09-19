@@ -217,7 +217,7 @@ Before naming any stop level, state all three:
 
 1. **Today's low** (and the 5–10 day lowest low). **A proposed stop above the most
    recent day's low is inside normal noise — reject it.**
-2. **ATR(14)** in dollars and as a % of price. The stop must sit at least
+2. **ATR(14)** in dollars and as a % of price. The stop must be placed at least
    **1.5 × ATR** below the reference price, per `entry-discipline.md`
    (target 1.75 × ATR below entry, or the swing low / technical level, whichever is wider).
 3. **The resulting max loss** — if the properly-wide stop implies more risk than

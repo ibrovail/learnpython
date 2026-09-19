@@ -73,8 +73,9 @@ When `<daily_summary>` XML appears in the conversation, check for skip condition
 If neither skip condition applies, **immediately run the daily portfolio analysis without waiting for a prompt.** Follow the 6-section format in `Start Your Own/daily_analysis_prompt.md`.
 
 **Sourcing within the daily** (per `.claude/rules/price-data-integrity.md`):
-- **IWM close** for the regime check comes from the `<daily_summary>` itself (the script prices IWM as a benchmark) — do NOT WebSearch a "live IWM price."
-- **IWM 50-day SMA** is a slow-moving technical level; a dated technical-analysis page is acceptable, but note the date.
+- **Regime (IWM close, 50-day SMA, RISK-ON/OFF)** comes from the script's `<market_regime>` block,
+  computed from IWM daily closes and saved to `regime_history.csv` (since 2026-09-19). Do NOT look
+  up the IWM price or its SMA on the web. If the block says UNAVAILABLE, say so and look it up.
 - **Any live/after-hours/pre-market price** (e.g. reacting to a post-close print) → **browser tool** with a timestamp, never WebSearch.
 - **Analyst PTs, ratings, forward P/E, TTM revenue/EPS, beta, 52-wk range** → **browser quote page**, not WebSearch (see the PRV gate above and the source hierarchy).
 - **Catalyst dates + historical guidance** → WebSearch is acceptable for discovery; date each claim, browser-verify anything decision-relevant, and apply *Thesis-Input Freshness* (`.claude/rules/entry-discipline.md`) to any time-varying driver.
@@ -108,7 +109,7 @@ make trigger
 It reads the ledger only (no downloads, ~3 seconds) and prints `<research_trigger>` with a
 `<status>`, the reasons, and this weekend's `<week_number>`.
 
-- **`DUE`** → Step 1 (directive questions) → `make weekend …` → full 10-section report → save
+- **`DUE`** → Step 1 (one optional question) → `make weekend FOCUS="…"` → full report → save
   `Week N Full.md`, `Week N Summary.md` and the PDF, as below.
 - **`NOT DUE`** → run **`make screen`** (the weekly screen always runs — Phase 4 needs every
   weekend's formation date), then write a **short monitoring note**: stops, any holding nearing its
@@ -116,25 +117,30 @@ It reads the ledger only (no downloads, ~3 seconds) and prints `<research_trigge
   re-underwrite theses nothing has changed for. Save it as
   **`Weekly Deep Research (MD)/Week N Monitor.md`** — never as "Full": the 30-session backstop
   counts Full reports only, so a note saved as Full would silently reset it. No PDF, no Summary.
-- **Override** → run the full report anyway if the regime flipped (RISK-ON ↔ RISK-OFF) since the
-  last Full report — analyst-applied, not computed — or if the user asks.
+- A **regime flip** since the last Full report is now a computed trigger (from `regime_history.csv`).
+- **Override** → run the full report anyway if the user asks.
 
 If the portfolio is not current for the last session, the trigger still prints but `make weekend`
 will stop: run the daily first.
 
-### Step 1 — Session Config (ask BEFORE running make weekend)
+### Step 1 — One optional question (only when Step 0 says DUE)
 
-Ask the 4 session directive questions (defined in `Start Your Own/daily_analysis_prompt.md`):
+Ask **one** question (defined in `Start Your Own/daily_analysis_prompt.md`):
 
-**Q1 — Sector focus:** Wide net (default) | Biotech | Energy | Tech | Industrials
-**Q2 — Catalyst timing:** Within 5 days | Within 10 days (default) | 30-60 days
-**Q3 — Risk posture:** Neutral | Aggressive | Defensive | Tighten stops
-**Q4 — Max concurrent positions:** 5 (default) | 6
+> **Anything specific you want researched this weekend** — a ticker, a sector, or a question?
+> *(Default: no — wide net across all permitted sectors.)*
 
 Then run:
 ```bash
-make weekend SECTOR="<answer>" TIMING="<answer>" RISK="<answer>" POSITIONS="<answer>"
+make weekend FOCUS="<answer, or leave empty>"
 ```
+
+**The four questions used until 2026-09-19 are retired.** Timing, risk posture and position count
+are set by the rules, not chosen weekly: holding horizon 40–60 sessions, catalyst window 90 days
+(non-binary only), 2% risk per trade, a 5–6 position ceiling (about 4 fit at current sizing), and
+risk posture governed by the regime filter and the drawdown circuit breaker. Two of the retired
+options worked against the rules — "Aggressive, we are trailing the benchmark" is gap-chasing (the
+pressure behind TYRA), and "Tighten all stops by one ATR" contradicted the stop rules outright.
 
 The `make weekend` target automatically runs the screener first. If the screener fails (Finviz down, network issue), the weekend workflow continues — use WebSearch as a fallback for candidate sourcing.
 
@@ -142,7 +148,19 @@ The `make weekend` target automatically runs the screener first. If the screener
 
 When `<weekly_context>` XML appears in the conversation output, **immediately begin the deep research** — do NOT ask for further input:
 
-1. **Screener candidate evaluation**: If a `<screener_watchlist>` block is present, evaluate AT LEAST the top 5 candidates. Use WebSearch to *discover* the story (what happened, catalyst dates), then **browser-fetch the quote page of every candidate that reaches the shortlist** — the PRV gate applies to any name you will recommend buying, and the quote page is where forward P/E, PT, TTM growth, 52-wk position and beta actually live. For each screener candidate NOT selected, state why in one line. Include at least 2 candidates from different GICS sectors in the evaluation table. Screener candidates get priority over web-search-only finds.
+1. **Shortlist 8–10 candidates from the top 50 — a spread, not the top of the list.** The ranking
+   order has no demonstrated skill on independent data (Phase 3.5 Part 3), and the top of the list
+   tilts toward larger, calmer names (9/15: median $2.4Bn, 31 of 50 above $2Bn). So:
+   - **Pre-filter from the watchlist columns first** — drop names with an `earnings` date inside
+     the next 10 sessions (no-initiation guard), prohibited names, `REVIEW`-flagged names you
+     cannot clear, and binary-thesis setups. Don't spend research on names that can't be bought.
+   - **Then shortlist so that:** ≥3 come from ranks 1–15 **and** ≥3 from ranks 16–50; ≥3 different
+     GICS sectors; **≥2 below $2Bn market cap.**
+   - Use WebSearch to *discover* the story, then **browser-fetch the quote page of every
+     shortlisted name** (PRV gate) — revenue growth, the book's best filter, lives there.
+   - Off-list finds (web search, the user's `FOCUS`) are welcome **in addition** to the 8–10.
+   - For every shortlisted name, bought or passed, state the decision and the reason in one line
+     — and **log it** (item 5).
 2. **Run analysis**: produce the full 10-section deep research report (format defined in `Start Your Own/weekend_summary.md`). Use WebSearch broadly for discovery, but **browser-verify every holding and every candidate you recommend acting on** (PRV gate).
 3. **Correlated-risk check**: Before finalizing positions, verify both limits in
    `portfolio_rules.md` — at most **2 positions sharing a primary thesis driver** (named
@@ -152,7 +170,16 @@ When `<weekly_context>` XML appears in the conversation output, **immediately be
 4. **60-session re-underwrite**: any holding whose `<position_limits>` row shows **60 or more
    sessions held** must be re-justified in writing this session — current thesis, current driver,
    current conviction — against the standard for a fresh buy, and exited if it fails.
-5. **Save outputs** immediately after the report completes:
+5. **Log every shortlisted candidate** — bought, passed or put on watch — with
+   `log_research.py`, one row each, **passes included**. Never edit `research_log.csv` by hand.
+   ```bash
+   venv/bin/python log_research.py --week 54 --ticker XYZ --source "screener #12" \
+     --decision PASS --reason-code extended --reason "44% above the 50-day" --ref-price 12.34
+   ```
+   Buys are only half the evidence. Scoring the passes is the only way to learn whether research
+   adds value beyond the screener list it chose from — the 9/19 trade review could not answer that,
+   because passes were never recorded.
+6. **Save outputs** immediately after the report completes:
    - Full report → `Weekly Deep Research (MD)/Week X Full.md`
    - Section 9 (Thesis Review Summary) only → `Weekly Deep Research (MD)/Week X Summary.md`
    - Convert full report to PDF → `Weekly Deep Research (PDF)/Week X.pdf`

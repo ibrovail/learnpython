@@ -45,9 +45,12 @@ Stops must be set at the wider of:
 
 A stop within 1.5 × ATR is too tight for normal daily noise and will be triggered by a routine down day.
 
-**1.5×ATR is a floor; 1.75×ATR is the target.** These are deliberately different numbers. A stop
-may never *sit* below 1.5×ATR; a stop is *placed* at 1.75×ATR. The anti-ratchet rule in
-`portfolio_rules.md` depends on headroom existing between them — collapsing the two would break it.
+**1.5×ATR is the placement floor; 1.75×ATR is the entry target; 2.0×ATR is the raise target.**
+No stop may be *placed* (at entry or by a raise) less than 1.5×ATR below the price. Price can later
+walk a stop inside that band — expected, and handled by the once-per-entry restoration check in
+`portfolio_rules.md`, not a violation. *(Revised 2026-09-19: the floor previously read "may never
+sit below", which declared an ordinary state impermissible with no remedy once restoration was
+used.)*
 
 If the required stop would create a max-loss exceeding **2% of equity** — the standing
 risk-per-trade budget — **reduce position size**, do not tighten the stop. *(The 5% figure that
@@ -138,7 +141,8 @@ current data. If sources disagree or the latest data is unavailable, mark it
 
 Screener composite score — since 2026-09-15 the equal-weighted ranks of low volatility, proximity to the 60-day high, Bollinger squeeze, 5/50-day volume, 1-day volume ratio and distance above the 50-day SMA (the six signals that passed the Phase 2 factor study; 20-day momentum is reported but no longer scored) — identifies *candidates* but does NOT confer fundamental conviction. **Its measured edge is small and mostly defensive:** the top 15 beat the surviving universe by under 1pp per 10 sessions, largely by avoiding volatile losers rather than by finding winners. Apply the full 5-step verification to every screener pick — **step 1 requires the browser quote page (PRV gate, `analysis-workflow.md`), not WebSearch**:
 1. **Fundamental quality — from the live quote page**: TTM revenue **and growth %**, TTM EPS/net income, forward P/E vs trailing, analyst rating + price target, 52-week range position, beta. *Shrinking revenue is the single strongest disqualifier this book has found* (TDAY −8.3% YoY → exited; FOXF −4.5% with TTM EPS −$7.14 → withdrawn; PAR +18.8% → bought).
-2. Catalyst durability over the chosen timing window
+2. Catalyst durability over the **90-day catalyst window and the 40–60 session hold** *(the weekly
+   "catalyst timing" question was retired 2026-09-19 — the horizon is fixed by the rules)*
 3. **Thesis-input freshness** — identify the thesis's time-varying driver(s) and verify each is current and not reversing (see *Thesis-Input Freshness* above). Mandatory for any commodity/rate/FX/subsidy-dependent name.
 4. Distance-from-base and post-earnings cooldown checks
 5. Liquidity (ADV >$1M for full sizing, $500K-$1M for half sizing)

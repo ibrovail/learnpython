@@ -35,7 +35,7 @@ Instead of copying trading script output to ChatGPT, Claude Code acts as the ana
 **Why not run `make daily` via the `!` shell prefix?** Claude Code's `!` prefix does not support interactive stdin (`input()` calls fail with EOFError). The `Run daily:` pattern works around this by piping pre-constructed answers to the script via the Bash tool.
 
 **Daily analysis output (6 sections):**
-1. Market Regime Check — IWM vs 50-day SMA (live web search)
+1. Market Regime Check — IWM vs its 50-day SMA, computed by the script (`<market_regime>`)
 2. Per-holding review — price, P&L, catalyst research, trailing stop recalculation, add-shares check
 3. New positions — screening or pass with rationale
 4. Final decisions — exact action blocks (BUY / SELL / UPDATE STOP / HOLD)
@@ -60,13 +60,11 @@ Not due → `make screen` plus a short monitoring note saved as `Week N Monitor.
    ```
    run weekend
    ```
-   **Do NOT invoke `make weekend` directly via the `!` shell prefix** — that bypasses Claude. Claude needs to ask the session directive questions first, then run `make weekend` with your answers as CLI arguments.
+   **Do NOT invoke `make weekend` directly via the `!` shell prefix** — that bypasses Claude. Claude runs `make trigger` first, then (if a report is due) asks one question and runs `make weekend FOCUS="..."`.
 
-2. Claude asks the 4 session directive questions:
-   - Sector focus (wide net, biotech, energy, tech, industrials)
-   - Catalyst timing (5 days, 10 days, 30-60 days)
-   - Risk posture (neutral, aggressive, defensive, tighten stops)
-   - Max concurrent positions (5 or 6)
+2. If a report is due, Claude asks **one optional question**: anything specific to research (a
+   ticker, sector or question)? Default is a wide net. The four questions used until 2026-09-19
+   (sector, timing, risk posture, positions) are retired — the rules now fix all of those.
 
 3. After you answer, Claude runs `make weekend` which:
    - Runs the quantitative screener (`screener.py`) to generate a sector-diverse watchlist
@@ -96,7 +94,7 @@ Say `Run daily: no changes` (or with any needed trades), then say `run weekend` 
 
 ## Screener
 
-The quantitative screener (`screener.py`) scans the full micro/small-cap universe to generate sector-diverse candidates. It runs automatically as part of `make weekend`, or standalone:
+The quantitative screener (`screener.py`) scans the full small-cap universe (up to $5Bn) to generate sector-diverse candidates. It runs automatically as part of `make weekend`, or standalone:
 
 ```
 ! make screen
@@ -129,7 +127,7 @@ The quantitative screener (`screener.py`) scans the full micro/small-cap univers
 | File | Purpose |
 |------|---------|
 | `Start Your Own/portfolio_rules.md` | Complete portfolio rules — read before every analysis |
-| `Start Your Own/daily_analysis_prompt.md` | Daily 6-section output format + weekend session directive questions |
+| `Start Your Own/daily_analysis_prompt.md` | Daily 6-section output format + the one weekend question |
 | `Start Your Own/weekend_summary.md` | Weekend deep research prompt — updated by `make weekend` |
 | `screener.py` | Quantitative screener: Finviz universe → yfinance signals → ranked watchlist CSV |
 | `Start Your Own/watchlist.csv` | Screener output — top 50 gate survivors ranked by composite score (max 6 per sector) |
@@ -156,13 +154,10 @@ make install
 
 ---
 
-## Session Directive Options
+## The Weekend Question
 
-Each weekend, Claude asks these 4 questions before running the analysis:
-
-| Question | Options |
-|----------|---------|
-| Sector focus | Wide net (default) / Biotech / Energy / Tech / Industrials |
-| Catalyst timing | Within 5 days / Within 10 days / 30–60 days (medium-term, high conviction) |
-| Risk posture | Neutral / Aggressive (trailing benchmark) / Defensive (protect gains) / Tighten stops 1 ATR |
-| Max concurrent positions | 5 / 6 |
+When a full report is due, Claude asks one optional question — **anything specific you want
+researched?** — and passes the answer as `make weekend FOCUS="..."`. Leaving it empty means a
+wide net. Retired 2026-09-19: sector focus, catalyst timing, risk posture and max positions. The
+rules set all four; two of the old options (aggressive / tighten stops by one ATR) contradicted
+them.

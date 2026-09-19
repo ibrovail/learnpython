@@ -45,8 +45,17 @@ something went wrong, the origin is named in one line and the full account is in
 
 ## Universe
 
-- U.S.-listed common stocks, nano-cap to small-cap, **market cap up to $5Bn**
-  (`screener.py` enforces `MAX_MARKET_CAP = 5e9`).
+- U.S.-listed common stocks, **small-cap: market cap up to $5Bn** (`screener.py` enforces
+  `MAX_MARKET_CAP = 5e9`).
+- **What the label means.** By index-provider convention this is small-cap — the S&P SmallCap 600,
+  which ATRC joins in September 2026 at ~$2.7Bn, holds companies of several billion. By the common
+  retail tiers (micro < $250M, small $250M–$2Bn, mid $2–10Bn) the $2–5Bn band is lower mid-cap.
+  "Micro-cap" no longer describes the book. *(Renamed 2026-09-19.)*
+- **Where the book actually sits** (2026-09-15 screen): universe 17% micro, 48% small, **35%
+  $2–5Bn**; but the ranked top 50 has a **median of $2.4Bn, 31 of 50 above $2Bn and 1 micro-cap**,
+  because the composite rewards low volatility and larger companies are calmer. The research
+  shortlist therefore requires ≥2 names below $2Bn (`analysis-workflow.md`), and Phase 4 tests
+  whether the size tilt helps or hurts.
 - Allowed exchanges: NYSE, NASDAQ, NYSE American.
 - Existing positions above **$5Bn** may be held or sold; no new shares may be added.
 
@@ -92,18 +101,29 @@ written** (`.claude/rules/analysis-workflow.md`).
   If the resulting stop would breach the risk budget below, **reduce position size — never tighten
   the stop.**
 - **Trailing stop floor:** `max(1.5 × ATR(14), 15% below the 20-day rolling high)`.
-- **1.5×ATR is a floor, 1.75×ATR is a target.** These are two different numbers and the
-  distinction is deliberate. A stop may never *sit* below 1.5×ATR; a stop is *placed* at 1.75×ATR.
-  Collapsing them breaks the anti-ratchet test below, which requires headroom between the two.
+- **Three numbers, deliberately different** (revised 2026-09-19):
+  - **1.5×ATR — the placement floor.** No stop may be *placed*, at entry or by a raise, less than
+    1.5×ATR below the price. After placement, price can walk a stop inside this band; that is
+    expected, not a violation — it only triggers the once-per-entry restoration check below.
+  - **1.75×ATR — the entry target** (or the swing low / technical level, if wider).
+  - **2.0×ATR — the raise target.** A raised stop needs more headroom than an entry stop, because
+    it cannot be lowered afterwards and the one restoration is often already spent.
+- *Why 2.0 for raises:* a stop raised to 1.75×ATR has only 0.25×ATR above the floor — less than an
+  ordinary day's move. ATRC's 2026-09-17 raise to $55.27 sat at 1.75×ATR and was at **1.28×ATR**
+  after a single −1.7% session (0.46×ATR), with its restoration already used. At 2.0×ATR the same
+  day would have left it at 1.54×ATR. The cost is ~0.25×ATR more give-back when a raised stop
+  fires; for a book whose measured edge is *holding winners*, being shaken out by noise is the
+  more expensive failure.
 
 ### Raising a stop — anti-ratchet minimum
 
 Do **not** raise a stop unless the raise is **≥ 0.5 × ATR(14)** *and* the new level still leaves
 **≥ 1.5 × ATR** of room below the reference price. Both conditions, every time.
 
-- Compute the candidate level at **1.75 × ATR** below the reference price, then apply the
-  0.5×ATR size test to that level. Raising *to* the 1.5×ATR floor lands exactly on the boundary,
-  where it either fails on floating-point or passes with zero margin.
+- Compute the candidate level at **2.0 × ATR** below the reference price (the raise target; it
+  was 1.75× until 2026-09-19), then apply the 0.5×ATR size test to that level. The room test is
+  then met automatically, and still binds if a swing low or technical level sets the candidate
+  instead. Never raise *to* the 1.5×ATR floor — it lands exactly on the boundary.
 - A raise failing either test is **declined, not reduced**. Wait until a qualifying raise exists.
 - *Why:* small trailing raises bank trivial profit while measurably increasing stop-out
   probability, and a stop can never be lowered afterwards, so the cost is permanent.
@@ -114,7 +134,8 @@ Do **not** raise a stop unless the raise is **≥ 0.5 × ATR(14)** *and* the new
 
 If a stop comes to sit **below 1.5 × ATR(14)** of the current price **through price movement
 alone** — never through tightening — it may be reset **once per entry** to a level computed at
-**1.75 × ATR** below the reference price.
+**1.75 × ATR** below the reference price. *(Restoration stays at 1.75×, not the 2.0× raise target:
+it is the one case where a stop moves down, so it moves the minimum.)*
 
 - **"Once per entry," not once per ticker.** A position that is stopped out and later re-entered
   after the re-entry ban begins a new entry with a fresh allowance.
@@ -273,12 +294,17 @@ to decide. `trading_script.py` prints a `<research_trigger>` block computing the
 | Idle capital | deployable cash ≥ 25% of equity |
 | Re-underwrite due | any holding at ≥ 60 sessions |
 | Circuit breaker armed | current drawdown ≤ −20% |
+| Regime flip | RISK-ON ↔ RISK-OFF between the last report and now (`regime_history.csv`) |
 | **Backstop** | **≥ 30 sessions since the last report** |
 
 *Deployable cash = cash − the 15% floor.*
 
-- **One analyst-applied trigger:** a **regime flip** (RISK-ON ↔ RISK-OFF) since the last report.
-  It is judged from the daily regime check, not computed, and is labelled as such in the block.
+- **The regime is computed, not looked up** (since 2026-09-19): `trading_script.py` derives it from
+  IWM's daily closes and a 50-session simple average, prints `<market_regime>`, and saves every
+  session to `regime_history.csv` — which is how the ledger-only trigger detects a flip.
+  *Whipsaw note:* in late July 2026 IWM sat on its SMA and the regime flipped **six times in eight
+  sessions** (7/24–8/03). The trigger compares only the regime at the last report with today, so
+  intermediate flips don't fire it; the regime filter itself has no such damping (open question).
 - **When not due:** produce a short monitoring note — stops, anything nearing 60 sessions, the
   breaker line. **Do not re-underwrite theses that nothing has changed for.**
 - *Why:* the book holds for 40–60 sessions, so a weekly re-underwrite offered 8–12 chances per

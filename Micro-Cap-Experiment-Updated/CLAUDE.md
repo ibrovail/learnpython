@@ -1,7 +1,8 @@
-# Micro-Cap Live Portfolio
+# Small-Cap Live Portfolio
 
-An indefinite live process using Claude Code to manage a real-money small/micro-cap stock
-portfolio, tracking alpha vs. the S&P 500. The fixed 52-week experiment closed at the
+An indefinite live process using Claude Code to manage a real-money **small-cap** stock portfolio
+(market cap up to $5Bn), tracking alpha vs. the S&P 500. *Folder and file names still say
+"Micro-Cap" / "chatgpt_" from the project's origins; they are kept because renaming breaks paths.* The fixed 52-week experiment closed at the
 2026-09-11 close; there is no end date. Holding horizon is **40–60 trading sessions**.
 
 ## Tech Stack
@@ -77,7 +78,7 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 2. Claude auto-analyzes the XML output with live web search
 3. Review recommendations; specify any trades in the next `Run daily:` command
 
-**Note:** Always use `Run daily:` (not the `!` shell prefix on `make daily`) — Claude Code's `!` prefix does not support interactive stdin. Likewise, say `run weekend` (not `! make weekend`): Claude runs `make trigger` first; if a full report is due it asks the session directive questions and runs `make weekend` with the answers as CLI args (SECTOR, TIMING, RISK, POSITIONS); if not, it runs `make screen` and writes a short `Week N Monitor.md` note.
+**Note:** Always use `Run daily:` (not the `!` shell prefix on `make daily`) — Claude Code's `!` prefix does not support interactive stdin. Likewise, say `run weekend` (not `! make weekend`): Claude runs `make trigger` first; if a full report is due it asks one optional question (anything specific to research?) and runs `make weekend FOCUS="..."`; if not, it runs `make screen` and writes a short `Week N Monitor.md` note.
 
 ## Current State
 
@@ -96,11 +97,17 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   **Joins the S&P SmallCap 600 before Monday 9/21's open** — the +12.8% run since the 9/04
   announcement and Friday's 8.67M shares were index demand. **49 sessions held** (re-underwrite
   ~10/5). Equity **$727.32**, cash **$553.02 (76.0%)**, **gap −0.76%**, regime RISK-OFF.
-- **Next**: **Week 54 weekend research — `<research_trigger>` is DUE.** ATRC first: the mechanical
-  +60% partial no longer exists, so any trim before index demand fades must pass the thesis-exit
-  test at the PRV gate (would it be bought today, at this price?) — not "it is up a lot". Then
-  deploy ~$444 under the new RISK-OFF capacity. Re-entry bans: PAR ~9/29, VTS ~9/30. Pending:
-  final 52-week readout (S&P +14.87% vs +14.59%).
+- **Complete (9/19)**: review items adopted — **one weekend question** (R1); shortlist **8–10 as a
+  spread** incl. ≥2 below $2Bn (R3); **research log** of buys *and* passes via `log_research.py`
+  (R4); stop **raise target 2.0×ATR**, 1.5× floor applies at placement (R5); **regime computed**
+  by the script → `<market_regime>`, `regime_history.csv`, flip trigger (R7); **small-cap** label +
+  size control for Phase 4 (R8). Under discussion: R2 (slimmer report), R6 (daily by exception),
+  regime whipsaw damping.
+- **Next**: **Week 54 weekend research — `make trigger` says DUE.** ATRC first: joins the S&P
+  SmallCap 600 at Monday's open; any trim must pass the thesis-exit test (would it be bought today
+  at this price?). Then deploy ~$444 under RISK-OFF capacity, and log every shortlisted name.
+  Commit `regime_history.csv` and `research_log.csv` with the dailies. Re-entry bans: PAR ~9/29,
+  VTS ~9/30.
 
 ## Documentation
 

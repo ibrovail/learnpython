@@ -15,7 +15,8 @@ Daily Portfolio Review — [DATE]
 
 1. Market Regime Check
 
-   IWM: $[price] | 50-day SMA: $[value] (source: [WebSearch result])
+   IWM: $[price] | 50-day SMA: $[value] | [±X.XX%] (source: the script's <market_regime> block —
+   computed from IWM closes; do not look it up elsewhere)
    Regime: RISK-ON / RISK-OFF / BORDERLINE
    Rule applied: [state the specific restriction if RISK-OFF, or "No restrictions" if RISK-ON]
 
@@ -43,8 +44,9 @@ Daily Portfolio Review — [DATE]
    Stop-Loss Update (portfolio_rules.md → "Raising a stop — anti-ratchet minimum"):
    - ATR(14): $X.XX — computed from yfinance price history, never estimated or searched
    - Close / today's low / 10-day low: $X.XX / $X.XX / $X.XX
-   - Current stop: $X.XX = X.XX×ATR below the close   (floor: a stop may not SIT below 1.5×ATR)
-   - Candidate level: close − 1.75×ATR = $X.XX        (target 1.75×ATR — never raise TO the floor)
+   - Current stop: $X.XX = X.XX×ATR below the close   (1.5×ATR floor applies when PLACING a stop;
+     drift below it afterwards is expected — note it and check restoration eligibility)
+   - Candidate level: close − 2.0×ATR = $X.XX         (raise target 2.0×ATR — never raise TO the floor)
    - Test 1, raise size:   (candidate − current stop) ÷ ATR = X.XX   ≥ 0.50 → PASS / FAIL
    - Test 2, room left:    (close − candidate) ÷ ATR = X.XX          ≥ 1.50 → PASS / FAIL
    - Range check: candidate below today's low → PASS / FAIL
@@ -65,8 +67,10 @@ Daily Portfolio Review — [DATE]
 
 3. New Positions
 
-   [RISK-OFF regime: "Market regime is RISK-OFF (IWM below 50-day SMA). No new initiations
-   unless high-conviction catalyst-driven. Holding $X.XX cash."]
+   [RISK-OFF regime — capacity per portfolio_rules.md → Allocation Framework: up to 3 non-binary
+   catalyst positions at standard 2% sizing, plus screener-sourced entries at half the risk
+   budget (1%) on the defensive profile only (top-decile low_vol, near the 60-day high, volume
+   confirmation; this allowance sunsets at Phase 4). Name the capacity used and what remains.]
 
    [If screening candidates:]
    | Ticker | Thesis | Catalyst (≥2 sources) | Liquidity | Bear Case | Sizing |
@@ -127,25 +131,14 @@ Sources:
 
 ---
 
-## Weekend Session Directive Questions
+## Weekend Question (only when `make trigger` says DUE)
 
-Before running the weekend deep research analysis, ask the user these 4 questions and update the
-`<session_directives>` block in `weekend_summary.md` with their answers:
+Ask the user **one** optional question, then pass the answer as `make weekend FOCUS="..."`:
 
-**Q1 — Sector focus:**
-> Wide net across all sectors (default) | Biotech | Energy | Tech | Industrials
+> **Anything specific you want researched this weekend** — a ticker, a sector, or a question?
+> *(Default: no — wide net across all permitted sectors.)*
 
-**Q2 — Catalyst timing priority:**
-> Within 5 trading days | Within 10 trading days | 30–60 days (medium-term, high conviction only)
-
-**Q3 — Risk posture:**
-> Neutral | Aggressive — we are trailing the benchmark | Defensive — protect recent gains | Tighten all stop-losses by one ATR
-
-**Q4 — Max concurrent positions:**
-> 5 | 6
-
-*(A ceiling, not a target. At 2% risk with 1.75×ATR stops a typical position runs 19–29% of
-equity, so an 85% deployable book fits roughly four.)*
-
-Update `<session_directives>` to include the selected options as active directives (not as comments),
-then proceed immediately to the full 10-section deep research report defined in `weekend_summary.md`.
+Everything the four retired questions used to set is now fixed by `portfolio_rules.md`: holding
+horizon 40–60 sessions; catalyst window 90 days, non-binary only; 2% risk per trade; a 5–6
+position ceiling (about 4 fit at current sizing); risk posture governed by the regime filter and
+the drawdown circuit breaker. Then proceed to the full deep-research report.

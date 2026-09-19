@@ -1188,3 +1188,46 @@ floor"; `_ledger_trigger_inputs()` computes the drawdown without downloads.
 | `trading_script.py`, `Makefile` | `--research-trigger`, `make trigger`, `_report_week_number()`, `_ledger_trigger_inputs()` |
 | `.claude/rules/analysis-workflow.md`, `README_CLAUDE.md`, `CLAUDE.md` | Trigger-first weekend flow; Monitor notes |
 | `Experiment Details/Rules Amendment History.md` | 2026-09-19 entry |
+
+---
+
+## 2026-09-19 (c) — Review recommendations R1, R3, R4, R5, R7, R8
+
+Adopted from the research-arm review; R2 and R6 held for discussion. Full rationale and the two
+places where implementation went slightly beyond the recommendation as written:
+`Experiment Details/Rules Amendment History.md`.
+
+- **R1** — weekend questions reduced to one (`make weekend FOCUS="..."`, `--research-focus`); the
+  old `--sector-focus/--catalyst-timing/--risk-posture/--max-positions` flags are still accepted
+  (suppressed, ignored) so an older invocation does not crash. `<session_directives>` now states
+  what the rules fix.
+- **R3** — Step 2 shortlist rule (spread across ranks, sectors and size; earnings-window pre-filter
+  from the watchlist's `earnings` column).
+- **R4** — `log_research.py` (append-only; validates every row before writing any, so a bad batch
+  writes nothing — tested) and `research/score_research_log.py` (BUY vs PASS like-for-like per
+  research date, independent-date guard, per-reason breakdown — tested on synthetic rows, then
+  reset). `research_log.csv` starts header-only.
+- **R5** — raise target 2.0×ATR in `portfolio_rules.md`, `entry-discipline.md`, the daily template;
+  the 1.5× floor now applies at placement; restoration stays 1.75×.
+- **R7** — `_update_regime_history()` (IWM unadjusted closes, 50-session SMA, atomic upsert into
+  `regime_history.csv`, backfills on first run: 241 sessions), `_print_market_regime()` in both the
+  daily and weekend output, `_regime_on()` feeding a computed regime-flip trigger. **Validated:**
+  9/16 computed at −3.94%, matching the daily report; RISK-OFF since 8/28.
+- **R8** — "small-cap (up to $5Bn)" in `CLAUDE.md`, `portfolio_rules.md` (with the label's meaning
+  and where the book sits), `README_CLAUDE.md`, screener banner/docstrings; size control added to
+  `research-methods.md` and Phase 4 scope.
+- **Stale line fixed:** the daily template's RISK-OFF text still carried the pre-9/17 rule ("no new
+  initiations unless high-conviction catalyst-driven").
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | `--research-focus`; regime helpers + `<market_regime>`; regime-flip trigger; small-cap docstring |
+| `Makefile` | `FOCUS` replaces `SECTOR/TIMING/RISK/POSITIONS` |
+| `log_research.py`, `research/score_research_log.py`, `Start Your Own/research_log.csv` | **New** (R4) |
+| `Start Your Own/regime_history.csv` | **New** (R7), backfilled |
+| `Start Your Own/portfolio_rules.md` | Stop numbers (R5), trigger table + regime note (R7), universe label (R8) |
+| `.claude/rules/analysis-workflow.md` | Step 0/1/2 (R1, R3, R4), regime sourcing (R7) |
+| `.claude/rules/entry-discipline.md`, `price-data-integrity.md`, `research-methods.md` | R5 wording, timing window, size control |
+| `Start Your Own/daily_analysis_prompt.md` | One question, 2.0× raise, computed regime, RISK-OFF capacity |
+| `README_CLAUDE.md`, `CLAUDE.md`, `screener.py` | R1/R7/R8 wording |
+| `Experiment Details/…Phase 3.5.md`, `Rules Amendment History.md` | Phase 4 size + research-log scope; 2026-09-19 (b) entry |

@@ -1,4 +1,4 @@
-"""Quantitative screener for the micro/small-cap universe.
+"""Quantitative screener for the small-cap universe (market cap up to $5Bn).
 
 Pipeline: Finviz universe (identity + fundamentals) -> yfinance price/volume
 signals -> hard gates encoding portfolio_rules.md / entry-discipline.md ->
@@ -785,7 +785,7 @@ def _fmt_market_cap(val) -> str:
 # ---------------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description="Micro/small-cap quantitative screener")
+    parser = argparse.ArgumentParser(description="Small-cap quantitative screener (market cap up to $5Bn)")
     parser.add_argument("--data-dir", default="Start Your Own", help="Data directory (default: 'Start Your Own')")
     parser.add_argument("--top-n", type=int, default=50, help="Number of top candidates to output (default: 50)")
     parser.add_argument("--max-per-sector", type=int, default=6,
@@ -797,7 +797,7 @@ def main():
         print(f"ERROR: Data directory '{data_dir}' does not exist.", file=sys.stderr)
         sys.exit(1)
 
-    print("Micro-Cap Screener")
+    print("Small-Cap Screener (market cap up to $5Bn)")
     print("=" * 40)
 
     # Step 1: Get universe

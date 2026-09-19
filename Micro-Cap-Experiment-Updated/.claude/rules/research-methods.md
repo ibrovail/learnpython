@@ -28,6 +28,11 @@ Rules for any quantitative study of screener signals, gates or strategy performa
 - **Control for low volatility before crediting a signal** (partial IC). The screener's
   "squeeze" had no information beyond low volatility: partial IC −0.001.
 
+- **Control for size too.** Low volatility and company size move together, so a volatility-
+  flavoured ranking can quietly become a size tilt: on 2026-09-15 the top 50 had a median market
+  cap of $2.4Bn against a universe median of $1.2Bn. Report partial IC on log market cap, and top-N
+  results within size terciles, before crediting a signal with skill.
+
 - **Set sample-size floors on EFFECTIVE observations, not raw formation dates.** With weekly
   formation dates and an h-session forward window, roughly `h/5` consecutive dates share the same
   forward period, so effective n ≈ dates ÷ (h/5). Phase 3.5 pre-registered a floor of 8 *dates*;

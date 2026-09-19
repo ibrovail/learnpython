@@ -438,6 +438,17 @@ fewer than half the lists beat the universe; see Part 5).
 A **pre-registered regime test** is also required, since the RISK-OFF screener allowance sunsets
 on its outcome and Phase 3.5 had no RISK-OFF dates at all.
 
+**Size control (added 2026-09-19).** The ranked top 50 skews to larger companies (9/15: median
+$2.4Bn, 31 of 50 above $2Bn) because `low_vol` rewards calm stocks and larger companies are calmer.
+Phase 4 reports each signal's partial IC controlling for log market cap, and the composite's
+top-50 excess within size terciles — to establish whether the ranking has skill *within* a size
+band, or is largely a size tilt. Market cap is in every saved screen, so this needs no new data.
+
+**Research log (added 2026-09-19).** If the log (`log_research.py`) holds ≥5 independent research
+dates by December, Phase 4 also scores BUY vs PASS (`research/score_research_log.py`). It will
+likely hold fewer: reports are now trigger-based, so research dates accumulate only as fast as
+reports are due.
+
 ---
 
 ## Part 5 — Correction (2026-09-19)

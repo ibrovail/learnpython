@@ -10,6 +10,31 @@ operating manual. The full superseded text is preserved in git at `e838891`.
 
 ---
 
+# 2026-09-19 (b) — Review recommendations adopted: R1, R3, R4, R5, R7, R8
+
+From the review of the two research arms. **R2** (slim the report) and **R6** (daily monitoring by
+exception) are under discussion and not adopted.
+
+| # | Change | Why |
+|---|---|---|
+| **R1** | The four weekend questions → **one optional question** (anything specific to research?) | The rules now fix timing, risk and position count; "Aggressive — trailing the benchmark" was gap-chasing and "Tighten all stops by one ATR" contradicted the stop rules |
+| **R3** | Shortlist **8–10 across the top 50**: ≥3 from ranks 1–15, ≥3 from 16–50, ≥3 sectors, **≥2 below $2Bn**; pre-filter out names with earnings inside 10 sessions | The ranking order has no demonstrated skill on independent data, and the top of the list tilts to larger names |
+| **R4** | **Research log**: every shortlisted name, passes included, via append-only `log_research.py`; scored by `research/score_research_log.py` | The trade review could not say whether research beats the list it picks from, because passes were never recorded |
+| **R5** | Raise target **1.75× → 2.0× ATR**; the 1.5× floor applies **when a stop is placed or raised**, and drift below it afterwards is expected | A stop raised to 1.75× has 0.25×ATR above the floor — less than one ordinary day. ATRC went 1.75× → 1.28× in one −1.7% session with restoration spent, and the old "may never sit below" wording then declared it impermissible with no remedy |
+| **R7** | The regime is **computed** from IWM closes, printed as `<market_regime>`, saved to `regime_history.csv`; a regime flip became a computed trigger | It was looked up on a web page daily, and it now sets deployment capacity. Validated: 9/16 computed −3.94%, matching the daily report exactly |
+| **R8** | Language: **small-cap (up to $5Bn)**, not micro-cap; size added as a Phase 4 control and a research-methods rule | Universe 17% micro / 48% small / 35% $2–5Bn; top-50 median $2.4Bn |
+
+**Two decisions extended beyond the recommendation as written, flagged at the time:** R5's floor
+re-wording (adopting only the 2.0× target would have left the "may never sit below" contradiction
+in place), and R3's size quota (a rank-and-sector spread alone would still be mostly $2–5Bn names).
+
+**Found while implementing:** the daily template's RISK-OFF line still read "no new initiations
+unless high-conviction catalyst-driven" — the pre-9/17 rule, which would have silently blocked the
+new RISK-OFF capacity. Corrected. And the computed regime history shows the filter **whipsawed six
+times in eight sessions** in late July 2026 as IWM sat on its SMA — an open question, not changed.
+
+---
+
 # 2026-09-19 — Exits clarified; weekend flow made trigger-first
 
 **Thesis exits restored to the text.** The 9/17 wording said a position "runs until its trailing

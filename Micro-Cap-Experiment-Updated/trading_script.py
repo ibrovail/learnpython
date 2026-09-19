@@ -1,4 +1,4 @@
-"""Utilities for maintaining the ChatGPT micro-cap portfolio.
+"""Utilities for maintaining the small-cap live portfolio (originally the ChatGPT micro-cap experiment).
 
 This module rewrites the original script to:
 - Centralize market data fetching with a robust Yahoo->Stooq fallback
@@ -1520,6 +1520,93 @@ def _ledger_trigger_inputs() -> tuple[pd.DataFrame, float, float, float]:
     return holdings, cash, equity, current_dd
 
 
+def _regime_csv() -> Path:
+    return Path(DATA_DIR) / "regime_history.csv"
+
+
+def _update_regime_history() -> Optional[dict]:
+    """Compute the market regime from IWM and persist it; return the latest row.
+
+    Regime rule (portfolio_rules.md): IWM close below its 50-session simple moving average =
+    RISK-OFF. Computed here from unadjusted daily closes -- previously the daily analysis looked
+    the 50-day SMA up on a web page, a manual step feeding the one input that now sets how much
+    capital may be deployed. Every computable session in the fetched window is upserted into
+    regime_history.csv, so the file backfills itself on first run and the ledger-only trigger
+    (`make trigger`) can detect a regime flip without downloading anything.
+    """
+    try:
+        end = last_completed_session()
+        fetch = download_price_data("IWM", start=end - pd.Timedelta(days=420),
+                                    end=end + pd.Timedelta(days=1), auto_adjust=False, progress=False)
+        df = fetch.df
+        if df is None or df.empty or "Close" not in df.columns:
+            return None
+        close = df["Close"].astype(float)
+        close.index = pd.to_datetime(close.index).tz_localize(None).normalize()
+        close = close[close.index <= end].dropna()
+        sma = close.rolling(50).mean()
+        new = pd.DataFrame({"date": close.index, "iwm_close": close.values.round(2),
+                            "sma50": sma.values.round(2)}).dropna()
+        new["pct_vs_sma50"] = ((new["iwm_close"] / new["sma50"] - 1) * 100).round(2)
+        new["regime"] = np.where(new["iwm_close"] >= new["sma50"], "RISK-ON", "RISK-OFF")
+        path = _regime_csv()
+        if path.exists() and path.stat().st_size > 0:
+            old = pd.read_csv(path, parse_dates=["date"])
+            new = pd.concat([old[~old["date"].isin(new["date"])], new], ignore_index=True)
+        new = new.sort_values("date")
+        tmp = path.with_suffix(".csv.tmp")
+        new.to_csv(tmp, index=False, date_format="%Y-%m-%d")
+        os.replace(tmp, path)                      # atomic: never a half-written file
+        return new.iloc[-1].to_dict()
+    except Exception as e:
+        logger.warning("regime computation failed: %s", e)
+        return None
+
+
+def _regime_on(day: pd.Timestamp) -> Optional[str]:
+    """Regime as of the last recorded session on or before `day` (from regime_history.csv)."""
+    try:
+        path = _regime_csv()
+        if not path.exists():
+            return None
+        h = pd.read_csv(path, parse_dates=["date"])
+        h = h[h["date"] <= pd.Timestamp(day).normalize()]
+        return None if h.empty else str(h.iloc[-1]["regime"])
+    except Exception:
+        return None
+
+
+def _print_market_regime(row: Optional[dict]) -> None:
+    print("<market_regime>")
+    if not row:
+        print("  <status>UNAVAILABLE — IWM history could not be fetched. Look up IWM vs its 50-day "
+              "SMA manually and say so in the report.</status>")
+        print("</market_regime>")
+        print()
+        return
+    pct = float(row["pct_vs_sma50"])
+    print(f"  <date>{pd.Timestamp(row['date']).date()}</date>")
+    print(f"  <iwm_close>{float(row['iwm_close']):.2f}</iwm_close>")
+    print(f"  <sma50>{float(row['sma50']):.2f}</sma50>")
+    print(f"  <pct_vs_sma50>{pct:+.2f}%</pct_vs_sma50>")
+    print(f"  <regime>{row['regime']}</regime>")
+    try:
+        h = pd.read_csv(_regime_csv(), parse_dates=["date"])
+        chg = h[h["regime"] != h["regime"].shift()]
+        since = chg.iloc[-1]["date"] if not chg.empty else h.iloc[0]["date"]
+        n = int((h["date"] >= since).sum())
+        print(f"  <since>{row['regime']} since {since.date()} ({n} sessions)</since>")
+    except Exception:
+        pass
+    if abs(pct) < 0.5:
+        print("  <note>Within 0.5% of the SMA — borderline. The rule applies to the binary value "
+              "above; say so in the report.</note>")
+    print("  <source>trading_script.py — IWM unadjusted daily closes, 50-session simple average. "
+          "Do not look this up elsewhere.</source>")
+    print("</market_regime>")
+    print()
+
+
 def _last_report_date() -> Optional[pd.Timestamp]:
     """Modification date of the most recent weekly deep-research report."""
     try:
@@ -1581,6 +1668,10 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
                 reasons.append(f"circuit breaker armed (drawdown {current_dd:+.1%})")
 
         last = _last_report_date()
+        regime_now = _regime_on(pd.Timestamp.now())
+        regime_then = _regime_on(last) if last is not None else None
+        if regime_now and regime_then and regime_now != regime_then:
+            reasons.append(f"regime flipped since the last report ({regime_then} -> {regime_now})")
         # Limitation: this reads file mtime, which a fresh clone or worktree checkout
         # resets to the checkout time. There the backstop silently will not fire --
         # the other triggers still do. Sanity-check the date printed below.
@@ -1608,9 +1699,13 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
             print("  <reason>none of the computed triggers fired</reason>")
             for b in blocked:
                 print(f"  <note>{b}</note>")
-        print("  <analyst_trigger>Also run the full report on a REGIME FLIP since the last "
-              "one (RISK-ON &lt;-&gt; RISK-OFF). That is judged from the daily regime check, "
-              "not computed here.</analyst_trigger>")
+        if regime_now and regime_then:
+            print(f"  <regime>{regime_now} now; {regime_then} at the last report "
+                  f"(from regime_history.csv)</regime>")
+        else:
+            print("  <analyst_trigger>No regime history covers the last report date — judge a "
+                  "regime flip (RISK-ON &lt;-&gt; RISK-OFF) from the daily regime check."
+                  "</analyst_trigger>")
         print("  <if_not_due>Produce a short monitoring note instead: stops, any position "
               "nearing 60 sessions, and the breaker line. Do not re-underwrite theses that "
               "nothing has changed for.</if_not_due>")
@@ -2252,6 +2347,7 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
     print()
 
     # -------- Portfolio Snapshot (replaces <cash_balance>) --------
+    _print_market_regime(_update_regime_history())
     _print_portfolio_snapshot_table(metrics.final_equity, metrics.dollar_weighted_spx, cash, metrics.metrics_base_date)
     print()
 
@@ -2348,13 +2444,14 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
     # -------- Execution Request --------
     print("<execution_requests>")
     print("<session_directives>")
-    if session_directives:
-        print(f"- Sector focus: {session_directives.get('sector_focus', 'Wide net across all sectors')}")
-        print(f"- Catalyst timing: {session_directives.get('catalyst_timing', 'Within 10 trading days')}")
-        print(f"- Risk posture: {session_directives.get('risk_posture', 'Neutral')}")
-        print(f"- Max concurrent positions: {session_directives.get('max_positions', '5')}")
-    else:
-        print("<!-- UPDATE: Paste the directives for the weekly execution requests -->")
+    _focus = (session_directives or {}).get("research_focus")
+    print(f"- Research focus: {_focus if _focus else 'none — wide net across all permitted sectors'}")
+    print("- Fixed by portfolio_rules.md, not chosen weekly: holding horizon 40–60 sessions; "
+          "catalyst window 90 days, non-binary only; 2% risk per trade; 5–6 position ceiling "
+          "(about 4 fit at current sizing); risk posture set by the regime filter and the "
+          "drawdown circuit breaker.")
+    print("- Shortlist 8–10 from the top 50 as a spread (analysis-workflow.md Step 2), and log "
+          "every shortlisted name — passes included — with log_research.py.")
     print("</session_directives>")
     print()
     print("Using the rules, safeguards, and portfolio context above, execute the deep research window now.")
@@ -2408,6 +2505,7 @@ def _print_xml_summary(
     print()
 
     # -------- Portfolio Snapshot --------
+    _print_market_regime(_update_regime_history())
     _print_portfolio_snapshot_table(metrics.final_equity, metrics.dollar_weighted_spx, cash, metrics.metrics_base_date)
     print()
 
@@ -2729,14 +2827,12 @@ if __name__ == "__main__":
     parser.add_argument("--update-stops", action="store_true", help="Run in stop-loss update mode only")
     parser.add_argument("--weekend-summary", action="store_true",
                        help="Output weekend summary in XML format for deep research")
-    parser.add_argument("--sector-focus", default=None,
-                       help="Session directive: sector focus (e.g., 'Wide net across all sectors', 'Biotech')")
-    parser.add_argument("--catalyst-timing", default=None,
-                       help="Session directive: catalyst timing (e.g., 'Within 10 trading days')")
-    parser.add_argument("--risk-posture", default=None,
-                       help="Session directive: risk posture (e.g., 'Aggressive — trailing benchmark')")
-    parser.add_argument("--max-positions", default=None,
-                       help="Session directive: max concurrent positions (e.g., '5')")
+    parser.add_argument("--research-focus", default=None,
+                       help="Optional weekend focus: a ticker, sector or question to research (default: wide net)")
+    # Retired 2026-09-19 -- the rules now fix timing, risk posture and position count. Still
+    # accepted so an older `make weekend SECTOR=...` invocation does not crash; ignored.
+    for _old in ("--sector-focus", "--catalyst-timing", "--risk-posture", "--max-positions"):
+        parser.add_argument(_old, default=None, help=argparse.SUPPRESS)
     parser.add_argument("--research-trigger", action="store_true",
                         help="Print only the <research_trigger> verdict from the ledger (no downloads) and exit")
     parser.add_argument("--check-data-current", action="store_true",
@@ -2779,13 +2875,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     # Build session directives from CLI args if any are provided
-    _sd_args = {
-        "sector_focus": args.sector_focus,
-        "catalyst_timing": args.catalyst_timing,
-        "risk_posture": args.risk_posture,
-        "max_positions": args.max_positions,
-    }
-    _sd = {k: v for k, v in _sd_args.items() if v is not None} or None
+    _sd = {"research_focus": args.research_focus} if args.research_focus else None
 
     main(Path(args.data_dir) if args.data_dir else None,
          update_stops=args.update_stops,

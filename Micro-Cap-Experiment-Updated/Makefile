@@ -39,10 +39,8 @@ daily:
 # Weekend workflow: check portfolio is current, update weekend_summary.md, inject last thesis, print for Claude
 # Session directives are passed via CLI args (Claude asks questions, then runs with answers):
 #   make weekend SECTOR="Biotech" TIMING="Within 10 trading days" RISK="Aggressive" POSITIONS="5"
-SECTOR ?=
-TIMING ?=
-RISK ?=
-POSITIONS ?=
+# The one weekend question (2026-09-19): anything specific to research? Empty = wide net.
+FOCUS ?=
 
 screen:
 	venv/bin/python screener.py --data-dir "Start Your Own" --top-n 50
@@ -58,10 +56,7 @@ weekend:
 	@venv/bin/python trading_script.py --data-dir "Start Your Own" --check-data-current --log-level ERROR || \
 	(echo "⚠️  Portfolio data is not current for the last trading day. Ask Claude to 'run daily' first, then 'run weekend'." && exit 1)
 	@SD_ARGS=""; \
-	if [ -n "$(SECTOR)" ]; then SD_ARGS="$$SD_ARGS --sector-focus \"$(SECTOR)\""; fi; \
-	if [ -n "$(TIMING)" ]; then SD_ARGS="$$SD_ARGS --catalyst-timing \"$(TIMING)\""; fi; \
-	if [ -n "$(RISK)" ]; then SD_ARGS="$$SD_ARGS --risk-posture \"$(RISK)\""; fi; \
-	if [ -n "$(POSITIONS)" ]; then SD_ARGS="$$SD_ARGS --max-positions \"$(POSITIONS)\""; fi; \
+	if [ -n "$(FOCUS)" ]; then SD_ARGS="$$SD_ARGS --research-focus \"$(FOCUS)\""; fi; \
 	printf '\n' | eval venv/bin/python trading_script.py --data-dir \"Start Your Own\" --weekend-summary $$SD_ARGS
 	@venv/bin/python inject_last_thesis.py
 	@cat "Start Your Own/weekend_summary.md"
