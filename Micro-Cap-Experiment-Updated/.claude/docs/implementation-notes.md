@@ -954,6 +954,181 @@ ticker-identity check dropped 4 rows (0.3%, far below the 30% corruption alarm).
 
 ---
 
+## 2026-09-17 — Graduation to an indefinite live system
+
+The largest rules revision in the project: **13 decisions, 6 rules deleted, 3 new rules**, plus a
+research study pulled forward three months. Full decision record and reasoning:
+`Experiment Details/Rules Amendment History.md`.
+
+**Why.** The 52-week experiment closed 2026-09-11 and the horizon went `null` on 2026-09-14 — but
+only the *horizon* changed. The rules themselves had been written against a deadline and were
+inherited wholesale. A review found many still shaped by a race with no finish line, and two that
+argued the wrong way outright (the stop-restoration allowance keyed to "the life of the
+experiment", and the CADL precedent declining restoration because a catalyst fell "outside the
+runway" — a runway that no longer exists).
+
+**Decisions.** Horizon 40–60 sessions · universe frozen at $5Bn until Phase 4 · trailing stop is
+the only exit · 60-session written re-underwrite · binary-thesis entries prohibited, catalyst
+window 60→90 days · risk-per-trade 2% · drawdown circuit breaker · driver cap 2 + uniform sector
+cap 3 · initial stop unified at 1.75×ATR · restoration once per *entry* · RISK-OFF catalyst
+capacity 1→3 positions · RISK-OFF screener entries at half size with a Phase 4 sunset · 15% cash
+floor promoted to a standing rule.
+
+**Deleted:** partial profit-taking, the entire partial-deferral apparatus, the binary event stop
+override, pre-catalyst exit orders, the 20-day SMA waiver (its trigger condition became
+impossible), and the 5-day minimum hold.
+
+**The deployment bug this fixes.** Under RISK-OFF the rules froze screener-sourced plays — the only
+bucket with capacity — while capping catalyst plays at 1 position / 15%. Maximum deployment was
+~15% plus existing holdings, so the book's 76.3% cash on 2026-09-16 was **arithmetically
+unavoidable**, not a market judgment.
+
+**Three defects found by critiquing the decision set before implementing:**
+
+1. **"Ban binary events" + "hold for months" would have broken the system.** The rulebook's
+   definition of a date-certain binary catalyst listed **"earnings report date"**; a 40–60 session
+   hold spans at least one print, so the ban as drafted prohibited holding any stock. Split into
+   *binary-thesis entry* (prohibited) vs *holding through a scheduled event* (normal), plus a
+   10-session pre-earnings initiation guard.
+2. **Unifying the stop at 1.75×ATR would have broken the anti-ratchet rule.** The 1.5×/1.75× split
+   is deliberate — floor vs target — and the anti-ratchet test needs headroom between them. Only
+   the *initial entry* stop was genuinely contradictory.
+3. **The drawdown trigger was contaminated by capital injections.** `max_drawdown` ran on raw
+   equity with no injection adjustment, unlike TWR and the S&P-equivalent.
+
+**Verified, and it mattered more than expected.** Against $547.64 of injections into a book that
+started at $142.13, the raw-equity max drawdown reads **−24.99%** while the injection-neutral
+figure is **−37.26%** — a **12.3-point** understatement. The injection-neutral figure reproduces
+exactly the −37.26% the Week 52 strategic readout independently reports, so the daily/weekend
+risk table and the readouts had been printing two different "max drawdowns" on two different
+bases, unreconciled. Both are now shown and labelled.
+
+**A fourth defect, found by running the new metric.** The circuit breaker was first written as
+"peak-to-trough", which reads as *maximum* drawdown — on that basis it fires `CASH` on day one
+(−37.26%, from April 2026). A breaker must trigger on **current** drawdown from the running peak.
+Added `current_drawdown_twr` and the breaker-state column. The peak basis is the **re-based**
+series: on a since-inception peak the book currently sits −18.81% below its 2026-01-08 high, 1.2
+points from the de-risk line, permanently near-armed over a drawdown it has already recovered
++29.4% from.
+
+**Enforcement correction.** The sector cap was described during the review as "enforced in the
+screener." It is not: `--max-per-sector` governs watchlist composition and the screener has no
+knowledge of the portfolio. Both correlated-risk caps are research-time judgments. New
+`<position_limits>` block prints live sector counts, each holding's **sessions held** (so the
+60-session review triggers visibly) and a driver-cap reminder — **surfaced, not gated**.
+
+**Verified on the 2026-09-16 ledger:** all three drawdown rows render; breaker reads `clear of
+breaker` at −1.67% from the re-based peak; raw and injection-neutral agree since there have been
+no injections after 9/11 (correct by construction). `<position_limits>` returns ATRC · Healthcare ·
+**47 sessions held** · re-underwrite not yet due — it falls due in ~13 sessions.
+
+| File | Change |
+|------|--------|
+| `Start Your Own/portfolio_rules.md` | Rewritten as a standing operating manual; amendment blocks removed; new Mandate/Horizon, Drawdown circuit breaker, Correlated-risk, Position Management sections |
+| `Experiment Details/Rules Amendment History.md` | **New.** Full 2026-09-17 decision record, critique findings, and every superseded block preserved verbatim |
+| `Experiment Details/Horizon Factor Study — Phase 3.5.md` | **New.** Pre-registration, committed before any result (`9f47b4a`) |
+| `.claude/rules/entry-discipline.md` | Horizon caveat on the screener edge; distance-from-base rationale re-grounded; 1.5×/1.75× floor-vs-target; pre-print guard; driver naming; Day-1 rationale |
+| `.claude/rules/analysis-workflow.md` | Driver named at the PRV gate; correlated-risk + 60-session re-underwrite steps in the weekend flow |
+| `trading_script.py` | `max_drawdown_twr`, `current_drawdown_twr` + breaker state; `_sessions_held`, `_ticker_sectors`, `_print_position_limits` wired into both daily and weekend output |
+| `Start Your Own/daily_analysis_prompt.md` | Driver + sessions-held rows; 5%→2% risk budget; playbook rewritten without binaries or partials; breaker line |
+| `CLAUDE.md`, `README_CLAUDE.md` | De-experimented framing; allocation framework rewritten |
+
+---
+
+## 2026-09-17 (b) — Phase 3.5: the composite at the adopted horizon
+
+Pre-registered `9f47b4a`, raw output `afbf106`, both before interpretation. Extended
+`factor_study.py` to 40- and 60-session horizons (PRIMARY=40) on 21 reconstructed point-in-time
+formation dates; 14 carry full 40-session forward data, 10 carry 60.
+
+**Pre-registered outcome: all six adopted signals retain support at 40 sessions → rule 5, the
+composite stands.** `mom20` passes at 40s having failed at 10s, but rule 8 keeps it out of the
+composite before Phase 4 — reinforced by its eligible-universe IC turning negative at 60s. Both
+60-session momentum signals and `squeeze_own` remain negative and get worse with horizon. Gates
+unchanged (rule 9).
+
+**The study found a flaw in its own pre-registration, and it is the decisive fact.** Rule 10 set
+a sample-size floor of 8 formation *dates*. With weekly formation and an h-session window, ~h/5
+consecutive dates share a forward period, so effective n is **1.75 at 40 sessions and 0.83 at
+60** — and the pre-registered Newey-West lag rule put **12 lags on 10 observations** at 60s, which
+is undefined rather than conservative. That is why `near_high` prints t 14.77 on 14 dates. Only
+**2.6 non-overlapping windows** fit the span at 40s (1.7 at 60s), and the IC series carries +0.42
+lag-1 autocorrelation. Verdict recorded as **"no evidence of breakdown," not confirmation.**
+Lesson added to `research-methods.md`: floors on effective observations, lags capped well below n,
+and implausibly large t on small overlapping samples read as a broken variance estimate.
+
+**Findings that do not rest on a t-statistic**, and are the reason the horizon decision looks
+right: top-50 excess over the survivor median rises monotonically **+0.50 → +0.78 → +2.85 →
++5.57 → +6.99pp** across 5/10/20/40/60 sessions (share of dates positive 71→55→78→79→100%), and
+Phase 2's worst diagnostic reverses — mean quintile spreads move from ~0/negative at 10 sessions
+to **+4 to +5pp at 40**. The delivered-watchlist mystery widens rather than closes: researched
+lists beat the universe by **+9.19pp at 40s and +11.37pp at 60s**, still ahead of the rebuilt
+composite. Open for Phase 4.
+
+Two rule notes corrected in place: `entry-discipline.md`'s measured-edge caveat now states the
+edge by horizon, and the 20-day SMA downgrade keeps its conclusion but loses its stated reason
+(`vs_sma20` tests better at 40s than at 10s — the downgrade now rests on the gate being absolute
+and unwaivable, not on the signal failing).
+
+**No RISK-OFF evidence.** All 14 usable 40-session dates are RISK-ON, so the RISK-OFF screener
+allowance keeps its Phase 4 sunset exactly as written.
+
+| File | Change |
+|------|--------|
+| `Experiment Details/Horizon Factor Study — Phase 3.5.md` | Part 2: results, the effective-n flaw, post-hoc findings, consequences |
+| `research/factor_study.py` | Horizons 40/60, NW lags 8/12, PRIMARY=40, rule-10 sample flag |
+| `research/output/*` | Raw results incl. `phase35_console.txt` |
+| `.claude/rules/research-methods.md` | Effective-sample-size rule; lag cap; implausible-t symptom |
+| `.claude/rules/entry-discipline.md` | Measured edge stated by horizon, with the effective-n caveat |
+| `Start Your Own/portfolio_rules.md` | 20-day SMA downgrade rationale corrected |
+| `CLAUDE.md` | Current state |
+
+---
+
+## 2026-09-17 (c) — Non-overlapping formation dates; trigger-based research cadence
+
+**Non-overlapping dates adopted for Phase 4, and they overturn Phase 3.5 Part 2's headline.**
+`nonoverlapping_phases()` partitions formation dates into maximal subsets whose forward windows
+never overlap; within a phase lags are 0 because there is nothing left to correct. At 40 sessions
+that leaves **2 independent observations, not 14** — so 20, 40 and 60 sessions are all descriptive
+only and **no verdict exists at the horizon the book holds**. On observations that are independent,
+individual signals clear t=2.0 at 5 sessions (`low_vol` 2.48, `vol_ratio` 2.22, `near_high` 2.10,
+`squeeze` 2.02) and only `vol_ratio` holds across both phases at 10. **The composite clears t=2.0
+at no horizon.** Not overturned: effect sizes rise monotonically with horizon on non-overlapping
+data too (`low_vol` 0.072 → 0.092 → 0.123 → 0.172) and match the pooled point estimates closely —
+the direction was real, the confidence was an artifact.
+
+**Phase 4 revised:** keeps December, primary horizon moves to **20 sessions** (~8 independent
+observations); 40 sessions deferred to ~March 2027, 60 effectively unreachable (5 obs ~Sept 2027,
+20 obs ~2031). Sample-size floor is now ≥5 *independent* observations.
+
+**Research cadence changed weekly → trigger-based.** The book holds 40–60 sessions, so a weekly
+re-underwrite gave 8–12 chances per holding period to abandon a thesis deliberately given months
+to work; 82 closed trades at a 50% win rate returned −$3.84. `_print_research_trigger()` computes
+the triggers rather than leaving them to judgment — free slot with ≥10% deployable, ≥25%
+deployable cash, a holding at 60 sessions, breaker armed, or a **30-session backstop** so the
+cadence cannot decay into "whenever I feel like it." Regime flip is flagged as analyst-applied.
+**The weekly screen is unchanged** — weekly formation dates are what produce the phases (8 at 40
+sessions vs 2 monthly), and slowing them would remove cross-checks without adding independence.
+
+Known limitation, noted in the code: last-report detection uses file mtime, which a fresh clone or
+worktree checkout resets, disabling only the backstop.
+
+**Verified on the 2026-09-16 ledger:** trigger block returns **DUE** — free slot (1/5) with 61%
+deployable, and deployable cash 61% ≥ 25%.
+
+| File | Change |
+|------|--------|
+| `research/factor_study.py` | `nonoverlapping_phases()`; per-horizon phase table; `ic_nonoverlapping.csv` |
+| `Experiment Details/Horizon Factor Study — Phase 3.5.md` | Part 3 (non-overlapping results, revised conclusion) and Part 4 (Phase 4 scope) |
+| `Start Your Own/portfolio_rules.md` | New *Research cadence — trigger-based* section |
+| `trading_script.py` | `_last_report_date()`, `_print_research_trigger()` |
+| `.claude/rules/analysis-workflow.md` | Step 0: check the trigger before running the report |
+| `.claude/rules/entry-discipline.md` | Measured-edge note corrected to the non-overlapping result |
+| `README_CLAUDE.md`, `CLAUDE.md` | Cadence note; Phase 4 horizon change |
+
+---
+
 ## 2026-09-19 — Index changes added to the unexplained-move check
 
 The unexplained-move rule in `price-data-integrity.md` checked four categories (company

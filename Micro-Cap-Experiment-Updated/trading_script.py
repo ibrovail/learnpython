@@ -1349,9 +1349,207 @@ class PortfolioMetrics:
     twr: float = np.nan
     twr_spx: float = np.nan
     twr_alpha: float = np.nan
+    # Injection-neutral drawdown. max_drawdown above runs on raw equity, which a
+    # capital injection steps up -- see _compute_portfolio_metrics. The circuit
+    # breaker in portfolio_rules.md triggers on current_drawdown_twr.
+    max_drawdown_twr: float = np.nan
+    mdd_twr_date_str: str = "N/A"
+    current_drawdown_twr: float = np.nan
     # First session of the measurement window: the benchmark base date when one is
     # configured, otherwise the first ledger date.
     metrics_base_date: str = ""
+
+
+def _sessions_held(ticker: str) -> Optional[int]:
+    """Count sessions in the CURRENT holding run of `ticker`.
+
+    Walks backwards through the ledger's session dates and counts consecutive
+    sessions on which the ticker has a row, stopping at the first gap. A gap
+    means the position was exited and later re-entered, so only the current
+    entry is counted -- which is what both the 60-session re-underwrite and the
+    "once per entry" stop restoration are defined against.
+    """
+    try:
+        df = pd.read_csv(PORTFOLIO_CSV)
+        if df.empty or "Ticker" not in df.columns:
+            return None
+        df["Date"] = pd.to_datetime(df["Date"])
+        sessions = sorted(df.loc[df["Ticker"] == "TOTAL", "Date"].unique())
+        held = set(df.loc[df["Ticker"].astype(str).str.upper() == ticker.upper(), "Date"])
+        n = 0
+        for d in reversed(sessions):
+            if d in held:
+                n += 1
+            else:
+                break
+        return n or None
+    except Exception:
+        return None
+
+
+def _ticker_sectors(tickers: list[str]) -> dict[str, str]:
+    """Map tickers to GICS-style sectors from the cached screener universe."""
+    out: dict[str, str] = {}
+    try:
+        cache = Path(DATA_DIR) / "universe_cache.csv"
+        if not cache.exists():
+            return out
+        df = pd.read_csv(cache, usecols=["ticker", "sector"])
+        m = {str(r.ticker).upper(): str(r.sector) for r in df.itertuples()}
+        for t in tickers:
+            out[t.upper()] = m.get(t.upper(), "UNKNOWN")
+    except Exception:
+        pass
+    return out
+
+
+def _print_position_limits(portfolio_df: pd.DataFrame) -> None:
+    """Surface the limits that cannot be gated in code.
+
+    The driver cap and the sector cap in portfolio_rules.md are applied at
+    research time -- screener.py's --max-per-sector governs watchlist
+    composition and has no knowledge of the portfolio. Printing the live counts
+    here is the enforcement mechanism: surfaced, not gated. Origin: the
+    2026-09-17 rules review, and before it CXW, where a rule that lived only in
+    prose went unapplied for months.
+    """
+    try:
+        if portfolio_df is None:
+            return
+        if not isinstance(portfolio_df, pd.DataFrame):
+            portfolio_df = pd.DataFrame(portfolio_df)
+        if portfolio_df.empty or "ticker" not in portfolio_df.columns:
+            return
+        tickers = [str(t).upper() for t in portfolio_df["ticker"].tolist()]
+    except Exception:
+        return
+    sectors = _ticker_sectors(tickers)
+
+    print("<position_limits>")
+    print("| Ticker | Sector                 | Sessions Held | 60-Session Review |")
+    print("|--------|------------------------|---------------|-------------------|")
+    for t in tickers:
+        n = _sessions_held(t)
+        n_str = str(n) if n is not None else "—"
+        if n is None:
+            due = "—"
+        elif n >= 60:
+            due = "** DUE NOW **"
+        elif n >= 50:
+            due = f"in {60 - n}"
+        else:
+            due = "not yet"
+        print(f"| {t:<6} | {sectors.get(t, 'UNKNOWN'):<22} | {n_str:>13} | {due:<17} |")
+
+    counts: dict[str, int] = {}
+    for t in tickers:
+        sec = sectors.get(t, "UNKNOWN")
+        counts[sec] = counts.get(sec, 0) + 1
+    over = [f"{k} ({v})" for k, v in sorted(counts.items()) if v > 3]
+    print(f"  <sector_counts>{', '.join(f'{k}: {v}' for k, v in sorted(counts.items())) or 'none'}</sector_counts>")
+    print(f"  <sector_cap_status>{'BREACH — ' + ', '.join(over) if over else 'OK (cap 3 per sector)'}</sector_cap_status>")
+    print("  <driver_cap>Max 2 positions may share a primary thesis driver. Name each holding's "
+          "primary driver in this report — it cannot be derived from data and an unnamed driver "
+          "is a rule violation (portfolio_rules.md).</driver_cap>")
+    print("</position_limits>")
+    print()
+
+
+def _last_report_date() -> Optional[pd.Timestamp]:
+    """Modification date of the most recent weekly deep-research report."""
+    try:
+        md = Path(__file__).resolve().parent / "Weekly Deep Research (MD)"
+        best_n, best_p = 0, None
+        for q in md.glob("Week *Full.md"):
+            m = re.search(r"Week\s+(\d+)", q.name)
+            if m and int(m.group(1)) >= best_n:
+                best_n, best_p = int(m.group(1)), q
+        if best_p is None:
+            return None
+        return pd.Timestamp(datetime.fromtimestamp(best_p.stat().st_mtime)).normalize()
+    except Exception:
+        return None
+
+
+def _print_research_trigger(portfolio_df, cash: float, equity: float,
+                            current_dd: float = np.nan) -> None:
+    """Decide whether a full deep-research report is due.
+
+    Cadence changed 2026-09-17 from weekly to trigger-based. The book holds for
+    40-60 sessions, so a weekly re-underwrite offered 8-12 chances per holding
+    period to abandon a thesis deliberately given months to work -- and the record
+    (82 closed trades, 50% win rate, -$3.84 net realised) says that churn cost
+    money. The weekly SCREEN is unchanged: it is cheap and the factor research
+    needs its formation dates.
+
+    Triggers are computed here rather than judged, so "trigger-based" cannot decay
+    into "whenever I feel like it". The 30-session backstop is the guard against
+    that: no matter how quiet things are, research never goes stale indefinitely.
+    """
+    POSITION_CEILING, CASH_FLOOR, MIN_POSITION = 5, 0.15, 0.10
+    CASH_TRIGGER, BACKSTOP_SESSIONS, REVIEW_SESSIONS = 0.25, 30, 60
+
+    try:
+        if portfolio_df is not None and not isinstance(portfolio_df, pd.DataFrame):
+            portfolio_df = pd.DataFrame(portfolio_df)
+        tickers = ([str(t).upper() for t in portfolio_df["ticker"].tolist()]
+                   if portfolio_df is not None and not portfolio_df.empty
+                   and "ticker" in portfolio_df.columns else [])
+        deployable = max(0.0, cash - equity * CASH_FLOOR) if equity > 0 else 0.0
+        deployable_pct = deployable / equity if equity > 0 else 0.0
+
+        reasons, blocked = [], []
+        if len(tickers) < POSITION_CEILING and deployable_pct >= MIN_POSITION:
+            reasons.append(f"free slot ({len(tickers)}/{POSITION_CEILING}) with "
+                           f"{deployable_pct:.0%} deployable")
+        elif len(tickers) < POSITION_CEILING:
+            blocked.append(f"free slot but only {deployable_pct:.0%} deployable "
+                           f"(need {MIN_POSITION:.0%})")
+        if deployable_pct >= CASH_TRIGGER:
+            reasons.append(f"deployable cash {deployable_pct:.0%} >= {CASH_TRIGGER:.0%}")
+        for t in tickers:
+            n = _sessions_held(t)
+            if n is not None and n >= REVIEW_SESSIONS:
+                reasons.append(f"{t} at {n} sessions -- re-underwrite due")
+        if not (current_dd is None or (isinstance(current_dd, float) and np.isnan(current_dd))):
+            if current_dd <= -0.20:
+                reasons.append(f"circuit breaker armed (drawdown {current_dd:+.1%})")
+
+        last = _last_report_date()
+        # Limitation: this reads file mtime, which a fresh clone or worktree checkout
+        # resets to the checkout time. There the backstop silently will not fire --
+        # the other triggers still do. Sanity-check the date printed below.
+        if last is None:
+            reasons.append("no prior report found")
+            since = None
+        else:
+            since = int((pd.Timestamp.now().normalize() - last).days * 5 / 7)
+            if since >= BACKSTOP_SESSIONS:
+                reasons.append(f"{since} sessions since last report "
+                               f">= {BACKSTOP_SESSIONS} backstop")
+
+        print("<research_trigger>")
+        print(f"  <cadence>trigger-based since 2026-09-17 (the weekly SCREEN is unchanged)</cadence>")
+        print(f"  <last_report>{last.date() if last is not None else 'none'}"
+              f"{f' ({since} sessions ago)' if since is not None else ''}</last_report>")
+        print(f"  <status>{'DUE' if reasons else 'NOT DUE'}</status>")
+        if reasons:
+            for r in reasons:
+                print(f"  <reason>{r}</reason>")
+        else:
+            print("  <reason>none of the computed triggers fired</reason>")
+            for b in blocked:
+                print(f"  <note>{b}</note>")
+        print("  <analyst_trigger>Also run the full report on a REGIME FLIP since the last "
+              "one (RISK-ON &lt;-&gt; RISK-OFF). That is judged from the daily regime check, "
+              "not computed here.</analyst_trigger>")
+        print("  <if_not_due>Produce a short monitoring note instead: stops, any position "
+              "nearing 60 sessions, and the breaker line. Do not re-underwrite theses that "
+              "nothing has changed for.</if_not_due>")
+        print("</research_trigger>")
+        print()
+    except Exception:
+        return
 
 
 def _get_ticker_role(ticker: str, holdings_set: set[str]) -> str:
@@ -1402,6 +1600,8 @@ def _print_risk_metrics(
     beta: float, alpha_annual: float, r2: float,
     twr: float = np.nan, twr_spx: float = np.nan, twr_alpha: float = np.nan,
     base_date: str = "",
+    max_drawdown_twr: float = np.nan, mdd_twr_date: str = "N/A",
+    current_drawdown_twr: float = np.nan,
 ) -> None:
     """Print the <risk_metrics> table."""
     print("<risk_metrics>")
@@ -1413,6 +1613,20 @@ def _print_risk_metrics(
     mdd_val = _fmt_pct(max_drawdown * 100) if not (max_drawdown is None or (isinstance(max_drawdown, float) and np.isnan(max_drawdown))) else "N/A"
     mdd_note = f"on {mdd_date}" if mdd_date and mdd_date != "N/A" else ""
     print(f"| {'Max Drawdown':<29} | {mdd_val:>9} | {mdd_note:<23} |")
+
+    mdd_twr_val = (
+        _fmt_pct(max_drawdown_twr * 100)
+        if not (max_drawdown_twr is None or (isinstance(max_drawdown_twr, float) and np.isnan(max_drawdown_twr)))
+        else "N/A"
+    )
+    mdd_twr_note = f"on {mdd_twr_date}" if mdd_twr_date and mdd_twr_date != "N/A" else "circuit breaker"
+    print(f"| {'Max Drawdown (inj-neutral)':<29} | {mdd_twr_val:>9} | {mdd_twr_note:<23} |")
+
+    # The circuit-breaker line. -20% = de-risk, -30% = cash (portfolio_rules.md).
+    if not (current_drawdown_twr is None or (isinstance(current_drawdown_twr, float) and np.isnan(current_drawdown_twr))):
+        _cd = current_drawdown_twr
+        _state = "BREAKER: CASH" if _cd <= -0.30 else ("BREAKER: DE-RISK" if _cd <= -0.20 else "clear of breaker")
+        print(f"| {'Current Drawdown (from peak)':<29} | {_fmt_pct(_cd * 100):>9} | {_state:<23} |")
 
     sharpe_val = _fmt_num(sharpe_annual, 4) if not (sharpe_annual is None or (isinstance(sharpe_annual, float) and np.isnan(sharpe_annual))) else "N/A"
     print(f"| {'Sharpe Ratio (annualized)':<29} | {sharpe_val:>9} | {'':<23} |")
@@ -1556,6 +1770,8 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
         return PortfolioMetrics(
             price_volume_rows=price_volume_rows,
             max_drawdown=np.nan, mdd_date_str="N/A",
+            max_drawdown_twr=np.nan, mdd_twr_date_str="N/A",
+            current_drawdown_twr=np.nan,
             sharpe_annual=np.nan, sortino_annual=np.nan,
             beta=np.nan, alpha_annual=np.nan, r2=np.nan,
             final_equity=cash, dollar_weighted_spx=np.nan,
@@ -1753,6 +1969,38 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
     except Exception:
         twr = np.nan
 
+    # -------- Injection-neutral drawdown (the circuit-breaker metric) --------
+    # max_drawdown above runs on raw equity, which steps up whenever capital is
+    # added: a deposit resets the running peak with no market event behind it.
+    # The drawdown circuit breaker in portfolio_rules.md must not be movable by a
+    # contribution, so it is measured on the same chained index the TWR uses:
+    #   index_t = index_{t-1} * Equity_t / (Equity_{t-1} + injection_on_t)
+    # Origin: 2026-09-17 rules review -- $547.64 was injected into a book that
+    # started at $142.13, so on raw equity the "peak" is largely a deposit history.
+    max_drawdown_twr = np.nan
+    mdd_twr_date_str = "N/A"
+    try:
+        _dvals = equity_series.values.astype(float)
+        _ddates = list(equity_series.index)
+        _idx_vals = [1.0]
+        for _i in range(1, len(_dvals)):
+            _dn = _dvals[_i - 1] + inj_by_date.get(_ddates[_i], 0.0)
+            _idx_vals.append(_idx_vals[-1] * (_dvals[_i] / _dn) if _dn > 0 else _idx_vals[-1])
+        _idx = pd.Series(_idx_vals, index=equity_series.index)
+        _dd = (_idx / _idx.cummax()) - 1.0
+        max_drawdown_twr = float(_dd.min())
+        _mt = _dd.idxmin()
+        mdd_twr_date_str = str(_mt.date()) if hasattr(_mt, "date") else str(_mt)
+        # CURRENT drawdown -- distance from the running peak as of the latest
+        # session. This, not the historical minimum, is what the circuit breaker
+        # in portfolio_rules.md triggers on: a max-drawdown reading would fire
+        # permanently on a decline the book has already recovered from.
+        current_drawdown_twr = float(_dd.iloc[-1])
+    except Exception:
+        max_drawdown_twr = np.nan
+        mdd_twr_date_str = "N/A"
+        current_drawdown_twr = np.nan
+
     # S&P 500 cumulative price return over the same window. A price index has no
     # contributions, so it is injection-neutral by nature — the right benchmark
     # for a TWR comparison.
@@ -1770,6 +2018,8 @@ def _compute_portfolio_metrics(chatgpt_portfolio: pd.DataFrame, cash: float) -> 
     return PortfolioMetrics(
         price_volume_rows=price_volume_rows,
         max_drawdown=max_drawdown, mdd_date_str=mdd_date_str,
+        max_drawdown_twr=max_drawdown_twr, mdd_twr_date_str=mdd_twr_date_str,
+        current_drawdown_twr=current_drawdown_twr,
         sharpe_annual=sharpe_annual, sortino_annual=sortino_annual,
         beta=beta, alpha_annual=alpha_annual, r2=r2,
         final_equity=final_equity, dollar_weighted_spx=dollar_weighted_spx,
@@ -1942,6 +2192,9 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
         metrics.beta, metrics.alpha_annual, metrics.r2,
         metrics.twr, metrics.twr_spx, metrics.twr_alpha,
         metrics.metrics_base_date,
+        max_drawdown_twr=metrics.max_drawdown_twr,
+        mdd_twr_date=metrics.mdd_twr_date_str,
+        current_drawdown_twr=metrics.current_drawdown_twr,
     )
     print("</market_data>")
     print()
@@ -1986,6 +2239,10 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
 
     print("</holdings>")
     print()
+
+    _print_position_limits(chatgpt_portfolio)
+    _print_research_trigger(chatgpt_portfolio, cash, metrics.final_equity,
+                            metrics.current_drawdown_twr)
 
     # -------- Last Analyst Thesis (placeholder) --------
     print("<last_analyst_thesis>")
@@ -2091,6 +2348,9 @@ def _print_xml_summary(
         metrics.beta, metrics.alpha_annual, metrics.r2,
         metrics.twr, metrics.twr_spx, metrics.twr_alpha,
         metrics.metrics_base_date,
+        max_drawdown_twr=metrics.max_drawdown_twr,
+        mdd_twr_date=metrics.mdd_twr_date_str,
+        current_drawdown_twr=metrics.current_drawdown_twr,
     )
     print("</market_data>")
     print()
@@ -2134,6 +2394,8 @@ def _print_xml_summary(
 
     print("</holdings>")
     print()
+    _print_position_limits(chatgpt_portfolio)
+
 
     # -------- Instructions (static) --------
     print("<instructions>")

@@ -8,7 +8,12 @@ Hard rules for new-position selection in the weekend deep research and daily ana
 
 - **Never recommend a buy within 3 trading days of an earnings print** at a price more than +5% above the post-print close.
 - Reason: ARLO Week 34 (entered $15.25 Monday, three trading days after Wednesday close of $13.60 pre-print, post-print closed $15.32 — bought at the post-print high, gave back -10.9% on entry day).
-- Either enter pre-print (binary risk acknowledged) or wait for ≥1 trading week of post-print consolidation showing a higher-low base.
+- Wait for ≥1 trading week of post-print consolidation showing a higher-low base.
+- **"Enter pre-print (binary risk acknowledged)" is no longer an option.** `portfolio_rules.md`
+  prohibits initiation within **10 trading sessions before a known earnings date**. This cooldown
+  covers the window after a print; that guard covers the window before it. Together they close
+  both sides. Holding an existing position through its print remains normal and permitted — the
+  prohibition is on buying into one.
 
 ## Distance-from-Base Limits
 
@@ -17,7 +22,19 @@ For every screener candidate considered for entry, compute and report:
 - Distance from 20-day SMA (must be ≤ 20% above)
 - Days since 20-day breakout (avoid days 1-3 of a new breakout if the move is >+10% cumulative)
 
-If a candidate is >50% above its 50-day SMA, it is **disqualified** for a fresh buy regardless of catalyst strength. Mean reversion risk dominates within a 5-trading-day window.
+If a candidate is >50% above its 50-day SMA, it is **disqualified** for a fresh buy regardless of catalyst strength.
+
+**Rationale, re-grounded 2026-09-17.** This rule previously justified itself by mean-reversion
+risk "within a 5-trading-day window" — a horizon the book no longer holds to. The thresholds are
+retained because Phase 2 validated them directly: every price-computable gate removed names that
+subsequently did *worse* than the survivors (median 10-session excess — >40% above the 50-day
+**−3.2pp**, >20% above the 20-day **−2.3pp**, fresh breakout **−2.1pp**). Buying extended is
+costly regardless of how long you then hold.
+
+**Known limitation:** that validation was measured at 10 sessions only. The book now holds
+40–60. Phase 3.5 (`Experiment Details/Horizon Factor Study — Phase 3.5.md`) reports how the
+gated groups performed at the adopted horizon. Until it does, treat these thresholds as
+evidence-backed at 10 sessions and provisional at 40.
 
 ## ATR-Based Stop Sizing
 
@@ -26,7 +43,16 @@ Stops must be set at the wider of:
 - The most recent swing low on the daily chart, OR
 - A technical level (50-day SMA, post-breakout VWAP)
 
-A stop within 1.5 × ATR is too tight for normal daily noise and will be triggered by a routine down day. If the wider stop would create a max-loss exceeding 2% of equity, **reduce position size**, do not tighten the stop.
+A stop within 1.5 × ATR is too tight for normal daily noise and will be triggered by a routine down day.
+
+**1.5×ATR is a floor; 1.75×ATR is the target.** These are deliberately different numbers. A stop
+may never *sit* below 1.5×ATR; a stop is *placed* at 1.75×ATR. The anti-ratchet rule in
+`portfolio_rules.md` depends on headroom existing between them — collapsing the two would break it.
+
+If the required stop would create a max-loss exceeding **2% of equity** — the standing
+risk-per-trade budget — **reduce position size**, do not tighten the stop. *(The 5% figure that
+formerly appeared in `portfolio_rules.md` was a standing contradiction with this line; resolved in
+favour of 2% on 2026-09-17.)*
 
 ## Pre-Open Verification
 
@@ -76,6 +102,33 @@ current data. If sources disagree or the latest data is unavailable, mark it
 
 ## Screener Score is Sourcing, Not Conviction
 
+> **Horizon note — updated 2026-09-17 after Phase 3.5 reported.** The figures below are Phase 2's
+> **10-session** measurements. Phase 3.5 re-tested at the adopted 40–60 session horizon: **all six
+> signals retain support**, and the practical edge rises sharply with holding period:
+>
+> | Top 50 minus survivor median | 5s | 10s | 20s | **40s** | **60s** |
+> |---|---|---|---|---|---|
+> | Excess | +0.50pp | +0.78pp | +2.85pp | **+5.57pp** | **+6.99pp** |
+>
+> Phase 2's central weakness also reverses: the quintile spread on **mean** returns — near zero or
+> negative at 10 sessions — is **+4 to +5pp at 40** and higher at 60. So "under 1pp per 10
+> sessions, mostly defensive" is accurate for 10 sessions and **understates the edge at the
+> horizon actually used.**
+>
+> **Do not over-read it — and the "all six retain support" line above is the pooled estimate, not
+> a verdict.** Re-run on **non-overlapping** formation dates (Phase 3.5 Part 3, the basis adopted
+> for Phase 4), the 40-session horizon has **2 independent observations**, so no verdict is
+> available there at all. On observations that *are* independent, the individual signals clear
+> t = 2.0 at 5 sessions (`low_vol` 2.48, `vol_ratio` 2.22, `near_high` 2.10, `squeeze` 2.02) and
+> only `vol_ratio` holds up across phases at 10 (2.05–2.51). **The composite itself does not clear
+> t = 2.0 at any horizon** on independent data.
+>
+> What survives: the **effect sizes rise monotonically with horizon** on non-overlapping data too
+> (`low_vol` 0.072 → 0.092 → 0.123 → 0.172 across 5/10/20/40 sessions), and they match the pooled
+> point estimates closely. So the direction is real and consistent; the *confidence* was an
+> artifact. Screener rank remains **sourcing, not conviction** — and that framing is now better
+> supported than the edge figures are.
+
 Screener composite score — since 2026-09-15 the equal-weighted ranks of low volatility, proximity to the 60-day high, Bollinger squeeze, 5/50-day volume, 1-day volume ratio and distance above the 50-day SMA (the six signals that passed the Phase 2 factor study; 20-day momentum is reported but no longer scored) — identifies *candidates* but does NOT confer fundamental conviction. **Its measured edge is small and mostly defensive:** the top 15 beat the surviving universe by under 1pp per 10 sessions, largely by avoiding volatile losers rather than by finding winners. Apply the full 5-step verification to every screener pick — **step 1 requires the browser quote page (PRV gate, `analysis-workflow.md`), not WebSearch**:
 1. **Fundamental quality — from the live quote page**: TTM revenue **and growth %**, TTM EPS/net income, forward P/E vs trailing, analyst rating + price target, 52-week range position, beta. *Shrinking revenue is the single strongest disqualifier this book has found* (TDAY −8.3% YoY → exited; FOXF −4.5% with TTM EPS −$7.14 → withdrawn; PAR +18.8% → bought).
 2. Catalyst durability over the chosen timing window
@@ -84,6 +137,17 @@ Screener composite score — since 2026-09-15 the equal-weighted ranks of low vo
 5. Liquidity (ADV >$1M for full sizing, $500K-$1M for half sizing)
 
 Conviction rating starts at 2/5 for any screener pick and can only rise on the strength of independent web-research evidence, not the screener score itself.
+
+**Name the primary thesis driver.** Every recommended entry must state the time-varying input its
+thesis depends on (see *Thesis-Input Freshness* above). This is not documentation — it is the
+input to the **driver cap** in `portfolio_rules.md`: at most 2 positions may share a primary
+driver. The cap cannot be enforced in code, so an unnamed driver is a rule violation rather than
+an omission.
+
+*Terminology: these are **screener-sourced plays**. The former name, "momentum/technical plays",
+was retired on 2026-09-17 — 20-day momentum showed no ranking skill and is no longer scored. The
+six validated signals describe calm stocks near their highs with volume confirmation in an
+established uptrend: low-volatility trend continuation, not momentum.*
 
 **The screener pre-applies these gates as a backstop, not a substitute** (since 2026-09-14): prohibited businesses, deal-pinned, >40% above the 50-day / >20% above the 20-day SMA, days 1–3 of a >10% breakout, post-earnings jump, shrinking revenue (Finviz Sales Q/Q < 0) and liquidity — all *before* ranking, so the list is not filled with names that fail by hand. The gates run on Finviz/yfinance data, and a gate whose input is missing passes the name, so **every check above is still run on the quote page.** A `REVIEW` flag marks industries mixing prohibited and permitted businesses. The thresholds live in `screener.py` constants — change the rule here first, then the constant.
 
@@ -122,5 +186,10 @@ The **weekend deep research report** may include the reminder "Place this stop w
 
 If a freshly opened position closes -8% or worse on entry day:
 - **Default action: exit at next market open** unless an explicit positive-news catalyst surfaced after entry.
-- Reason: A -8% same-day move on a momentum-screened name signals thesis break, not noise. Continuing to hold rationalizes a bad entry.
+- Reason: a −8% same-day move signals thesis break, not noise. Continuing to hold rationalizes a
+  bad entry. *(Re-grounded 2026-09-17: this previously read "on a momentum-screened name", which
+  referenced a selection method the book no longer uses. The rule survives the rename because it
+  is about the entry being wrong on day one, not about how the name was sourced — and it is
+  independent of holding horizon: a thesis that breaks on day 1 does not improve over 60
+  sessions.)*
 - This rule overrides the stop-loss field — exit even if the stop was not breached intraday.

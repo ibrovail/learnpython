@@ -33,6 +33,11 @@ all of them):
 | Day range, volume, market cap | Range check inputs; volume validates whether a quote is meaningful |
 
 **Also required, same gate:**
+- **Primary thesis driver.** Name the time-varying input the thesis depends on (commodity/spot
+  price, rate, FX cross, tariff/subsidy, named supply-demand condition). This feeds the **driver
+  cap** — at most 2 positions may share one — which cannot be enforced in code. `trading_script.py`
+  prints a `<position_limits>` block with live sector counts and a driver-cap reminder; the driver
+  itself must be written by you. An unnamed driver is a rule violation, not an omission.
 - **⛔ Prohibited-business check — first, before anything else.** Confirm the company is not a
   prison/detention operator, a weapons/defence/firearms business, a predatory lender, or
   Israeli-affiliated (`portfolio_rules.md` → *Exclusions*). The quote page's **Industry** field
@@ -92,6 +97,22 @@ Do not write "the reaction is a tomorrow event" and defer it, and do not infer "
 
 When the user asks to run the weekend analysis (e.g., "make weekend", "run weekend", "weekend summary"):
 
+### Step 0 — Is a full report due? (check FIRST)
+
+Cadence is **trigger-based** since 2026-09-17, not weekly. The `<research_trigger>` block in the
+script output computes the answer.
+
+- **`<status>DUE</status>`** → proceed with Step 1 and the full 10-section report.
+- **`<status>NOT DUE</status>`** → produce a **short monitoring note** instead: stops, any holding
+  nearing its 60-session re-underwrite, the circuit-breaker line, and anything that changed. Do
+  **not** re-underwrite theses nothing has changed for — that churn is what the cadence change
+  exists to stop.
+- **Override:** run the full report anyway if the regime flipped (RISK-ON ↔ RISK-OFF) since the
+  last one — that trigger is analyst-applied, not computed — or if the user asks.
+
+The **screener still runs every weekend either way.** The factor research needs its weekly
+formation dates; only the report cadence changed.
+
 ### Step 1 — Session Config (ask BEFORE running make weekend)
 
 Ask the 4 session directive questions (defined in `Start Your Own/daily_analysis_prompt.md`):
@@ -114,8 +135,15 @@ When `<weekly_context>` XML appears in the conversation output, **immediately be
 
 1. **Screener candidate evaluation**: If a `<screener_watchlist>` block is present, evaluate AT LEAST the top 5 candidates. Use WebSearch to *discover* the story (what happened, catalyst dates), then **browser-fetch the quote page of every candidate that reaches the shortlist** — the PRV gate applies to any name you will recommend buying, and the quote page is where forward P/E, PT, TTM growth, 52-wk position and beta actually live. For each screener candidate NOT selected, state why in one line. Include at least 2 candidates from different GICS sectors in the evaluation table. Screener candidates get priority over web-search-only finds.
 2. **Run analysis**: produce the full 10-section deep research report (format defined in `Start Your Own/weekend_summary.md`). Use WebSearch broadly for discovery, but **browser-verify every holding and every candidate you recommend acting on** (PRV gate).
-3. **Sector cap check**: Before finalizing positions, verify no more than 2 positions (of the up-to-6 book) are in the same GICS sector (per `portfolio_rules.md` Allocation Framework).
-4. **Save outputs** immediately after the report completes:
+3. **Correlated-risk check**: Before finalizing positions, verify both limits in
+   `portfolio_rules.md` — at most **2 positions sharing a primary thesis driver** (named
+   explicitly in the report) and at most **3 positions in any one GICS sector**. The
+   `<position_limits>` block in the script output prints live sector counts and each holding's
+   sessions held; the driver cap is yours to apply.
+4. **60-session re-underwrite**: any holding whose `<position_limits>` row shows **60 or more
+   sessions held** must be re-justified in writing this session — current thesis, current driver,
+   current conviction — against the standard for a fresh buy, and exited if it fails.
+5. **Save outputs** immediately after the report completes:
    - Full report → `Weekly Deep Research (MD)/Week X Full.md`
    - Section 9 (Thesis Review Summary) only → `Weekly Deep Research (MD)/Week X Summary.md`
    - Convert full report to PDF → `Weekly Deep Research (PDF)/Week X.pdf`

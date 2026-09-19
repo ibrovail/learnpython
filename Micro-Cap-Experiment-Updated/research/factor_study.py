@@ -1,7 +1,9 @@
-"""Phase 2 screener factor study: rank IC of screener signals on point-in-time universes.
+"""Screener factor study: rank IC of screener signals on point-in-time universes.
 
-Pre-registered in "Experiment Details/Screener Factor Study — Phase 2.md" (Part 1), committed
-before this script first ran. The verdicts it prints apply those rules mechanically.
+Phase 2 pre-registered in "Experiment Details/Screener Factor Study — Phase 2.md" (Part 1).
+Phase 3.5 extends it to 40- and 60-session horizons, pre-registered in
+"Experiment Details/Horizon Factor Study — Phase 3.5.md" (Part 1), committed before this
+script was run at those horizons. The verdicts it prints apply those rules mechanically.
 
 Inputs (research/data/, gitignored -- rebuilt from git history and yfinance):
   universe_commits.txt, watchlist_commits.txt   one "<sha>|<committer ISO time>" per line
@@ -30,11 +32,17 @@ sys.path.insert(0, str(ROOT.parent))
 import screener as scr  # noqa: E402  -- exclusion lists, ticker repair, gate thresholds
 
 DATA, OUT = ROOT / "data", ROOT / "output"
-PRICE_START, PRICE_END = "2025-11-03", "2026-09-15"   # end is exclusive
+PRICE_START, PRICE_END = "2025-11-03", "2026-09-18"   # end is exclusive
 FIRST_FORMATION = pd.Timestamp("2026-04-17")
-HORIZONS = (5, 10, 20)
-NW_LAGS = {5: 0, 10: 1, 20: 3}   # weekly formation dates overlap the 10- and 20-session horizons
-PRIMARY = 10
+HORIZONS = (5, 10, 20, 40, 60)
+# Weekly formation dates overlap every horizon beyond 5 sessions. Phase 2 used 0/1/3 for
+# 5/10/20 and those are kept unchanged for continuity. Phase 3.5 pre-registers ceil(h/5) for
+# the new horizons: at 40 and 60 sessions consecutive observations share 7 of 8 and 11 of 12
+# of their forward windows, so Phase 2's lag structure would badly overstate t-statistics.
+NW_LAGS = {5: 0, 10: 1, 20: 3, 40: 8, 60: 12}
+PRIMARY = 40                     # Phase 3.5 rule 1: the midpoint of the adopted 40-60 hold
+CONTINUITY = (5, 10, 20)         # reported, but cannot trigger a decision rule
+MIN_DATES = 8                    # Phase 3.5 rule 10: below this a horizon is descriptive only
 MIN_NAMES = 30                   # fewer names with data on a date -> no IC for that date
 BATCH = 100
 SIGNALS = ["mom20", "vol_ratio", "squeeze", "composite",
@@ -249,8 +257,38 @@ def quintile_spread(x: pd.Series, y: pd.Series) -> float:
     return float(y[ok][q == 4].mean() - y[ok][q == 0].mean())
 
 
+def nonoverlapping_phases(dates: list, h: int, sessions: pd.DatetimeIndex) -> list[list]:
+    """Partition formation dates into maximal subsets whose forward windows never overlap.
+
+    A date at session index i owns the window [i, i+h). Two dates are independent only if
+    their indices differ by at least h. Starting from each of the first `step` dates and
+    greedily taking every date at least h sessions later yields several non-overlapping
+    "phases" that between them use all the data. Each phase is internally independent, so a
+    t-statistic on it needs no Newey-West correction -- which is the whole point. The phases
+    are NOT independent of each other, so they are reported side by side rather than pooled:
+    the spread across phases shows how much the answer depends on which slice you took.
+
+    Adopted for Phase 4 (decided 2026-09-17) after Phase 3.5 found that weekly formation
+    dates at a 40-session horizon give an effective n of 1.75 while appearing to give 14.
+    """
+    if not dates:
+        return []
+    idx = {d: sessions.get_loc(d) for d in dates}
+    step = max(1, min(len(dates), int(round(h / 5)) or 1))
+    phases = []
+    for start in range(step):
+        picked, last = [], None
+        for d in dates[start:]:
+            if last is None or idx[d] - idx[last] >= h:
+                picked.append(d)
+                last = d
+        if len(picked) >= 2 and picked not in phases:
+            phases.append(picked)
+    return phases
+
+
 def verdict(mean_ic: float, t: float, hit: float) -> str:
-    """Pre-registered rules 2-4 (10-session horizon)."""
+    """Pre-registered rules 2-4, applied at PRIMARY."""
     if np.isnan(mean_ic) or np.isnan(t):
         return "NO DATA"
     if mean_ic > 0 and t >= 2.0 and hit >= 0.60:
@@ -313,6 +351,32 @@ def main() -> None:
                                               "excess_vs_survivor_median": r[f"fwd{h}"] - y_sv.median()})
 
     ic = pd.DataFrame(ic_rows)
+
+    # ---- Non-overlapping formation dates (Phase 4 basis, decided 2026-09-17) ----
+    # Phase 3.5 established that weekly dates at h sessions overlap ~h/5 deep, so the
+    # pooled t-statistic counts near-duplicate observations as independent evidence.
+    # Within a phase the windows never overlap, so lags = 0 is correct.
+    nonov_rows = []
+    for h in HORIZONS:
+        hdates = sorted(ic[ic["horizon"] == h]["date"].unique())
+        hdates = [pd.Timestamp(d) for d in hdates]
+        for pi, phase in enumerate(nonoverlapping_phases(hdates, h, sessions)):
+            sub_ic = ic[(ic["horizon"] == h) & (ic["date"].isin(phase))]
+            for sig, grp in sub_ic.groupby("signal"):
+                v = grp.set_index("date")["ic"].sort_index().dropna()
+                if len(v) < 2:
+                    continue
+                nonov_rows.append({
+                    "horizon": h, "phase": pi, "signal": sig, "n": len(v),
+                    "mean_ic": v.mean(), "sd": v.std(ddof=1),
+                    "t_indep": (v.mean() / (v.std(ddof=1) / np.sqrt(len(v)))) if v.std(ddof=1) > 0 else np.nan,
+                    "all_positive": bool((v > 0).all()),
+                    "first": str(phase[0].date()), "last": str(phase[-1].date()),
+                })
+    nonov = pd.DataFrame(nonov_rows)
+    if not nonov.empty:
+        nonov.to_csv(OUT / "ic_nonoverlapping.csv", index=False)
+
     summary = []
     for (sig, h), grp in ic.groupby(["signal", "horizon"], sort=False):
         s = grp.set_index("date")["ic"].sort_index()
@@ -376,6 +440,11 @@ def main() -> None:
     print(pd.DataFrame(cover_rows).to_string(index=False))
     for h in HORIZONS:
         t = summary[summary["horizon"] == h].sort_values("nw_t", ascending=False)
+        _n = int(t["dates"].max()) if not t.empty else 0
+        _tag = ("  [PRIMARY]" if h == PRIMARY else ("  [continuity only]" if h in CONTINUITY else ""))
+        if _n < MIN_DATES:
+            _tag += f"  [DESCRIPTIVE ONLY -- {_n} dates < {MIN_DATES} (rule 10)]"
+        print(f"(horizon {h}: {_n} dates{_tag})")
         print(f"\n=== Rank IC among gate survivors, {h}-session forward return ===")
         print(t[["signal", "dates", "mean_ic", "nw_t", "hit_rate", "mean_ic_eligible", "q5_q1", "mean_names"]
                 + (["verdict_10d"] if h == PRIMARY else [])].round(3).to_string(index=False))
@@ -390,6 +459,30 @@ def main() -> None:
     print(wl_perf.round(4).to_string(index=False))
     if not wl_perf.empty:
         print(wl_perf[[c for c in wl_perf.columns if c.startswith("excess")]].agg(["mean", "count"]).round(4).to_string())
+    print("\n=== NON-OVERLAPPING formation dates (Phase 4 basis) ===")
+    print("Within a phase, forward windows never overlap, so t needs no NW correction.")
+    print("Phases are not independent OF EACH OTHER -- the spread across them is the point.\n")
+    if nonov.empty:
+        print("  no horizon has >=2 non-overlapping formation dates yet")
+    else:
+        six = ["low_vol", "near_high", "squeeze", "vol_5_50", "vol_ratio", "vs_sma50"]
+        for h in sorted(nonov["horizon"].unique()):
+            hh = nonov[nonov["horizon"] == h]
+            nph, nobs = hh["phase"].nunique(), int(hh["n"].max())
+            print(f"  horizon {h}: {nph} phase(s), up to {nobs} independent observations each")
+            agg = (hh[hh["signal"].isin(six + ["composite"])]
+                   .groupby("signal")
+                   .agg(phases=("phase", "nunique"), n=("n", "max"),
+                        mean_ic=("mean_ic", "mean"), ic_min=("mean_ic", "min"),
+                        ic_max=("mean_ic", "max"), t_min=("t_indep", "min"),
+                        t_max=("t_indep", "max"), always_pos=("all_positive", "all"))
+                   .sort_values("mean_ic", ascending=False))
+            print(agg.round(3).to_string())
+            if nobs < 5:
+                print(f"  -> {nobs} independent observations: DESCRIPTIVE ONLY, no verdict.\n")
+            else:
+                print()
+
     print("\n=== Rule 7 (timing modes) ===")
     print("\n".join(modes) if modes else "No signal passes at one horizon while <= 0 at the other: one mode.")
 

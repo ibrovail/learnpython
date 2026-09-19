@@ -46,6 +46,13 @@ Instead of copying trading script output to ChatGPT, Claude Code acts as the ana
 
 ## Weekend Workflow
 
+**Cadence note (changed 2026-09-17):** the **screener runs every weekend**, but the full
+10-section report is now **trigger-based** — it runs when there is something to decide (free slot
+with capital, ≥25% deployable cash, a holding at 60 sessions, the circuit breaker armed, or 30
+sessions since the last report). The script prints a `<research_trigger>` block with the verdict.
+When not due, Claude produces a short monitoring note instead. Thresholds and rationale are in
+`portfolio_rules.md` → *Research cadence*.
+
 **On Saturday or Sunday:**
 
 1. Tell Claude to run the weekend analysis:
@@ -102,9 +109,17 @@ The quantitative screener (`screener.py`) scans the full micro/small-cap univers
 5. Applies the hard gates (prohibited businesses, deal-pinned, distance from 20/50-day SMA, fresh breakout, post-earnings jump, shrinking revenue, liquidity) **before** ranking, then outputs the top 50 survivors (max 6 per sector) to `Start Your Own/watchlist.csv` and the full gated universe to `Start Your Own/screener_history/screen_YYYY-MM-DD.csv`
 
 **Allocation Framework** (see `portfolio_rules.md`):
-- **Catalyst plays**: max 1 position, 15% equity (binary events like PDUFAs)
-- **Momentum/technical plays**: 3-4 positions, sourced from screener watchlist, no catalyst required
-- **Sector cap**: max 2 of 5 positions in the same GICS sector
+- **Catalyst plays**: dated **non-binary** catalyst within 90 days. Sized by the standard 2% risk
+  budget — no separate size cap. RISK-ON up to 2 positions, RISK-OFF up to 3.
+  **Binary-thesis entries are prohibited** (a stop cannot bound an overnight gap).
+- **Screener-sourced plays**: sourced from the screener watchlist, no catalyst required.
+  RISK-ON up to 4 positions; RISK-OFF permitted at half the risk budget on a defensive profile
+  (this allowance sunsets at Phase 4 unless the regime test confirms it).
+- **Correlated-risk caps**: max **2 positions sharing a primary thesis driver**; max **3 positions
+  in any one GICS sector**. Neither is gated in code — `trading_script.py` prints a
+  `<position_limits>` block so both are visible at research time.
+- **Exits**: the trailing stop is the only exit. No mechanical partials. Any holding at
+  **60 sessions** must be re-underwritten in writing or exited.
 
 ---
 

@@ -1,6 +1,8 @@
-# Micro-Cap Experiment
+# Micro-Cap Live Portfolio
 
-A live 12-month trading experiment using Claude Code to manage a real-money micro-cap stock portfolio, tracking alpha generation vs. S&P 500 benchmark.
+An indefinite live process using Claude Code to manage a real-money small/micro-cap stock
+portfolio, tracking alpha vs. the S&P 500. The fixed 52-week experiment closed at the
+2026-09-11 close; there is no end date. Holding horizon is **40–60 trading sessions**.
 
 ## Tech Stack
 
@@ -35,7 +37,8 @@ A live 12-month trading experiment using Claude Code to manage a real-money micr
 | File | Purpose |
 |------|---------|
 | `trading_script.py` | Trading engine: portfolio processing (482-741), daily analytics (987-1330), weekend summary (1368-1517) |
-| `Start Your Own/portfolio_rules.md` | Portfolio rules — read before every analysis session |
+| `Start Your Own/portfolio_rules.md` | **Standing** portfolio rules — read before every analysis session |
+| `Experiment Details/Rules Amendment History.md` | Why each rule exists; every dated amendment and its outcome |
 | `Start Your Own/daily_analysis_prompt.md` | Daily 6-section format + weekend directive questions |
 | `Start Your Own/weekend_summary.md` | Weekend deep research prompt (updated by `make weekend`) |
 | `inject_last_thesis.py` | Injects Week N-1 Summary into `<last_analyst_thesis>` block |
@@ -77,9 +80,26 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: **Screener Phase 3 live** — `composite_score` = equal-weighted ranks of `low_vol`, `near_high`, `squeeze`, `vol_5_50`, `vol_ratio`, `vs_sma50`; **20-day momentum no longer scored**; legacy and dedup scores saved with every screen for Phase 4 (`Experiment Details/Screener Factor Study — Phase 2.md`). **Dailies logged through Friday 9/18.** Index changes added as a fifth unexplained-move category after the ATRC miss below
-- **In progress**: **One position** — ATRC 3 sh **+69.4%** ($58.10), stop **$55.27 / $55.12** (locks +61.1%, but only **1.28×ATR** of room; restoration used 8/31). **ATRC joins the S&P SmallCap 600 before Monday 9/21's open** (S&P DJI, 9/04): the +12.8% run since the announcement and Friday's 8.67M shares were index demand. Equity **$727.32**, cash **$553.02 (76.0%)**, **gap −0.76%**, regime RISK-OFF
-- **Next**: **Week 54 weekend research** — first decide the **ATRC +60% partial (1 share) before Monday's open**; then deploy ~$444 under RISK-OFF (catalyst-driven only) from the Phase 3 screener. Re-entry bans: PAR ~9/29, VTS ~9/30. **Open question**: `portfolio_rules.md` defines momentum/technical plays by momentum, which Phase 2 found has no ranking skill. Pending: final 52-week readout (S&P +14.87% vs +14.59%)
+- **Complete**: **Indefinite-system rules revision (9/17)** — horizon **40–60 sessions**; the
+  trailing stop is the only **mechanical** exit (partials deleted); **binary-thesis entries
+  prohibited**; risk-per-trade **2%**; **drawdown circuit breaker** (−20% de-risk / −30% cash, on
+  the injection-neutral series from the re-based peak); driver cap 2 + sector cap 3; RISK-OFF
+  capacity raised; weekend **report** is trigger-based while the **screen** stays weekly. Standing
+  rules in `portfolio_rules.md`, reasons in `Experiment Details/Rules Amendment History.md`.
+- **Complete**: **Phase 3.5** — on non-overlapping formation dates the composite clears t=2.0 at
+  **no** horizon, and 20/40/60 sessions have too few independent observations for any verdict;
+  effect sizes do rise with horizon. **Phase 4 (Dec) primary horizon = 20 sessions**; the
+  40-session test waits for ~March 2027. Index changes are the fifth unexplained-move category.
+- **In progress**: **One position** — ATRC 3 sh **+69.4%** ($58.10), stop **$55.27 / $55.12**
+  (locks +61.1%, only **1.28×ATR** of room; restoration used 8/31, so it cannot be lowered).
+  **Joins the S&P SmallCap 600 before Monday 9/21's open** — the +12.8% run since the 9/04
+  announcement and Friday's 8.67M shares were index demand. **49 sessions held** (re-underwrite
+  ~10/5). Equity **$727.32**, cash **$553.02 (76.0%)**, **gap −0.76%**, regime RISK-OFF.
+- **Next**: **Week 54 weekend research — `<research_trigger>` is DUE.** ATRC first: the mechanical
+  +60% partial no longer exists, so any trim before index demand fades must pass the thesis-exit
+  test at the PRV gate (would it be bought today, at this price?) — not "it is up a lot". Then
+  deploy ~$444 under the new RISK-OFF capacity. Re-entry bans: PAR ~9/29, VTS ~9/30. Pending:
+  final 52-week readout (S&P +14.87% vs +14.59%).
 
 ## Documentation
 
