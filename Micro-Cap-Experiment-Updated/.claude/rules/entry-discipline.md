@@ -18,7 +18,7 @@ Hard rules for new-position selection in the weekend deep research and daily ana
 ## Distance-from-Base Limits
 
 For every screener candidate considered for entry, compute and report:
-- Distance from 50-day SMA (must be ≤ 40% above for a momentum entry)
+- Distance from 50-day SMA (must be ≥ 0% — above it — and ≤ 40% above for a screener-sourced entry)
 - Distance from 20-day SMA (must be ≤ 20% above)
 - Days since 20-day breakout (avoid days 1-3 of a new breakout if the move is >+10% cumulative)
 

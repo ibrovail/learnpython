@@ -46,6 +46,7 @@ REASON_CODES = {
     "shrinking-revenue": "TTM revenue or Sales Q/Q negative",
     "negative-earnings": "TTM EPS / net income negative without a credible path",
     "extended": "too far above the 20- or 50-day SMA, or days 1-3 of a >10% breakout",
+    "below-50d": "trading below its 50-day SMA (trend rule, applied at stage 1)",
     "earnings-window": "earnings inside the next 10 sessions (no-initiation guard)",
     "post-earnings": "inside the post-earnings cooldown",
     "binary-thesis": "the thesis is a pass/fail event",

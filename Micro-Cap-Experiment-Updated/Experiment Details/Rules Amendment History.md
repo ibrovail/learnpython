@@ -10,6 +10,27 @@ operating manual. The full superseded text is preserved in git at `e838891`.
 
 ---
 
+# 2026-09-19 (f) — Whole-system critique: six defects fixed
+
+Run across the rules, templates and code after every adoption of the day, with end-to-end tests:
+the screener (live Finviz run: 1,579 → 798 survivors → top 50 + ranks 51–100 + history), the daily
+(against a copy of the data folder), the weekend render, the trigger and the research logger.
+
+| # | Defect | Fix |
+|---|---|---|
+| F1 | **The rules said "above the 50-day SMA at entry — hard gate, enforced in `screener.py`." It never was**: the screener excludes only names >40% *above* it. 535 of 807 survivors (66%) and 18 of the top 50 sat below it. The 9/17 decision to downgrade the 20-day gate had rested on this claim, so neither trend check was enforced anywhere | Applied at research stage 1 from the watchlist's `pct_vs_sma50` (reason code `below-50d`) — not as a screener gate, to keep Phase 4's screens comparable. Evidence restated honestly: pooled t 2.21, non-overlapping t 1.58 |
+| F2 | The RISK-OFF defensive profile ("top-decile `low_vol`") could not be applied: the watchlist carried only raw values, and "near the high" / "volume confirmation" had no thresholds | `rank_low_vol`, `rank_near_high`, `rank_vol_5_50` added to the watchlist; thresholds set at ≥0.90 / ≥−5% / >1.0 (6 of the 9/15 top 50 qualify) |
+| F3 | A legacy "trailing stop floor: max(1.5×ATR, 15% below the 20-day high)" survived from the deleted partial-profit rule; never applied, and on one reading it forbade ATRC's current stop | Replaced by the actual mechanism: trail by the raise rule |
+| F4 | "momentum entry" wording survived in the distance-from-base rule | "screener-sourced entry", with the ≥0% floor made explicit |
+| F5 | A buy proposed in a *daily* bypassed the funnel and the research log, biasing the log's buy-vs-pass scoring | Daily buys held to stage-2 research and logged |
+| F6 | The last-report date — and so the 30-session backstop and week numbering — read file mtime, which clones and checkouts reset | Read from the report's own header date; mtime only as a fallback. Verified in a worktree whose mtimes are all wrong |
+
+**A concern that did not survive testing:** that RISK-OFF would still leave cash stranded because
+half-risk entries use whole position slots. Risk-based sizing makes calm names large even at half
+risk (the six qualifying names size at 25–30% of equity), so the cash floor binds first.
+
+---
+
 # 2026-09-19 (e) — R6 and D3 adopted: dailies by exception; a banded regime
 
 **D3 — regime band.** RISK-OFF only on a close more than 1% below IWM's 50-day SMA, RISK-ON only on a

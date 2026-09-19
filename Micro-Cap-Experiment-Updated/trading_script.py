@@ -1455,6 +1455,25 @@ def _print_position_limits(portfolio_df: pd.DataFrame) -> None:
     print()
 
 
+def _report_file_date(path: Path) -> pd.Timestamp:
+    """Date a report was written: the first ISO date in its opening lines, else file mtime.
+
+    Report headers carry their date -- "**Date:** Monday, 2026-09-14" in the old format, and
+    "# Week N — Research Report (YYYY-MM-DD)" in the six-section template. File mtime is only
+    a fallback: a fresh clone, a worktree checkout or a sync can reset it, which would silently
+    disable the 30-session backstop. Fixed 2026-09-19.
+    """
+    try:
+        with path.open(encoding="utf-8") as fh:
+            head = "".join(next(fh, "") for _ in range(6))
+        m = re.search(r"(20\d{2}-\d{2}-\d{2})", head)
+        if m:
+            return pd.Timestamp(m.group(1)).normalize()
+    except Exception:
+        pass
+    return pd.Timestamp(datetime.fromtimestamp(path.stat().st_mtime)).normalize()
+
+
 def _report_week_number() -> int:
     """Week label for this weekend = the latest weekend file's number + 1.
 
@@ -1476,7 +1495,7 @@ def _report_week_number() -> int:
                 latest_n, latest_p = int(m.group(1)), q
         if latest_p is None:
             return 0
-        age = (datetime.now() - datetime.fromtimestamp(latest_p.stat().st_mtime)).days
+        age = (pd.Timestamp(_effective_now()).normalize() - _report_file_date(latest_p)).days
         return latest_n if age < 3 else latest_n + 1
     except Exception:
         return 0
@@ -1641,7 +1660,7 @@ def _last_report_date() -> Optional[pd.Timestamp]:
                 best_n, best_p = int(m.group(1)), q
         if best_p is None:
             return None
-        return pd.Timestamp(datetime.fromtimestamp(best_p.stat().st_mtime)).normalize()
+        return _report_file_date(best_p)
     except Exception:
         return None
 
@@ -1695,9 +1714,8 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
         regime_then = _regime_on(last) if last is not None else None
         if regime_now and regime_then and regime_now != regime_then:
             reasons.append(f"regime flipped since the last report ({regime_then} -> {regime_now})")
-        # Limitation: this reads file mtime, which a fresh clone or worktree checkout
-        # resets to the checkout time. There the backstop silently will not fire --
-        # the other triggers still do. Sanity-check the date printed below.
+        # The report date comes from the report's own header (_report_file_date), not file
+        # mtime, so a clone or checkout cannot silently disable the backstop.
         if last is None:
             reasons.append("no prior report found")
             since = None

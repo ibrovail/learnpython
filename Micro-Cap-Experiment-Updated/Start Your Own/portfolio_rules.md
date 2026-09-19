@@ -100,7 +100,11 @@ written** (`.claude/rules/analysis-workflow.md`).
 
   If the resulting stop would breach the risk budget below, **reduce position size — never tighten
   the stop.**
-- **Trailing stop floor:** `max(1.5 × ATR(14), 15% below the 20-day rolling high)`.
+- **Trailing:** stops trail by the raise rule below (raise target 2.0×ATR, subject to the
+  anti-ratchet tests), never by a percentage of the high. *(Corrected 2026-09-19: a legacy line
+  here read "trailing stop floor: max(1.5×ATR, 15% below the 20-day rolling high)" — inherited from
+  the deleted partial-profit rule, never applied by the daily template, and on one reading it
+  would have declared ATRC's current $55.27 stop impermissible.)*
 - **Three numbers, deliberately different** (revised 2026-09-19):
   - **1.5×ATR — the placement floor.** No stop may be *placed*, at entry or by a raise, less than
     1.5×ATR below the price. After placement, price can walk a stop inside this band; that is
@@ -385,8 +389,16 @@ hold or exit at market. Log the assessment in the daily analysis.
 - Float ≥ 5M shares (unless justified with reasoning)
 
 ### Trend Filters
-- **Above the 50-day SMA at entry — hard gate.** Enforced in `screener.py`. `vs_sma50` passed the
-  Phase 2 pre-registered test (t 2.21).
+- **Above the 50-day SMA at entry — hard rule, applied at stage 1 of the research funnel** from the
+  watchlist's `pct_vs_sma50` column (below zero → PASS, reason code `below-50d`), and re-checked on
+  the quote page for any buy. *Corrected 2026-09-19:* this line previously said "enforced in
+  `screener.py`" — it never was. The screener only excludes names **more than 40% above** the 50-day;
+  it ranks by `vs_sma50` but excludes nothing below it. On the 9/15 screen **535 of 807 survivors
+  (66%) and 18 of the top 50** sat below their 50-day SMA. It is applied at research time rather
+  than as a new screener gate so Phase 4's saved screens stay comparable. Evidence is weaker than
+  first stated: `vs_sma50` passed Phase 2 on pooled data (t 2.21); on non-overlapping dates it was
+  t 1.58 at 5 sessions — the rule rests on the regime logic (don't buy downtrends in a weak tape)
+  as much as on the factor study. Phase 4 retests it.
 - **Distance from the 20-day SMA — reported, not disqualifying.** Compute and state it for every
   candidate. A candidate below its 20-day SMA requires **written justification**, but is not
   automatically blocked. Phase 2 rated `vs_sma20` **UNPROVEN** (t 1.50, below the 2.0 bar).
@@ -463,8 +475,12 @@ and in their capacity under RISK-OFF.
 | Screener-sourced plays | up to 4 positions | permitted at **half the risk budget (1%)**, defensive profile only |
 | Total positions | 5–6 ceiling | 5–6 ceiling |
 
-- **RISK-OFF defensive profile** (all required): top-decile `low_vol` among gate survivors, near
-  the 60-day high, and positive volume confirmation.
+- **RISK-OFF defensive profile** (all required), read from the watchlist columns: **`rank_low_vol`
+  ≥ 0.90** (top decile of calm among gate survivors), **`near_high` ≥ −5%** (within 5% of the 60-day
+  high), and **`vol_5_50` > 1.0** (this week's volume above its 50-day average). *Made concrete
+  2026-09-19:* the profile was first written without thresholds and the watchlist carried no
+  percentile rank, so it could not be applied consistently. On the 9/15 screen 6 of the top 50
+  met all three.
 - **⏳ SUNSET — the RISK-OFF screener allowance expires at Phase 4** unless the pre-registered
   regime test confirms it. It rests on suggestive but incomplete evidence: Phase 2 found the
   signals' skill concentrates in weeks the median stock fell (IC 0.169 vs 0.009), but

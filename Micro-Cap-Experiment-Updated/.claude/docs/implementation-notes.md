@@ -1333,3 +1333,24 @@ name" with "no slot or cash"; the research log's `capacity` code separates them 
 | `Start Your Own/weekend_summary.md` | Report section 4 starts from `<holding_review>` |
 | `.claude/rules/analysis-workflow.md`, `CLAUDE.md`, `README_CLAUDE.md` | Daily-by-exception rules; the optional "full review TICKER" phrase |
 | `Experiment Details/…Phase 3.5.md`, `Rules Amendment History.md` | Phase 4 regime definition; 2026-09-19 (e) |
+
+---
+
+## 2026-09-19 (h) — Whole-system critique: F1–F6
+
+End-to-end tests: live screener run (1,579 → 798 survivors; `watchlist_extended.csv` written;
+outputs discarded afterwards so the weekend run produces the committed screen), daily run on a copy
+of `Start Your Own` (all blocks, 0 tracebacks, real ledger untouched), weekend render, trigger,
+logger. Six defects fixed — see `Rules Amendment History.md` 2026-09-19 (f). Code changes:
+`_report_file_date()` (header date, mtime fallback) used by `_report_week_number()` and
+`_last_report_date()`; `WATCHLIST_COLS` gains three percentile ranks; `log_research.py` gains the
+`below-50d` reason code.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | `_report_file_date()`; week number and last-report date use it |
+| `screener.py` | Percentile ranks in the watchlist output |
+| `log_research.py` | `below-50d` reason code |
+| `Start Your Own/portfolio_rules.md` | F1 trend rule corrected; F2 profile thresholds; F3 trailing line |
+| `.claude/rules/analysis-workflow.md`, `entry-discipline.md` | F1 stage-1 kill; F5 daily buys; F4 wording |
+| `Experiment Details/Rules Amendment History.md` | 2026-09-19 (f) |

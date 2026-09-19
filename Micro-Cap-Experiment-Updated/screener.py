@@ -715,6 +715,9 @@ WATCHLIST_COLS = [
     "low_vol", "near_high", "pct_vs_sma20", "pct_vs_sma50", "atr_pct", "sales_qq",
     "eps_qq", "fwd_pe", "recom", "target_upside", "beta", "earnings", "short_float",
     "review_flag", "data_confidence", "composite_score", "composite_legacy", "composite_dedup",
+    # Percentile ranks among gate survivors (added 2026-09-19): the RISK-OFF defensive profile
+    # needs "top-decile low_vol", which the raw low_vol value cannot express on its own.
+    "rank_low_vol", "rank_near_high", "rank_vol_5_50",
 ]
 
 

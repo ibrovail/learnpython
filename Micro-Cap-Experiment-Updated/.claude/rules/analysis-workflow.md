@@ -97,6 +97,11 @@ FULL flag for a move or volume spike is also where the five-category unexplained
 
 Do not write "the reaction is a tomorrow event" and defer it, and do not infer "beat/miss" from the price move alone. Origin: 2026-08-04 — ARDT reported after close and popped **+6.98% AH**, which read like a clean beat; the live release showed a **mixed print** (revenue beat $1.622B, but EPS $0.12 *missed* the $0.17 est and adj. EBITDA −32.3% YoY — the pop was on a +67% cash-flow jump + reaffirmed guidance). WebSearch had **none** of these numbers at that hour. Confirm the actual result, run the post-catalyst reassessment (re-rate conviction on the substance, plan the next-open stop change), and report it.
 
+**A buy proposed in a daily is held to the weekend standard.** Any new position or add recommended
+in a daily must clear stage-2 research (the full PRV gate, entry checks, sizing and caps) and be
+logged with `log_research.py --stage 2`. Otherwise the research log only sees weekend decisions
+and its buy-vs-pass scoring is biased. *(Added 2026-09-19.)*
+
 **News recency — the same discipline as prices, applied to news** (`.claude/rules/price-data-integrity.md`): WebSearch returns cached snippets and lags real time; it can surface an *older* article as the latest and miss a newer downgrade, guidance cut, or the print itself. So:
 - **Time-sensitive / breaking / price-moving news and sentiment** — actual earnings results, same-day analyst rating/PT changes, M&A, halts, or the driver behind an **unexplained intraday move** — must be verified on a **live, timestamped source via the browser tool**, not on WebSearch alone.
 - **Established, slower-moving facts** — a confirmed future earnings *date*, historical guidance, an analyst PT from several days ago — WebSearch is acceptable, but **date every claim** and re-verify live anything that could have changed in the last ~48h.
@@ -172,8 +177,9 @@ When `<weekly_context>` XML appears in the conversation output, **immediately be
 
    **Stage 1 — quick check, quote page only.** One `stockanalysis.com/stocks/TICKER/` fetch per
    name: TTM revenue growth, TTM EPS, the **next** earnings date, analyst rating/target, 52-week
-   position — plus the prohibited-business check. Kill on: shrinking revenue, earnings within 10
-   sessions, prohibited, binary-thesis setup, or anything else that plainly fails a rule.
+   position — plus the prohibited-business check. Kill on: shrinking revenue, **below the 50-day
+   SMA** (`pct_vs_sma50` < 0 in the watchlist — the screener does not exclude these), earnings
+   within 10 sessions, prohibited, binary-thesis setup, or anything else that plainly fails a rule.
    - **Draw the stage-1 names as a spread:** ≥3 from ranks 1–15, ≥3 from ranks 16–50, ≥3 GICS
      sectors, **≥2 below $2Bn**. The ranking order has no demonstrated skill on independent data
      (Phase 3.5 Part 3), and the top of the list tilts toward larger, calmer names.
