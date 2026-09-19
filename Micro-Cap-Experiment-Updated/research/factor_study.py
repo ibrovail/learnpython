@@ -340,8 +340,15 @@ def main() -> None:
                 ic_rows.append({"date": d, "regime": regime, "horizon": h, "signal": sig, "ic": ic_sv,
                                 "ic_eligible": ic_el, "names": n_sv, "q5_q1": quintile_spread(sv[sig], y_sv)})
             top = sv.nlargest(50, "composite")
+            # top50_minus_median compares a group MEAN with a population MEDIAN, which
+            # research-methods.md forbids: right skew flatters any group, and the skew
+            # grows with horizon. Kept only for continuity with Phase 2's printed table.
+            # The like-for-like columns are the ones to read (added 2026-09-19).
             spread_rows.append({"date": d.date(), "horizon": h,
-                                "top50_minus_median": top[f"fwd{h}"].mean() - y_sv.median()})
+                                "top50_minus_median": top[f"fwd{h}"].mean() - y_sv.median(),
+                                "top50_mean_vs_mean": top[f"fwd{h}"].mean() - y_sv.mean(),
+                                "top50_median_vs_median": top[f"fwd{h}"].median() - y_sv.median(),
+                                "survivor_skew_gap": y_sv.mean() - y_sv.median()})
             if h == PRIMARY:
                 for g, label in GATES.items():
                     hit = pop[pop[g]]
@@ -425,6 +432,9 @@ def main() -> None:
             names = [t for t in wl["ticker"] if t in fwd.index and pd.notna(fwd[t])]
             row[f"found{h}"] = len(names)
             row[f"excess{h}"] = fwd[names].mean() - pop[f"fwd{h}"].median() if names else np.nan
+            # like-for-like versions (2026-09-19); excess{h} above is mean-vs-median
+            row[f"mm{h}"] = fwd[names].mean() - pop[f"fwd{h}"].mean() if names else np.nan
+            row[f"dd{h}"] = fwd[names].median() - pop[f"fwd{h}"].median() if names else np.nan
         wl_rows.append(row)
     wl_perf = pd.DataFrame(wl_rows)
 

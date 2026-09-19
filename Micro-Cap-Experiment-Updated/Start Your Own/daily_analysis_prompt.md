@@ -40,13 +40,17 @@ Daily Portfolio Review — [DATE]
    - [Risk factors or negative signals]
    Sources: [Name — URL], [Name — URL]
 
-   Stop-Loss Update (trailing stop rule: max(1.5×ATR(14), 15% below rolling high)):
-   - Rolling high: $X.XX ([date])
-   - 15% below rolling high: $X.XX
-   - 1.5×ATR(14): $X.XX (source: [WebSearch])
-   - Trailing stop floor: $X.XX (the higher of the two)
-   - Current stop: $X.XX → [RAISE to $X.XX / HOLD — already above floor]
-   Action: [Raise stop-loss to $X.XX, stop-limit to $X.XX / No change needed]
+   Stop-Loss Update (portfolio_rules.md → "Raising a stop — anti-ratchet minimum"):
+   - ATR(14): $X.XX — computed from yfinance price history, never estimated or searched
+   - Close / today's low / 10-day low: $X.XX / $X.XX / $X.XX
+   - Current stop: $X.XX = X.XX×ATR below the close   (floor: a stop may not SIT below 1.5×ATR)
+   - Candidate level: close − 1.75×ATR = $X.XX        (target 1.75×ATR — never raise TO the floor)
+   - Test 1, raise size:   (candidate − current stop) ÷ ATR = X.XX   ≥ 0.50 → PASS / FAIL
+   - Test 2, room left:    (close − candidate) ÷ ATR = X.XX          ≥ 1.50 → PASS / FAIL
+   - Range check: candidate below today's low → PASS / FAIL
+   Action: RAISE to $X.XX / $X.XX only if ALL pass; otherwise HOLD. A failing raise is declined,
+   not reduced. If the current stop already sits below 1.5×ATR through price movement alone,
+   say so and state whether this entry's one restoration is still available.
 
    Add Shares?
    - Risk budget: $[equity] × 2% = $[amount]

@@ -102,21 +102,28 @@ current data. If sources disagree or the latest data is unavailable, mark it
 
 ## Screener Score is Sourcing, Not Conviction
 
-> **Horizon note — updated 2026-09-17 after Phase 3.5 reported.** The figures below are Phase 2's
-> **10-session** measurements. Phase 3.5 re-tested at the adopted 40–60 session horizon: **all six
-> signals retain support**, and the practical edge rises sharply with holding period:
+> **Horizon note — updated 2026-09-17 after Phase 3.5, corrected 2026-09-19.** The figures below
+> are Phase 2's **10-session** measurements. At the adopted 40–60 session horizon the top 50 by
+> composite beat the other gate survivors by more, measured like-for-like:
 >
-> | Top 50 minus survivor median | 5s | 10s | 20s | **40s** | **60s** |
+> | Top 50 vs survivors | 5s | 10s | 20s | **40s** | **60s** |
 > |---|---|---|---|---|---|
-> | Excess | +0.50pp | +0.78pp | +2.85pp | **+5.57pp** | **+6.99pp** |
+> | Mean vs mean | +0.09pp | −0.23pp | +0.76pp | **+2.46pp** | **+3.54pp** |
+> | Median vs median | +0.12pp | +0.36pp | +1.29pp | **+3.66pp** | **+4.80pp** |
+>
+> *Correction:* this table first printed +0.50 / +0.78 / +2.85 / +5.57 / +6.99pp. Those compared
+> the top-50 **mean** with the survivor **median** — the comparison `research-methods.md` forbids —
+> and the right skew that flatters it grows with horizon (mean − median of survivors: 0.41pp at
+> 5 sessions, **3.45pp at 60**). About half the reported edge was skew. The direction survives;
+> the "roughly seven times" framing did not.
 >
 > Phase 2's central weakness also reverses: the quintile spread on **mean** returns — near zero or
 > negative at 10 sessions — is **+4 to +5pp at 40** and higher at 60. So "under 1pp per 10
 > sessions, mostly defensive" is accurate for 10 sessions and **understates the edge at the
 > horizon actually used.**
 >
-> **Do not over-read it — and the "all six retain support" line above is the pooled estimate, not
-> a verdict.** Re-run on **non-overlapping** formation dates (Phase 3.5 Part 3, the basis adopted
+> **Do not over-read it — Phase 3.5's headline "all six signals retain support" is the pooled
+> estimate, not a verdict.** Re-run on **non-overlapping** formation dates (Phase 3.5 Part 3, the basis adopted
 > for Phase 4), the 40-session horizon has **2 independent observations**, so no verdict is
 > available there at all. On observations that *are* independent, the individual signals clear
 > t = 2.0 at 5 sessions (`low_vol` 2.48, `vol_ratio` 2.22, `near_high` 2.10, `squeeze` 2.02) and

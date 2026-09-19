@@ -1143,3 +1143,48 @@ rebalance Friday; late June for Russell).
 | File | Change |
 |------|--------|
 | `.claude/rules/price-data-integrity.md` | "FOUR categories" → "FIVE"; index-change row in the driver table; ATRC reason |
+
+---
+
+## 2026-09-19 (b) — Merge; two reporting errors corrected; research arms scored; weekend flow fixed
+
+**Merged** the 9/17 planning branch into main (`d1b0778`); conflicts in `CLAUDE.md` and this file
+were both-sides-added and resolved by keeping both, in date order.
+
+**Two errors corrected — both mine, both had reached the rules files.**
+1. *Mean vs median.* The top-50 spread and the delivered-watchlist excess in `factor_study.py`
+   compared a group **mean** with a population **median**, which `research-methods.md` forbids.
+   Survivor skew grows with horizon (0.41pp at 5 sessions → 3.45pp at 60), so the bias grew with
+   it and manufactured about half of the "edge rises seven-fold with horizon" result. Like-for-like
+   at 40 sessions: **+2.46pp mean vs mean, +3.66pp median vs median** (was reported +5.57pp).
+   Fair columns now written beside the legacy ones; Phase 3.5 Part 5 records the correction.
+2. *"Researched" watchlists.* The delivered watchlists are the screener's own committed output,
+   not research picks, so they never measured research's value. Like-for-like, they beat the
+   universe on only **41% of lists at 40 sessions and 27% at 60** — a few lucky early lists. The
+   "mystery" is withdrawn as a Phase 4 question.
+
+**Research arms scored** (`research/arm_review.py`). All 84 sell events paired with their entries;
+reconciles exactly to the Week 52 readout (pivot → 9/09: 25 events, +$83.59). Post-pivot, 27
+closed trades: **51.9% win rate, median +0.7pp vs the S&P over each holding window**; winners held
+**26 sessions averaging +22.0%**, losers **13 sessions averaging −7.5%**. Stop exits netted
+**+$61.00**, discretionary exits **−$0.30**. Research picks did not beat the screener top-15 they
+were chosen from (50% of from-list picks and 30% of off-list picks beat the list). The largest
+contributor is still open: ATRC, +$71.40 unrealised, bought as screener **#3**. Conclusion: the
+measurable edge is **exit discipline and holding winners**, not stock selection by either arm.
+
+**Fixes:** thesis exits restored to the rules text; `make trigger` / `--research-trigger`
+(ledger-only verdict, runs before the directive questions); `_report_week_number()` counts Full and
+Monitor files; the daily stop template now applies the anti-ratchet tests instead of "raise to the
+floor"; `_ledger_trigger_inputs()` computes the drawdown without downloads.
+
+| File | Change |
+|------|--------|
+| `research/factor_study.py` | `top50_mean_vs_mean`, `top50_median_vs_median`, `survivor_skew_gap`, `mm{h}`, `dd{h}` |
+| `research/arm_review.py`, `research/output/trades_scored.csv` | **New.** Per-trade scoring of the research arms |
+| `Experiment Details/Horizon Factor Study — Phase 3.5.md` | Findings 2–3 corrected in place; Part 5 |
+| `.claude/rules/entry-discipline.md` | Edge table corrected to like-for-like |
+| `Start Your Own/portfolio_rules.md` | Thesis exits (three ways a position closes) |
+| `Start Your Own/daily_analysis_prompt.md` | Stop block applies the anti-ratchet tests |
+| `trading_script.py`, `Makefile` | `--research-trigger`, `make trigger`, `_report_week_number()`, `_ledger_trigger_inputs()` |
+| `.claude/rules/analysis-workflow.md`, `README_CLAUDE.md`, `CLAUDE.md` | Trigger-first weekend flow; Monitor notes |
+| `Experiment Details/Rules Amendment History.md` | 2026-09-19 entry |

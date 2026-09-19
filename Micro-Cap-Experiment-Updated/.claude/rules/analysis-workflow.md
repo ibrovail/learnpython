@@ -97,21 +97,30 @@ Do not write "the reaction is a tomorrow event" and defer it, and do not infer "
 
 When the user asks to run the weekend analysis (e.g., "make weekend", "run weekend", "weekend summary"):
 
-### Step 0 — Is a full report due? (check FIRST)
+### Step 0 — Is a full report due? (run FIRST, before asking anything)
 
-Cadence is **trigger-based** since 2026-09-17, not weekly. The `<research_trigger>` block in the
-script output computes the answer.
+Cadence is **trigger-based** since 2026-09-17, not weekly. Run:
 
-- **`<status>DUE</status>`** → proceed with Step 1 and the full 10-section report.
-- **`<status>NOT DUE</status>`** → produce a **short monitoring note** instead: stops, any holding
-  nearing its 60-session re-underwrite, the circuit-breaker line, and anything that changed. Do
-  **not** re-underwrite theses nothing has changed for — that churn is what the cadence change
-  exists to stop.
-- **Override:** run the full report anyway if the regime flipped (RISK-ON ↔ RISK-OFF) since the
-  last one — that trigger is analyst-applied, not computed — or if the user asks.
+```bash
+make trigger
+```
 
-The **screener still runs every weekend either way.** The factor research needs its weekly
-formation dates; only the report cadence changed.
+It reads the ledger only (no downloads, ~3 seconds) and prints `<research_trigger>` with a
+`<status>`, the reasons, and this weekend's `<week_number>`.
+
+- **`DUE`** → Step 1 (directive questions) → `make weekend …` → full 10-section report → save
+  `Week N Full.md`, `Week N Summary.md` and the PDF, as below.
+- **`NOT DUE`** → run **`make screen`** (the weekly screen always runs — Phase 4 needs every
+  weekend's formation date), then write a **short monitoring note**: stops, any holding nearing its
+  60-session re-underwrite, the circuit-breaker line, and anything that changed. Do **not**
+  re-underwrite theses nothing has changed for. Save it as
+  **`Weekly Deep Research (MD)/Week N Monitor.md`** — never as "Full": the 30-session backstop
+  counts Full reports only, so a note saved as Full would silently reset it. No PDF, no Summary.
+- **Override** → run the full report anyway if the regime flipped (RISK-ON ↔ RISK-OFF) since the
+  last Full report — analyst-applied, not computed — or if the user asks.
+
+If the portfolio is not current for the last session, the trigger still prints but `make weekend`
+will stop: run the daily first.
 
 ### Step 1 — Session Config (ask BEFORE running make weekend)
 

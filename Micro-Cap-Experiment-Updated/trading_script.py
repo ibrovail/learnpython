@@ -1455,6 +1455,71 @@ def _print_position_limits(portfolio_df: pd.DataFrame) -> None:
     print()
 
 
+def _report_week_number() -> int:
+    """Week label for this weekend = the latest weekend file's number + 1.
+
+    Counts BOTH full reports ("Week N Full.md") and monitoring notes
+    ("Week N Monitor.md"). Since 2026-09-17 the full report is trigger-based, so
+    a quiet weekend produces a monitoring note instead; counting only Full files
+    would stall the week label on every quiet weekend and let the next report
+    collide with a monitor note's number. Returns 0 when no file exists.
+
+    Re-run guard: if the latest file was written in the last 3 days we are
+    regenerating the same weekend, so its number is reused, not incremented.
+    """
+    md = Path(__file__).resolve().parent / "Weekly Deep Research (MD)"
+    try:
+        latest_n, latest_p = 0, None
+        for q in md.glob("Week *.md"):
+            m = re.match(r"Week (\d+) (?:Full|Monitor)\.md$", q.name)
+            if m and int(m.group(1)) > latest_n:
+                latest_n, latest_p = int(m.group(1)), q
+        if latest_p is None:
+            return 0
+        age = (datetime.now() - datetime.fromtimestamp(latest_p.stat().st_mtime)).days
+        return latest_n if age < 3 else latest_n + 1
+    except Exception:
+        return 0
+
+
+def _ledger_trigger_inputs() -> tuple[pd.DataFrame, float, float, float]:
+    """Holdings, cash, equity and current injection-neutral drawdown, from the
+    ledger alone -- no price downloads, so the trigger check is instant and can
+    run BEFORE the weekend directive questions are asked.
+
+    The drawdown is measured from the re-based peak (benchmark_base_date), the
+    basis portfolio_rules.md sets for the circuit breaker.
+    """
+    df = pd.read_csv(PORTFOLIO_CSV)
+    df["Date"] = pd.to_datetime(df["Date"])
+    tot = df[df["Ticker"] == "TOTAL"].sort_values("Date")
+    last = tot["Date"].max()
+    cash = float(tot["Cash Balance"].iloc[-1])
+    equity = float(tot["Total Equity"].iloc[-1])
+    rows = df[(df["Date"] == last) & (df["Ticker"] != "TOTAL")]
+    rows = rows[~rows["Action"].astype(str).str.upper().str.contains("SELL")]
+    holdings = pd.DataFrame({"ticker": rows["Ticker"].astype(str).str.upper()})
+
+    eq = pd.Series(tot["Total Equity"].astype(float).values, index=tot["Date"])
+    base = _load_experiment_config().get("benchmark_base_date")
+    if base:
+        eq = eq[eq.index >= pd.Timestamp(base)]
+    inj = load_capital_injections()
+    by: dict = {}
+    if not inj.empty:
+        for _, r in inj.iterrows():
+            fut = eq.index[eq.index >= pd.Timestamp(r["Date"]).normalize()]
+            if len(fut) and (not base or pd.Timestamp(r["Date"]) > pd.Timestamp(base)):
+                by[fut[0]] = by.get(fut[0], 0.0) + float(r["Amount"])
+    idx, v, d = [1.0], eq.values, list(eq.index)
+    for i in range(1, len(v)):
+        dn = v[i - 1] + by.get(d[i], 0.0)
+        idx.append(idx[-1] * (v[i] / dn) if dn > 0 else idx[-1])
+    s_ = pd.Series(idx)
+    current_dd = float((s_ / s_.cummax()).iloc[-1] - 1.0) if len(s_) else np.nan
+    return holdings, cash, equity, current_dd
+
+
 def _last_report_date() -> Optional[pd.Timestamp]:
     """Modification date of the most recent weekly deep-research report."""
     try:
@@ -1530,6 +1595,9 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
 
         print("<research_trigger>")
         print(f"  <cadence>trigger-based since 2026-09-17 (the weekly SCREEN is unchanged)</cadence>")
+        _wk = _report_week_number()
+        if _wk:
+            print(f"  <week_number>{_wk}</week_number>")
         print(f"  <last_report>{last.date() if last is not None else 'none'}"
               f"{f' ({since} sessions ago)' if since is not None else ''}</last_report>")
         print(f"  <status>{'DUE' if reasons else 'NOT DUE'}</status>")
@@ -2128,23 +2196,7 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
     # printed the same number two weekends running), and it sat -1 behind the
     # committed report sequence — forcing a manual correction before every
     # weekend run. The report files are the source of truth for the label.
-    week_num = 0
-    _md_dir = Path(__file__).resolve().parent / "Weekly Deep Research (MD)"
-    try:
-        _latest_n = 0
-        _latest_path: Optional[Path] = None
-        for _p in _md_dir.glob("Week * Full.md"):
-            _m = re.match(r"Week (\d+) Full\.md$", _p.name)
-            if _m and int(_m.group(1)) > _latest_n:
-                _latest_n, _latest_path = int(_m.group(1)), _p
-        if _latest_path is not None:
-            # Re-run guard: if the latest report was written in the last 3 days
-            # we are regenerating the same weekend — reuse its number instead of
-            # incrementing (reports are only produced on weekends, 7 days apart).
-            _age_days = (datetime.now() - datetime.fromtimestamp(_latest_path.stat().st_mtime)).days
-            week_num = _latest_n if _age_days < 3 else _latest_n + 1
-    except Exception:
-        week_num = 0
+    week_num = _report_week_number()
     if week_num == 0 and metrics.experiment_start_date:
         # Fallback if no report files are found: date-based estimate.
         week_num = (friday_date - pd.Timestamp(metrics.experiment_start_date)).days // 7 + 1
@@ -2685,6 +2737,8 @@ if __name__ == "__main__":
                        help="Session directive: risk posture (e.g., 'Aggressive — trailing benchmark')")
     parser.add_argument("--max-positions", default=None,
                        help="Session directive: max concurrent positions (e.g., '5')")
+    parser.add_argument("--research-trigger", action="store_true",
+                        help="Print only the <research_trigger> verdict from the ledger (no downloads) and exit")
     parser.add_argument("--check-data-current", action="store_true",
                        help="Exit 0 if the portfolio CSV covers the last completed session, else 1")
     parser.add_argument("--log-level", default="INFO",
@@ -2705,6 +2759,14 @@ if __name__ == "__main__":
 
     if args.asof:
         set_asof(args.asof)
+
+    if args.research_trigger:
+        # Runs first in `run weekend`, before any directive question is asked:
+        # a quiet weekend should not cost four questions and a full report.
+        set_data_dir(Path(args.data_dir) if args.data_dir else DATA_DIR)
+        _h, _cash, _eq, _dd_now = _ledger_trigger_inputs()
+        _print_research_trigger(_h, _cash, _eq, _dd_now)
+        sys.exit(0)
 
     if args.check_data_current:
         _dd = Path(args.data_dir) if args.data_dir else DATA_DIR

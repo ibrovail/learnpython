@@ -47,6 +47,10 @@ POSITIONS ?=
 screen:
 	venv/bin/python screener.py --data-dir "Start Your Own" --top-n 50
 
+# Is a full weekend report due? Ledger-only, instant; run before the directive questions.
+trigger:
+	@venv/bin/python trading_script.py --data-dir "Start Your Own" --research-trigger --log-level ERROR
+
 weekend:
 	@echo "Running screener..."
 	@venv/bin/python screener.py --data-dir "Start Your Own" --top-n 50 || \

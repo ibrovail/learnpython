@@ -10,6 +10,28 @@ operating manual. The full superseded text is preserved in git at `e838891`.
 
 ---
 
+# 2026-09-19 — Exits clarified; weekend flow made trigger-first
+
+**Thesis exits restored to the text.** The 9/17 wording said a position "runs until its trailing
+stop takes it out, or until it fails the re-underwrite", which read as forbidding every
+discretionary exit and contradicted three other rules (post-catalyst reassessment, Day-1 drawdown,
+the PRV gate's sell provisions). The 9/17 decision removed *mechanical* partials. Now stated as:
+the trailing stop is the only **mechanical** exit; a **thesis exit** needs new, verified
+information such that the position would not be bought today at today's price, documented at the
+PRV gate; selling because a position is up is explicitly not one. Surfaced by a live case: ATRC's
+S&P SmallCap 600 addition, effective 9/21, ends forced index buying at Monday's open.
+
+**Weekend flow.** The trigger verdict was only printed by `make weekend`, which runs *after* the
+directive questions — so a quiet weekend would have cost four questions before learning no report
+was due. `make trigger` (ledger-only, ~3s) now runs first. Quiet weekends produce
+`Week N Monitor.md`; week numbering counts Full and Monitor files so the label keeps advancing,
+while the 30-session backstop counts Full reports only.
+
+**Daily stop template now follows the anti-ratchet rule.** It had instructed "RAISE to" the
+trailing floor — the exact move the rule forbids — and sourced ATR from WebSearch.
+
+---
+
 # 2026-09-17 — Graduation to an indefinite live system
 
 The largest single revision in the project's history: **13 decisions, 6 rules deleted outright,

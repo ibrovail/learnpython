@@ -51,6 +51,7 @@ portfolio, tracking alpha vs. the S&P 500. The fixed 52-week experiment closed a
 ```bash
 make daily      # Run trading script after 4 PM (Claude auto-analyzes output)
 make screen     # Run quantitative screener (outputs watchlist CSV)
+make trigger    # Is a full weekend report due? Ledger-only verdict, run before any question
 make weekend    # Run screener + weekend analysis workflow (Claude auto-triggers deep research)
 make setup      # Create venv + install deps
 make graph      # Generate performance chart
@@ -76,7 +77,7 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 2. Claude auto-analyzes the XML output with live web search
 3. Review recommendations; specify any trades in the next `Run daily:` command
 
-**Note:** Always use `Run daily:` (not the `!` shell prefix on `make daily`) — Claude Code's `!` prefix does not support interactive stdin. Likewise, say `run weekend` (not `! make weekend`) so Claude asks the 4 session directive questions first, then runs `make weekend` with answers as CLI args (SECTOR, TIMING, RISK, POSITIONS).
+**Note:** Always use `Run daily:` (not the `!` shell prefix on `make daily`) — Claude Code's `!` prefix does not support interactive stdin. Likewise, say `run weekend` (not `! make weekend`): Claude runs `make trigger` first; if a full report is due it asks the session directive questions and runs `make weekend` with the answers as CLI args (SECTOR, TIMING, RISK, POSITIONS); if not, it runs `make screen` and writes a short `Week N Monitor.md` note.
 
 ## Current State
 

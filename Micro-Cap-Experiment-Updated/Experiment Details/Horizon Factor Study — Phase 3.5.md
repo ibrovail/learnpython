@@ -241,23 +241,36 @@ volatile losers without finding winners. That flips with horizon:
 | `vol_ratio` | −0.1pp | **+4.4pp** | **+9.1pp** |
 | `composite` | −0.4pp | **+4.3pp** | **+7.8pp** |
 
-**2. The screener's practical edge rises monotonically with horizon.** Top-50 by composite, minus
-the survivor median:
+**2. The screener's practical edge rises with horizon — by about half as much as first
+reported.** Top 50 by composite versus the other gate survivors:
 
 | Horizon | 5 | 10 | 20 | **40** | **60** |
 |---|---|---|---|---|---|
-| Excess | +0.50pp | +0.78pp | +2.85pp | **+5.57pp** | **+6.99pp** |
-| Share of dates positive | 71% | 55% | 78% | **79%** | **100%** |
+| Mean vs mean | +0.09pp | −0.23pp | +0.76pp | **+2.46pp** | **+3.54pp** |
+| Median vs median | +0.12pp | +0.36pp | +1.29pp | **+3.66pp** | **+4.80pp** |
+| ~~As first printed (mean vs median)~~ | ~~+0.50~~ | ~~+0.78~~ | ~~+2.85~~ | ~~+5.57~~ | ~~+6.99~~ |
 
-**This is the most decision-relevant result in the study.** The screener's measured edge at the
-horizon just adopted is roughly **seven times** its edge at the horizon it was tuned for. The
-rules-file caveat that the edge is "under 1pp per 10 sessions" is accurate for 10 sessions and
-materially understates it at 40.
+*Corrected 2026-09-19 — see Part 5.* The first version compared the top-50 **mean** with the
+survivor **median**, exactly the error `research-methods.md` records from Phase 2. Survivor skew
+(mean − median) grows from 0.41pp at 5 sessions to **3.45pp at 60**, so the bias grew with the
+horizon and manufactured about half of the apparent rise. The claim that the edge at 40 sessions
+is "roughly seven times" the 10-session edge is withdrawn. What survives is a smaller, still
+monotone rise — on overlapping dates, so descriptive only.
 
-**3. The delivered-watchlist mystery not only persists, it widens.** The watchlists actually
-researched beat the eligible universe by **+2.87pp** at 10 sessions and **+9.19pp at 40**,
-**+11.37pp at 60** — still ahead of the rebuilt composite's top 50 at every horizon. Whatever the
-judgment layer is adding, it compounds with holding period. Unexplained; remains Phase 4's.
+**3. ~~The delivered-watchlist mystery widens.~~ The delivered-watchlist gap is mostly a few
+lucky lists.** *Corrected 2026-09-19.* Two errors in the first version. It called these "the
+watchlists actually researched" — they are not: they are the screener's **own committed output**
+(`watchlist.csv` snapshots), the list research chose *from*, so they say nothing about the value
+research adds. And the +2.87 / +9.19 / +11.37pp figures were mean vs median. Like-for-like:
+
+| Delivered lists vs universe | 10s | 20s | 40s | 60s |
+|---|---|---|---|---|
+| Mean vs mean | +2.24pp | +4.08pp | +6.73pp | +8.51pp |
+| **Share of lists that beat the universe** | 55% | 59% | **41%** | **27%** |
+| Median vs median | +1.44pp | +3.02pp | +7.61pp | +7.37pp |
+
+At 40 and 60 sessions **fewer than half the lists beat the universe**; a handful of early
+(April–May) lists carry the average. There is little left to explain.
 
 **4. `squeeze_own` gets worse the longer you hold it** (t −2.81 at 40, −3.34 at 60). Phase 2's
 decision to drop it is reinforced.
@@ -420,6 +433,39 @@ and March 2027 closes it.
 
 Phase 4's other three questions are unchanged: the out-of-sample comparison of `composite_score`
 vs `composite_legacy` vs `composite_dedup`, the first test of fundamentals, and the unexplained
-delivered-watchlist gap (which *widened* at longer horizons in Phase 3.5 — +9.19pp at 40 sessions).
+delivered-watchlist gap (*corrected 2026-09-19:* mostly a few lucky early lists — at 40 sessions
+fewer than half the lists beat the universe; see Part 5).
 A **pre-registered regime test** is also required, since the RISK-OFF screener allowance sunsets
 on its outcome and Phase 3.5 had no RISK-OFF dates at all.
+
+---
+
+## Part 5 — Correction (2026-09-19)
+
+Two metrics in `factor_study.py` compared a group **mean** with a population **median**: the
+top-50 spread and the delivered-watchlist excess. `research-methods.md` has forbidden that since
+Phase 2, which caught the same flaw in its own pre-registered metrics and reported unbiased
+versions in the diagnostics script. The primary script never received the fix, and Phase 3.5
+quoted its biased columns as findings — including in the rules files — for two days.
+
+The bias is not constant; it grows with horizon, because survivor skew (mean − median) does:
+
+| Horizon | 5 | 10 | 20 | 40 | 60 |
+|---|---|---|---|---|---|
+| Survivor mean − median | 0.41pp | 1.02pp | 2.09pp | 3.11pp | 3.45pp |
+
+So a mean-vs-median comparison doesn't merely inflate an edge; it inflates it **more the longer
+the horizon**, which is precisely the shape of the result it produced ("the edge rises seven-fold
+with holding period"). The like-for-like columns (`top50_mean_vs_mean`,
+`top50_median_vs_median`, `mm{h}`, `dd{h}`) are now written beside the legacy ones.
+
+**What changes:** the edge at 40 sessions is ~+2.5–3.7pp, not +5.6pp; the delivered-watchlist
+"mystery" is withdrawn as a Phase 4 question; and the Part 2 description of those lists as
+"researched" was wrong — they are screener output.
+
+**What does not change:** every rank-IC result (rank-based, unaffected), the quintile spreads
+(`quintile_spread()` is mean vs mean), the non-overlapping verdicts in Part 3, and the Phase 4
+scope. The rise in effect size with horizon holds on both the fair metrics and the rank ICs.
+
+**Lesson for the pipeline, not just the analysis:** a fix applied in a diagnostics script and not
+back-ported to the primary script is not a fix. The primary script now carries the fair columns.

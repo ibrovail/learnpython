@@ -214,10 +214,29 @@ setting, not the weaker one: starting at the peak means any −20% decline from 
 
 ## Position Management
 
-### The trailing stop is the only exit
+### The trailing stop is the only mechanical exit
 
-There are **no mechanical partial sells.** A position runs until its trailing stop takes it out,
-or until it fails the re-underwrite below.
+There are **no mechanical partial sells and no profit targets.** A position closes in one of
+three ways:
+
+1. **The trailing stop** — the default, and the only automatic exit.
+2. **A thesis exit** — new, verified information breaks or materially weakens the thesis, so the
+   position **would not be bought today at today's price**. Requires the PRV gate (live quote page
+   and news check) and a written reason naming the new information. It is the same test as the
+   60-session re-underwrite, applied whenever the evidence changes instead of on a calendar.
+3. **A rule that mandates an exit** — the 60-session re-underwrite below, the Day-1 drawdown rule,
+   the post-catalyst reassessment, or the circuit breaker.
+
+**Not a thesis exit:** selling because a position is up a lot, to "lock in" a gain, or because it
+feels extended. That is the stop's job, and discretionary profit-taking is exactly what removing
+the partials took away. A **trim** needs the same written, evidence-based case as a full exit.
+
+*Clarified 2026-09-19.* The 9/17 wording — "a position runs until its trailing stop takes it out,
+or until it fails the re-underwrite" — read as forbidding every discretionary exit, contradicting
+the post-catalyst reassessment ("exit at market"), the Day-1 rule and the PRV gate's sell
+provisions. The 9/17 decision removed **mechanical** partials; thesis exits were never in
+question. The record supports keeping them rare: post-pivot, the 13 discretionary exits netted
+**−$0.30** while the 14 stop exits netted **+$61.00**.
 
 - *Why:* across 82 closed trades the book produced a 50% win rate and **−$3.84 of net realised
   P&L** — turnover paid nothing — while its one substantial winner was the position that was
