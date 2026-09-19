@@ -1279,3 +1279,28 @@ name" with "no slot or cash"; the research log's `capacity` code separates them 
 | `research/earnings_guard_study.py` | **New** |
 | `.claude/rules/analysis-workflow.md`, `Start Your Own/portfolio_rules.md`, `CLAUDE.md` | Funnel rule; guard evidence |
 | `Experiment Details/Rules Amendment History.md` | 2026-09-19 (c) entry |
+
+---
+
+## 2026-09-19 (f) — R2: six-section report; skill retired; PDF clipping bug fixed
+
+- **Template** in the static header of `Start Your Own/weekend_summary.md` (`<output_format>`,
+  `<role>`, `<thinking_approach>` rewritten). The script only regenerates `<weekly_context>`, so the
+  header persists — verified by a full `--weekend-summary` run (restored afterwards).
+- **Skill retired** — override stated in `<output_format>` and in `print_weekend_summary()`'s
+  closing instruction (which previously *told* the model to read the skill). Docs updated:
+  `analysis-workflow.md` Step 2 (six sections; Summary = section 6; a skeleton for the
+  monitoring note, whose path never sees `weekend_summary.md`), `README_CLAUDE.md`,
+  `portfolio_rules.md`.
+- **`generate_pdf.py`** — `pdf.set_x(pdf.l_margin)` before `multi_cell` in the paragraph,
+  numbered-list and code-block branches. Verified by rendering a dummy report in the new format
+  plus regression lines (consecutive paragraphs, numbered items, code lines): all render in full.
+- Memory `feedback_pdf_orders_bullet_format` corrected to the real root cause.
+
+| File | Change |
+|------|--------|
+| `Start Your Own/weekend_summary.md` | Six-section `<output_format>`; role and thinking approach |
+| `trading_script.py` | Closing instruction: template, not the skill; save paths |
+| `generate_pdf.py` | Cursor reset in three branches |
+| `.claude/rules/analysis-workflow.md`, `README_CLAUDE.md`, `Start Your Own/portfolio_rules.md`, `CLAUDE.md` | Six-section references; monitor skeleton |
+| `Experiment Details/Rules Amendment History.md` | 2026-09-19 (d) |

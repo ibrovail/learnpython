@@ -204,6 +204,7 @@ def build_pdf(md_path: Path, pdf_path: Path) -> None:
         if num_match:
             text = strip_inline(num_match.group(1))
             pdf.set_font(ReportPDF.BODY_FONT, "", 9)
+            pdf.set_x(pdf.l_margin)          # see the paragraph branch: cursor-at-right-edge bug
             pdf.multi_cell(usable_width, 5, f"  {text}")
             i += 1
             continue
@@ -220,6 +221,9 @@ def build_pdf(md_path: Path, pdf_path: Path) -> None:
                 pdf.set_font(ReportPDF.MONO_FONT, "", 7.5)
                 pdf.set_fill_color(245, 245, 245)
                 for cl in code_lines:
+                    # Without this reset every line after the first began at the right margin
+                    # and was clipped -- the real cause of "code blocks clip off the page".
+                    pdf.set_x(pdf.l_margin)
                     pdf.multi_cell(usable_width, 4, cl[:120], fill=True)
                 pdf.ln(2)
             continue
@@ -233,6 +237,11 @@ def build_pdf(md_path: Path, pdf_path: Path) -> None:
         # ── Regular paragraph ─────────────────────────────────────────────
         text = strip_inline(stripped)
         pdf.set_font(ReportPDF.BODY_FONT, "", 9)
+        # multi_cell leaves the cursor at the RIGHT edge of the cell it just wrote. Headings
+        # (pdf.ln) and list items (set_x) reset it; a paragraph did not, so a plain line that
+        # directly followed another plain line or a bullet started at the right margin and was
+        # clipped to a few characters. Fixed 2026-09-19 (found testing the six-section template).
+        pdf.set_x(pdf.l_margin)
         pdf.multi_cell(usable_width, 5, text)
         i += 1
 

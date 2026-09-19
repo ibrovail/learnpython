@@ -101,8 +101,9 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   sized to the buys sought, spread across ranks/sectors/size, extending to ranks 51–100 (R3); **research log** of buys *and* passes via `log_research.py`
   (R4); stop **raise target 2.0×ATR**, 1.5× floor applies at placement (R5); **regime computed**
   by the script → `<market_regime>`, `regime_history.csv`, flip trigger (R7); **small-cap** label +
-  size control for Phase 4 (R8). Under discussion: R2 (slimmer report), R6 (daily by exception),
-  regime whipsaw damping.
+  size control for Phase 4 (R8). **Six-section report** replaces the ten (R2);
+  the `weekly-portfolio-report` skill is **retired** (predates every rule; conflicts with four).
+  Under discussion: R6 (daily by exception), regime whipsaw damping.
 - **Next**: **Week 54 weekend research — `make trigger` says DUE.** ATRC first: joins the S&P
   SmallCap 600 at Monday's open; any trim must pass the thesis-exit test (would it be bought today
   at this price?). Then deploy ~$444 under RISK-OFF capacity, and log every shortlisted name.

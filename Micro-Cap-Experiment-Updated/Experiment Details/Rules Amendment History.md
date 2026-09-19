@@ -10,6 +10,30 @@ operating manual. The full superseded text is preserved in git at `e838891`.
 
 ---
 
+# 2026-09-19 (d) — R2 adopted: a six-section report; the report skill retired
+
+**The report** (`weekend_summary.md` → `<output_format>`): 1 Scoreboard · 2 Deployment (the funnel,
+stage 1 table + stage 2 blocks + research-log count) · 3 Exact orders · 4 Holdings by exception ·
+5 Risk checks · 6 Thesis summary — then Sources. **Dropped:** restated rules, research scope,
+per-holding re-rating every report, monitoring plan, cash confirmation (folded into section 5).
+**Kept deliberately:** citations — the old Research Scope section carried the Research Safeguards
+requirement for source, URL and timestamp; dropping it silently would have deleted a rule, so it
+survives as the Sources list. `Week N Summary.md` is now section 6.
+
+**The `weekly-portfolio-report` skill is retired.** Written 1 March 2026 for the original 26-week
+experiment, it predated every current rule and conflicted with four: code-block orders, a "10% below
+entry" stop example, output to a claude.ai sandbox path (`/mnt/user-data/outputs/`), and "Week NN
+of 26". It auto-triggers on the `<weekly_context>` / `<execution_request>` tags every weekend prompt
+contains, so the override is stated twice — in `<output_format>` and in the script's closing
+instruction. The Bamboo experiment (last commit 2026-02-12) does not reference it.
+
+**Found while testing the template:** `generate_pdf.py` left the cursor at the right edge after
+every `multi_cell`, and three branches — plain paragraphs, numbered items, code-block lines — never
+reset it, so any such line after the first began at the right margin and was clipped. That was the
+real cause of the Week 40 "code blocks clip off the page" problem. Fixed in all three.
+
+---
+
 # 2026-09-19 (c) — R3 becomes a two-stage funnel; earnings guard tested
 
 **Funnel.** A fixed 8–10 was the wrong shape: historically ~10 names were researched per new buy

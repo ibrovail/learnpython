@@ -2466,8 +2466,13 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
     print("</session_directives>")
     print()
     print("Using the rules, safeguards, and portfolio context above, execute the deep research window now.")
-    print("\nSearch for live pricing, volume, catalysts, and filings for all current holdings and any new candidates. Produce the complete output per the required format. Do not skip sections. Confirm cash and constraints at the end.")
-    print("\n**IMPORTANT:** Before writing your report, read the weekly-portfolio-report skill for the exact output template and file creation instructions. Your final deliverable MUST be a downloadable .md file — do not just print the report in chat.")
+    print("\nWrite the report in the six-section format in <output_format> above: scoreboard, "
+          "deployment funnel, exact orders, holdings by exception, risk checks, thesis summary, "
+          "then sources.")
+    print("\n**IMPORTANT:** Do NOT load or follow the weekly-portfolio-report skill — retired "
+          "2026-09-19; <output_format> replaces it. Save the report files as set out in "
+          ".claude/rules/analysis-workflow.md (Week N Full.md, Week N Summary.md = section 6 only, "
+          "and the PDF) — not to /mnt/user-data/outputs.")
     print()
     print("</execution_requests>")
     print()

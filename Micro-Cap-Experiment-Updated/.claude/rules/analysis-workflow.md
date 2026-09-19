@@ -117,6 +117,12 @@ It reads the ledger only (no downloads, ~3 seconds) and prints `<research_trigge
   re-underwrite theses nothing has changed for. Save it as
   **`Weekly Deep Research (MD)/Week N Monitor.md`** — never as "Full": the 30-session backstop
   counts Full reports only, so a note saved as Full would silently reset it. No PDF, no Summary.
+  Skeleton (this path never runs `make weekend`, so the report template is not in front of you):
+  - `# Week N — Monitoring note (YYYY-MM-DD)`
+  - **Why no full report:** the `<research_trigger>` reasons for NOT DUE
+  - **Scoreboard:** gap since re-base, drawdown vs the breaker, regime — one line each
+  - **Holdings:** one line each — price, stop and its room in ATR, sessions held, anything changed
+  - **Before the next weekend:** events due, holdings nearing 60 sessions, stop raises that may qualify
 - A **regime flip** since the last Full report is now a computed trigger (from `regime_history.csv`).
 - **Override** → run the full report anyway if the user asks.
 
@@ -180,7 +186,11 @@ When `<weekly_context>` XML appears in the conversation output, **immediately be
 
    State the decision and reason for every name at both stages in one line each — and **log them**
    (item 5), stage-1 kills included.
-2. **Run analysis**: produce the full 10-section deep research report (format defined in `Start Your Own/weekend_summary.md`). Use WebSearch broadly for discovery, but **browser-verify every holding and every candidate you recommend acting on** (PRV gate).
+2. **Run analysis**: produce the report in the **six-section format** in the `<output_format>` block of
+   `Start Your Own/weekend_summary.md` (adopted 2026-09-19, R2). **Do not load or follow the
+   `weekly-portfolio-report` skill** — it is retired: written for the original 26-week experiment,
+   it predates every current rule, saves to a claude.ai sandbox path that does not exist here, and
+   puts orders in code blocks that `generate_pdf.py` clips. Use WebSearch broadly for discovery, but **browser-verify every holding and every candidate you recommend acting on** (PRV gate).
 3. **Correlated-risk check**: Before finalizing positions, verify both limits in
    `portfolio_rules.md` — at most **2 positions sharing a primary thesis driver** (named
    explicitly in the report) and at most **3 positions in any one GICS sector**. The
@@ -201,7 +211,8 @@ When `<weekly_context>` XML appears in the conversation output, **immediately be
    because passes were never recorded.
 6. **Save outputs** immediately after the report completes:
    - Full report → `Weekly Deep Research (MD)/Week X Full.md`
-   - Section 9 (Thesis Review Summary) only → `Weekly Deep Research (MD)/Week X Summary.md`
+   - Section 6 (Thesis summary) only → `Weekly Deep Research (MD)/Week X Summary.md` — this
+     becomes the next report's `<last_analyst_thesis>` (reports before Week 54 used Section 9)
    - Convert full report to PDF → `Weekly Deep Research (PDF)/Week X.pdf`
      (run: `python generate_pdf.py "Weekly Deep Research (MD)/Week X Full.md" "Weekly Deep Research (PDF)/Week X.pdf"`)
    - Where X = the week number from `<week_number>` in the weekly context

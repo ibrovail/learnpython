@@ -285,7 +285,8 @@ to a fresh buy. If it would not be bought today, exit it.
 research depends on its weekly formation dates (Phase 3.5 Part 3 — weekly dates give 8
 non-overlapping phases to cross-check at a 40-session horizon; monthly would give 2).
 
-**The full 10-section deep-research report is no longer weekly.** It runs when there is something
+**The full deep-research report is no longer weekly** (and has six sections since 2026-09-19 —
+see `weekend_summary.md` → `<output_format>`). It runs when there is something
 to decide. `trading_script.py` prints a `<research_trigger>` block computing these:
 
 | Trigger | Threshold |

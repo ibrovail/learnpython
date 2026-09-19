@@ -47,7 +47,7 @@ Instead of copying trading script output to ChatGPT, Claude Code acts as the ana
 ## Weekend Workflow
 
 **Cadence note (changed 2026-09-17):** the **screener runs every weekend**, but the full
-10-section report is now **trigger-based** — it runs when there is something to decide (free slot
+research report is now **trigger-based** — it runs when there is something to decide (free slot
 with capital, ≥25% deployable cash, a holding at 60 sessions, the circuit breaker armed, or 30
 sessions since the last report). Saying `run weekend` now starts with `make trigger` (instant, ledger-only), which prints the
 verdict **before** any directive question is asked. Due → the usual questions and full report.
@@ -75,11 +75,13 @@ Not due → `make screen` plus a short monitoring note saved as `Week N Monitor.
 
 4. Claude **automatically** begins the deep research:
    - Evaluates at least the top 5 screener candidates via web search (with sector cap enforcement: max 2 positions per GICS sector)
-   - Runs the full 10-section deep research report with extensive web search
+   - Writes the report in the **six-section format** (since 2026-09-19): scoreboard, deployment
+     funnel, exact orders, holdings by exception, risk checks, thesis summary — plus sources.
+     The `weekly-portfolio-report` skill is retired and must not be used
 
 5. After the report, Claude automatically saves three output files:
-   - `Weekly Deep Research (MD)/Week X Full.md` — full 10-section report
-   - `Weekly Deep Research (MD)/Week X Summary.md` — Section 9 (Thesis Review) only
+   - `Weekly Deep Research (MD)/Week X Full.md` — the full report
+   - `Weekly Deep Research (MD)/Week X Summary.md` — Section 6 (Thesis summary) only (Section 9 before Week 54)
    - `Weekly Deep Research (PDF)/Week X.pdf` — PDF version of the full report
 
 **If `make weekend` reports the portfolio is not current:**
