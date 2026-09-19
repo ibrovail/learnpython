@@ -148,28 +148,38 @@ The `make weekend` target automatically runs the screener first. If the screener
 
 When `<weekly_context>` XML appears in the conversation output, **immediately begin the deep research** — do NOT ask for further input:
 
-1. **Shortlist 8–10 candidates from the top 50 — a spread, not the top of the list.** The ranking
-   order has no demonstrated skill on independent data (Phase 3.5 Part 3), and the top of the list
-   tilts toward larger, calmer names (9/15: median $2.4Bn, 31 of 50 above $2Bn). So:
-   - **Pre-filter first** — drop prohibited names, `REVIEW`-flagged names you cannot clear, and
-     binary-thesis setups. Then check each name's **next** earnings date **on its quote page** and
-     drop any reporting within 10 sessions (no-initiation guard). Don't spend research on names
-     that can't be bought.
-   - ⚠️ **The watchlist's `earnings` column is the LAST report, not the next one.** Finviz shows the
-     previous date until the next is scheduled — on the 9/15 screen all 49 dates fell between
-     Jul 20 and Sep 10. It feeds the post-earnings cooldown ("how long since"), and is useless for
-     the forward guard. *(Corrected 2026-09-19, the same day this rule was written.)*
-   - **Expect a squeeze in mid-October to early November.** Estimating next prints as last + ~91
-     days, the forward guard blocks roughly **23 of the top 50 on 10/19, 39 on 10/26 and 25 on
-     11/02**. Some weekends in that window may not yield a buyable name at all — that is the rule
-     working, not a reason to relax it.
-   - **Then shortlist so that:** ≥3 come from ranks 1–15 **and** ≥3 from ranks 16–50; ≥3 different
-     GICS sectors; **≥2 below $2Bn market cap.**
-   - Use WebSearch to *discover* the story, then **browser-fetch the quote page of every
-     shortlisted name** (PRV gate) — revenue growth, the book's best filter, lives there.
-   - Off-list finds (web search, the user's `FOCUS`) are welcome **in addition** to the 8–10.
-   - For every shortlisted name, bought or passed, state the decision and the reason in one line
-     — and **log it** (item 5).
+1. **Research funnel — two stages, sized to the buys being sought.** *(Adopted 2026-09-19,
+   replacing a fixed 8–10.)* Historically ~10 names were researched per new buy (Weeks 40–53: 97
+   researched, 10 bought), so a fixed count is too few when there is cash to deploy and more than
+   needed once the book is full. `<research_trigger>` prints the **buys sought** and the
+   **stage-1 count** (~5 per buy, min 10, max 20).
+
+   **Stage 1 — quick check, quote page only.** One `stockanalysis.com/stocks/TICKER/` fetch per
+   name: TTM revenue growth, TTM EPS, the **next** earnings date, analyst rating/target, 52-week
+   position — plus the prohibited-business check. Kill on: shrinking revenue, earnings within 10
+   sessions, prohibited, binary-thesis setup, or anything else that plainly fails a rule.
+   - **Draw the stage-1 names as a spread:** ≥3 from ranks 1–15, ≥3 from ranks 16–50, ≥3 GICS
+     sectors, **≥2 below $2Bn**. The ranking order has no demonstrated skill on independent data
+     (Phase 3.5 Part 3), and the top of the list tilts toward larger, calmer names.
+   - **Extend beyond #50** to `Start Your Own/watchlist_extended.csv` (ranks 51–100, written by
+     every screen) when the top 50 cannot supply the stage-1 count. Those names passed every gate;
+     many score *above* #50 and were squeezed out only by the 6-per-sector cap, so the extended
+     list clusters in a few sectors — apply the sector quota across both lists together.
+   - ⚠️ **The watchlist's `earnings` column is the LAST report, not the next one.** Finviz shows
+     the previous date until the next is scheduled — on the 9/15 screen all 49 dates fell between
+     Jul 20 and Sep 10. Use the quote page's next earnings date for the forward guard.
+   - **Expect a squeeze from mid-October to early November.** Estimating next prints as last +
+     ~91 days, the forward guard blocks roughly **23 of the top 50 on 10/19, 39 on 10/26 and 25 on
+     11/02** — the weeks the extension exists for. Some weekends may still yield no buyable name;
+     that is the rule working, not a reason to relax it.
+
+   **Stage 2 — full research on every stage-1 survivor** (typically 4–8): WebSearch to discover the
+   story, catalyst and driver freshness, news check, the full PRV gate, sizing and correlation
+   caps. Buy the best, up to the buys sought. Off-list finds (web search, the user's `FOCUS`) enter
+   at stage 1 like any other name.
+
+   State the decision and reason for every name at both stages in one line each — and **log them**
+   (item 5), stage-1 kills included.
 2. **Run analysis**: produce the full 10-section deep research report (format defined in `Start Your Own/weekend_summary.md`). Use WebSearch broadly for discovery, but **browser-verify every holding and every candidate you recommend acting on** (PRV gate).
 3. **Correlated-risk check**: Before finalizing positions, verify both limits in
    `portfolio_rules.md` — at most **2 positions sharing a primary thesis driver** (named
@@ -179,11 +189,12 @@ When `<weekly_context>` XML appears in the conversation output, **immediately be
 4. **60-session re-underwrite**: any holding whose `<position_limits>` row shows **60 or more
    sessions held** must be re-justified in writing this session — current thesis, current driver,
    current conviction — against the standard for a fresh buy, and exited if it fails.
-5. **Log every shortlisted candidate** — bought, passed or put on watch — with
-   `log_research.py`, one row each, **passes included**. Never edit `research_log.csv` by hand.
+5. **Log every name at both funnel stages** — bought, passed or put on watch — with
+   `log_research.py`, one row each, **passes included**, `--stage 1` for quick-check kills and
+   `--stage 2` for fully researched names. Never edit `research_log.csv` by hand.
    ```bash
-   venv/bin/python log_research.py --week 54 --ticker XYZ --source "screener #12" \
-     --decision PASS --reason-code extended --reason "44% above the 50-day" --ref-price 12.34
+   venv/bin/python log_research.py --week 54 --ticker XYZ --source "screener #12" --stage 1 \
+     --decision PASS --reason-code shrinking-revenue --reason "TTM revenue -6%" --ref-price 12.34
    ```
    Buys are only half the evidence. Scoring the passes is the only way to learn whether research
    adds value beyond the screener list it chose from — the 9/19 trade review could not answer that,

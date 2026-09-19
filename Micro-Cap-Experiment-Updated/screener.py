@@ -709,18 +709,45 @@ def _save_history(scored: pd.DataFrame, data_dir: Path) -> None:
 # Output formatting
 # ---------------------------------------------------------------------------
 
+WATCHLIST_COLS = [
+    "rank", "ticker", "company", "sector", "industry", "latest_price", "market_cap",
+    "momentum_20d", "momentum_5d", "volume_ratio", "vol_5_50", "rs_vs_iwm", "bb_width",
+    "low_vol", "near_high", "pct_vs_sma20", "pct_vs_sma50", "atr_pct", "sales_qq",
+    "eps_qq", "fwd_pe", "recom", "target_upside", "beta", "earnings", "short_float",
+    "review_flag", "data_confidence", "composite_score", "composite_legacy", "composite_dedup",
+]
+
+
+def save_extended_watchlist(ranked: pd.DataFrame, scored: pd.DataFrame, data_dir: Path,
+                            n: int = 50) -> Path | None:
+    """Write the next `n` gate survivors after the watchlist -- ranks 51-100 by default.
+
+    Adopted 2026-09-19 with the research funnel: when the top 50 cannot supply the stage-1
+    count (typically in earnings season, when the no-initiation guard blocks most of it),
+    research extends here. These names passed every gate; only their rank is lower, and the
+    ranking order has no demonstrated skill on independent data. No sector cap is applied --
+    the funnel's own spread quotas handle diversity -- so a name squeezed out of the top 50
+    by the 6-per-sector cap appears here near the top.
+    """
+    if scored is None or scored.empty or "composite_score" not in scored.columns:
+        return None
+    taken = set(ranked["ticker"]) if ranked is not None and not ranked.empty else set()
+    ext = (scored[scored["composite_score"].notna() & ~scored["ticker"].isin(taken)]
+           .sort_values("composite_score", ascending=False).head(n).copy())
+    ext["rank"] = range(len(taken) + 1, len(taken) + 1 + len(ext))
+    cols = [c for c in WATCHLIST_COLS if c in ext.columns]
+    path = data_dir / "watchlist_extended.csv"
+    ext[cols].to_csv(path, index=False)
+    print(f"  Extended watchlist (ranks {len(taken) + 1}-{len(taken) + len(ext)}) saved to {path}")
+    return path
+
+
 def format_watchlist(df: pd.DataFrame, data_dir: Path) -> str:
     """Write watchlist CSV and return formatted table for stdout."""
     csv_path = data_dir / "watchlist.csv"
 
     # Columns for output
-    out_cols = [
-        "rank", "ticker", "company", "sector", "industry", "latest_price", "market_cap",
-        "momentum_20d", "momentum_5d", "volume_ratio", "vol_5_50", "rs_vs_iwm", "bb_width",
-        "low_vol", "near_high", "pct_vs_sma20", "pct_vs_sma50", "atr_pct", "sales_qq",
-        "eps_qq", "fwd_pe", "recom", "target_upside", "beta", "earnings", "short_float",
-        "review_flag", "data_confidence", "composite_score", "composite_legacy", "composite_dedup",
-    ]
+    out_cols = WATCHLIST_COLS
     available = [c for c in out_cols if c in df.columns]
     out = df[available].copy()
 
@@ -825,6 +852,7 @@ def main():
     # Step 5: Format and output
     print("\n[5/5] Generating watchlist...")
     table = format_watchlist(ranked, data_dir)
+    save_extended_watchlist(ranked, scored, data_dir)
     print(table)
 
     # Sector distribution summary

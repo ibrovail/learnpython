@@ -1251,3 +1251,31 @@ name" with "no slot or cash"; the research log's `capacity` code separates them 
 | File | Change |
 |------|--------|
 | `.claude/rules/analysis-workflow.md` | Step 2 pre-filter: next earnings date from the quote page; column warning; squeeze estimate |
+
+---
+
+## 2026-09-19 (e) — Research funnel; ranks 51–100; earnings guard tested
+
+- **Funnel** (replaces R3's fixed 8–10): `_print_research_trigger()` computes buys sought =
+  min(open slots, deployable ÷ 20% of equity) and the stage-1 count (5 per buy, 10–20) —
+  currently **3 buys, 15 checks**. Rule text in `analysis-workflow.md` Step 2; `log_research.py`
+  gains a required `stage` column (1 = quick check, 2 = full research; a BUY must be stage 2 —
+  tested); `research_log.csv` header updated (still empty).
+- **`screener.py save_extended_watchlist()`** writes `watchlist_extended.csv`, ranks 51–100 by
+  composite among gate survivors, no sector cap. Tested on the 9/15 screen: 50 rows, no overlap
+  with the top 50, all survivors, scores 0.711–0.827 against a top-50 floor of 0.696 (the
+  per-sector cap pushed higher scorers down), 5 sectors, 23 below $2Bn.
+- **`research/earnings_guard_study.py`** — 1,141 reports from the Sep 14–15 snapshots (one season;
+  the `earnings` column only exists from 9/14), date-matched baseline, stop applied. k=5: stopped
+  32% vs 12%; losses >1.5× plan 8.8% vs 0.7%; mean +2.23% vs +1.14% but median +0.28% vs +0.68%.
+  Survivorship (mid-September universe) likely *understates* report-day risk: names that collapsed
+  on a print may have fallen out of the universe. Guard kept; evidence added to the rule.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | Funnel count in `<research_trigger>`; directives line |
+| `screener.py` | `WATCHLIST_COLS`, `save_extended_watchlist()` |
+| `log_research.py`, `Start Your Own/research_log.csv` | `stage` column + validation |
+| `research/earnings_guard_study.py` | **New** |
+| `.claude/rules/analysis-workflow.md`, `Start Your Own/portfolio_rules.md`, `CLAUDE.md` | Funnel rule; guard evidence |
+| `Experiment Details/Rules Amendment History.md` | 2026-09-19 (c) entry |

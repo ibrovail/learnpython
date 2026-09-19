@@ -13,8 +13,8 @@ Append-only by design. The file is never rewritten, so a malformed call cannot t
 the failure mode that once emptied the portfolio ledger (2026-06-23).
 
 Usage:
-  venv/bin/python log_research.py --week 54 --ticker XYZ --source "screener #12" \
-      --decision PASS --reason-code extended --reason "44% above the 50-day" --ref-price 12.34
+  venv/bin/python log_research.py --week 54 --ticker XYZ --source "screener #12" --stage 1 \
+      --decision PASS --reason-code shrinking-revenue --reason "TTM revenue -6%" --ref-price 12.34
 
   # several rows at once (a JSON list of objects with the same keys, dashes -> underscores)
   venv/bin/python log_research.py --batch rows.json
@@ -29,8 +29,13 @@ from pathlib import Path
 
 LOG = Path("Start Your Own") / "research_log.csv"
 
-COLUMNS = ["date", "week", "ticker", "source", "rank", "sector", "market_cap_bn", "decision",
-           "reason_code", "reason", "ref_price", "conviction", "driver"]
+COLUMNS = ["date", "week", "ticker", "source", "rank", "sector", "market_cap_bn", "stage",
+           "decision", "reason_code", "reason", "ref_price", "conviction", "driver"]
+
+# Research funnel (2026-09-19): stage 1 = quick quote-page check, stage 2 = full research.
+# A name killed at stage 1 is logged as PASS with stage 1 -- cheap, and the most useful passes
+# for testing which filters work.
+STAGES = {"1", "2"}
 
 DECISIONS = {"BUY", "PASS", "WATCH"}
 
@@ -71,6 +76,11 @@ def _row(d: dict) -> dict:
         errors.append(f"reason_code must be one of {sorted(REASON_CODES)}")
     if not str(row["source"]).strip():
         errors.append('source is required, e.g. "screener #12" or "off-list"')
+    row["stage"] = str(row["stage"]).strip()
+    if row["stage"] not in STAGES:
+        errors.append("stage must be 1 (quick check) or 2 (full research)")
+    elif row["decision"] == "BUY" and row["stage"] != "2":
+        errors.append("a BUY must come from stage 2 (full research)")
     if row["reason_code"] == "other" and not str(row["reason"]).strip():
         errors.append('reason_code "other" needs --reason')
     for num in ("ref_price", "market_cap_bn", "rank", "week", "conviction"):

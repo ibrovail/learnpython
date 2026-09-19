@@ -97,8 +97,8 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   **Joins the S&P SmallCap 600 before Monday 9/21's open** — the +12.8% run since the 9/04
   announcement and Friday's 8.67M shares were index demand. **49 sessions held** (re-underwrite
   ~10/5). Equity **$727.32**, cash **$553.02 (76.0%)**, **gap −0.76%**, regime RISK-OFF.
-- **Complete (9/19)**: review items adopted — **one weekend question** (R1); shortlist **8–10 as a
-  spread** incl. ≥2 below $2Bn (R3); **research log** of buys *and* passes via `log_research.py`
+- **Complete (9/19)**: review items adopted — **one weekend question** (R1); **two-stage research funnel**
+  sized to the buys sought, spread across ranks/sectors/size, extending to ranks 51–100 (R3); **research log** of buys *and* passes via `log_research.py`
   (R4); stop **raise target 2.0×ATR**, 1.5× floor applies at placement (R5); **regime computed**
   by the script → `<market_regime>`, `regime_history.csv`, flip trigger (R7); **small-cap** label +
   size control for Phase 4 (R8). Under discussion: R2 (slimmer report), R6 (daily by exception),

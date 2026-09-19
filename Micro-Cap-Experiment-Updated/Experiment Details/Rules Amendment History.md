@@ -10,6 +10,26 @@ operating manual. The full superseded text is preserved in git at `e838891`.
 
 ---
 
+# 2026-09-19 (c) — R3 becomes a two-stage funnel; earnings guard tested
+
+**Funnel.** A fixed 8–10 was the wrong shape: historically ~10 names were researched per new buy
+(Weeks 40–53: 97 researched, 10 bought), so it was too few when capital needs deploying and more
+than needed once the book is full. Now: **stage 1** = quick quote-page checks, ~5 per buy sought
+(min 10, max 20, computed and printed by `make trigger`); **stage 2** = full research on the
+survivors. Both stages logged (`--stage`). When the top 50 cannot supply stage 1, research extends
+to `watchlist_extended.csv` (ranks 51–100) — gate survivors, many scoring above #50 but squeezed out
+by the 6-per-sector cap. Needed most mid-October to early November, when the earnings guard is
+estimated to block up to ~39 of the top 50.
+
+**R3's earnings pre-filter was pointed at the wrong date** when first written: the watchlist's
+`earnings` column is the *last* report. Corrected to the next date on the quote page.
+
+**Earnings guard kept, now with evidence** (see *Entry Requirements*): buying before a report
+roughly triples the stop-out rate and multiplies the chance of a loss beyond plan more than
+tenfold, for a higher *average* but worse *typical* result.
+
+---
+
 # 2026-09-19 (b) — Review recommendations adopted: R1, R3, R4, R5, R7, R8
 
 From the review of the two research arms. **R2** (slim the report) and **R6** (daily monitoring by

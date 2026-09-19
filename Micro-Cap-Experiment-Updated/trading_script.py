@@ -1684,8 +1684,16 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
                 reasons.append(f"{since} sessions since last report "
                                f">= {BACKSTOP_SESSIONS} backstop")
 
+        # Research funnel (2026-09-19): ~5 stage-1 quick checks per buy being sought, 10-20.
+        # Buys sought = open slots, capped by how many ~20%-of-equity positions the deployable
+        # cash can fund (2% risk at a 1.75xATR stop sizes a typical small cap at 19-29%).
+        _buys = max(0, min(POSITION_CEILING - len(tickers), int(deployable_pct / 0.20)))
+        _stage1 = 0 if _buys == 0 else max(10, min(20, 5 * _buys))
         print("<research_trigger>")
         print(f"  <cadence>trigger-based since 2026-09-17 (the weekly SCREEN is unchanged)</cadence>")
+        print(f"  <funnel>buys sought: {_buys}; stage-1 quick checks: {_stage1}"
+              f"{' (extend to watchlist_extended.csv if the top 50 cannot supply them)' if _stage1 else ''}"
+              f"</funnel>")
         _wk = _report_week_number()
         if _wk:
             print(f"  <week_number>{_wk}</week_number>")
@@ -2450,8 +2458,11 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
           "catalyst window 90 days, non-binary only; 2% risk per trade; 5–6 position ceiling "
           "(about 4 fit at current sizing); risk posture set by the regime filter and the "
           "drawdown circuit breaker.")
-    print("- Shortlist 8–10 from the top 50 as a spread (analysis-workflow.md Step 2), and log "
-          "every shortlisted name — passes included — with log_research.py.")
+    print("- Research funnel (analysis-workflow.md Step 2): stage 1 = quick quote-page checks, "
+          "~5 per buy sought (the count is in <research_trigger>), spread across ranks, sectors "
+          "and size, extending to watchlist_extended.csv (ranks 51–100) if the top 50 cannot "
+          "supply them; stage 2 = full research on the survivors. Log every name at both stages "
+          "with log_research.py.")
     print("</session_directives>")
     print()
     print("Using the rules, safeguards, and portfolio context above, execute the deep research window now.")

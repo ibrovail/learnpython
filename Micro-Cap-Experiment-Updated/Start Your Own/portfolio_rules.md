@@ -387,6 +387,13 @@ hold or exit at market. Log the assessment in the daily analysis.
   stops an unintended binary entry — buying days before a print on a non-binary thesis produces
   the same gap exposure under a different label. With the post-earnings cooldown in
   `entry-discipline.md`, both sides of a print are covered.
+  - *Tested 2026-09-19* (`research/earnings_guard_study.py`, 1,141 small-cap reports, one season,
+    date-matched against same-window stocks with no report): a position bought 5 sessions before
+    a report with a 1.75×ATR stop was **stopped out 32% of the time vs 12%**, and **9% of the time
+    lost more than 1.5× the planned risk vs 0.7%** (worst decile 4.7% of equity against a 2% plan).
+    The *average* return was higher (+2.2% vs +1.1%, carried by a few big winners) but the
+    **typical outcome was worse** (median +0.28% vs +0.68%). A lottery-shaped payoff; the guard
+    stays. Shortening the window would not help: the risk sits in the report day itself.
 - **No re-entry ban:** once a ticker is stopped out it is banned from re-entry for 10 trading
   sessions. Flag any proposed re-entry inside the blackout window.
 

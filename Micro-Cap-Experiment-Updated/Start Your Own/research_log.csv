@@ -1,1 +1,1 @@
-date,week,ticker,source,rank,sector,market_cap_bn,decision,reason_code,reason,ref_price,conviction,driver
+date,week,ticker,source,rank,sector,market_cap_bn,stage,decision,reason_code,reason,ref_price,conviction,driver
