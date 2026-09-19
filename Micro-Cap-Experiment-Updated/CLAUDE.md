@@ -77,9 +77,9 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: **Screener Phase 3 live** — `composite_score` = equal-weighted ranks of `low_vol`, `near_high`, `squeeze`, `vol_5_50`, `vol_ratio`, `vs_sma50`; **20-day momentum no longer scored**; `composite_legacy` and `composite_dedup` saved with every screen for the Phase 4 out-of-sample test (`Experiment Details/Screener Factor Study — Phase 2.md`). **Daily 9/16 backfilled** — Wednesday had been missed
-- **In progress**: **One position left.** ATRC 3 sh **+66.6%** ($57.14), stop **$53.40 / $53.25** (locks +55.7%, 1.75×ATR of room). Equity **$724.44**, cash **$553.02 (76.3%)**, **gap +0.14%**, regime RISK-OFF (IWM 3.94% below its 50-day, widening daily). Both other holdings stopped out on sector moves: **PAR 9/15 at $17.05** (−$22.00; restaurant-tech selloff), **VTS 9/16 at $17.69** (−$0.96; WTI −3.2%, plus ~$2.23 dividend due 9/30)
-- **Next**: **9/17 daily after the 4 PM close** (pre-open Yahoo serves the prior bar — never run it early). Week 54 research must deploy ~$444 of idle cash under RISK-OFF (catalyst-driven only). Re-entry bans: PAR ~9/29, VTS ~9/30. **Open question**: `portfolio_rules.md` still defines momentum/technical plays by momentum, which Phase 2 found has no ranking skill. Pending: final 52-week readout (S&P +14.87% vs +14.59%)
+- **Complete**: **Screener Phase 3 live** — `composite_score` = equal-weighted ranks of `low_vol`, `near_high`, `squeeze`, `vol_5_50`, `vol_ratio`, `vs_sma50`; **20-day momentum no longer scored**; `composite_legacy` and `composite_dedup` saved with every screen for the Phase 4 out-of-sample test (`Experiment Details/Screener Factor Study — Phase 2.md`). **Dailies logged through Friday 9/18**
+- **In progress**: **One position.** ATRC 3 sh **+69.4%** ($58.10). Ledger stop **$53.40 / $53.25**; **$55.27 / $55.12 recommended 9/17 — placement unconfirmed**. Equity **$727.32**, cash **$553.02 (76.0%)**, **gap −0.76%** (cash drag in a rising S&P), regime RISK-OFF. PAR (9/15, $17.05) and VTS (9/16, $17.69) stopped out on sector moves
+- **Next**: **Week 54 weekend research** — deploy ~$444 under RISK-OFF (catalyst-driven only) from the Phase 3 screener. Confirm why ATRC traded **8.67M shares (~5.6× normal) on rebalance Friday**. Re-entry bans: PAR ~9/29, VTS ~9/30. **Open question**: `portfolio_rules.md` defines momentum/technical plays by momentum, which Phase 2 found has no ranking skill. Pending: final 52-week readout (S&P +14.87% vs +14.59%)
 
 ## Documentation
 
