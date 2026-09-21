@@ -1,1 +1,16 @@
 date,week,ticker,source,rank,sector,market_cap_bn,stage,decision,reason_code,reason,ref_price,conviction,driver
+2026-09-20,54,LTC,screener #15,15,Real Estate,2.29,1,PASS,valuation,Hold consensus; PT $45.00 is +5.7% with the price 2.4% off the 60-day high,42.56,,
+2026-09-20,54,HAE,extended #78,78,Healthcare,4.93,1,PASS,valuation,"TTM revenue +0.4%, TTM EPS -37.2%, PT +2.9% at the 52-week high",108.4,,
+2026-09-20,54,TALO,screener #26,26,Energy,2.84,1,PASS,negative-earnings,"TTM net income -$404.98M, EPS -$2.39",17.01,,
+2026-09-20,54,KODK,screener #36,36,Industrials,0.935,1,PASS,negative-earnings,"TTM net income -$123M, EPS -$1.29, no analyst coverage, beta 1.58",9.55,,
+2026-09-20,54,DNOW,screener #37,37,Industrials,2.82,1,PASS,negative-earnings,TTM net income -$188M despite +69.8% acquisition-driven revenue,15.59,,
+2026-09-20,54,AVO,screener #39,39,Consumer Defensive,1.13,1,PASS,shrinking-revenue,"TTM revenue -6.2%; TTM EPS $0.02, -96.1%",12.9,,
+2026-09-20,54,PUBM,screener #50,50,Technology,0.8,1,PASS,shrinking-revenue,TTM revenue -1.0% and lossmaking; beta 1.58,17.55,,
+2026-09-20,54,CON,screener #1,1,Healthcare,4.52,2,BUY,thesis,"Strong Buy, PT +15.6%; TTM revenue +14.0%, EPS +29.4%, beta 0.63; clears the RISK-OFF defensive profile",35.47,3,US hiring / employer workers-comp and pre-placement visit volumes
+2026-09-20,54,HOPE,screener #12,12,Financials,1.78,2,BUY,thesis,"TTM revenue +31.1%, EPS +173.8%, fwd PE 10.1, PT +11.0%; MANUBANK CBU close approved, early Q4",13.96,3,"US short-rate path via NIM (2.96%, +6bp QoQ) plus the SMBC MANUBANK CBU close"
+2026-09-20,54,CFFN,screener #3,3,Financials,1.1,2,PASS,valuation,PT $9.50 is +6.7%; Piper Neutral; liability-sensitive thrift into a Fed that just hiked,8.9,,
+2026-09-20,54,CVBF,screener #5,5,Financials,4.0,2,PASS,capacity,Clears every gate but TTM EPS -1.8% and net income +1.5%; HOPE is the stronger bank and cash funds only two buys,22.7,,
+2026-09-20,54,CLBK,extended #51,51,Financials,3.12,2,PASS,valuation,PE 44.7 and NIM 2.44% into a hiking Fed; below its 20-day; unexplained Friday after-hours -3.1% on 17.6M shares,11.58,,
+2026-09-20,54,OPCH,screener #7,7,Healthcare,3.64,2,PASS,weak-catalyst,Fails the RISK-OFF defensive profile (rank_low_vol 0.85) with no confirmed catalyst; -34% from its 52-week high,24.3,,
+2026-09-20,54,EXPO,screener #10,10,Industrials,3.25,2,PASS,weak-catalyst,Misses the RISK-OFF near_high gate at -5.03% (limit -5%) and has no confirmed catalyst,68.3,,
+2026-09-20,54,HRMY,screener #13,13,Healthcare,2.45,2,PASS,binary-thesis,"Fails the defensive profile; the only catalyst in view is the undated TEMPO Phase 3 PWS readout, which is binary",42.02,,

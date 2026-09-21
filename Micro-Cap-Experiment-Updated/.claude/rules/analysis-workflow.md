@@ -167,6 +167,14 @@ The `make weekend` target automatically runs the screener first. If the screener
 
 ### Step 2 — Analysis (auto-trigger when `<weekly_context>` XML appears)
 
+**Check the block before analysing it.** `make weekend` prints `weekend_summary.md`; confirm the
+printed output contains `<weekly_context>`, `<portfolio_snapshot>`, `<holding_review>` and
+`<research_trigger>`. If any is missing, the file is damaged — do **not** reconstruct the figures
+by hand or from a previous report. Restore the template (`git checkout HEAD -- "Start Your Own/weekend_summary.md"`),
+re-run the `--weekend-summary` step and `inject_last_thesis.py`, and fix the cause before writing
+the report. *Origin: 2026-09-20 — `inject_last_thesis.py` matched the prose `<last_analyst_thesis>`
+mention in `<output_format>` and deleted the entire data block; see `.claude/docs/implementation-notes.md`.*
+
 When `<weekly_context>` XML appears in the conversation output, **immediately begin the deep research** — do NOT ask for further input:
 
 1. **Research funnel — two stages, sized to the buys being sought.** *(Adopted 2026-09-19,

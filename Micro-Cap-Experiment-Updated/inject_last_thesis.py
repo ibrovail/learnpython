@@ -55,12 +55,19 @@ def main() -> None:
     thesis_content = thesis_path.read_text(encoding="utf-8").strip()
 
     # Replace content between <last_analyst_thesis> and </last_analyst_thesis>
+    # Anchor on the real block: both tags alone on their own lines. The
+    # six-section <output_format> (adopted 2026-09-19) mentions
+    # `<last_analyst_thesis>` mid-sentence in section 4, and that mention comes
+    # first in the file — an unanchored non-greedy match ran from there to the
+    # real closing tag and deleted the entire <weekly_context> data block
+    # (market data, regime, snapshot, watchlist, holdings, research trigger)
+    # on every weekend run. Found 2026-09-20, the first run under that template.
     updated = re.sub(
-        r"(<last_analyst_thesis>).*?(</last_analyst_thesis>)",
+        r"^(<last_analyst_thesis>)[ \t]*$.*?^(</last_analyst_thesis>)[ \t]*$",
         lambda m: f"{m.group(1)}\n{thesis_content}\n{m.group(2)}",
         content,
         count=1,
-        flags=re.DOTALL,
+        flags=re.DOTALL | re.MULTILINE,
     )
 
     if updated == content:

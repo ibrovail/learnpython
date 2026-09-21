@@ -1354,3 +1354,26 @@ logger. Six defects fixed — see `Rules Amendment History.md` 2026-09-19 (f). C
 | `Start Your Own/portfolio_rules.md` | F1 trend rule corrected; F2 profile thresholds; F3 trailing line |
 | `.claude/rules/analysis-workflow.md`, `entry-discipline.md` | F1 stage-1 kill; F5 daily buys; F4 wording |
 | `Experiment Details/Rules Amendment History.md` | 2026-09-19 (f) |
+
+## 2026-09-20 — `inject_last_thesis.py` deleted the weekend data block
+
+The first weekend run under the six-section report template (R2, 2026-09-19) produced a
+`weekend_summary.md` with **no `<weekly_context>` data at all** — no market data, regime,
+portfolio snapshot, screener watchlist, holdings, position limits, holding review or research
+trigger. `trading_script.py --weekend-summary` had written the block correctly; `inject_last_thesis.py`
+then removed it. Its regex, `(<last_analyst_thesis>).*?(</last_analyst_thesis>)` with `DOTALL` and
+`count=1`, matched from the **first** occurrence of the opening tag in the file. Since 2026-09-19
+that first occurrence is the prose mention in section 4 of `<output_format>` ("Measure against
+`<last_analyst_thesis>`"), roughly 200 lines above the real block — so the non-greedy match ran
+from there to the real closing tag and replaced everything in between with the previous week's
+summary. On the next run the opening tag no longer existed, so `trading_script.py`'s own
+`<weekly_context>` substitution silently matched nothing and the file stayed broken.
+
+Both tags are now anchored to their own lines (`^<last_analyst_thesis>[ \t]*$` … with `MULTILINE`),
+which cannot match a mid-sentence mention. `weekend_summary.md` was restored from HEAD and
+regenerated; the block is back (383 lines, `<weekly_context>` at 129, `<last_analyst_thesis>` at 286).
+
+| File | Change |
+|------|--------|
+| `inject_last_thesis.py` | Line-anchored both tags in the injection regex; comment records the failure |
+| `Start Your Own/weekend_summary.md` | Restored from HEAD and regenerated for Week 54 |

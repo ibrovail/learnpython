@@ -127,154 +127,225 @@ Before writing, work through these steps:
 </thinking_approach>
 
 <weekly_context>
-<date>Monday, September 14, 2026</date>
-<week_number>53 of 52 (twelve-month live experiment)</week_number>
-<experiment_runway>ends 2026-09-18 (1 calendar weeks remaining)</experiment_runway>
+<date>Sunday, September 20, 2026</date>
+<week_number>54 (ongoing live process)</week_number>
+<experiment_runway>ongoing — no end date set</experiment_runway>
 
 <market_data>
 <price_volume>
 | Ticker | Close   | % Chg  | Volume      | Role       |
 |--------|---------|--------|-------------|------------|
-| ATRC   |   54.54 | +0.00% |   1,098,900 | Holding    |
-| PAR    |   18.00 | +0.00% |     687,000 | Holding    |
-| VTS    |   18.76 | +0.00% |     466,500 | Holding    |
-| IWO    |  367.63 | +0.00% |     868,000 | Benchmark  |
-| XBI    |  156.20 | +0.00% |   8,412,600 | Benchmark  |
-| SPY    |  764.29 | +0.00% |  45,477,300 | Benchmark  |
-| IWM    |  288.89 | +0.00% |  26,353,300 | Benchmark  |
-| QQQ    |  714.88 | +0.00% |  26,598,700 | Benchmark  |
-| TLT    |   80.87 | +0.00% |  32,420,500 | Macro      |
-| HYG    |   78.60 | +0.00% |  38,955,300 | Macro      |
+| ATRC   |   58.10 | -1.73% |   8,670,300 | Holding    |
+| IWO    |  362.09 | -0.43% |     403,500 | Benchmark  |
+| XBI    |  156.72 | -0.97% |   9,873,700 | Benchmark  |
+| SPY    |  761.69 | +0.13% |  65,308,100 | Benchmark  |
+| IWM    |  284.10 | -0.47% |  31,106,300 | Benchmark  |
+| QQQ    |  721.45 | +0.63% |  48,277,100 | Benchmark  |
+| TLT    |   81.25 | -0.65% |  41,085,300 | Macro      |
+| HYG    |   78.53 | -0.24% |  34,871,100 | Macro      |
 </price_volume>
 
 <risk_metrics>
 | Metric                        | Value     | Note                    |
 |-------------------------------|-----------|-------------------------|
-| Max Drawdown                  |   -24.99% | on 2026-03-20           |
-| Sharpe Ratio (annualized)     |    1.9911 |                         |
-| Sortino Ratio (annualized)    |    6.6854 |                         |
-| Beta (daily) vs ^GSPC         |    1.5730 |                         |
-| Alpha (annualized) vs ^GSPC   |  +623.69% |                         |
-| R²                            |     0.036 | Low — alpha/beta unstable |
-| Time-Weighted Return (cum)    |   +16.01% | injection-neutral       |
-| S&P 500 Return (cum)          |   +15.46% | same window             |
-| TWR Alpha (cum)               |    +0.55% | TWR minus S&P           |
+| Measured From (close)         | 2026-09-11 | all metrics below       |
+| Max Drawdown                  |    -1.67% | on 2026-09-16           |
+| Max Drawdown (inj-neutral)    |    -1.67% | on 2026-09-16           |
+| Current Drawdown (from peak)  |    -1.28% | clear of breaker        |
+| Sharpe Ratio (annualized)     |       N/A |                         |
+| Sortino Ratio (annualized)    |       N/A |                         |
+| Beta (daily) vs ^GSPC         |       N/A |                         |
+| Alpha (annualized) vs ^GSPC   |       N/A |                         |
+| R²                            |       N/A |                         |
+| Time-Weighted Return (cum)    |    -0.84% | injection-neutral       |
+| S&P 500 Return (cum)          |    -0.08% | same window             |
+| TWR Alpha (cum)               |    -0.76% | TWR minus S&P           |
 </risk_metrics>
 </market_data>
+
+<market_regime>
+  <date>2026-09-18</date>
+  <iwm_close>284.10</iwm_close>
+  <sma50>295.14</sma50>
+  <pct_vs_sma50>-3.74%</pct_vs_sma50>
+  <regime>RISK-OFF</regime>
+  <since>RISK-OFF since 2026-08-31 (14 sessions)</since>
+  <rule>RISK-OFF after a close more than 1% below the 50-day SMA; RISK-ON after a close more than 1% above it; held in between.</rule>
+  <source>trading_script.py — IWM unadjusted daily closes, 50-session simple average. Do not look this up elsewhere.</source>
+</market_regime>
 
 <portfolio_snapshot>
 | Metric              | Value     |
 |---------------------|-----------|
-| Portfolio Equity    |   $733.51 |
-| S&P Equivalent      |   $768.52 |
-| Cash Balance        |   $259.33 |
+| Portfolio Equity    |   $727.32 |
+| S&P Equivalent      |   $732.89 |
+| Benchmark Base      | 2026-09-11 |
+| Cash Balance        |   $553.02 |
 </portfolio_snapshot>
 
 <capital_injection>
   <planned>false</planned>
 </capital_injection>
 
-<screener_watchlist generated="2026-09-14" candidates="15">
-|   rank | ticker   | sector                 |   latest_price | market_cap   |   momentum_20d |   momentum_5d |   volume_ratio |   rs_vs_iwm |   bb_width | above_sma20   | data_confidence   |   composite_score |
-|-------:|:---------|:-----------------------|---------------:|:-------------|---------------:|--------------:|---------------:|------------:|-----------:|:--------------|:------------------|------------------:|
-|      1 | DBRG     | Financial              |          15.9  | $3.0B        |          -0.13 |         -0.19 |           2.56 |        5.18 |     0.0062 | False         | HIGH              |            0.8917 |
-|      2 | BRBS     | Financial              |           4.09 | $361M        |          10.84 |          3.28 |           1.64 |       16.15 |     0.0868 | True          | HIGH              |            0.8895 |
-|      3 | BZH      | Consumer Cyclical      |          33.25 | $887M        |           0.45 |         -0.03 |           1.79 |        5.76 |     0.0063 | True          | HIGH              |            0.8868 |
-|      4 | CBZ      | Industrials            |          54.54 | $3.0B        |           0.15 |         -0.57 |           1.61 |        5.46 |     0.0119 | False         | HIGH              |            0.8737 |
-|      5 | LFST     | Healthcare             |          12.97 | $5.0B        |           4.43 |          1.89 |           1.7  |        9.74 |     0.0852 | True          | HIGH              |            0.8731 |
-|      6 | CXW      | Industrials            |          34.93 | $3.5B        |           6.43 |          0.63 |           1.62 |       11.74 |     0.1005 | True          | HIGH              |            0.8622 |
-|      7 | NMAX     | Communication Services |          11.39 | $1.5B        |           4.78 |          7.15 |           1.7  |       10.09 |     0.1043 | True          | HIGH              |            0.8558 |
-|      8 | WKC      | Energy                 |          35.21 | $1.8B        |          -2.49 |         -0.54 |           1.98 |        2.82 |     0.0429 | False         | HIGH              |            0.8494 |
-|      9 | VREX     | Healthcare             |          18.46 | $778M        |          -0.16 |         -0.27 |           1.32 |        5.15 |     0.0043 | False         | HIGH              |            0.8449 |
-|     10 | RAMP     | Technology             |          37.6  | $2.3B        |          -0.66 |         -0.4  |           1.37 |        4.65 |     0.0102 | False         | HIGH              |            0.8435 |
-|     11 | SPSC     | Technology             |          82.68 | $3.0B        |           4.13 |         -0.39 |           3.56 |        9.44 |     0.1322 | True          | HIGH              |            0.8365 |
-|     12 | KRP      | Energy                 |          14.9  | $1.9B        |          -1.32 |          0.13 |           1.42 |        3.99 |     0.0444 | False         | HIGH              |            0.836  |
-|     13 | UTZ      | Consumer Defensive     |          14.28 | $2.1B        |           0.78 |          0.49 |           1.18 |        6.09 |     0.0142 | True          | HIGH              |            0.8338 |
-|     14 | NATL     | Technology             |          46.62 | $3.5B        |          -0.66 |          1.15 |           1.3  |        4.65 |     0.0319 | True          | HIGH              |            0.833  |
-|     15 | DV       | Communication Services |          13.41 | $2.1B        |           0.9  |          0.37 |           1.15 |        6.21 |     0.0116 | True          | HIGH              |            0.8307 |
+<screener_watchlist generated="2026-09-20" candidates="50">
+|   rank | ticker   | sector                 |   latest_price | market_cap   |   momentum_20d |   volume_ratio |   vol_5_50 |   near_high |   pct_vs_sma50 |   atr_pct |   sales_qq |   target_upside |   recom | earnings   | review_flag   |   composite_score |
+|-------:|:---------|:-----------------------|---------------:|:-------------|---------------:|---------------:|-----------:|------------:|---------------:|----------:|-----------:|----------------:|--------:|:-----------|:--------------|------------------:|
+|      1 | CON      | Healthcare             |          35.47 | $4.5B        |           1.34 |           5.19 |      1.926 |       -3.38 |           6.16 |     2.504 |      10.03 |            15.6 |    1    | Aug 06/a   |               |            0.9238 |
+|      2 | NWBI     | Financial              |          15.46 | $2.3B        |           0.26 |           3.69 |      1.666 |       -4.33 |          -0.23 |     1.696 |      18.31 |             7.2 |    2.75 | Jul 27/a   |               |            0.906  |
+|      3 | CFFN     | Financial              |           8.9  | $1.1B        |           4.34 |           3.55 |      1.537 |       -3.89 |           1.92 |     1.806 |       6.5  |             6.7 |    2.33 | Jul 29/b   |               |            0.9002 |
+|      4 | NHP      | Real Estate            |          16    | $311M        |          -5.66 |           6.3  |      1.872 |       -8.36 |          -0.55 |     2.857 |       2.58 |            18.4 |    2    | Aug 05/a   |               |            0.8858 |
+|      5 | CVBF     | Financial              |          22.7  | $4.0B        |           0.58 |           2.6  |      1.723 |       -3.03 |           0.39 |     1.803 |      37.86 |            15.3 |    1.83 | Jul 22/a   |               |            0.8816 |
+|      6 | FCF      | Financial              |          21.1  | $2.1B        |           0.05 |           3.01 |      1.501 |       -5.55 |          -0.28 |     1.699 |       0.6  |            14.1 |    1.83 | Jul 28/a   |               |            0.8719 |
+|      7 | OPCH     | Healthcare             |          24.3  | $3.6B        |           2.53 |           2.77 |      1.518 |       -2.64 |           4.57 |     2.769 |       1.86 |            17.6 |    1.79 | Jul 29/b   |               |            0.8687 |
+|      8 | LFST     | Healthcare             |          12.57 | $4.8B        |           0.8  |           3.31 |      1.895 |       -7.3  |           6.14 |     3.814 |      26.08 |            13   |    1.45 | Aug 06/b   |               |            0.8657 |
+|      9 | VIA      | Technology             |          27.98 | $2.3B        |           3.67 |           6.2  |      2.015 |       -3.88 |          18.3  |     4.571 |      26.67 |            21.5 |    1.1  | Aug 06/b   |               |            0.8629 |
+|     10 | EXPO     | Industrials            |          68.3  | $3.2B        |          -2.72 |           2.87 |      1.556 |       -5.03 |           2.24 |     2.674 |      20.89 |            23   |    1.6  | Jul 30/a   |               |            0.8616 |
+|     11 | FBP      | Financial              |          27.58 | $4.2B        |          -3.3  |           3.66 |      1.527 |       -7.7  |          -2.58 |     1.896 |       4.7  |            15   |    1.57 | Jul 22/b   |               |            0.8611 |
+|     12 | HOPE     | Financial              |          13.96 | $1.8B        |          -0.07 |           2.99 |      1.317 |       -4.32 |           0.15 |     1.965 |      17.81 |            11   |    2    | Jul 27/b   |               |            0.8563 |
+|     13 | HRMY     | Healthcare             |          42.02 | $2.5B        |          10.14 |           3.72 |      1.813 |       -3.38 |           9.25 |     2.971 |      30.32 |            12.7 |    1.82 | Aug 04/b   |               |            0.8529 |
+|     14 | WKC      | Energy                 |          35.95 | $1.8B        |           0    |           3.77 |      1.493 |      -12.74 |          -1.74 |     2.649 |      50.48 |             4.8 |    3.67 | Jul 23/a   |               |            0.846  |
+|     15 | LTC      | Real Estate            |          42.56 | $2.3B        |           5.69 |           2.45 |      1.429 |       -2.39 |           4.03 |     2.219 |      63.83 |             6.3 |    2.11 | Aug 05/a   |               |            0.8339 |
+|     16 | MRP      | Real Estate            |          28.87 | $4.5B        |          -5    |           4.3  |      1.842 |      -10.26 |          -2.27 |     2.528 |      32.11 |            28.7 |    1    | Aug 04/b   |               |            0.826  |
+|     17 | GRAL     | Healthcare             |          80.77 | $3.6B        |           1.55 |           3.53 |      2.382 |       -5.52 |           9.21 |     4.684 |      25.72 |            -3.8 |    2.18 | Aug 05/a   |               |            0.8227 |
+|     18 | BXDC     | Real Estate            |          19.33 | $1.9B        |          -5.89 |           8.4  |      3.971 |      -13.43 |          -4.68 |     2.864 |     nan    |            22   |    2.17 | Aug 04/b   |               |            0.8203 |
+|     19 | CURB     | Real Estate            |          28.33 | $3.3B        |          -3.61 |           3.91 |      1.501 |      -11.88 |          -5.78 |     2.218 |      52.98 |            19.4 |    1.6  | Jul 28/b   |               |            0.8187 |
+|     20 | CGEM     | Healthcare             |          21.08 | $1.4B        |          -2.77 |           3.57 |      1.962 |       -9.1  |           7.34 |     4.679 |     nan    |            62.5 |    1    | Aug 06/b   |               |            0.8157 |
+|     21 | LILAK    | Communication Services |           8.4  | $1.6B        |           0.12 |           3.18 |      1.219 |       -5.78 |           2.45 |     2.967 |       1.46 |             8.8 |    2.67 | Aug 05/a   |               |            0.8137 |
+|     22 | IRDM     | Communication Services |          46.77 | $5.0B        |          -4.51 |           4.79 |      1.605 |      -18.21 |          -2.03 |     1.981 |       3.84 |             2.6 |    2.83 | Jul 22/b   |               |            0.8132 |
+|     23 | LADR     | Real Estate            |           9.43 | $1.2B        |          -4.94 |           2.7  |      1.429 |      -10.95 |          -3.61 |     1.772 |      15.51 |            27.3 |    1.29 | Jul 23/b   |               |            0.8066 |
+|     24 | PRDO     | Consumer Defensive     |          32.55 | $2.0B        |          -1.42 |           3.05 |      1.184 |      -12.22 |          -0.47 |     2.822 |       1.8  |            35.2 |    1    | Aug 06/a   |               |            0.8014 |
+|     25 | REI      | Energy                 |           1.46 | $380M        |          -1.35 |           3.07 |      1.515 |       -7.59 |           7.07 |     4.012 |      26.73 |            42.5 |    1.67 | Aug 05/a   |               |            0.8011 |
+|     26 | TALO     | Energy                 |          17.01 | $2.8B        |          -2.63 |           2.54 |      1.558 |       -9.16 |           7.26 |     3.8   |      56.53 |            18.6 |    1.69 | Aug 04/a   |               |            0.7972 |
+|     27 | DC       | Basic Materials        |           6.11 | $820M        |          -0.65 |           3.58 |      1.396 |       -5.78 |          11.38 |     4.697 |     nan    |            97.9 |    1    | Sep 02     |               |            0.7915 |
+|     28 | WBI      | Energy                 |          30.86 | $3.8B        |          -2.65 |           5.83 |      1.91  |      -16.35 |          -6.01 |     3.347 |     128    |            18.3 |    1.44 | Aug 05/a   |               |            0.7892 |
+|     29 | INVX     | Energy                 |          28.8  | $2.0B        |          -1.77 |           3.72 |      1.76  |      -14.57 |           0.48 |     4.04  |       9.21 |            19.8 |    1.4  | Aug 03/a   |               |            0.7884 |
+|     30 | ACCO     | Industrials            |           4.17 | $385M        |          -1.65 |           2.56 |      1.292 |       -8.55 |          -1.24 |     2.895 |       5.14 |            91.8 |    1    | Jul 30/a   |               |            0.7873 |
+|     31 | SBH      | Consumer Cyclical      |          15.79 | $1.5B        |          -4.71 |           2.71 |      1.235 |       -8.68 |          -0.54 |     3.587 |       0.23 |             7.7 |    2.4  | Aug 03/b   |               |            0.7856 |
+|     32 | CRGY     | Energy                 |          13.9  | $4.6B        |          -1.14 |           3.19 |      1.648 |      -10.15 |          11.61 |     3.771 |      55.34 |            25.5 |    1.58 | Aug 03/a   |               |            0.7828 |
+|     33 | CCO      | Communication Services |           2.38 | $1.2B        |           0    |           2.82 |      0.884 |       -2.46 |          -0.44 |     0.78  |       8.75 |             2.1 |    3.25 | Aug 05/b   |               |            0.7815 |
+|     34 | NMAX     | Communication Services |          10.32 | $1.3B        |          -4    |           4.08 |      1.822 |      -14.78 |           8.49 |     5.688 |      16.53 |            79.3 |    1    | Aug 13/a   |               |            0.7814 |
+|     35 | DAN      | Consumer Cyclical      |          29.81 | $3.2B        |          -6.02 |           2.9  |      1.298 |       -7.71 |           2.22 |     3.307 |       3.88 |            30.8 |    1.78 | Aug 06/b   |               |            0.7732 |
+|     36 | KODK     | Industrials            |           9.55 | $935M        |          -2.95 |           2.93 |      1.233 |       -7.37 |           5.73 |     3.029 |      18.25 |            25.7 |  nan    | Aug 04/a   |               |            0.7619 |
+|     37 | DNOW     | Industrials            |          15.59 | $2.8B        |          -0.57 |           1.97 |      1.339 |       -9.36 |           2.7  |     3.162 |     108.12 |            20.6 |    1.4  | Aug 06/b   |               |            0.7579 |
+|     38 | AVA      | Utilities              |          36.25 | $3.0B        |          -3.51 |           2.56 |      1.484 |      -15.89 |          -7.28 |     1.543 |       0.49 |            11   |    3    | Aug 03/b   |               |            0.7526 |
+|     39 | AVO      | Consumer Defensive     |          12.9  | $1.1B        |          -2.93 |           2.24 |      1.324 |       -9.28 |           0.01 |     3.639 |      25.8  |            27.9 |    1    | Sep 08/a   |               |            0.748  |
+|     40 | MDU      | Utilities              |          18.56 | $3.9B        |          -6.97 |           3.09 |      1.719 |      -15.37 |          -8.09 |     2.036 |       6.87 |            27.7 |    1.75 | Aug 06/b   |               |            0.7479 |
+|     41 | NTCT     | Technology             |          38.21 | $2.8B        |          -0.73 |           2.43 |      1.438 |      -15.61 |          -3.12 |     2.492 |      12.68 |            24.8 |    2    | Aug 06/b   |               |            0.7464 |
+|     42 | NSP      | Industrials            |          50.31 | $1.9B        |          -4.7  |           3.52 |      1.157 |      -10    |          -1.37 |     4.545 |       1.69 |             2.9 |    3    | Jul 29/a   |               |            0.7447 |
+|     43 | VGZ      | Basic Materials        |           2.26 | $330M        |          -9.24 |           4.02 |      1.743 |      -11.02 |          10.18 |     4.867 |     nan    |            99.1 |    1    | Jul 29/a   |               |            0.743  |
+|     44 | LILA     | Communication Services |           8.41 | $1.6B        |          -0.71 |           3.2  |      0.902 |       -6.03 |           1.71 |     2.433 |       1.46 |             9   |    2.6  | Aug 05/a   |               |            0.7426 |
+|     45 | SHEN     | Communication Services |          11.57 | $641M        |          -6.16 |           8.51 |      3.418 |      -27.42 |          -5.83 |     3.828 |       5.53 |           137.7 |    1.5  | Jul 29/b   |               |            0.74   |
+|     46 | KFY      | Industrials            |          76.78 | $4.2B        |          -9.73 |           3.35 |      1.807 |      -12.26 |          -5.68 |     3.063 |       6.86 |            17.5 |    1.6  | Sep 09/b   |               |            0.7376 |
+|     47 | SONO     | Technology             |          15.53 | $1.8B        |          -1.9  |           3.8  |      1.435 |      -11.76 |           0.77 |     4.549 |       8.85 |            26.7 |    1.5  | Jul 29/a   |               |            0.7368 |
+|     48 | CE       | Basic Materials        |          45.41 | $5.0B        |          -2.97 |           2.51 |      1.278 |       -8.56 |           0    |     3.962 |       8.69 |            36.4 |    1.86 | Aug 04/a   |               |            0.7327 |
+|     49 | COLM     | Consumer Cyclical      |          56.84 | $2.9B        |          -5.78 |           2.23 |      1.284 |      -13.09 |          -4.15 |     2.403 |       1.5  |            22.9 |    2.55 | Jul 30/a   |               |            0.7258 |
+|     50 | PUBM     | Technology             |          17.55 | $799M        |           6.95 |           1.88 |      1.165 |       -8.55 |          14.24 |     4.109 |      10.55 |            17.6 |    1.54 | Aug 06/a   |               |            0.7212 |
 </screener_watchlist>
 
 **Screener Integration:**
-- Evaluate AT LEAST the top 5 screener candidates via WebSearch before selecting.
+- Every candidate has already passed the screener's hard gates: prohibited businesses, deal-pinned, >40% above the 50-day or >20% above the 20-day SMA, days 1-3 of a >10% breakout, post-earnings jump, shrinking revenue (Sales Q/Q < 0), liquidity. Gates run on Finviz-level data — the PRV gate (browser quote page) still applies to every name.
+- `composite_score` (since 2026-09-15) = equal-weight ranks of low volatility, proximity to the 60-day high, Bollinger squeeze, 5/50-day volume, 1-day volume ratio and distance above the 50-day SMA — the six signals that passed the Phase 2 factor study. 20-day momentum is reported but no longer scored (no measurable ranking skill). The measured edge is small and mostly defensive, so rank is sourcing, never conviction.
+- `review_flag` = industry that mixes prohibited and permitted businesses: read what the company does before any research.
+- Evaluate AT LEAST the top 5 screener candidates before selecting (discover via WebSearch, verify on the browser quote page).
 - For each screener candidate not selected, state why in one line.
 - Respect the sector cap: max 2 positions in the same GICS sector.
 
-<holdings date="2026-09-11">
-<holding ticker="ATRC" shares="3" avg_cost="34.30" current_price="54.54" stop_loss="50.30" stop_limit="50.15" />
-<holding ticker="PAR" shares="11" avg_cost="19.05" current_price="18.00" stop_loss="17.05" stop_limit="16.90" />
-<holding ticker="VTS" shares="6" avg_cost="17.85" current_price="18.76" stop_loss="17.50" stop_limit="17.35" />
+<holdings date="2026-09-18">
+<holding ticker="ATRC" shares="3" avg_cost="34.30" current_price="58.10" stop_loss="55.27" stop_limit="55.12" />
 </holdings>
 
-<last_analyst_thesis>
-# Week 52 — Thesis Review Summary (FINAL)
+<position_limits>
+| Ticker | Sector                 | Sessions Held | 60-Session Review |
+|--------|------------------------|---------------|-------------------|
+| ATRC   | Healthcare             |            49 | not yet           |
+  <sector_counts>Healthcare: 1</sector_counts>
+  <sector_cap_status>OK (cap 3 per sector)</sector_cap_status>
+  <driver_cap>Max 2 positions may share a primary thesis driver. Name each holding's primary driver in this report — it cannot be derived from data and an unnamed driver is a rule violation (portfolio_rules.md).</driver_cap>
+</position_limits>
 
-**Date:** 2026-09-07 | **Week:** 52 of 52 | **Posture:** Aggressive — deploy the cash
-**9 sessions remain.** Equity $772.00 · Cash $272.17 (35.3%) · **Gap −0.35%** · TWR alpha +5.71%
+<holding_review>
+| Ticker | Close | Move (×ATR) | Volume (×20d) | Stop room (×ATR) | Held | Est. next earnings | Review |
+|--------|-------|-------------|---------------|------------------|------|--------------------|--------|
+| ATRC   | $58.10 | -0.46 | 8.7 | 1.28 | 49 | ~2026-10-22 (24s, est.) | **FULL** |
+  <full_review ticker="ATRC">volume 8.7× average</full_review>
+  <rule>FULL review (portfolio_rules.md → Daily monitoring by exception) when a holding moved ≥1.5×ATR, traded ≥3× its average volume, has its stop within 1×ATR, has a qualifying stop raise, may report earnings within ~15 sessions, or was bought ≤3 sessions ago — or when the user asks ("full review TICKER"). Otherwise ONE LINE. Every holding still gets the live news-feed check; news the script cannot see upgrades a LINE to FULL.</rule>
+</holding_review>
+
+<research_trigger>
+  <cadence>trigger-based since 2026-09-17 (the weekly SCREEN is unchanged)</cadence>
+  <funnel>buys sought: 3; stage-1 quick checks: 15 (extend to watchlist_extended.csv if the top 50 cannot supply them)</funnel>
+  <week_number>54</week_number>
+  <last_report>2026-09-14 (4 sessions ago)</last_report>
+  <status>DUE</status>
+  <reason>free slot (1/5) with 61% deployable</reason>
+  <reason>deployable cash 61% >= 25%</reason>
+  <regime>RISK-OFF now; RISK-OFF at the last report (from regime_history.csv)</regime>
+  <if_not_due>Produce a short monitoring note instead: stops, any position nearing 60 sessions, and the breaker line. Do not re-underwrite theses that nothing has changed for.</if_not_due>
+</research_trigger>
+
+<last_analyst_thesis>
+# Week 53 — Thesis Review Summary (FINAL WEEK)
+
+**Date:** 2026-09-14 | **5 sessions remain** | **Posture:** Aggressive — deploy the cash, but only into a name that clears every filter
+Equity $733.51 · Cash $259.33 (35.4%) · **Gap −4.56%** · TWR alpha +1.11% (corrected 9/14 from +0.55% — S&P leg started a session early) · Regime RISK-OFF
+
+> **⚠️ REVISED 2026-09-14 — CXW WITHDRAWN.** CoreCivic operates prisons and immigration detention centers, a prohibited business. No replacement; cash held at $259.33. The conditional ATRC partial is also cancelled (indefinite horizon). No orders remain. The exclusion is now enforced in the rules, the PRV gate and the screener.
 
 ---
 
 ## Per-Position Thesis
 
-**ATRC (AtriCure) — KEEP | Conviction 5/5**
-**+50.2%** at $51.52, and the reason this book is level with the benchmark rather than behind it. **Three price-target raises in twelve days** — BTIG $55, Piper $60, **Needham $64** — all Buy or Overweight, on the STS quality metric and the BoxX-NoAF trial. Revenue +13.9%. Stop $48.50 locks **+41.4%**.
-The caveat matters more than the targets: **Needham attributed its raise to "peer multiple expansion," not new data, and BoxX-NoAF's 30-day readout lands H1 2027** — well outside this experiment. This is a re-rated multiple, not a delivered fundamental, and multiples give back faster than earnings do. **The +60% partial trigger is $54.88, 6.5% away.** If it prints, my lean is to *take* the partial rather than defer a third time — with the catalyst outside the runway, there is no longer a mechanism for the thesis to pay off before the finish.
+**ATRC (AtriCure) — KEEP | Conviction 5/5** *(forced partial cancelled — indefinite horizon)*
+**+59.0%** at $54.54 — the experiment's defining position. It crossed the **+60% partial trigger ($54.88)** intraday at $55.16 and closed $0.34 short of it. ~~If it closes at or above $54.88, sell 1 of 3 shares.~~ **Cancelled** when the portfolio moved to an indefinite horizon: BoxX-NoAF data (H1 2027) is now inside the horizon, and all four deferral criteria hold. The four deferral criteria technically hold, but the argument against deferring a third time is stronger: the consensus target of $51.67 now sits *below* the price, BTIG/Piper/Needham's $55–$64 targets rest on a BoxX-NoAF readout that lands in H1 2027, and five sessions give the stock more room to disappoint than to re-rate again. The stop at $50.30 locks +46.6%.
 
-**PAR (PAR Technology) — KEEP | Conviction 4/5**
-+3.8% at $19.77 after a **+4.60%** Friday. The best fundamental profile in the book: revenue **+18.8%**, forward PE ~16.8, Buy with **PT $25.31 (+28%)**. Now 28.2% of equity — **$14 from the 30% cap**, so it cannot be added to even on strength. Stop $17.05.
+**VTS (Vitesse Energy) — KEEP | Conviction 4/5**
++5.1% at $18.76, and doing exactly what it was bought for: low-volatility ballast (ATR 2.2%, beta 0.63) on a verified, rising oil driver, with WTI above $100. **It goes ex-dividend tomorrow, Tuesday Sept 15** — confirmed from the S&P Global dividend table after yfinance's calendar briefly suggested today. Expect ~$0.44 off the price with no ledger credit; the payment arrives Sept 30, after the finish. The $17.50 stop was sized to keep ~1.7×ATR through that drop.
 
-**CADL (Candel Therapeutics) — KEEP | Conviction 3/5**
-+11.8% at $12.78. **Strong Buy, PT $21.00 (+64%)** — the largest upside on the board — with beta −0.50. Stop $12.35 sits at roughly **0.5×ATR** on a 6.7%-ATR name, making it the likeliest exit of the three. **Its restoration allowance remains unused, deliberately:** the CAN-2409 BLA is guided for Q4 2026, so widening the stop would buy option value on an event that cannot occur inside the runway.
+**PAR (PAR Technology) — KEEP | Conviction 3/5 (reduced)**
+−5.5% at $18.00, recovered off its stop to 1.06×ATR after testing it all week. Revenue growth (+18.8%) remains the best in the book, but the analyst picture is split — targets from $16 to $30, with UBS and RBC both at $16 — and its restoration allowance is spent. Conviction trimmed to reflect that dispersion rather than the headline average.
 
-**VTS (Vitesse Energy) — INITIATE | Conviction 4/5**
-**6 shares, limit $17.85, stop $16.65/$16.50.**
-The only candidate on a weak screen that passes every filter. Revenue **+7.9%**, **Buy with PT $21.00 (+18.1%)**, beta **0.63**, trading **32% below its 52-week high**, and filling the empty Energy sector. Its ATR of **2.33%** is the lowest on the screen — which is the point: with the gap at −0.35% and nine sessions left, this adds exposure without adding the variance that could convert a near-tie into a clear loss.
-**The driver was verified, and it is rising into the entry:** WTI **$92.45, +7.8% over five days and +12.6% over twenty**, weekly closes stepping 82.40 → 87.06 → 83.40 → 91.48 → 92.45. The LXU rule voids a thesis whose driver has fallen three straight weeks; this is that failure's mirror image.
-**Bear case:** the oil move is **geopolitical** — US/Iran tensions, a Venezuela policy shift — not demand-driven, and a war premium can unwind in days. The company is GAAP-lossmaking despite its 9.8% distribution. And **ex-dividend falls on Sept 15, inside our window**: the ~$0.44/share payment mechanically cuts the price while the ledger, which tracks `shares × price`, credits nothing — a known **~$2.63 (0.34% of equity) drag**, quantified in advance rather than discovered later.
+**CXW (CoreCivic) — ~~INITIATE~~ WITHDRAWN: prohibited business (prisons & detention)**
+~~5 shares, limit $34.93, stop $32.85/$32.70~~ — **do not place.** Analysis below retained as a record only.
+The only name on the weakest screen of the final stretch that clears every filter. Revenue **+24.3%**, EPS **+31.8%**, beta **0.60**, no earnings until November. **All five covering analysts rate it Buy, and the *lowest* target — $40 — is +14.5% above the price**; StoneX maintained $45 on Sept 11. The catalyst that satisfies the RISK-OFF filter is a **$500M accelerated share repurchase, about 14.5% of market cap**, with a bank buying stock through our window.
+**The thesis rests on federal detention policy, and it was verified rather than assumed.** Discovery turned up alarming items — ICE buying warehouses to own its capacity, a spending bill cutting 5,500 beds, a report of a 16%/11% private-prison selloff. **Every one dated to early 2026 once opened**, and price history placed the selloff in February, after which GEO and CXW both set new 52-week highs (Aug 26 and Sept 8). The newest dated evidence is supportive: GEO's new five-year ICE contracts in early August and the Sept 11 target maintenance.
+**Bear case:** ICE's insourcing shift is structural and ongoing, with a Sept 30 deadline; a fresh headline could gap CXW as February's did (−10.3% in a day), and a stop cannot bound a gap — that tail is ~$18, 2.45% of equity. It was bought at a 52-week high, in a sector down four weeks. And its role is modest: it replaces idle cash with a low-beta, buyback-supported position; it will not close the gap.
 
 ---
 
 ## Overall Portfolio Thesis
 
-**The gap is −0.35% with nine sessions left — the closest this experiment has been to level since the lead evaporated in late August.** It has travelled +1.52% (Aug 25) → −2.47% (Aug 31 intraday) → −0.35% now, and the recovery came from two places: ATRC's Needham-driven +7.50% re-rating, and TILE stopping out at **+12.9%** before it could give more back.
+**Five sessions, a −4.56% gap, and one honest expectation: the book will very likely finish behind the benchmark.** Closing the gap needs roughly +$35, or about +7% from the holdings in a week. Only ATRC has shown moves of that size, and its consensus target is already below its price.
 
-**The decisive question this week was what to do with 35% cash, and the honest answer was "less than you would like."** The screen was the weakest of the final stretch — 20-day momentum spanning just **+1.1% to +13.7%** against +11% to +34% five weeks ago, dominated by low-beta insurers and lenders. Of six names taken to the live quote page, four failed on their own numbers: **NAVI** with revenue **−42.8%** and a target below its price, **DAN** whose "PE 3" is an artifact of a one-off gain rolling off (forward PE 8.96 against trailing 3.09), **GNW** with **no analyst coverage at all**, and **ITGR** rated Hold with a target 3.7% *under* the market at its 52-week high.
+**This week's decisions are therefore about the finish, not a comeback.** The aggressive directive is honoured in the only way that survives the rules — deploying $175 into the one name that cleared every filter, rather than into the sixth-best idea on a thin list or into a binary. The lesson from TYRA is in every line of this report: *a position must pass the rules on its own merits; a directive to deploy is not a reason to lower the bar.* CXW passed. BRBS (shrinking revenue), NMAX (lossmaking, 111× forward), LFST (9.5% upside at its high) and three deal-pinned names did not.
 
-**So one name was bought, not two.** You authorised up to two; forcing a second would mean buying the sixth-best idea on a stalled screen to satisfy a directive — precisely the failure this book has documented over and over. `portfolio_rules.md` is explicit: *if no candidates pass all filters, hold cash and explain why.* Holding $165 is the disciplined answer.
+**Three data corrections were made in-session**, and each would have changed a decision if missed: VTS's ex-dividend is **Tuesday**, not today; CXW's 2.11 forward P/E is a **misentry** (real figure ~20.8×); and a search summary placed the private-prison selloff in **August** when price history puts it in **February** — the difference between an active thesis break and old, priced news. That last one is the reason every discovery item was opened and dated before it was weighed.
 
-**The hardest call was TYRA, and it deserves stating rather than burying.** It was the *only* candidate with a dated catalyst inside the window — **SURF302 Phase 2 data on September 9**, two sessions away — with Strong Buy from 15 analysts and a **+77% price target**. Exactly what the timing directive asked for. **I declined it**, for reasons that compound: a stop cannot protect against an oncology gap, so the book's core risk control simply does not function; the +15.25% Friday move means the anticipation is already priced; it is day 1 of a >10% breakout, which entry discipline tells us to avoid; and above all **I have no edge whatsoever on the readout**. At the 15% cap, a −35% gap costs 5.2% of equity and ends the experiment 7 sessions early in any meaningful sense.
-The deepest objection is not about risk but about measurement: **this experiment exists to test whether a disciplined process generates alpha. Resolving it on one clinical readout destroys that measurement no matter which way the data lands.** The order is written out in full in §5 of the Full report if you disagree — you have overridden me correctly before, and this is a judgment call rather than a rule.
-
-**Where the outcome now rests.** No holding reports earnings before 9/18. The only dated events are VTS's ex-dividend on the 15th and ATRC's $54.88 partial trigger. There is no further scheduled research window — this is the last one. The result will be decided by whether ATRC holds its re-rating, whether PAR's +28% target starts to close, whether CADL survives a stop half an ATR away, and whether oil holds above $90. Four stops are live, aggregate risk if all fire is **6.54%**, and the positions are held through the close per the endgame directive — since the gap marks equity, selling early would bank nothing the metric does not already credit.
-
-**Next:** execute VTS Tuesday; watch ATRC's $54.88 trigger; expect VTS's ex-div drop on the 15th and do not misread it; final daily on 2026-09-18.
+**What to protect:** ATRC's +59% — conditionally bank a third at $54.88; VTS through tomorrow's ex-dividend without misreading the drop; and CXW against an ICE headline, which should be reassessed the same day rather than left to the stop.
 
 ---
 
-*Week 52 Summary — final scheduled research window. Generated 2026-09-07 by Claude Code. All prices are 9/04 settled closes plus verified after-hours prints; ATR and range figures computed from settled bars through 2026-09-04.*
+*Week 53 Summary — final week. Generated 2026-09-14 by Claude Code.*
 </last_analyst_thesis>
 
 <recent_trades>
 <!-- Trades from Monday through Friday of current week -->
 Date,Ticker,Shares Bought,Buy Price,Cost Basis,PnL,Reason,Shares Sold,Sell Price
-2026-09-08,TYRA,4.0,29.3,117.2,0.0,MANUAL BUY LIMIT - Filled,,
-2026-09-08,VTS,6.0,17.85,107.1,0.0,MANUAL BUY LIMIT - Filled,,
-2026-09-08,CADL,,,11.43,9.0,AUTOMATED SELL - STOP LIMIT TRIGGERED,10.0,12.33
-2026-09-09,TYRA,,,117.2,-29.040000000000006,MANUAL SELL MARKET - Filled,4.0,22.04
+2026-09-15,PAR,,,19.05,-22.0,AUTOMATED SELL - STOP LIMIT TRIGGERED,11.0,17.05
+2026-09-16,VTS,,,17.85,-0.96,AUTOMATED SELL - STOP LIMIT TRIGGERED,6.0,17.69
 </recent_trades>
 
 <execution_requests>
 <session_directives>
-- Sector focus: Wide net
-- Catalyst timing: Within 5 days
-- Risk posture: Aggressive — deploy the cash
-- Max concurrent positions: 4
+- Research focus: No sector or theme focus - cast a wide net across the screener ranks for the 3 buys sought. Additionally: ATRC now that it joins the S&P SmallCap 600 at Monday 9/21's open - decide hold vs trim against the thesis-exit test, given the stop sits only 1.28x ATR away and cannot be lowered.
+- Fixed by portfolio_rules.md, not chosen weekly: holding horizon 40–60 sessions; catalyst window 90 days, non-binary only; 2% risk per trade; 5–6 position ceiling (about 4 fit at current sizing); risk posture set by the regime filter and the drawdown circuit breaker.
+- Research funnel (analysis-workflow.md Step 2): stage 1 = quick quote-page checks, ~5 per buy sought (the count is in <research_trigger>), spread across ranks, sectors and size, extending to watchlist_extended.csv (ranks 51–100) if the top 50 cannot supply them; stage 2 = full research on the survivors. Log every name at both stages with log_research.py.
 </session_directives>
 
 Using the rules, safeguards, and portfolio context above, execute the deep research window now.
 
-Search for live pricing, volume, catalysts, and filings for all current holdings and any new candidates. Produce the complete output per the required format. Do not skip sections. Confirm cash and constraints at the end.
+Write the report in the six-section format in <output_format> above: scoreboard, deployment funnel, exact orders, holdings by exception, risk checks, thesis summary, then sources.
 
-**IMPORTANT:** Before writing your report, read the weekly-portfolio-report skill for the exact output template and file creation instructions. Your final deliverable MUST be a downloadable .md file — do not just print the report in chat.
+**IMPORTANT:** Do NOT load or follow the weekly-portfolio-report skill — retired 2026-09-19; <output_format> replaces it. Save the report files as set out in .claude/rules/analysis-workflow.md (Week N Full.md, Week N Summary.md = section 6 only, and the PDF) — not to /mnt/user-data/outputs.
 
 </execution_requests>
 

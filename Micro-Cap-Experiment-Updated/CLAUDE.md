@@ -94,11 +94,14 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   **no** horizon, and 20/40/60 sessions have too few independent observations for any verdict;
   effect sizes do rise with horizon. **Phase 4 (Dec) primary horizon = 20 sessions**; the
   40-session test waits for ~March 2027. Index changes are the fifth unexplained-move category.
-- **In progress**: **One position** — ATRC 3 sh **+69.4%** ($58.10), stop **$55.27 / $55.12**
-  (locks +61.1%, only **1.28×ATR** of room; restoration used 8/31, so it cannot be lowered).
-  **Joins the S&P SmallCap 600 before Monday 9/21's open** — the +12.8% run since the 9/04
-  announcement and Friday's 8.67M shares were index demand. **49 sessions held** (re-underwrite
-  ~10/5). Equity **$727.32**, cash **$553.02 (76.0%)**, **gap −0.76%**, regime RISK-OFF.
+- **In progress**: **Three positions after Week 54.** ATRC 3 sh **+69.4%** ($58.10), stop
+  **$55.27 / $55.12**, only **1.28×ATR** of room and it cannot be lowered (restoration spent 8/31;
+  the 2.0×ATR raise target $53.68 sits below it). Its **S&P SmallCap 600 addition is a straight add**
+  (S&P DJI, 9/04) effective before Monday 9/21's open — **hold, no trim**: the trim case rests on
+  price level and a completed flow event, not on new negative information. 49 sessions held,
+  re-underwrite ~10/5. Week 54 orders: **BUY 4 CON limit $35.47 stop $33.92/$33.77** and
+  **BUY 15 HOPE limit $13.96 stop $13.48/$13.38**, both at the RISK-OFF half risk budget (1%).
+  Cash after $201.74 (27.7%), **gap −0.76%** since re-base, regime RISK-OFF.
 - **Complete (9/19)**: review items adopted — **one weekend question** (R1); **two-stage research funnel**
   sized to the buys sought, spread across ranks/sectors/size, extending to ranks 51–100 (R3); **research log** of buys *and* passes via `log_research.py`
   (R4); stop **raise target 2.0×ATR**, 1.5× floor applies at placement (R5); **regime computed**
@@ -107,11 +110,15 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   the `weekly-portfolio-report` skill is **retired** (predates every rule; conflicts with four).
   **Dailies by exception** — `<holding_review>` marks FULL/LINE (R6); **regime ±1% band** — 17 → 7
   regime changes a year, same RISK-OFF share (D3). Nothing left under discussion.
-- **Next**: **Week 54 weekend research — `make trigger` says DUE.** ATRC first: joins the S&P
-  SmallCap 600 at Monday's open; any trim must pass the thesis-exit test (would it be bought today
-  at this price?). Then deploy ~$444 under RISK-OFF capacity, and log every shortlisted name.
-  Commit `regime_history.csv` and `research_log.csv` with the dailies. Re-entry bans: PAR ~9/29,
-  VTS ~9/30.
+- **Next**: **Run the pre-open check on both Week 54 limits before Monday's open** (down >2% in
+  pre-market → lower the limit or pass), then `run daily` with the fills and stops. Watch ATRC's
+  first week without the index bid; HOPE's SMBC MANUBANK close (early Q4) and the October FOMC —
+  the Fed **hiked** 25bp to 3.75–4.00% on 9/16, which is now a live risk to HOPE's driver.
+  Commit `regime_history.csv` and `research_log.csv` (15 Week-54 rows) with the dailies.
+  Re-entry bans: PAR ~9/29, VTS ~9/30.
+- **Fixed (9/20)**: `inject_last_thesis.py` matched the **first** `<last_analyst_thesis>` in the
+  file — the prose mention in the six-section `<output_format>` — and deleted the entire
+  `<weekly_context>` data block on every weekend run. Both tags are now line-anchored.
 
 ## Documentation
 
