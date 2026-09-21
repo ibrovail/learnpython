@@ -1728,7 +1728,13 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
         # Research funnel (2026-09-19): ~5 stage-1 quick checks per buy being sought, 10-20.
         # Buys sought = open slots, capped by how many ~20%-of-equity positions the deployable
         # cash can fund (2% risk at a 1.75xATR stop sizes a typical small cap at 19-29%).
-        _buys = max(0, min(POSITION_CEILING - len(tickers), int(deployable_pct / 0.20)))
+        # 0.20 estimates a typical position (the Week 54 buys came in at 19.5% and 28.8% of
+        # equity), but never report 0 buys while there is still enough cash for one: the
+        # free-slot trigger above fires at MIN_POSITION (10%), so without this floor a report
+        # could be DUE with nothing to research. Found 2026-09-21.
+        _slots = POSITION_CEILING - len(tickers)
+        _fundable = max(1 if deployable_pct >= MIN_POSITION else 0, int(deployable_pct / 0.20))
+        _buys = max(0, min(_slots, _fundable))
         _stage1 = 0 if _buys == 0 else max(10, min(20, 5 * _buys))
         print("<research_trigger>")
         print(f"  <cadence>trigger-based since 2026-09-17 (the weekly SCREEN is unchanged)</cadence>")

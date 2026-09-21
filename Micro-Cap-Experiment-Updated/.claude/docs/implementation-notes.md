@@ -1377,3 +1377,21 @@ regenerated; the block is back (383 lines, `<weekly_context>` at 129, `<last_ana
 |------|--------|
 | `inject_last_thesis.py` | Line-anchored both tags in the injection regex; comment records the failure |
 | `Start Your Own/weekend_summary.md` | Restored from HEAD and regenerated for Week 54 |
+
+---
+
+## 2026-09-21 — Research trigger: never report 0 buys while a slot is still fundable
+
+The free-slot trigger fires at `MIN_POSITION` (deployable ≥ 10% of equity), but the funnel
+estimated buys as `int(deployable / 0.20)`. After the Week 54 buys are logged (deployable ~13%),
+that combination would have produced a **DUE report with 0 stage-1 checks** — due, with nothing to
+research. The funnel now floors at one buy whenever deployable clears `MIN_POSITION`, keeping 0.20
+as the typical-position estimate (Week 54's buys were 19.5% and 28.8% of equity, so 0.20 is the
+better estimator; 0.10 is the right floor).
+
+Verified both states: 1 holding / $553.02 cash → 3 buys, 15 checks (unchanged); 3 holdings /
+$201.74 cash → 1 buy, 10 checks (was 0 / 0).
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | `_print_research_trigger`: `_fundable` floor in the funnel calculation |
