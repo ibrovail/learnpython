@@ -45,6 +45,16 @@ Stops must be set at the wider of:
 
 A stop within 1.5 × ATR is too tight for normal daily noise and will be triggered by a routine down day.
 
+**Compute all three candidates and name the widest — every time.** State the 1.75×ATR level, the
+lowest low of the last **10 sessions**, and the **50-day SMA**; the stop goes below the lowest of
+them. A stop above the 10-session low or above the 50-day SMA fails this rule, however it compares
+with the last session's low. **Recompute from the actual fill:** when a limit fills below the
+planned price, the stop's distance shrinks by the difference — re-derive it before the stop is placed.
+*Origin: 2026-09-21 — CON's Week 54 stop ($33.92) was set at 1.75×ATR from a $35.47 plan and checked
+only against Friday's low ($34.78). The 9/09 swing low ($33.32) and the 50-day SMA ($33.41) both sat
+below it, and the $35.31 fill cut its distance to 1.57×ATR; one −1.97% session later it was 0.94×ATR
+from the price.*
+
 **1.5×ATR is the placement floor; 1.75×ATR is the entry target; 2.0×ATR is the raise target.**
 No stop may be *placed* (at entry or by a raise) less than 1.5×ATR below the price. Price can later
 walk a stop inside that band — expected, and handled by the once-per-entry restoration check in

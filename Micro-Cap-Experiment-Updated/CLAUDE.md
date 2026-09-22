@@ -94,14 +94,14 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   **no** horizon, and 20/40/60 sessions have too few independent observations for any verdict;
   effect sizes do rise with horizon. **Phase 4 (Dec) primary horizon = 20 sessions**; the
   40-session test waits for ~March 2027. Index changes are the fifth unexplained-move category.
-- **In progress**: **Three positions after Week 54.** ATRC 3 sh **+69.4%** ($58.10), stop
-  **$55.27 / $55.12**, only **1.28×ATR** of room and it cannot be lowered (restoration spent 8/31;
-  the 2.0×ATR raise target $53.68 sits below it). Its **S&P SmallCap 600 addition is a straight add**
-  (S&P DJI, 9/04) effective before Monday 9/21's open — **hold, no trim**: the trim case rests on
-  price level and a completed flow event, not on new negative information. 49 sessions held,
-  re-underwrite ~10/5. Week 54 orders: **BUY 4 CON limit $35.47 stop $33.92/$33.77** and
-  **BUY 15 HOPE limit $13.96 stop $13.48/$13.38**, both at the RISK-OFF half risk budget (1%).
-  Cash after $201.74 (27.7%), **gap −0.76%** since re-base, regime RISK-OFF.
+- **In progress**: **Three positions.** ATRC 3 sh **+71.5%** ($58.83), stop $55.27/$55.12
+  (1.61×ATR; cannot be lowered — restoration spent 8/31), **51 sessions — re-underwrite ~10/5**.
+  **CON 3 @ $35.31** ($34.88), stop **$33.19/$33.04** — the Week 54 placement error was corrected
+  9/22 using CON's one restoration plus a 1-share sale at $34.95 (−$0.36 realised); room is back to
+  **1.84×ATR** and risk $6.36 (0.88%), inside the 1% RISK-OFF budget. **HOPE 15 @ $13.96** ($13.78),
+  stop $13.48/$13.38 — **1.09×ATR** but below the 10-session low $13.69, so the range check holds it;
+  restoration still unused. Equity $725.16, cash $237.33 (32.7%), **gap −2.51%** since re-base,
+  regime RISK-OFF (IWM −2.58%).
 - **Complete (9/19)**: review items adopted — **one weekend question** (R1); **two-stage research funnel**
   sized to the buys sought, spread across ranks/sectors/size, extending to ranks 51–100 (R3); **research log** of buys *and* passes via `log_research.py`
   (R4); stop **raise target 2.0×ATR**, 1.5× floor applies at placement (R5); **regime computed**
@@ -110,15 +110,15 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   the `weekly-portfolio-report` skill is **retired** (predates every rule; conflicts with four).
   **Dailies by exception** — `<holding_review>` marks FULL/LINE (R6); **regime ±1% band** — 17 → 7
   regime changes a year, same RISK-OFF share (D3). Nothing left under discussion.
-- **Next**: **Run the pre-open check on both Week 54 limits before Monday's open** (down >2% in
-  pre-market → lower the limit or pass), then `run daily` with the fills and stops. Watch ATRC's
-  first week without the index bid; HOPE's SMBC MANUBANK close (early Q4) and the October FOMC —
-  the Fed **hiked** 25bp to 3.75–4.00% on 9/16, which is now a live risk to HOPE's driver.
-  Commit `regime_history.csv` and `research_log.csv` (15 Week-54 rows) with the dailies.
-  Re-entry bans: PAR ~9/29, VTS ~9/30.
-- **Fixed (9/20)**: `inject_last_thesis.py` matched the **first** `<last_analyst_thesis>` in the
-  file — the prose mention in the six-section `<output_format>` — and deleted the entire
-  `<weekly_context>` data block on every weekend run. Both tags are now line-anchored.
+- **Next**: Weekend 9/26 will likely be **DUE** — 3 positions (< 5) with deployable cash ~17.7% of
+  equity clears the free-slot trigger, so expect 1 buy / 10 stage-1 checks. Watch HOPE: below both
+  SMAs and one ordinary down day from a sub-1×ATR stop flag; a break of $13.69 is a breakdown, not
+  noise, and the stop should work rather than be widened. ATRC's 60-session re-underwrite ~10/5.
+  Commit `regime_history.csv` and `research_log.csv` with the dailies. Re-entry bans: PAR ~9/29,
+  VTS ~9/30.
+- **Fixed (9/20–9/21)**: `inject_last_thesis.py` line-anchors its tags (it had deleted the weekend
+  data block); `entry-discipline.md` now requires all three stop candidates — 1.75×ATR, the
+  10-session low, the 50-day SMA — with the stop below the lowest, recomputed from the actual fill.
 
 ## Documentation
 

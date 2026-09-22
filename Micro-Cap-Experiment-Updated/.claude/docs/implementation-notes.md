@@ -1395,3 +1395,22 @@ $201.74 cash → 1 buy, 10 checks (was 0 / 0).
 | File | Change |
 |------|--------|
 | `trading_script.py` | `_print_research_trigger`: `_fundable` floor in the funnel calculation |
+
+## 2026-09-21 (b) — Entry stops: compute all three candidates, recompute from the fill
+
+The rule already said an entry stop goes at the **wider** of 1.75×ATR, the most recent swing low,
+or a technical level such as the 50-day SMA, but nothing made the derivation show all three. Week
+54's CON stop ($33.92) was computed at 1.75×ATR from the planned $35.47 limit and checked only
+against Friday's low ($34.78); the 9/09 swing low ($33.32) and the 50-day SMA ($33.41) both sat
+below it, so the stop was inside the recent range from the moment it was placed. The fill then came
+in at $35.31, cutting the distance to 1.57×ATR, and one −1.97% session left it 0.94×ATR from the
+price. `entry-discipline.md` now requires the three candidates to be stated with the stop below the
+lowest, and the distance to be re-derived from the actual fill before the stop is placed. The 9/21
+daily recommends correcting CON with its one restoration ($33.19/$33.04 — below the swing low, the
+50-day and the session low) and a one-share reduction to hold at-stop risk inside the 1% RISK-OFF
+budget ($6.36 = 0.88% on 3 shares, versus $8.48 = 1.17% on 4).
+
+| File | Change |
+|------|--------|
+| `.claude/rules/entry-discipline.md` | ATR-Based Stop Sizing: all three candidates stated, stop below the lowest; recompute from the fill |
+| `CLAUDE.md` | Current State: positions filled 9/21, the CON correction, the new rule |
