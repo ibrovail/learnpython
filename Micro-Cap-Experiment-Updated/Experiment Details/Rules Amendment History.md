@@ -10,6 +10,52 @@ operating manual. The full superseded text is preserved in git at `e838891`.
 
 ---
 
+# 2026-09-28 — What the 60-session re-underwrite actually tests
+
+**The problem, found six sessions before it would have bitten.** The re-underwrite says a position
+at 60 sessions must be re-justified "against the standard applied to a fresh buy," and exited if it
+would not be bought today. ATRC reaches 60 sessions around 2026-10-05 at **+70.3%**. Checked against
+*every* entry gate it fails two: beta 1.26 keeps it outside the RISK-OFF defensive profile required
+of screener-sourced entries, and its next trial readout (BoxX-NoAF) lands in H1 2027, outside the
+90-day catalyst window. A literal reading therefore forces the sale of the book's best position —
+while the same rule says, two lines later, that "a winner passes trivially and keeps running;
+nothing is sold for being old." Both readings are available in the text, which means the outcome
+would have been decided by whoever read it on the day.
+
+**The decision.** The fresh-buy standard means the **quality tests** — revenue, earnings path,
+driver freshness, non-binary, prohibited business, trend and distance-from-base, the earnings guard,
+and a placeable stop inside the 30% ceiling. It does **not** mean the **regime capacity gates** —
+the defensive profile, the half risk budget, the catalyst window, the position ceiling. Capacity
+gates answer *should new money go here now*; the re-underwrite asks *does this thesis still deserve
+its slot*. A failing quality test is an exit. A failing capacity gate is a hold that must be written
+down, naming the gate.
+
+**Why this way round.** The capacity gates are regime-dependent, so the literal reading makes the
+exit decision a function of the tape rather than of the company: the same position passes in
+RISK-ON and fails in RISK-OFF with no change in the business. That is a market-timing rule wearing
+a re-underwrite's clothes, and this book has a name for gap- and tape-driven pressure on
+position decisions — TYRA. It also contradicts the rule's own stated purpose, which is to stop a
+position drifting sideways forever now that partials are gone, not to re-run the allocation
+framework on holdings.
+
+**The honest accounting.**
+- **No track record.** The 60-session rule has never fired; ATRC will be the first position to reach
+  it. This clarification is reasoning, not evidence.
+- **The obvious risk is that it becomes an excuse.** "Only a capacity gate failed" could justify
+  holding anything. The mitigation is that the quality tests are now enumerated and the hold must
+  name the gate in writing — a hold leaves a record that can be scored later, exactly as the
+  research log scores passes.
+- **What would falsify it:** a holding that passes the quality tests, is held on this reading, and
+  then gives back more than the stop would have saved — repeatedly. The research log and the
+  trade ledger will show it.
+
+**Left open deliberately:** the rule says "at 60 trading sessions held" and does not say what
+happens afterwards. If ATRC passes at 60, the next review date is undefined. Not legislated here,
+because inventing a cadence with zero observations is how the 1.75×ATR raise target got set too
+tight; it should be decided when the first position actually passes.
+
+---
+
 # 2026-09-19 (f) — Whole-system critique: six defects fixed
 
 Run across the rules, templates and code after every adoption of the day, with end-to-end tests:

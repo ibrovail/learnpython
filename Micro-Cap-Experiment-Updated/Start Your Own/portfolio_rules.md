@@ -290,6 +290,25 @@ to a fresh buy. If it would not be bought today, exit it.
   being old. The rule exists because with partials removed, the stop is the only automatic exit,
   so a position that drifts sideways indefinitely would otherwise consume a slot forever.
 - `trading_script.py` reports **sessions held** per position so the review triggers visibly.
+- **What "the standard applied to a fresh buy" means: the quality tests, not the capacity gates.**
+  The review asks whether the *thesis* still earns its slot, so it applies the tests that judge the
+  position itself — growing TTM revenue with a credible earnings path; a named primary driver that
+  is current and not reversing (*Thesis-Input Freshness*); a non-binary thesis; no prohibited
+  business; above the 50-day SMA and inside the distance-from-base limits; no earnings print within
+  the next 10 sessions; a stop still placeable under the ATR rules with the position inside the 30%
+  ceiling.
+- **It does not apply the regime capacity gates** — the RISK-OFF defensive profile, the half risk
+  budget, the 90-day catalyst-window requirement, or the position-count ceiling. Those govern
+  **committing new capital**, not holding exposure already owned. A holding that would be *sized*
+  differently if bought fresh today is not thereby a sell; a holding whose *thesis* has failed is.
+- **If a quality test fails, exit. If only a capacity gate fails, hold — and write down which gate
+  and why**, in that session's report. The distinction is recorded either way, so a hold cannot be
+  a silent one.
+- *Origin: 2026-09-28, ATRC six sessions before its review fell due. Read against every entry gate,
+  the rule would have forced the sale of a +70.3% position for failing two written for new entries
+  in a weak tape — beta 1.26 keeps it out of the RISK-OFF defensive profile, and its next trial
+  readout (BoxX-NoAF, H1 2027) sits outside the 90-day catalyst window — while the same rule says a
+  winner passes trivially. Found before the review, not during it.*
 
 ### Research cadence — trigger-based
 

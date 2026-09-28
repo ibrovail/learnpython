@@ -112,13 +112,19 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   the `weekly-portfolio-report` skill is **retired** (predates every rule; conflicts with four).
   **Dailies by exception** — `<holding_review>` marks FULL/LINE (R6); **regime ±1% band** — 17 → 7
   regime changes a year, same RISK-OFF share (D3). Nothing left under discussion.
-- **Next**: **Settle the re-underwrite reading in `portfolio_rules.md` before ~10/5.** Read
-  literally, "would it be bought today" fails ATRC on two RISK-OFF *entry* gates (beta 1.26 misses
-  the defensive profile; BoxX-NoAF is H1 2027 so no catalyst inside 90 days) — which would sell the
-  book's best position over gates written for deploying new capital, against the same rule's "a
-  winner passes trivially". Proposed reading: the fresh-buy standard means the thesis and quality
-  tests, not the regime capacity gates. Then: October FOMC vs HOPE's driver; next screen 10/03; the
-  mid-October earnings squeeze starts the week after. Re-entry bans expired (PAR 9/29, VTS 9/30).
+- **Complete (9/28)**: **the 60-session re-underwrite now says what it tests** — the **quality**
+  tests (revenue, earnings path, driver freshness, non-binary, prohibited business, trend and
+  distance-from-base, earnings guard, placeable stop inside the 30% ceiling), **not** the regime
+  **capacity** gates (defensive profile, half risk budget, 90-day catalyst window, position
+  ceiling), which govern new capital only. A failed quality test is an exit; a failed capacity gate
+  is a hold that **must name the gate in writing**. Reasoning and the honest accounting are in
+  `Rules Amendment History.md` (2026-09-28). Deliberately left open: the review cadence *after* a
+  pass — decide it when ATRC actually passes.
+- **Next**: **ATRC's 60-session review lands ~10/5** (55 sessions on 9/28) — plan is hold unless a
+  quality test fails first; the prep is in the Week 55 report. Watch HOPE: stop **0.62×ATR** away
+  with the rate driver adverse three sessions running (10-year above 5.12%); hold unless the October
+  FOMC or the 10/27 print breaks the thesis — and if it gaps below $13.38 the stop-limit cannot
+  fill, so sell at market that morning. Next screen 10/03; the mid-October earnings squeeze follows.
 - **Fixed (9/20–9/21)**: `inject_last_thesis.py` line-anchors its tags (it had deleted the weekend
   data block); `entry-discipline.md` now requires all three stop candidates — 1.75×ATR, the
   10-session low, the 50-day SMA — with the stop below the lowest, recomputed from the actual fill.
