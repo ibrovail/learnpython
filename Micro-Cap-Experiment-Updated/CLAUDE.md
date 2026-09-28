@@ -94,14 +94,16 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   **no** horizon, and 20/40/60 sessions have too few independent observations for any verdict;
   effect sizes do rise with horizon. **Phase 4 (Dec) primary horizon = 20 sessions**; the
   40-session test waits for ~March 2027. Index changes are the fifth unexplained-move category.
-- **In progress**: **Three positions.** ATRC 3 sh **+71.5%** ($58.83), stop $55.27/$55.12
-  (1.61×ATR; cannot be lowered — restoration spent 8/31), **51 sessions — re-underwrite ~10/5**.
-  **CON 3 @ $35.31** ($34.88), stop **$33.19/$33.04** — the Week 54 placement error was corrected
-  9/22 using CON's one restoration plus a 1-share sale at $34.95 (−$0.36 realised); room is back to
-  **1.84×ATR** and risk $6.36 (0.88%), inside the 1% RISK-OFF budget. **HOPE 15 @ $13.96** ($13.78),
-  stop $13.48/$13.38 — **1.09×ATR** but below the 10-session low $13.69, so the range check holds it;
-  restoration still unused. Equity $725.16, cash $237.33 (32.7%), **gap −2.51%** since re-base,
-  regime RISK-OFF (IWM −2.58%).
+- **In progress**: **Three positions, no buy in Week 55.** ATRC 3 sh **+70.2%** ($58.38), stop
+  $55.27/$55.12 (1.35×ATR, cannot be lowered), **54 sessions — re-underwrite ~10/5**. Friday 9/25's
+  **−3.93% reversal** from a 52-week high ($61.70) cleared all five unexplained-move checks: no wire
+  news, no analyst action, index add complete 9/21, sector up, and a CTO Form 4 (4,519 sh at $60 on
+  9/23, 10b5-1 plan from February) that is **0.28% of the session's volume** — found, but incapable
+  of explaining it. Leading read: **post-inclusion giveback**. **CON 3 @ $35.31** ($35.01), stop
+  $33.19/$33.04 (1.94×ATR). **HOPE 15 @ $13.96** ($13.83), stop $13.48/$13.38 (1.38×ATR) — its
+  **driver turned**: the 10-year spiked above 5.12% on 9/23 (highest since 2007) and the market is
+  pricing more hikes, against a thesis of falling funding costs. Equity $724.95, cash $237.33
+  (32.7%), **gap −2.27%** since re-base, regime RISK-OFF (19 sessions).
 - **Complete (9/19)**: review items adopted — **one weekend question** (R1); **two-stage research funnel**
   sized to the buys sought, spread across ranks/sectors/size, extending to ranks 51–100 (R3); **research log** of buys *and* passes via `log_research.py`
   (R4); stop **raise target 2.0×ATR**, 1.5× floor applies at placement (R5); **regime computed**
@@ -110,12 +112,13 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   the `weekly-portfolio-report` skill is **retired** (predates every rule; conflicts with four).
   **Dailies by exception** — `<holding_review>` marks FULL/LINE (R6); **regime ±1% band** — 17 → 7
   regime changes a year, same RISK-OFF share (D3). Nothing left under discussion.
-- **Next**: Weekend 9/26 will likely be **DUE** — 3 positions (< 5) with deployable cash ~17.7% of
-  equity clears the free-slot trigger, so expect 1 buy / 10 stage-1 checks. Watch HOPE: below both
-  SMAs and one ordinary down day from a sub-1×ATR stop flag; a break of $13.69 is a breakdown, not
-  noise, and the stop should work rather than be widened. ATRC's 60-session re-underwrite ~10/5.
-  Commit `regime_history.csv` and `research_log.csv` with the dailies. Re-entry bans: PAR ~9/29,
-  VTS ~9/30.
+- **Next**: **Settle the re-underwrite reading in `portfolio_rules.md` before ~10/5.** Read
+  literally, "would it be bought today" fails ATRC on two RISK-OFF *entry* gates (beta 1.26 misses
+  the defensive profile; BoxX-NoAF is H1 2027 so no catalyst inside 90 days) — which would sell the
+  book's best position over gates written for deploying new capital, against the same rule's "a
+  winner passes trivially". Proposed reading: the fresh-buy standard means the thesis and quality
+  tests, not the regime capacity gates. Then: October FOMC vs HOPE's driver; next screen 10/03; the
+  mid-October earnings squeeze starts the week after. Re-entry bans expired (PAR 9/29, VTS 9/30).
 - **Fixed (9/20–9/21)**: `inject_last_thesis.py` line-anchors its tags (it had deleted the weekend
   data block); `entry-discipline.md` now requires all three stop candidates — 1.75×ATR, the
   10-session low, the 50-day SMA — with the stop below the lowest, recomputed from the actual fill.
