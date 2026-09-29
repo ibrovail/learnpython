@@ -135,6 +135,13 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   `<blackout>` in `<research_trigger>`, with reason code `re-entry-ban` in `log_research.py` and the
   ban added to the stage-1 kill list. It had been prose in `portfolio_rules.md` that nothing
   surfaced — the first run found **VTS 1 session inside its own ban**, unnoticed.
+- **Complete (9/29)**: **`research_log.csv` records `pct_vs_sma50`** — the candidate's margin above
+  its 50-day SMA at decision time, auto-filled from that week's watchlist so it cannot be forgotten
+  (`--pct-vs-sma50` overrides for off-list names). Weeks 54–55 backfilled from the committed
+  `screener_history` snapshots, so the HOPE post-mortem's question — does a **thin** trend-gate pass
+  predict a worse outcome? — is now queryable (HOPE +0.15% stopped out in 6 sessions; CON +6.16%
+  held). `log_research.py` also refuses to append when the file's header no longer matches its
+  columns, instead of writing silently misaligned rows.
 - **Fixed (9/20–9/21)**: `inject_last_thesis.py` line-anchors its tags (it had deleted the weekend
   data block); `entry-discipline.md` now requires all three stop candidates — 1.75×ATR, the
   10-session low, the 50-day SMA — with the stop below the lowest, recomputed from the actual fill.

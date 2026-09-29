@@ -30,7 +30,17 @@ from pathlib import Path
 LOG = Path("Start Your Own") / "research_log.csv"
 
 COLUMNS = ["date", "week", "ticker", "source", "rank", "sector", "market_cap_bn", "stage",
-           "decision", "reason_code", "reason", "ref_price", "conviction", "driver"]
+           "decision", "reason_code", "reason", "ref_price", "conviction", "driver",
+           "pct_vs_sma50"]
+
+# pct_vs_sma50: the candidate's distance above its 50-day SMA at decision time, in percent.
+# Added 2026-09-29. The trend gate is a hard rule at entry but says nothing about MARGIN, and
+# the log could not be asked whether a thin pass predicts a worse outcome -- the question the
+# HOPE post-mortem raised, HOPE having been bought at +0.15% and stopped out six sessions later
+# while CON at +6.16% held. Auto-filled from that week's watchlist by ticker, so it cannot be
+# forgotten; pass --pct-vs-sma50 explicitly for an off-list name the screen never ranked.
+WATCHLISTS = (Path("Start Your Own") / "watchlist.csv",
+              Path("Start Your Own") / "watchlist_extended.csv")
 
 # Research funnel (2026-09-19): stage 1 = quick quote-page check, stage 2 = full research.
 # A name killed at stage 1 is logged as PASS with stage 1 -- cheap, and the most useful passes
@@ -63,6 +73,23 @@ REASON_CODES = {
 }
 
 
+def _vs_sma50(ticker: str) -> str:
+    """This week's pct_vs_sma50 for a ticker, from the watchlists; "" when it is not on them."""
+    for path in WATCHLISTS:
+        if not path.exists():
+            continue
+        try:
+            with path.open(newline="", encoding="utf-8") as f:
+                for row in csv.DictReader(f):
+                    if str(row.get("ticker", "")).strip().upper() == ticker:
+                        val = str(row.get("pct_vs_sma50", "")).strip()
+                        if val:
+                            return f"{float(val):.2f}"
+        except (OSError, ValueError, csv.Error):
+            continue  # a missing or malformed watchlist must never block logging
+    return ""
+
+
 def _row(d: dict) -> dict:
     row = {c: d.get(c, "") for c in COLUMNS}
     row["date"] = row["date"] or date.today().isoformat()
@@ -85,7 +112,9 @@ def _row(d: dict) -> dict:
         errors.append("a BUY must come from stage 2 (full research)")
     if row["reason_code"] == "other" and not str(row["reason"]).strip():
         errors.append('reason_code "other" needs --reason')
-    for num in ("ref_price", "market_cap_bn", "rank", "week", "conviction"):
+    if not str(row["pct_vs_sma50"]).strip() and row["ticker"]:
+        row["pct_vs_sma50"] = _vs_sma50(row["ticker"])
+    for num in ("ref_price", "market_cap_bn", "rank", "week", "conviction", "pct_vs_sma50"):
         if str(row[num]).strip():
             try:
                 float(row[num])
@@ -101,6 +130,17 @@ def _row(d: dict) -> dict:
 def append(rows: list[dict]) -> None:
     clean = [_row(r) for r in rows]  # validate everything before writing anything
     new = not LOG.exists() or LOG.stat().st_size == 0
+    if not new:
+        # Appending rows whose fields do not match the file's own header writes silently
+        # misaligned data -- worse than failing, because nothing looks wrong afterwards.
+        with LOG.open(newline="", encoding="utf-8") as f:
+            header = next(csv.reader(f), [])
+        if header != COLUMNS:
+            raise ValueError(
+                f"{LOG} header does not match COLUMNS. Found {len(header)} columns, expected "
+                f"{len(COLUMNS)}. Missing: {[c for c in COLUMNS if c not in header]}. Migrate the "
+                f"file (add the column with empty values for existing rows) before logging again."
+            )
     with LOG.open("a", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=COLUMNS)
         if new:

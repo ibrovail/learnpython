@@ -1458,3 +1458,32 @@ it: there is no `pct_vs_sma50` column, so "marginal" is not queryable. The data 
 weekly research commit carries that screen's `watchlist.csv`, which is how both figures above were
 recovered — but nothing joins the two. Adding the column costs one field and would make the question
 answerable from the log alone; it is not worth a retro-fill of 26 rows.
+
+## 2026-09-29 (b) — research_log.csv records the trend-gate margin
+
+The 9/29 HOPE post-mortem asked whether a **thin** pass of the above-the-50-day entry gate predicts
+a worse outcome: HOPE was bought at **+0.15%** above its 50-day and stopped out six sessions later,
+while CON at **+6.16%** held. The log could not answer it — the gate is binary in the rules and the
+margin was recorded nowhere, recoverable only by opening that week's `watchlist.csv` in git.
+
+`log_research.py` now carries a 15th column, `pct_vs_sma50`, **auto-filled from that week's
+watchlist by ticker** so a hand-written row cannot omit it; `--pct-vs-sma50` overrides for an
+off-list name the screen never ranked, and a malformed or missing watchlist is skipped rather than
+blocking a log write. Weeks 54–55 (25 rows) were backfilled from the committed
+`screener_history/screen_2026-09-18.csv` and `screen_2026-09-25.csv` snapshots — full coverage, all
+25 rows filled.
+
+The migration was a one-off rewrite of a file the module is otherwise careful never to rewrite, so
+it verified before replacing: same row count, every pre-existing field byte-identical, no row left
+unfilled. `append()` now also **refuses** to write when the file's header does not match `COLUMNS`,
+which is the failure this migration would otherwise have introduced — appending 15 fields under a
+14-column header writes silently misaligned data, worse than an error because nothing looks wrong
+afterwards. Verified: auto-fill (LTC → 4.25), off-list blank, explicit override, non-numeric
+rejected, and the header guard leaving the file byte-identical on refusal.
+`research/score_research_log.py` still reads the log unchanged.
+
+| File | Change |
+|------|--------|
+| `log_research.py` | `pct_vs_sma50` column; `_vs_sma50()` watchlist lookup; numeric validation; header-drift guard in `append()` |
+| `Start Your Own/research_log.csv` | Migrated to 15 columns; weeks 54–55 backfilled from screener history |
+| `CLAUDE.md` | Current State entry |
