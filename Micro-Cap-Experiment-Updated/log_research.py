@@ -49,6 +49,7 @@ REASON_CODES = {
     "below-50d": "trading below its 50-day SMA (trend rule, applied at stage 1)",
     "earnings-window": "earnings inside the next 10 sessions (no-initiation guard)",
     "post-earnings": "inside the post-earnings cooldown",
+    "re-entry-ban": "inside the 10-session blackout after a stop-out",
     "binary-thesis": "the thesis is a pass/fail event",
     "prohibited": "prohibited business",
     "driver-stale": "thesis driver falling or unverifiable (thesis-input freshness)",

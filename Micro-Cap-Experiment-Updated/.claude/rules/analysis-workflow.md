@@ -187,7 +187,9 @@ When `<weekly_context>` XML appears in the conversation output, **immediately be
    name: TTM revenue growth, TTM EPS, the **next** earnings date, analyst rating/target, 52-week
    position — plus the prohibited-business check. Kill on: shrinking revenue, **below the 50-day
    SMA** (`pct_vs_sma50` < 0 in the watchlist — the screener does not exclude these), earnings
-   within 10 sessions, prohibited, binary-thesis setup, or anything else that plainly fails a rule.
+   within 10 sessions, prohibited, binary-thesis setup, **inside the post-stop-out re-entry ban**
+   (read it off `<blackout>` in `<research_trigger>` — reason code `re-entry-ban`), or anything
+   else that plainly fails a rule.
    - **Draw the stage-1 names as a spread:** ≥3 from ranks 1–15, ≥3 from ranks 16–50, ≥3 GICS
      sectors, **≥2 below $2Bn**. The ranking order has no demonstrated skill on independent data
      (Phase 3.5 Part 3), and the top of the list tilts toward larger, calmer names.

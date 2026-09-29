@@ -1387,6 +1387,58 @@ def _sessions_held(ticker: str) -> Optional[int]:
         return None
 
 
+REENTRY_BAN_SESSIONS = 10   # portfolio_rules.md: banned for 10 sessions after a stop-out
+
+
+def _reentry_blackout(ban_sessions: int = REENTRY_BAN_SESSIONS) -> list[tuple[str, int]]:
+    """Tickers inside the post-stop-out re-entry blackout, with sessions remaining.
+
+    `portfolio_rules.md` bans re-entry for 10 trading sessions after a stop-out, but the
+    ban was recoverable only by reading the trade log: no weekend input surfaced it, the
+    stage-1 funnel had no way to see it, and a stopped-out name can reappear on the very
+    next screen -- HOPE stopped out on 2026-09-29 having ranked #12 on the screen that
+    bought it, with the ban running into the 10/03 and 10/10 screens. Added 2026-09-29.
+
+    A stop-out is any trade-log sell whose Reason names the stop. That covers the
+    automated exits ("AUTOMATED SELL - STOP LIMIT TRIGGERED" and the older
+    "AUTOMATED SELL - STOPLOSS TRIGGERED") and a manual exit that names it
+    ("MANUAL SELL LIMIT - STOP LIMIT TRIGGERED (day-1 stop-out)") -- all three appear in
+    this ledger. Discretionary and thesis exits carry no ban and are deliberately not
+    matched. **When a stop-driven exit is logged by hand -- a gap through the stop-limit
+    that has to be sold at market, or a Day-1 Drawdown Rule exit -- name the stop in the
+    reason or the ban will not be counted.**
+
+    Sessions come from the ledger's own session dates, the same basis as `_sessions_held`,
+    so the count agrees with every other session-defined rule. The exit session itself
+    does not count.
+    """
+    try:
+        log = pd.read_csv(TRADE_LOG_CSV)
+        if log.empty or "Reason" not in log.columns or "Ticker" not in log.columns:
+            return []
+        log["Date"] = pd.to_datetime(log["Date"], errors="coerce")
+        stops = log[log["Reason"].astype(str).str.upper().str.contains("STOP", na=False)]
+        stops = stops.dropna(subset=["Date"])
+        if stops.empty:
+            return []
+        pf = pd.read_csv(PORTFOLIO_CSV)
+        pf["Date"] = pd.to_datetime(pf["Date"], errors="coerce")
+        sessions = sorted(pf.loc[pf["Ticker"] == "TOTAL", "Date"].dropna().unique())
+        if not sessions:
+            return []
+        out: dict[str, int] = {}
+        for _, r in stops.iterrows():
+            elapsed = sum(1 for d in sessions if d > r["Date"])
+            left = ban_sessions - elapsed
+            if left > 0:
+                t = str(r["Ticker"]).upper()
+                # A ticker stopped out twice keeps the longer remaining ban (the later exit).
+                out[t] = max(out.get(t, 0), left)
+        return sorted(out.items())
+    except Exception:
+        return []
+
+
 def _ticker_sectors(tickers: list[str]) -> dict[str, str]:
     """Map tickers to GICS-style sectors from the cached screener universe."""
     out: dict[str, str] = {}
@@ -1741,6 +1793,15 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
         print(f"  <funnel>buys sought: {_buys}; stage-1 quick checks: {_stage1}"
               f"{' (extend to watchlist_extended.csv if the top 50 cannot supply them)' if _stage1 else ''}"
               f"</funnel>")
+        _bl = _reentry_blackout()
+        if _bl:
+            print("  <blackout>re-entry banned (portfolio_rules.md: 10 sessions after a "
+                  "stop-out) -- " + "; ".join(
+                      f"{t}, {n} session{'' if n == 1 else 's'} left" for t, n in _bl)
+                  + ". Kill these at stage 1; do not spend a quick check on them.</blackout>")
+        else:
+            print("  <blackout>none -- no ticker is inside the 10-session post-stop-out "
+                  "ban</blackout>")
         _wk = _report_week_number()
         if _wk:
             print(f"  <week_number>{_wk}</week_number>")

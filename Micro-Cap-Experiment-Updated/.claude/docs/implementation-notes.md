@@ -1414,3 +1414,47 @@ budget ($6.36 = 0.88% on 3 shares, versus $8.48 = 1.17% on 4).
 |------|--------|
 | `.claude/rules/entry-discipline.md` | ATR-Based Stop Sizing: all three candidates stated, stop below the lowest; recompute from the fill |
 | `CLAUDE.md` | Current State: positions filled 9/21, the CON correction, the new rule |
+
+## 2026-09-29 — The re-entry ban is computed, not remembered
+
+`portfolio_rules.md` has banned re-entry for **10 trading sessions after a stop-out** since the
+early weeks, but the ban existed only as prose: nothing in the weekend inputs surfaced it, the
+two-stage funnel had no field to check it against, and the only record of a stop-out was a row in
+`chatgpt_trade_log.csv`. That is a guard with no enforcement path — and the exposure is not
+theoretical, because a stopped-out name can reappear on the very next screen. **HOPE stopped out on
+2026-09-29 having ranked #12 on the screen that bought it**, with its ban running through the 10/03
+and 10/10 screens.
+
+`_reentry_blackout()` now computes the window from the trade log and prints it as `<blackout>` inside
+`<research_trigger>`, so it reaches both `make trigger` and the weekend prompt (which embeds that
+block) with no extra step. It prints `none` when nothing is banned, so the line is evidence the check
+ran rather than an ambiguous silence. **The first run found `VTS, 1 session left` — a live ban nobody
+knew about.** That is the whole case for the change in one line of output.
+
+Two details worth keeping straight:
+
+- **What counts as a stop-out is the trade-log reason naming the stop**, not the sell mechanism. The
+  ledger holds three spellings, all matched: `AUTOMATED SELL - STOP LIMIT TRIGGERED`, the older
+  `AUTOMATED SELL - STOPLOSS TRIGGERED`, and `MANUAL SELL LIMIT - STOP LIMIT TRIGGERED (day-1
+  stop-out)`. Discretionary exits (`Wk48 exit - beat sold into`) and the 9/22 one-share `MANUAL SELL
+  MARKET - Filled` stop-placement correction are correctly excluded. The consequence, now written
+  into `portfolio_rules.md`: **a stop-driven exit logged by hand must name the stop in its reason** —
+  a gap through the stop-limit sold at market, or a Day-1 Drawdown Rule exit — or the ban is missed.
+- **Sessions come from the ledger's `TOTAL` rows**, the same basis as `_sessions_held()`, and the exit
+  session itself does not count. So VTS (exit 9/16, 9 sessions since) has 1 left and PAR (exit 9/15,
+  10 since) has none — the boundary is the 10th completed session, not the 10th calendar entry.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | `REENTRY_BAN_SESSIONS`, `_reentry_blackout()`, `<blackout>` line in `_print_research_trigger()` |
+| `log_research.py` | reason code `re-entry-ban` |
+| `.claude/rules/analysis-workflow.md` | stage-1 kill list now names the ban and where to read it |
+| `Start Your Own/portfolio_rules.md` | the rule says the script computes it; the manual-logging convention |
+| `CLAUDE.md` | Current State: two positions, HOPE post-mortem, the fix |
+
+**Not done, deliberately.** The HOPE post-mortem asks whether a marginal trend-gate pass (HOPE was
+**+0.15%** above its 50-day; CON **+6.16%**) deserves reduced size. `research_log.csv` cannot answer
+it: there is no `pct_vs_sma50` column, so "marginal" is not queryable. The data survives — every
+weekly research commit carries that screen's `watchlist.csv`, which is how both figures above were
+recovered — but nothing joins the two. Adding the column costs one field and would make the question
+answerable from the log alone; it is not worth a retro-fill of 26 rows.

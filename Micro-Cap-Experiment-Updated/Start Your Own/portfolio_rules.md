@@ -454,7 +454,18 @@ hold or exit at market. Log the assessment in the daily analysis.
     **typical outcome was worse** (median +0.28% vs +0.68%). A lottery-shaped payoff; the guard
     stays. Shortening the window would not help: the risk sits in the report day itself.
 - **No re-entry ban:** once a ticker is stopped out it is banned from re-entry for 10 trading
-  sessions. Flag any proposed re-entry inside the blackout window.
+  sessions. Flag any proposed re-entry inside the blackout window. **The script computes the
+  window** and prints it as `<blackout>` in `<research_trigger>` (`make trigger`), counting from
+  the trade log against the ledger's session dates — so a banned name is killed at stage 1 of the
+  funnel without spending a quick check on it. *Added 2026-09-29: the ban had been recoverable
+  only by reading the trade log by hand, and a stopped-out name can reappear on the next screen —
+  HOPE stopped out on 9/29 having ranked #12 on the screen that bought it. The same run showed
+  VTS still 1 session inside its own ban, which nothing had surfaced.*
+  - **A stop-out is a sell whose trade-log reason names the stop.** The automated exits do this
+    already. When a stop-driven exit is logged **by hand** — a gap through the stop-limit that has
+    to be sold at market, or a Day-1 Drawdown Rule exit — **write the stop into the reason**
+    (`MANUAL SELL MARKET - STOP LIMIT GAPPED`) or the ban will not be counted. Discretionary and
+    thesis exits are not stop-outs and carry no ban.
 
 ### No Candidates Rule
 If no candidates pass all filters, hold cash and explain why. Do not force trades.

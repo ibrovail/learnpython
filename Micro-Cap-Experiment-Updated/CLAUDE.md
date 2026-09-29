@@ -94,16 +94,22 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   **no** horizon, and 20/40/60 sessions have too few independent observations for any verdict;
   effect sizes do rise with horizon. **Phase 4 (Dec) primary horizon = 20 sessions**; the
   40-session test waits for ~March 2027. Index changes are the fifth unexplained-move category.
-- **In progress**: **Three positions, no buy in Week 55.** ATRC 3 sh **+70.2%** ($58.38), stop
-  $55.27/$55.12 (1.35×ATR, cannot be lowered), **54 sessions — re-underwrite ~10/5**. Friday 9/25's
-  **−3.93% reversal** from a 52-week high ($61.70) cleared all five unexplained-move checks: no wire
-  news, no analyst action, index add complete 9/21, sector up, and a CTO Form 4 (4,519 sh at $60 on
-  9/23, 10b5-1 plan from February) that is **0.28% of the session's volume** — found, but incapable
-  of explaining it. Leading read: **post-inclusion giveback**. **CON 3 @ $35.31** ($35.01), stop
-  $33.19/$33.04 (1.94×ATR). **HOPE 15 @ $13.96** ($13.83), stop $13.48/$13.38 (1.38×ATR) — its
-  **driver turned**: the 10-year spiked above 5.12% on 9/23 (highest since 2007) and the market is
-  pricing more hikes, against a thesis of falling funding costs. Equity $724.95, cash $237.33
-  (32.7%), **gap −2.27%** since re-base, regime RISK-OFF (19 sessions).
+- **In progress**: **Two positions after HOPE stopped out 9/29.** ATRC 3 sh **+69.2%** ($58.05),
+  stop $55.27/$55.12 (**1.29×ATR**, cannot be lowered), **56 sessions — re-underwrite ~10/5**; the
+  9/25 −3.93% reversal cleared all five unexplained-move checks and reads as **post-inclusion
+  giveback**. **CON 3 @ $35.31** ($35.34, +0.1%), stop $33.19/$33.04 (2.37×ATR), 7 sessions — no
+  raise qualifies (+0.37×ATR against the 0.50 minimum). Equity **$719.70**, cash **$439.53
+  (61.1%)**, **$331.57 deployable (46.1%)**, **gap −2.06%** since re-base, drawdown −2.31%, regime
+  RISK-OFF (21 sessions).
+- **HOPE post-mortem (9/29)**: stopped out at $13.48 for **−$7.20 = 0.99% of equity — the budgeted
+  risk to the cent**, 6 sessions held. **No rule failed; the entry did.** It was bought **+0.15%
+  above its 50-day SMA** — the thinnest possible pass of the hard trend gate, flagged in the Week 54
+  report as thin — and still sized to **28.8% of equity**, the largest position in the book. Its rate
+  driver then inverted within three sessions (10-year highest since 2007 on 9/23). Two questions for
+  a later review, **not rule changes on one case**: does a sub-1% trend-gate pass deserve reduced
+  size or none, and should a rate-path thesis be entered days after an FOMC? *(The research log
+  cannot yet answer the first — it has no `pct_vs_sma50` column; the margin is recoverable only from
+  each week's watchlist snapshot in git.)*
 - **Complete (9/19)**: review items adopted — **one weekend question** (R1); **two-stage research funnel**
   sized to the buys sought, spread across ranks/sectors/size, extending to ranks 51–100 (R3); **research log** of buys *and* passes via `log_research.py`
   (R4); stop **raise target 2.0×ATR**, 1.5× floor applies at placement (R5); **regime computed**
@@ -120,11 +126,15 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   is a hold that **must name the gate in writing**. Reasoning and the honest accounting are in
   `Rules Amendment History.md` (2026-09-28). Deliberately left open: the review cadence *after* a
   pass — decide it when ATRC actually passes.
-- **Next**: **ATRC's 60-session review lands ~10/5** (55 sessions on 9/28) — plan is hold unless a
-  quality test fails first; the prep is in the Week 55 report. Watch HOPE: stop **0.62×ATR** away
-  with the rate driver adverse three sessions running (10-year above 5.12%); hold unless the October
-  FOMC or the 10/27 print breaks the thesis — and if it gaps below $13.38 the stop-limit cannot
-  fill, so sell at market that morning. Next screen 10/03; the mid-October earnings squeeze follows.
+- **Next**: **ATRC's 60-session review lands ~10/5** (56 sessions on 9/29) — plan is hold unless a
+  quality test fails first; the prep is in the Week 55 report. Next screen **10/03** with two free
+  slots and 46% deployable, so the trigger fires; but Week 55's funnel found nothing buyable in
+  RISK-OFF and the **mid-October earnings squeeze** starts next week, so expect the same constraint
+  with more cash behind it. **HOPE is re-entry-banned to ~10/13.**
+- **Fixed (9/29)**: the **post-stop-out re-entry ban is now computed and printed** as
+  `<blackout>` in `<research_trigger>`, with reason code `re-entry-ban` in `log_research.py` and the
+  ban added to the stage-1 kill list. It had been prose in `portfolio_rules.md` that nothing
+  surfaced — the first run found **VTS 1 session inside its own ban**, unnoticed.
 - **Fixed (9/20–9/21)**: `inject_last_thesis.py` line-anchors its tags (it had deleted the weekend
   data block); `entry-discipline.md` now requires all three stop candidates — 1.75×ATR, the
   10-session low, the 50-day SMA — with the stop below the lowest, recomputed from the actual fill.
