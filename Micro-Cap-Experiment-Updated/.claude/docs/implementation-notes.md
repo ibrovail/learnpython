@@ -1494,3 +1494,54 @@ rejected, and the header guard leaving the file byte-identical on refusal.
 | `log_research.py` | `pct_vs_sma50` column; `_vs_sma50()` watchlist lookup; numeric validation; header-drift guard in `append()` |
 | `Start Your Own/research_log.csv` | Migrated to 15 columns; weeks 54–55 backfilled from screener history |
 | `CLAUDE.md` | Current State entry |
+
+## 2026-09-30 — The trend-gate margin reaches the report, not just the log
+
+`research_log.csv` started recording `pct_vs_sma50` on 9/29, which makes the margin *studiable*. It
+did not make it *visible at the moment of decision*, and that is where HOPE was lost: bought at
+**+0.15%** above its 50-day SMA, described as thin in the Week 54 report's prose, and sized to
+**28.8% of equity** anyway. The number existed and was even written down; it just never travelled
+with the sizing decision.
+
+So the six-section template (`Start Your Own/weekend_summary.md` → `<output_format>`) now carries it
+at all four points a buy passes through:
+
+| Section | Change |
+|---|---|
+| 2 — Stage 1 | ninth column **`vs 50d`**, between `Rev growth` and `Next earnings` — the three commonest kills now sit together in order: revenue, trend, earnings window |
+| 2 — Stage 2 | entry checks state the 20- and 50-day distances **as percentages** and flag a margin under +1.0% |
+| 3 — Exact orders | the **Sizing** bullet carries the margin, and a sub-1.0% pass must be named there and the chosen size justified |
+| 5 — Risk checks | new **Trend-gate margin** row; the Exclusions row also now names the `<blackout>` re-entry ban |
+
+**A pass under +1.0% must be named in the Result cell** (`→ stage 2 (thin +0.4%)`) and carried
+forward. The template says in as many words that whether a thin pass deserves reduced size is an
+**open question, not a rule** — 25 log rows over two research dates cannot settle it — so the
+requirement is disclosure, not a size penalty. Legislating from one case is the failure this book
+keeps having to unlearn.
+
+**The PDF cost was checked, not assumed.** `generate_pdf.py` divides the usable width equally
+(`col_w = usable_width / cols`), so a ninth column narrows every column ~11% — and the template
+already warns "keep the cell short (the PDF table is narrow)". Rendered both versions of the same
+eight-row table and extracted the text: the wrapping is **character-for-character identical**.
+`Communicatio/n Services`, `negative-ear/nings` and `shrinking-re/venue` already broke that way at
+eight columns; the ninth added no new breakage, and every margin value (`+4.25%`, `+25.10%`,
+`+0.15%`) fits on one line at 6–7 characters.
+
+Two smaller things:
+
+- **Off-list names are the rows the study would lose.** `pct_vs_sma50` auto-fills by ticker from the
+  week's watchlist, so screened names need nothing — but a `FOCUS` request or a web-search find is on
+  no watchlist and logs blank unless `--pct-vs-sma50` is passed. The Research log subsection now says
+  so.
+- The placeholder in that instruction is a concrete value (`--pct-vs-sma50 4.25`), not
+  `<value>`. Angle-bracket prose in this file is what let `inject_last_thesis.py` match a
+  `<last_analyst_thesis>` mention inside `<output_format>` and delete the data block on 2026-09-20.
+
+Verified the script still owns only its own block: `re.sub(r'<weekly_context>.*?</weekly_context>')`
+matches, and `<output_format>` sits outside it, so `make weekend` regenerates the context without
+touching the template.
+
+| File | Change |
+|------|--------|
+| `Start Your Own/weekend_summary.md` | `<output_format>`: `vs 50d` column, stage-2 percentages, sizing line, risk row, off-list logging note |
+| `CLAUDE.md` | Current State |

@@ -132,6 +132,12 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   slots and 46% deployable, so the trigger fires; but Week 55's funnel found nothing buyable in
   RISK-OFF and the **mid-October earnings squeeze** starts next week, so expect the same constraint
   with more cash behind it. **HOPE is re-entry-banned to ~10/13.**
+- **Complete (9/30)**: the **trend-gate margin travels with the decision**. `research_log.csv`
+  records `pct_vs_sma50` (auto-filled; Weeks 54–55 backfilled from `screener_history/`), and the
+  six-section template now carries it in the **stage-1 table** (`vs 50d`), the stage-2 entry checks,
+  the **Sizing** bullet and the risk table — **a pass under +1.0% must be named** and carried
+  forward. Disclosure, not a size penalty: whether a thin pass deserves less size is still an open
+  question. PDF width checked — the ninth column changes no wrapping.
 - **Fixed (9/29)**: the **post-stop-out re-entry ban is now computed and printed** as
   `<blackout>` in `<research_trigger>`, with reason code `re-entry-ban` in `log_research.py` and the
   ban added to the stage-1 kill list. It had been prose in `portfolio_rules.md` that nothing

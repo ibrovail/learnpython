@@ -39,10 +39,19 @@ Then at most three sentences on what these numbers mean for this report's decisi
 First line: this report's capacity under the regime rules, and the buys sought.
 
 ### Stage 1 — quick checks
-| # | Ticker | Source | Sector | Mkt cap | Rev growth | Next earnings | Result |
-|---|---|---|---|---|---|---|---|
+| # | Ticker | Source | Sector | Mkt cap | Rev growth | vs 50d | Next earnings | Result |
+|---|---|---|---|---|---|---|---|---|
 Source = `screener #N`, `extended #N` or `off-list`. Result = `→ stage 2` or `PASS · <reason code>` —
 keep the cell short (the PDF table is narrow); the one-line reason goes in the research log.
+**vs 50d** = `pct_vs_sma50`, the percent above the 50-day SMA, straight from the watchlist
+(`+6.16%`). Below 0 is a hard kill — reason code `below-50d`. Three columns here are the three
+commonest kills in order: revenue, trend, earnings window.
+**A pass under +1.0% must be named in the Result cell as `→ stage 2 (thin +0.4%)`**, and carried
+into sizing (section 3) and the risk table (section 5). Reporting it once in prose is not enough:
+HOPE was bought at **+0.15%** on 2026-09-21, described as thin in the Week 54 report, and still
+sized to 28.8% of equity — the largest position in the book. It was stopped out eight days later.
+Whether a thin pass deserves reduced size is an **open question, not a rule** — one case does not
+settle it — so the requirement here is that the number travels with the decision.
 Below the table, confirm the spread — ≥3 from ranks 1–15, ≥3 from ranks 16+, ≥3 sectors, ≥2 below
 $2Bn — or state which quota could not be met and why.
 
@@ -53,13 +62,18 @@ One block per stage-1 survivor:
 - **Catalyst:** what and when — confirmed by ≥2 sources, or INSUFFICIENT CONFIRMATION.
 - **Quote page** (timestamped): price, TTM revenue growth, TTM EPS, forward P/E, analyst rating and
   target, 52-week position, beta.
-- **Entry checks:** distance above the 20- and 50-day SMA, days since breakout, next earnings date
-  (no initiation within 10 sessions), binary-thesis test, prohibited-business check.
+- **Entry checks:** distance above the 20- and 50-day SMA **as percentages** (`vs 50d` from stage 1
+  — restate it, and flag a margin under +1.0%), days since breakout, next earnings date (no
+  initiation within 10 sessions), binary-thesis test, prohibited-business check.
 - **Bear case:** one line.
 - **Decision:** one line.
 
 ### Research log
 Confirm every stage-1 and stage-2 name was logged with `log_research.py`, with counts by decision.
+`pct_vs_sma50` is auto-filled by ticker from this week's watchlist, so a screened name needs nothing
+extra — but an **off-list name** (a `FOCUS` request, or a web-search find) is on no watchlist and
+logs blank unless you pass it explicitly (`--pct-vs-sma50 4.25`). Those are the rows the trend-gate study would
+otherwise lose.
 
 ## 3. Exact orders
 One bullet block per order. Every field present; write N/A where it does not apply.
@@ -73,7 +87,8 @@ One bullet block per order. Every field present; write N/A where it does not app
 - **Stop loss / stop limit:** $X.XX / $X.XX — distance in ATR (entry target 1.75×, floor 1.5×),
   below the recent session lows
 - **Sizing:** risk $ = 2% of equity; shares = risk ÷ (entry − stop); % of equity after the trade;
-  order size ÷ average daily dollar volume (≤10%)
+  order size ÷ average daily dollar volume (≤10%); **trend-gate margin** (`vs 50d`) — if it is under
+  +1.0%, say so on this line and justify the size chosen
 - **Rationale:** one line
 If there are no orders: "No orders — <reason>."
 
@@ -100,7 +115,8 @@ enough. Measure against `<last_analyst_thesis>`: say what changed, not what didn
 | Slippage | each order ≤10% of average daily dollar volume | |
 | Regime capacity | RISK-OFF: ≤3 catalyst; screener at half risk, defensive profile only | |
 | Circuit breaker | current drawdown vs −20% / −30% | |
-| Exclusions | no prohibited business, binary thesis, or earnings inside 10 sessions | |
+| Exclusions | no prohibited business, binary thesis, earnings inside 10 sessions, or a ticker inside its post-stop-out re-entry ban (`<blackout>`) | |
+| Trend-gate margin | each buy above its 50-day SMA; report `vs 50d` and name any pass under +1.0% | |
 Every row must read PASS. If one cannot, withdraw the order that fails it and say so.
 
 ## 6. Thesis summary
