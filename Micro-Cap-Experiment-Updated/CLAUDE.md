@@ -107,9 +107,10 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   report as thin — and still sized to **28.8% of equity**, the largest position in the book. Its rate
   driver then inverted within three sessions (10-year highest since 2007 on 9/23). Two questions for
   a later review, **not rule changes on one case**: does a sub-1% trend-gate pass deserve reduced
-  size or none, and should a rate-path thesis be entered days after an FOMC? *(The research log
-  cannot yet answer the first — it has no `pct_vs_sma50` column; the margin is recoverable only from
-  each week's watchlist snapshot in git.)*
+  size or none, and should a rate-path thesis be entered days after an FOMC? *(`research_log.csv`
+  now records `pct_vs_sma50`, auto-filled and backfilled, so the first is queryable — but 25 rows
+  over two research dates cannot answer it yet: no date has both BUY and PASS names with forward
+  data.)*
 - **Complete (9/19)**: review items adopted — **one weekend question** (R1); **two-stage research funnel**
   sized to the buys sought, spread across ranks/sectors/size, extending to ranks 51–100 (R3); **research log** of buys *and* passes via `log_research.py`
   (R4); stop **raise target 2.0×ATR**, 1.5× floor applies at placement (R5); **regime computed**

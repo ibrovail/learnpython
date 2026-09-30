@@ -1452,12 +1452,19 @@ Two details worth keeping straight:
 | `Start Your Own/portfolio_rules.md` | the rule says the script computes it; the manual-logging convention |
 | `CLAUDE.md` | Current State: two positions, HOPE post-mortem, the fix |
 
-**Not done, deliberately.** The HOPE post-mortem asks whether a marginal trend-gate pass (HOPE was
-**+0.15%** above its 50-day; CON **+6.16%**) deserves reduced size. `research_log.csv` cannot answer
-it: there is no `pct_vs_sma50` column, so "marginal" is not queryable. The data survives — every
-weekly research commit carries that screen's `watchlist.csv`, which is how both figures above were
-recovered — but nothing joins the two. Adding the column costs one field and would make the question
-answerable from the log alone; it is not worth a retro-fill of 26 rows.
+**Left open here, built the same day** — see the next entry. The HOPE post-mortem asks whether a
+marginal trend-gate pass (HOPE was **+0.15%** above its 50-day; CON **+6.16%**) deserves reduced
+size, and `research_log.csv` had no `pct_vs_sma50` column, so "marginal" was not queryable.
+
+Two corrections to what this entry first said, both found while verifying the follow-up:
+
+- **The margin was never "recoverable only from git".** `screener.py` already archives every screen's
+  **full universe** to `Start Your Own/screener_history/screen_<session>.csv` — 1,216 names on 9/25,
+  `pct_vs_sma50` among the columns — automatically, and complete back to 9/14. That is a better source
+  than a `watchlist.csv` blob in a commit (it covers names outside the top 100) and it is what the
+  backfill correctly used. **Check `screener_history/` before reaching for git archaeology.**
+- The snapshots are named by the **last completed session**, not the run date: the screen run on 9/28
+  at 08:07 is `screen_2026-09-25.csv`. Absent dates are not gaps in the archive.
 
 ## 2026-09-29 (b) — research_log.csv records the trend-gate margin
 
