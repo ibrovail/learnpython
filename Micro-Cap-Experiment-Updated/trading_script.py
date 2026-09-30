@@ -277,6 +277,66 @@ def last_completed_session(now: datetime | None = None) -> pd.Timestamp:
 
 
 # ------------------------------
+# Session arithmetic (NYSE calendar aware)
+# ------------------------------
+# Three places used to convert calendar time into sessions by hand, each wrong in its own way:
+# the 30-session research backstop scaled days by 5/7 (off by -1 at a two-day gap, +2 over a
+# quarter), the re-underwrite projection advanced weekdays, and the earnings estimate used
+# pd.bdate_range. None of them knew a market holiday, though `last_completed_session()` above has
+# used the exchange calendar since the project began -- so the primitive existed and was simply
+# not reached for. The two helpers below are that primitive, with the same
+# calendar-then-weekday fallback shape. Consolidated 2026-09-30.
+
+
+def _sessions_between(start, end) -> int:
+    """Signed NYSE sessions from `start` to `end`.
+
+    Counts sessions *after* `start` up to and including `end`, so consecutive sessions are 1
+    apart and a same-day pair is 0. Negative when `end` precedes `start`, which the earnings
+    estimate relies on to say a print has already passed.
+    """
+    try:
+        a, b = pd.Timestamp(start).normalize(), pd.Timestamp(end).normalize()
+    except Exception:
+        return 0
+    if a == b:
+        return 0
+    if b < a:
+        return -_sessions_between(b, a)
+    if _HAS_XCALS:
+        try:
+            return len(xcals.get_calendar("XNYS").sessions_in_range(a + pd.Timedelta(days=1), b))
+        except Exception:
+            pass
+    return sum(1 for d in pd.date_range(a + pd.Timedelta(days=1), b) if d.weekday() < 5)
+
+
+def _add_sessions(start, n: int) -> Optional[pd.Timestamp]:
+    """The date `n` NYSE sessions after `start`; None for n <= 0 or if it cannot be resolved."""
+    if n <= 0:
+        return None
+    try:
+        a = pd.Timestamp(start).normalize()
+    except Exception:
+        return None
+    if _HAS_XCALS:
+        try:
+            # n sessions span at most ~n*7/5 days; the padding covers holiday clusters.
+            window = xcals.get_calendar("XNYS").sessions_in_range(
+                a + pd.Timedelta(days=1), a + pd.Timedelta(days=int(n * 2) + 21))
+            if len(window) >= n:
+                return pd.Timestamp(window[n - 1]).normalize()
+        except Exception:
+            pass
+    d, k = a, 0
+    while k < n:
+        d += pd.Timedelta(days=1)
+        if d.weekday() < 5:
+            k += 1
+    return d
+
+
+# ------------------------------
 # Data access layer
 # ------------------------------
 
@@ -1442,9 +1502,9 @@ def _reentry_blackout(ban_sessions: int = REENTRY_BAN_SESSIONS) -> list[tuple[st
 def _project_session_date(sessions_held: int, target: int) -> Optional[str]:
     """Calendar date of a holding's `target`-th session, given it is at `sessions_held` now.
 
-    Projects forward on weekdays from the ledger's last session, so it does not know about
-    market holidays -- callers label the result "~". It is used only to say when a
-    re-underwrite falls due, where being one session out changes no decision.
+    Projected on the NYSE calendar from the ledger's last session via `_add_sessions`, so it
+    accounts for market holidays; it still carries a "~" because the holding's session count
+    itself comes from the ledger, which a missed daily run can leave a session behind.
     """
     try:
         df = pd.read_csv(PORTFOLIO_CSV)
@@ -1452,12 +1512,8 @@ def _project_session_date(sessions_held: int, target: int) -> Optional[str]:
         sess = sorted(df.loc[df["Ticker"] == "TOTAL", "Date"].dropna().unique())
         if not sess or sessions_held >= target:
             return None
-        d, k = pd.Timestamp(sess[-1]), sessions_held
-        while k < target:
-            d += pd.Timedelta(days=1)
-            if d.weekday() < 5:
-                k += 1
-        return str(d.date())
+        d = _add_sessions(sess[-1], target - sessions_held)
+        return str(d.date()) if d is not None else None
     except Exception:
         return None
 
@@ -1813,7 +1869,12 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
             reasons.append("no prior report found")
             since = None
         else:
-            since = int((pd.Timestamp.now().normalize() - last).days * 5 / 7)
+            # Real sessions, not days*5/7: that approximation read a two-day gap as 1 session
+            # and a quarter as 73 against an actual 71, and it drifts further the longer the
+            # gap -- exactly the regime the backstop exists for. Fixed 2026-09-30.
+            # last_completed_session, not "now": a report is 30 sessions old only once 30
+            # sessions have actually closed.
+            since = _sessions_between(last, last_completed_session())
             if since >= BACKSTOP_SESSIONS:
                 reasons.append(f"{since} sessions since last report "
                                f">= {BACKSTOP_SESSIONS} backstop")
@@ -1847,7 +1908,8 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
         if _wk:
             print(f"  <week_number>{_wk}</week_number>")
         print(f"  <last_report>{last.date() if last is not None else 'none'}"
-              f"{f' ({since} sessions ago)' if since is not None else ''}</last_report>")
+              f"{f' ({since} session{"" if since == 1 else "s"} ago)' if since is not None else ''}"
+              f"</last_report>")
         print(f"  <status>{'DUE' if reasons else 'NOT DUE'}</status>")
         if reasons:
             for r in reasons:
@@ -1938,7 +2000,9 @@ def _holding_review_rows(portfolio_df) -> list[dict]:
                 if lr > end + pd.Timedelta(days=30):
                     lr -= pd.DateOffset(years=1)
                 nxt = lr + pd.Timedelta(days=91)
-                n = len(pd.bdate_range(end, nxt)) - 1
+                # bdate_range knows no holiday, and with nxt < end it returned an empty range,
+                # so every past-due estimate collapsed to exactly -1 however stale it was.
+                n = _sessions_between(end, nxt)
                 r["est_earn"] = f"~{nxt.date()} ({n}s, est.)"
                 if -3 <= n <= 15:
                     r["flags"].append(f"earnings possibly in ~{n} sessions (estimate — confirm on the quote page)")

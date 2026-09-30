@@ -132,6 +132,13 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   slots and 46% deployable, so the trigger fires; but Week 55's funnel found nothing buyable in
   RISK-OFF and the **mid-October earnings squeeze** starts next week, so expect the same constraint
   with more cash behind it. **HOPE is re-entry-banned to ~10/13.**
+- **Fixed (9/30 c)**: **session arithmetic now goes through the NYSE calendar**
+  (`_sessions_between`, `_add_sessions`). Three hand-rolled conversions were holiday-blind while
+  `last_completed_session()` had used `exchange_calendars` all along. The **30-session backstop**
+  scaled days by 5/7 (off +2 over a quarter, drifting with the gap) and now counts closed sessions;
+  the **earnings estimate** collapsed every past-due print to −1 via `pd.bdate_range`, which always
+  passed the −3..15 test and so pinned a **permanent spurious FULL review** on any holding with a
+  stale estimate.
 - **Complete (9/30 b)**: the **re-underwrite trigger fires before the threshold**. The review is
   counted in sessions but only happens in a weekend report, so a holding crossing 60 mid-week was
   reviewed late by construction — ATRC would have been raised at **64 sessions**.

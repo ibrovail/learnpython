@@ -1594,3 +1594,63 @@ Boundary behaviour, tested by stubbing `_sessions_held`:
 | `Start Your Own/portfolio_rules.md` | trigger table gains "Re-underwrite **imminent**"; a bullet under the re-underwrite rule explaining why early and why the threshold is unchanged |
 | `.claude/rules/analysis-workflow.md` | item 4 covers the early case and points at the quality-vs-capacity distinction |
 | `CLAUDE.md` | Current State |
+
+## 2026-09-30 (c) — Session arithmetic goes through the NYSE calendar
+
+Three places converted calendar time into sessions by hand, each wrong differently, and **none of
+them knew a market holiday** — although `last_completed_session()` has used `exchange_calendars`
+(`xcals.get_calendar("XNYS")`, a hard entry in `requirements.txt`) since the project began. The
+primitive existed and was simply not reached for. Consolidated into `_sessions_between()` and
+`_add_sessions()`, both following the same calendar-then-weekday-fallback shape as
+`last_completed_session()`.
+
+**1. The 30-session research backstop was the worst of the three**, because it gates a real
+decision: `int((now - last).days * 5 / 7)`.
+
+| Last report | `days*5/7` | Actual sessions | Off by |
+|---|---|---|---|
+| 2026-09-28 | 1 | 2 | −1 |
+| 2026-08-14 | 33 | 32 | +1 |
+| 2026-06-19 | 73 | 71 | +2 |
+
+It drifts further the longer the gap — exactly the regime the backstop exists for — so it could
+fire or withhold a DUE verdict by a session or two. It now counts real sessions, and against
+`last_completed_session()` rather than "now": a report is 30 sessions old only once 30 sessions have
+actually **closed**.
+
+**2. The earnings estimate turned out to be a live false-positive generator, not a date drift.**
+`n = len(pd.bdate_range(end, nxt)) - 1` — and `pd.bdate_range` returns an **empty** index when
+`nxt < end`, so *every* past-due estimate collapsed to exactly **−1**, however stale:
+
+| Estimated next print | old | new |
+|---|---|---|
+| 2026-09-28 (1 session ago) | −1 | −1 |
+| 2026-09-15 (10 sessions ago) | **−1** | **−10** |
+| 2026-08-10 (35 sessions ago) | **−1** | **−35** |
+
+Because −1 always satisfies the `-3 <= n <= 15` test, a holding whose estimated print was months
+stale earned `earnings possibly in ~-1 sessions` and a **FULL daily review, permanently** — a flag
+that could never clear. The real count puts −10 and −35 outside the window, so only a genuinely
+recent print still flags.
+
+**3. The re-underwrite projection** (`_project_session_date`, added earlier today) now projects on
+the calendar. It keeps its `~` label, but for an honest reason: the holding's session count comes
+from the ledger, which a missed daily run can leave a session behind. The holiday excuse is gone.
+
+Verified against the real calendar — `_sessions_between` matched on all 7 cases including a reversed
+pair and two holiday-spanning ranges; `_add_sessions` matched on all 5, including **2026-11-20 + 5 =
+11-30** (skipping Thanksgiving) and **2026-12-21 + 4 = 12-28** (skipping Christmas). ATRC's
+projection is unchanged at **2026-10-05** — there is no holiday in that window, which is why the
+weekday version happened to be right.
+
+**The fallback's limit, stated plainly:** with the import missing, `2026-12-21 + 4` returns
+**12-25** — Christmas Day, not a session at all. Predictable degradation, reachable only if
+`exchange_calendars` fails to import, and preferable to no answer; worth knowing it can name a
+non-session.
+
+A grep confirms no holiday-blind session math remains outside those two documented fallbacks.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | `_sessions_between()`, `_add_sessions()`; backstop, earnings estimate and re-underwrite projection all routed through them; `last_report` no longer reads "1 sessions ago" |
+| `CLAUDE.md` | Current State |
