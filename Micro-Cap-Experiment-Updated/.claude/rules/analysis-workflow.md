@@ -225,6 +225,14 @@ When `<weekly_context>` XML appears in the conversation output, **immediately be
 4. **60-session re-underwrite**: any holding whose `<position_limits>` row shows **60 or more
    sessions held** must be re-justified in writing this session — current thesis, current driver,
    current conviction — against the standard for a fresh buy, and exited if it fails.
+   - **Also re-underwrite a holding whose 60th session falls before the next weekend.**
+     `<research_trigger>` prints it as a separate reason with the projected date once the holding is
+     **within 5 sessions** of 60. Do it in *this* report: waiting means the review happens after the
+     threshold, not at it. The threshold is still 60 — the trigger is early, the standard is not
+     lowered. *(Added 2026-09-30, after ATRC would have been reviewed at 64 sessions.)*
+   - **What the review tests** is the *quality* set, not the regime *capacity* gates — see
+     `portfolio_rules.md` → *Mandatory re-underwrite at 60 sessions*. A failed quality test is an
+     exit; a failed capacity gate is a hold that must name the gate in writing.
 5. **Log every name at both funnel stages** — bought, passed or put on watch — with
    `log_research.py`, one row each, **passes included**, `--stage 1` for quick-check kills and
    `--stage 2` for fully researched names. Never edit `research_log.csv` by hand.

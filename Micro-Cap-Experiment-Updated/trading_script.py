@@ -1439,6 +1439,29 @@ def _reentry_blackout(ban_sessions: int = REENTRY_BAN_SESSIONS) -> list[tuple[st
         return []
 
 
+def _project_session_date(sessions_held: int, target: int) -> Optional[str]:
+    """Calendar date of a holding's `target`-th session, given it is at `sessions_held` now.
+
+    Projects forward on weekdays from the ledger's last session, so it does not know about
+    market holidays -- callers label the result "~". It is used only to say when a
+    re-underwrite falls due, where being one session out changes no decision.
+    """
+    try:
+        df = pd.read_csv(PORTFOLIO_CSV)
+        df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+        sess = sorted(df.loc[df["Ticker"] == "TOTAL", "Date"].dropna().unique())
+        if not sess or sessions_held >= target:
+            return None
+        d, k = pd.Timestamp(sess[-1]), sessions_held
+        while k < target:
+            d += pd.Timedelta(days=1)
+            if d.weekday() < 5:
+                k += 1
+        return str(d.date())
+    except Exception:
+        return None
+
+
 def _ticker_sectors(tickers: list[str]) -> dict[str, str]:
     """Map tickers to GICS-style sectors from the cached screener universe."""
     out: dict[str, str] = {}
@@ -1734,6 +1757,15 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
     """
     POSITION_CEILING, CASH_FLOOR, MIN_POSITION = 5, 0.15, 0.10
     CASH_TRIGGER, BACKSTOP_SESSIONS, REVIEW_SESSIONS = 0.25, 30, 60
+    # The re-underwrite threshold is counted in SESSIONS but the review only happens in a weekend
+    # REPORT, so a holding crossing 60 mid-week was always reviewed late: ATRC stood at 59 on
+    # Saturday 2026-10-03, crossed 60 on the Monday, and the >=60 test would not have flagged it
+    # until 10/10 at 64 sessions. Firing up to a trading week early puts the review in the report
+    # that precedes the threshold. Self-limiting in both directions: the reason itself makes the
+    # report DUE, so the gap to the next report cannot exceed a week once a holding is in the
+    # window, and the window is only 5 sessions wide, so it straddles at most two weekends before
+    # the >=60 reason takes over. Added 2026-09-30.
+    REVIEW_LOOKAHEAD = 5
 
     try:
         if portfolio_df is not None and not isinstance(portfolio_df, pd.DataFrame):
@@ -1755,8 +1787,17 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
             reasons.append(f"deployable cash {deployable_pct:.0%} >= {CASH_TRIGGER:.0%}")
         for t in tickers:
             n = _sessions_held(t)
-            if n is not None and n >= REVIEW_SESSIONS:
+            if n is None:
+                continue
+            if n >= REVIEW_SESSIONS:
                 reasons.append(f"{t} at {n} sessions -- re-underwrite due")
+            elif REVIEW_SESSIONS - n <= REVIEW_LOOKAHEAD:
+                _when = _project_session_date(n, REVIEW_SESSIONS)
+                reasons.append(
+                    f"{t} at {n} sessions -- its {REVIEW_SESSIONS}th"
+                    f"{f' lands ~{_when}' if _when else ''}, before the next weekend: "
+                    f"re-underwrite it in THIS report (the threshold is still "
+                    f"{REVIEW_SESSIONS}, not {REVIEW_SESSIONS - REVIEW_LOOKAHEAD})")
         if not (current_dd is None or (isinstance(current_dd, float) and np.isnan(current_dd))):
             if current_dd <= -0.20:
                 reasons.append(f"circuit breaker armed (drawdown {current_dd:+.1%})")

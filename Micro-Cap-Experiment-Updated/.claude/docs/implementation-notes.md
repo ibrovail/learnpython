@@ -1545,3 +1545,52 @@ touching the template.
 |------|--------|
 | `Start Your Own/weekend_summary.md` | `<output_format>`: `vs 50d` column, stage-2 percentages, sizing line, risk row, off-list logging note |
 | `CLAUDE.md` | Current State |
+
+## 2026-09-30 (b) — The re-underwrite trigger fires before the threshold, not after it
+
+The 60-session re-underwrite is counted in **sessions** but only ever *happens* in a weekend
+**report**, and the two were never reconciled: the trigger tested `n >= 60`, so a holding crossing
+the threshold mid-week could not be flagged until the following weekend. ATRC is the case that
+exposed it — 56 sessions on 9/29, **59 on Saturday 10/03**, crossing 60 on Monday 10/05, with the
+`>=60` test staying silent until **10/10 at 64 sessions**. Four sessions late, every time, for any
+holding whose 60th does not happen to fall on a weekend. Structural, not an ATRC quirk.
+
+`<research_trigger>` now emits a **second, distinct reason** once a holding is within
+`REVIEW_LOOKAHEAD = 5` sessions of 60, naming the projected date and saying to re-underwrite in
+*that* report:
+
+```
+<reason>ATRC at 56 sessions -- its 60th lands ~2026-10-05, before the next weekend:
+        re-underwrite it in THIS report (the threshold is still 60, not 55)</reason>
+```
+
+**Two reasons rather than one widened test**, because "due now" and "due before the next weekend"
+are different facts even though both make the report DUE and both call for the same action. The
+reason text says the threshold is unchanged, because the obvious misreading — that the rule is now
+55 sessions — would quietly shorten every holding's review clock.
+
+**Why 5, and why it cannot run away.** Five is a trading week, the longest a weekend report can be
+away once the window is entered: the reason *itself* makes the report DUE, so the look-ahead is
+self-enforcing. And because the window is exactly 5 sessions wide, a holding sits in it across at
+most two weekends before the `>=60` reason takes over — so no report-history suppression is needed
+to stop it repeating indefinitely.
+
+`_project_session_date()` advances weekdays from the ledger's last session, so it does not know
+about market holidays; every caller labels the result `~`. It is used only to say when a review
+falls due, where one session either way changes nothing.
+
+Boundary behaviour, tested by stubbing `_sessions_held`:
+
+| Sessions held | Reason emitted |
+|---|---|
+| 53, 54 | none — more than a week out |
+| 55 → 59 | look-ahead, with the projected 60th (`2026-10-06` → `2026-09-30`) |
+| 60, 64 | `re-underwrite due` |
+| `None` | none, and no crash |
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | `REVIEW_LOOKAHEAD`, `_project_session_date()`, the second reason; `_sessions_held() is None` now skips cleanly |
+| `Start Your Own/portfolio_rules.md` | trigger table gains "Re-underwrite **imminent**"; a bullet under the re-underwrite rule explaining why early and why the threshold is unchanged |
+| `.claude/rules/analysis-workflow.md` | item 4 covers the early case and points at the quality-vs-capacity distinction |
+| `CLAUDE.md` | Current State |

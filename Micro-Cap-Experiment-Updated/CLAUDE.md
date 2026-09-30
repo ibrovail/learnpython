@@ -132,6 +132,11 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   slots and 46% deployable, so the trigger fires; but Week 55's funnel found nothing buyable in
   RISK-OFF and the **mid-October earnings squeeze** starts next week, so expect the same constraint
   with more cash behind it. **HOPE is re-entry-banned to ~10/13.**
+- **Complete (9/30 b)**: the **re-underwrite trigger fires before the threshold**. The review is
+  counted in sessions but only happens in a weekend report, so a holding crossing 60 mid-week was
+  reviewed late by construction — ATRC would have been raised at **64 sessions**.
+  `<research_trigger>` now emits a second reason within **5 sessions** of 60, naming the projected
+  date. **The threshold is still 60**, not 55 — the trigger is early, the standard is not lowered.
 - **Complete (9/30)**: the **trend-gate margin travels with the decision**. `research_log.csv`
   records `pct_vs_sma50` (auto-filled; Weeks 54–55 backfilled from `screener_history/`), and the
   six-section template now carries it in the **stage-1 table** (`vs 50d`), the stage-2 entry checks,

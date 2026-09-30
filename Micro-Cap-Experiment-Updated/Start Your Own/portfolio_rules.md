@@ -290,6 +290,16 @@ to a fresh buy. If it would not be bought today, exit it.
   being old. The rule exists because with partials removed, the stop is the only automatic exit,
   so a position that drifts sideways indefinitely would otherwise consume a slot forever.
 - `trading_script.py` reports **sessions held** per position so the review triggers visibly.
+- **The trigger fires up to 5 sessions early, and the threshold is still 60.** The review is counted
+  in sessions but only *happens* in a weekend report, so a holding crossing 60 mid-week was reviewed
+  late by construction — ATRC stood at 59 on Saturday 2026-10-03, crossed 60 on the Monday, and the
+  ≥60 test would not have raised it until 10/10, at 64 sessions. `<research_trigger>` now fires a
+  second, distinct reason once a holding is within 5 sessions of 60, naming the projected date and
+  saying to re-underwrite **in that report**. *This does not move the threshold to 55* — it makes
+  the 60-session review land in the last report before the threshold instead of the first one after
+  it. Self-limiting both ways: the reason itself makes a report DUE, so the gap to the next report
+  cannot exceed a week once a holding is in the window, and the window is 5 sessions wide, so it
+  straddles at most two weekends before the ≥60 reason takes over. *(Added 2026-09-30.)*
 - **What "the standard applied to a fresh buy" means: the quality tests, not the capacity gates.**
   The review asks whether the *thesis* still earns its slot, so it applies the tests that judge the
   position itself — growing TTM revenue with a credible earnings path; a named primary driver that
@@ -325,6 +335,7 @@ to decide. `trading_script.py` prints a `<research_trigger>` block computing the
 | Free position slot with capital to fill it | positions < 5 **and** deployable cash ≥ 10% of equity |
 | Idle capital | deployable cash ≥ 25% of equity |
 | Re-underwrite due | any holding at ≥ 60 sessions |
+| Re-underwrite **imminent** | any holding within **5 sessions** of 60 — its 60th falls before the next weekend |
 | Circuit breaker armed | current drawdown ≤ −20% |
 | Regime flip | RISK-ON ↔ RISK-OFF between the last report and now (`regime_history.csv`) |
 | **Backstop** | **≥ 30 sessions since the last report** |
