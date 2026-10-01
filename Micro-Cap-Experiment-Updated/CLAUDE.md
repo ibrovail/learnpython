@@ -96,13 +96,17 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   **no** horizon, and 20/40/60 sessions have too few independent observations for any verdict;
   effect sizes do rise with horizon. **Phase 4 (Dec) primary horizon = 20 sessions**; the
   40-session test waits for ~March 2027. Index changes are the fifth unexplained-move category.
-- **In progress**: **Two positions after HOPE stopped out 9/29.** ATRC 3 sh **+69.2%** ($58.05),
-  stop $55.27/$55.12 (**1.29×ATR**, cannot be lowered), **56 sessions — re-underwrite ~10/5**; the
-  9/25 −3.93% reversal cleared all five unexplained-move checks and reads as **post-inclusion
-  giveback**. **CON 3 @ $35.31** ($35.34, +0.1%), stop $33.19/$33.04 (2.37×ATR), 7 sessions — no
-  raise qualifies (+0.37×ATR against the 0.50 minimum). Equity **$719.70**, cash **$439.53
-  (61.1%)**, **$331.57 deployable (46.1%)**, **gap −2.06%** since re-base, drawdown −2.31%, regime
-  RISK-OFF (21 sessions).
+- **In progress**: **One position and 85% cash.** **ATRC closed 10/01 at $55.24 — realised
+  +$62.82, +61.05%**, 58 sessions, the book's largest single gain and the position that was simply
+  held. The stop filled at the trigger while the stock closed **$53.59** (low $52.60), so exiting
+  mechanically was worth **$1.65/share** against the close. Its 60th session was 10/05: **the
+  re-underwrite never happened, and the 9/28 amendment stands untested.** The exit completes the
+  post-inclusion unwind — −11.82% on the week against peers −3.86% to +4.64%, **−3.33pp vs XLV and
+  −3.32pp vs peer median** on the day, 1.8× volume, no news, no analyst action, consensus $53.33
+  now 0.49% below the price. **CON 3 @ $35.31** ($34.97, −1.0%), stop $33.19/$33.04 (1.78×ATR),
+  9 sessions; it rose 1.60% on a −1.32% day for XLV (**+2.92pp**). Equity **$710.16**, cash
+  **$605.25 (85.2%)**, **$498.73 deployable (70.2%)**, **gap −3.30%**, drawdown −3.61%, RISK-OFF
+  (23 sessions). **Re-entry bans: HOPE ~10/13, ATRC ~10/15.**
 - **HOPE post-mortem (9/29)**: stopped out at $13.48 for **−$7.20 = 0.99% of equity — the budgeted
   risk to the cent**, 6 sessions held. **No rule failed; the entry did.** It was bought **+0.15%
   above its 50-day SMA** — the thinnest possible pass of the hard trend gate, flagged in the Week 54
@@ -129,11 +133,13 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   is a hold that **must name the gate in writing**. Reasoning and the honest accounting are in
   `Rules Amendment History.md` (2026-09-28). Deliberately left open: the review cadence *after* a
   pass — decide it when ATRC actually passes.
-- **Next**: **ATRC's 60-session review lands ~10/5** (56 sessions on 9/29) — plan is hold unless a
-  quality test fails first; the prep is in the Week 55 report. Next screen **10/03** with two free
-  slots and 46% deployable, so the trigger fires; but Week 55's funnel found nothing buyable in
-  RISK-OFF and the **mid-October earnings squeeze** starts next week, so expect the same constraint
-  with more cash behind it. **HOPE is re-entry-banned to ~10/13.**
+- **Next**: **Saturday 10/03 is a near-empty book, not a re-underwrite.** Three free slots, 70%
+  deployable, a RISK-OFF screen that yielded nothing in Week 55, the mid-October earnings squeeze
+  starting, and both recent exits banned from re-entry. Another no-buy week is the realistic
+  outcome. **The question worth posing before then:** is 85% cash through a 23-session RISK-OFF
+  stretch the rules working, or is the defensive profile (top-decile `rank_low_vol`, `near_high`
+  ≥ −5%, `vol_5_50` > 1.0 — **1 of 100 names in Week 55**) too tight to ever fill the book? That is
+  a strategy question for a rules session, not something to settle inside a weekend report.
 - **Fixed (9/30 c)**: **session arithmetic now goes through the NYSE calendar**
   (`_sessions_between`, `_add_sessions`). Three hand-rolled conversions were holiday-blind while
   `last_completed_session()` had used `exchange_calendars` all along. The **30-session backstop**
