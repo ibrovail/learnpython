@@ -1934,6 +1934,41 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
         return
 
 
+# Sector proxy per holding, for the daily's "is this idiosyncratic?" question.
+# Origin: 2026-09-30 -- ATRC (a device maker) fell 3.19% and the daily compared it with XBI,
+# a BIOTECH ETF that happened to be +0.55%, concluding the sector did not cover the move. XLV
+# was -1.35% and the four device peers fell 0.5-1.4%: about a third of the move was sector, not
+# idiosyncratic. XBI sits in DEFAULT_BENCHMARKS from when this book held biotech, and the review
+# compared against whatever ETF was in front of it. Keys are the screener universe's sector names.
+SECTOR_PROXY = {
+    "Healthcare": "XLV", "Financial": "XLF", "Technology": "XLK", "Energy": "XLE",
+    "Industrials": "XLI", "Real Estate": "XLRE", "Consumer Cyclical": "XLY",
+    "Consumer Defensive": "XLP", "Basic Materials": "XLB", "Utilities": "XLU",
+    "Communication Services": "XLC",
+}
+SECTOR_PROXY_FALLBACK = "IWM"  # unknown sector: the small-cap tape this book trades in
+
+
+def _sector_proxy_moves(sectors: set[str], end: pd.Timestamp) -> dict[str, tuple[str, float]]:
+    """{sector: (proxy ETF, its % change for the last session)}; one fetch per distinct ETF."""
+    out: dict[str, tuple[str, float]] = {}
+    cache: dict[str, float] = {}
+    for sector in sectors:
+        sym = SECTOR_PROXY.get(sector, SECTOR_PROXY_FALLBACK)
+        if sym not in cache:
+            try:
+                df = download_price_data(sym, start=end - pd.Timedelta(days=14),
+                                         end=end + pd.Timedelta(days=1), auto_adjust=False,
+                                         progress=False).df
+                df.index = pd.to_datetime(df.index).tz_localize(None).normalize()
+                c = df[df.index <= end]["Close"].astype(float).dropna()
+                cache[sym] = 100.0 * (float(c.iloc[-1]) / float(c.iloc[-2]) - 1.0)
+            except Exception:
+                cache[sym] = float("nan")  # a missing proxy must never break the review
+        out[sector] = (sym, cache[sym])
+    return out
+
+
 def _holding_review_rows(portfolio_df) -> list[dict]:
     """Per-holding exception flags for the daily (review item R6, 2026-09-19).
 
@@ -1961,6 +1996,9 @@ def _holding_review_rows(portfolio_df) -> list[dict]:
             last_er = {str(t).upper(): str(e) for t, e in zip(u["ticker"], u["earnings"])}
     except Exception:
         pass
+    tickers_all = [str(t).upper() for t in portfolio_df["ticker"].tolist()]
+    sectors = _ticker_sectors(tickers_all)
+    proxies = _sector_proxy_moves(set(sectors.values()) or {"UNKNOWN"}, end)
     rows = []
     for _, h in portfolio_df.iterrows():
         t = str(h["ticker"]).upper()
@@ -1983,6 +2021,13 @@ def _holding_review_rows(portfolio_df) -> list[dict]:
                      room=(close - stop) / a_now if stop == stop else float("nan"))
             cand = close - 2.0 * a_now                       # raise target (R5)
             r["raise_to"] = cand if (stop == stop and cand - stop >= 0.5 * a_now and cand < low) else None
+            # Same-session sector move, and the holding's move relative to it. Reported, not
+            # gated: whether a large relative move should raise a FULL flag is a rules question,
+            # not one for this script to decide (portfolio_rules.md -> Daily monitoring).
+            sym, spct = proxies.get(sectors.get(t, "UNKNOWN"), (SECTOR_PROXY_FALLBACK, float("nan")))
+            own_pct = 100.0 * (close / float(c.iloc[-2]) - 1.0)
+            r["proxy_sym"], r["proxy_pct"] = sym, spct
+            r["rel_pp"] = own_pct - spct
             if abs(r["move"]) >= 1.5:
                 r["flags"].append(f"moved {r['move']:+.1f}×ATR")
             if r["volx"] >= 3.0:
@@ -2023,10 +2068,15 @@ def _print_holding_review(portfolio_df) -> None:
         return
     f = lambda x, fmt: (fmt.format(x) if isinstance(x, (int, float)) and x == x else "—")
     print("<holding_review>")
-    print("| Ticker | Close | Move (×ATR) | Volume (×20d) | Stop room (×ATR) | Held | Est. next earnings | Review |")
-    print("|--------|-------|-------------|---------------|------------------|------|--------------------|--------|")
+    print("| Ticker | Close | Move (×ATR) | Sector | vs sector | Volume (×20d) | Stop room (×ATR) | "
+          "Held | Est. next earnings | Review |")
+    print("|--------|-------|-------------|--------|-----------|---------------|------------------|"
+          "------|--------------------|--------|")
     for r in rows:
+        sec = (f"{r['proxy_sym']} {r['proxy_pct']:+.2f}%"
+               if r.get("proxy_sym") and r.get("proxy_pct") == r.get("proxy_pct") else "—")
         print(f"| {r['ticker']:<6} | {f(r.get('close'), '${:.2f}')} | {f(r.get('move'), '{:+.2f}')} | "
+              f"{sec} | {f(r.get('rel_pp'), '{:+.2f}pp')} | "
               f"{f(r.get('volx'), '{:.1f}')} | {f(r.get('room'), '{:.2f}')} | {r.get('held') or '—'} | "
               f"{r.get('est_earn', '—')} | **{r['review']}** |")
     for r in rows:
@@ -2036,7 +2086,10 @@ def _print_holding_review(portfolio_df) -> None:
           "moved ≥1.5×ATR, traded ≥3× its average volume, has its stop within 1×ATR, has a qualifying "
           "stop raise, may report earnings within ~15 sessions, or was bought ≤3 sessions ago — or "
           "when the user asks (\"full review TICKER\"). Otherwise ONE LINE. Every holding still gets "
-          "the live news-feed check; news the script cannot see upgrades a LINE to FULL.</rule>")
+          "the live news-feed check; news the script cannot see upgrades a LINE to FULL. "
+          "**Sector** is the holding's sector proxy ETF and its move for the same session; "
+          "**vs sector** is the holding's move minus the proxy's, in percentage points — the "
+          "first test of whether a move is idiosyncratic. Reported, not gated.</rule>")
     print("</holding_review>")
     print()
 

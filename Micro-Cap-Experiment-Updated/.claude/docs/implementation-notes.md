@@ -1654,3 +1654,38 @@ A grep confirms no holiday-blind session math remains outside those two document
 |------|--------|
 | `trading_script.py` | `_sessions_between()`, `_add_sessions()`; backstop, earnings estimate and re-underwrite projection all routed through them; `last_report` no longer reads "1 sessions ago" |
 | `CLAUDE.md` | Current State |
+
+## 2026-09-30 — Sector proxy per holding, and a discovery brief
+
+**The miss.** ATRC fell 3.19% on 2026-09-30 and the five-category unexplained-move check recorded
+"sector does not cover it: XBI +0.55%". XBI is a **biotech** ETF; ATRC makes surgical devices. The
+right proxy, **XLV, was −1.35%**, and the four device peers fell 0.5–1.4% — about a third of the
+move was sector, not idiosyncratic. XBI sits in `DEFAULT_BENCHMARKS` from when the book held
+biotech, so the review compared against whatever ETF the script happened to print. That is a
+tooling defect, not a judgement one: the output offered the wrong comparison and it was taken.
+
+**The fix.** `_holding_review_rows()` now resolves each holding's sector from the cached universe,
+maps it to a proxy ETF (`SECTOR_PROXY`, Finviz sector names; unknown falls back to IWM, the tape
+this book trades), and prints two columns — **Sector** (`XLV -1.35%`) and **vs sector** (the
+holding's move minus the proxy's, in percentage points). One fetch per distinct ETF; a missing
+proxy yields `nan` and never breaks the review. Deliberately **reported, not gated**: whether a
+large relative move should raise a FULL flag is a rules question, not one for this script.
+Verified on the 9/30 data: ATRC −1.83pp, CON −1.25pp, reproducing by hand what the daily derived
+by hand.
+
+**`perplexity_brief.py` (`make brief`, `make brief T=ATRC`).** The same evening's check cost six
+browser fetches and two searches, and two of the headlines it surfaced were stale (2026-07-14 and
+2025-09-25) — dating them took two more. The brief splits the work the way
+`price-data-integrity.md` already splits it: peers are chosen from `universe_cache.csv` by industry
+(falling back to sector) and nearest **log** market cap, their one-session and one-week moves and
+the sector proxy are computed **locally from price history**, and the Perplexity Finance URL is
+printed for candidate *explanations* alongside a dating checklist. The script never scrapes the
+page: discovery proposes, price data and filings adjudicate. Handles an unknown ticker (no peers,
+`n/a`) and defaults to every current holding.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | `SECTOR_PROXY`, `_sector_proxy_moves()`; Sector and vs-sector columns in `<holding_review>` |
+| `perplexity_brief.py` | New: peer selection, verified local moves, Perplexity URL, dating checklist |
+| `Makefile` | `brief` target |
+| `CLAUDE.md` | Commands, Key Files, Current State |

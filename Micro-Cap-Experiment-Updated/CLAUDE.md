@@ -45,6 +45,7 @@ An indefinite live process using Claude Code to manage a real-money **small-cap*
 | `inject_last_thesis.py` | Injects Week N-1 Summary into `<last_analyst_thesis>` block |
 | `generate_pdf.py` | Converts weekly MD report to PDF using fpdf2 |
 | `Start Your Own/Generate_Graph.py` | Portfolio vs S&P 500 benchmark visualization |
+| `perplexity_brief.py` | Peer/sector comparison computed locally + the Perplexity Finance URL for discovery |
 | `screener.py` | Quantitative screener: Finviz universe → yfinance signals → ranked watchlist |
 
 ## Commands
@@ -52,6 +53,7 @@ An indefinite live process using Claude Code to manage a real-money **small-cap*
 ```bash
 make daily      # Run trading script after 4 PM (Claude auto-analyzes output)
 make screen     # Run quantitative screener (outputs watchlist CSV)
+make brief      # Discovery brief: verified peer/sector moves + the Perplexity URL (T=TICKER)
 make trigger    # Is a full weekend report due? Ledger-only verdict, run before any question
 make weekend    # Run screener + weekend analysis workflow (Claude auto-triggers deep research)
 make setup      # Create venv + install deps
@@ -161,6 +163,16 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   predict a worse outcome? — is now queryable (HOPE +0.15% stopped out in 6 sessions; CON +6.16%
   held). `log_research.py` also refuses to append when the file's header no longer matches its
   columns, instead of writing silently misaligned rows.
+- **Complete (9/30)**: **the daily names each holding's sector proxy.** `<holding_review>` gained
+  **Sector** (the holding's sector-proxy ETF and its same-session move) and **vs sector** (the
+  holding's move minus it, in pp). Origin: ATRC fell 3.19% on 9/30 and the review compared it with
+  **XBI — a biotech ETF** carried in `DEFAULT_BENCHMARKS` from when this book held biotech — and
+  concluded the sector did not cover the move. **XLV was −1.35%** and the device peers fell
+  0.5–1.4%: about a third was sector. Reported, not gated. Plus **`perplexity_brief.py`**
+  (`make brief T=ATRC`): peers picked from the cached universe by industry and log market cap,
+  their moves and the sector proxy computed **locally from price history**, and the Perplexity
+  Finance URL printed for candidate *explanations* with a dating checklist — discovery and
+  evidence kept apart, as `price-data-integrity.md` requires.
 - **Fixed (9/20–9/21)**: `inject_last_thesis.py` line-anchors its tags (it had deleted the weekend
   data block); `entry-discipline.md` now requires all three stop candidates — 1.75×ATR, the
   10-session low, the 50-day SMA — with the stop below the lowest, recomputed from the actual fill.

@@ -42,6 +42,13 @@ daily:
 # The one weekend question (2026-09-19): anything specific to research? Empty = wide net.
 FOCUS ?=
 
+# Discovery brief for a holding or candidate: verified peer/sector moves computed locally,
+# plus the Perplexity Finance URL to open for candidate explanations (discovery, not evidence).
+#   make brief            -- every current holding
+#   make brief T=ATRC     -- one name
+brief:
+	venv/bin/python perplexity_brief.py $(T) --data-dir "Start Your Own"
+
 screen:
 	venv/bin/python screener.py --data-dir "Start Your Own" --top-n 50
 
