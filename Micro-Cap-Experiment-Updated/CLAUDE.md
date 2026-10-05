@@ -123,9 +123,11 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   a calm stock is often one drifting quietly down. **Deferred to Phase 4:** loosening the calm leg
   to ≥ 0.75 (would give 10–11 names — declined on sample size, four RISK-OFF screens), and whether
   **beta** belongs in the profile at all — top-decile calm names had median **beta 0.85 vs 0.84**
-  for everything else, so `low_vol` is not measuring defensiveness. **WK** (beta 0.49, Strong Buy,
-  +24.1% target) was the name `near_high` removed. Reasoning in `Rules Amendment History.md`
-  (2026-10-05). **Also corrected there:** the 9/28 amendment claimed beta 1.26 kept ATRC out of the
+  for everything else, so `low_vol` is not measuring defensiveness — **WK** (beta **0.51**, Strong
+  Buy, +24.1% target) is rejected by `rank_low_vol` **0.505**, not by `near_high` as the Week 56
+  report said. What the change actually admits on the 10/02 screen is **DRH** (beta 1.03) and
+  **HRMY** (beta 1.01) — two market-sensitive names in, the defensive one still out. Reasoning in
+  `Rules Amendment History.md` (2026-10-05). **Also corrected there:** the 9/28 amendment claimed beta 1.26 kept ATRC out of the
   profile — **beta was never a leg**; the gate it failed was the 90-day catalyst window.
 - **HOPE post-mortem (9/29)**: stopped out at $13.48 for **−$7.20 = 0.99% of equity — the budgeted
   risk to the cent**, 6 sessions held. **No rule failed; the entry did.** It was bought **+0.15%

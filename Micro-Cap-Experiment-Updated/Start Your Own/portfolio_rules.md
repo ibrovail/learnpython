@@ -548,10 +548,15 @@ and in their capacity under RISK-OFF.
   - **`low_vol` does not measure what "defensive" normally means.** On the 10/02 screen the
     top-decile calm names had a median **beta of 0.85 against 0.84 for every other name**, and
     **18 of 54** carried beta above 1.0. `low_vol` is a stock's own 20-day return volatility; beta
-    is its sensitivity to the market. The profile is named for the second and tests the first. The
-    cost is concrete: **WK** (revenue +19.7%, Strong Buy, +24.1% to target, **beta 0.49**, forward
-    PE 19.3) was removed by `near_high` −11.58 — a genuinely defensive name failing a defensiveness
-    test. Whether beta belongs in the profile is a Phase 4 question, not a change made here.
+    is its sensitivity to the market. The profile is named for the second and tests the first.
+    **WK** is the cleanest demonstration: revenue +19.7%, Strong Buy, +24.1% to target, forward
+    PE 19.3 and **beta 0.51** — genuinely defensive — rejected because its `rank_low_vol` is
+    **0.505**, mid-pack on its own 20-day volatility. Whether beta belongs in the profile is a
+    Phase 4 question, not a change made here.
+  - **What dropping `near_high` actually admitted, on the 10/02 screen: DRH and HRMY** — beta
+    **1.03** and **1.01**. The change let in two market-sensitive names and still excludes the
+    beta-0.51 one. The capacity problem and the defensiveness problem are **separate**, and this
+    amendment addresses neither cleanly: it removes a leg that was wrong, nothing more.
 - **⏳ SUNSET — the RISK-OFF screener allowance expires at Phase 4** unless the pre-registered
   regime test confirms it. It rests on suggestive but incomplete evidence: Phase 2 found the
   signals' skill concentrates in weeks the median stock fell (IC 0.169 vs 0.009), but

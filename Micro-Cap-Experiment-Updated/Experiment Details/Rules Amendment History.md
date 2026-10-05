@@ -94,11 +94,22 @@ had a median **beta of 0.85 against 0.84 for everything else** — no separation
 returns; beta is its sensitivity to the market. The profile is named for the second and tests the
 first.
 
-The cost has a name: **WK** — revenue +19.7%, Strong Buy, **+24.1%** to target, forward PE 19.3, and
-**beta 0.49** — was removed by `near_high` −11.58. A genuinely defensive name, rejected by the
-defensiveness profile. Whether beta belongs in the profile is Option 3, deferred: on these four
-screens it adds nothing to capacity, so adopting it now would be a definitional change dressed as a
-remedy.
+The cost has a name: **WK** — revenue +19.7%, Strong Buy, **+24.1%** to target, forward PE 19.3 and
+**beta 0.51**. A genuinely defensive name, rejected by the defensiveness profile. Whether beta
+belongs in the profile is Option 3, deferred: on these four screens it adds nothing to capacity, so
+adopting it now would be a definitional change dressed as a remedy.
+
+**Correction, same day, found while listing what the change admits.** The Week 56 report recorded WK
+as "killed solely by `near_high` −11.58", and this amendment first repeated it. **WK fails two
+legs:** `near_high` −11.58 *and* `rank_low_vol` **0.505**. Dropping `near_high` does **not** admit
+WK. What it admits on the 10/02 screen is **DRH** (beta 1.03) and **HRMY** (beta 1.01, `vol_5_50`
+1.002 — a 0.2% margin on "volume confirmation", and ranked #94, so it sat in the extended list and
+was never quick-checked).
+
+That sharpens the finding rather than softening it. **The change let in two beta-1.0 names while
+still excluding the beta-0.51 name.** The capacity problem and the defensiveness problem are
+separate, and this amendment fixes neither — it removes a leg that was wrong, which is all it
+claims to do. WK belongs to the beta argument, not the `near_high` one.
 
 ## Correction found while doing this
 
