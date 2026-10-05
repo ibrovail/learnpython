@@ -83,8 +83,9 @@ Daily Portfolio Review — [DATE]
 
    [RISK-OFF regime — capacity per portfolio_rules.md → Allocation Framework: up to 3 non-binary
    catalyst positions at standard 2% sizing, plus screener-sourced entries at half the risk
-   budget (1%) on the defensive profile only (top-decile low_vol, near the 60-day high, volume
-   confirmation; this allowance sunsets at Phase 4). Name the capacity used and what remains.]
+   budget (1%) on the defensive profile only (top-decile low_vol plus volume confirmation; the
+   `near_high` leg was removed 2026-10-05; this allowance sunsets at Phase 4). Name the capacity
+   used and what remains.]
 
    [If screening candidates:]
    | Ticker | Thesis | Catalyst (≥2 sources) | Liquidity | Bear Case | Sizing |

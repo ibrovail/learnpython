@@ -726,6 +726,8 @@ WATCHLIST_COLS = [
     "review_flag", "data_confidence", "composite_score", "composite_legacy", "composite_dedup",
     # Percentile ranks among gate survivors (added 2026-09-19): the RISK-OFF defensive profile
     # needs "top-decile low_vol", which the raw low_vol value cannot express on its own.
+    # rank_near_high is NOT a profile leg -- the near_high leg was removed 2026-10-05. It is kept
+    # because near_high remains a composite input and the rank is useful for diagnostics.
     "rank_low_vol", "rank_near_high", "rank_vol_5_50",
 ]
 

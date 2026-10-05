@@ -10,6 +10,114 @@ operating manual. The full superseded text is preserved in git at `e838891`.
 
 ---
 
+# 2026-10-05 — `near_high` removed from the RISK-OFF defensive profile
+
+**The change.** The profile drops from three legs to two: `rank_low_vol` ≥ 0.90 and `vol_5_50` > 1.0
+survive, **`near_high` ≥ −5% is removed**. Option 1 of four considered; the other three were
+declined or deferred, below.
+
+**Why it came up.** Weeks 55 and 56 both produced **no buy**, each time with one name clearing the
+profile, and each time that name was **LTC** — passed on its merits anyway at under 5% consensus
+upside against a Hold. With one position and 85% cash in a 24-session RISK-OFF stretch, the question
+stopped being about candidates and became whether the gate can be satisfied in the regime it was
+written for.
+
+## The three faults
+
+**1. It was anti-correlated with its own precondition.** `near_high` requires a stock within 5% of
+its 60-day high. RISK-OFF is *defined* as the index trading more than 1% below its 50-day average.
+The allowance that exists for weak tapes demanded strength that weak tapes remove.
+
+**2. It was the only absolute threshold among relative ones, so it tightened unattended.** Among
+gate survivors:
+
+| Screen | median `near_high` | 90th pct | pass rate | `rank_low_vol` ≥ 0.90 pass rate |
+|---|---|---|---|---|
+| 09-15 | −19.2% | −6.1% | 7% | 10% |
+| 09-18 | −21.1% | −7.6% | 5% | 10% |
+| 09-25 | −22.2% | −8.1% | 4% | 10% |
+| 10-02 | −23.2% | −8.1% | 4% | 10% |
+
+The **90th percentile was −8.1%**, so a −5% cut was stricter than top-decile — roughly the top 4%
+and shrinking. `rank_low_vol` ≥ 0.90 passes exactly 10% every week because it is a percentile. One
+leg self-adjusted to the market and one did not, though the rule presented them as parallel.
+
+**3. It double-counted.** `near_high` is one of the six composite inputs (`screener.py` →
+`COMPOSITE_INPUTS`) that build the ranked list. A name reached the top 100 partly *because* it
+scored well on `near_high`; the profile then applied `near_high` again as a hard gate.
+
+## What the removal is worth — measured, not assumed
+
+Buyable names = profile **and** above the 50-day SMA, which is a separate hard entry rule that
+applies regardless. Population: top 100 by composite, i.e. the watchlist plus its extension.
+
+| Option | 09-15 | 09-18 | 09-25 | 10-02 | Verdict |
+|---|---|---|---|---|---|
+| **Current** (`near_high` ≥ −5%) | 6 | 7 | 1 | 1 | — |
+| **1. Drop `near_high`** | 7 | 8 | **2** | **3** | **ADOPTED** |
+| 2. Drop it **and** loosen calm to ≥ 0.75 | 13 | 17 | **10** | **11** | Deferred to Phase 4 |
+| 3. Replace it with `beta` ≤ 1.0 | 6 | 8 | 2 | 1 | Deferred to Phase 4 |
+| 4. Make it a percentile (`rank_near_high` ≥ 0.90) | 7 | 8 | 1 | 1 | Declined — gains nothing |
+
+**So this is a correctness fix, not a capacity fix, and the rules now say so in those words.**
+Option 4 is the instructive failure: making `near_high` relative looks like the tidy answer and
+changes nothing, because the pool was already selected on that very signal — fault 3 again.
+
+## What actually binds
+
+| Condition (of the top 100) | 09-15 | 09-18 | 09-25 | 10-02 |
+|---|---|---|---|---|
+| `above_sma50` alone | 64 | 47 | 39 | 33 |
+| `rank_low_vol` ≥ 0.90 alone | 40 | 42 | 46 | **54** |
+| **`rank_low_vol` ∧ `above_sma50`** | 17 | 9 | **4** | **7** |
+
+That pair is the constraint, and the mechanism is not subtle: **in a falling market a calm stock is
+frequently one drifting quietly down**, not one holding up. Note the calm count *rises* (40 → 54) as
+the tape weakens — the composite tilts toward calm names — while the share of them still above their
+50-day average falls. The two conditions pull apart in exactly the regime where both are demanded.
+
+## Why Option 2 was not taken, though it is the real lever
+
+Loosening the calm leg from top-decile to top-quartile would have produced 10–11 buyable names
+instead of 2–3. It is declined **on sample size, not on principle**: four screens, all RISK-OFF,
+spanning three weeks. `.claude/rules/research-methods.md` exists to refuse exactly this —
+a threshold change justified by a handful of overlapping observations. The sunset clause already
+schedules the whole allowance for Phase 4, and the 0.90 threshold is already recorded there as
+"chosen by judgment, not by the study." It now also carries the measured counts, so Phase 4 inherits
+evidence rather than an impression.
+
+## A finding worth more than the amendment
+
+**`low_vol` does not measure what "defensive" means.** On the 10/02 screen the top-decile calm names
+had a median **beta of 0.85 against 0.84 for everything else** — no separation at all — and **18 of
+54** carried beta above 1.0. `low_vol` is the negated 20-day standard deviation of a stock's own
+returns; beta is its sensitivity to the market. The profile is named for the second and tests the
+first.
+
+The cost has a name: **WK** — revenue +19.7%, Strong Buy, **+24.1%** to target, forward PE 19.3, and
+**beta 0.49** — was removed by `near_high` −11.58. A genuinely defensive name, rejected by the
+defensiveness profile. Whether beta belongs in the profile is Option 3, deferred: on these four
+screens it adds nothing to capacity, so adopting it now would be a definitional change dressed as a
+remedy.
+
+## Correction found while doing this
+
+`portfolio_rules.md` recorded, in the 2026-09-28 re-underwrite amendment, that ATRC failed two
+capacity gates and that the first was "beta 1.26 keeps it out of the RISK-OFF defensive profile."
+**Beta has never been a leg of that profile.** The gate ATRC actually failed was the 90-day catalyst
+window. The 9/28 amendment's logic — quality tests bind, capacity gates do not — is unaffected,
+since it needs only that one gate failed; but its illustration was wrong and is now fixed in place.
+
+## What this does not fix
+
+The book stays at 2–3 candidates a week under RISK-OFF. **Cash drag is the live problem and this
+amendment does not touch it.** At one position and 85% cash the gap tracks the index mechanically —
+it widens when the index rises and holds when it falls — so the −3.73% is no longer a judgement
+about the holdings. The open strategy question is what 85% cash should be doing, not how to loosen
+a gate until stocks qualify.
+
+---
+
 # 2026-09-28 — What the 60-session re-underwrite actually tests
 
 **The problem, found six sessions before it would have bitten.** The re-underwrite says a position

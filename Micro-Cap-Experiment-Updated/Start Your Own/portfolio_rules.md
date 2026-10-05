@@ -315,10 +315,16 @@ to a fresh buy. If it would not be bought today, exit it.
   and why**, in that session's report. The distinction is recorded either way, so a hold cannot be
   a silent one.
 - *Origin: 2026-09-28, ATRC six sessions before its review fell due. Read against every entry gate,
-  the rule would have forced the sale of a +70.3% position for failing two written for new entries
-  in a weak tape — beta 1.26 keeps it out of the RISK-OFF defensive profile, and its next trial
-  readout (BoxX-NoAF, H1 2027) sits outside the 90-day catalyst window — while the same rule says a
-  winner passes trivially. Found before the review, not during it.*
+  the rule would have forced the sale of a +70.3% position for failing gates written for new entries
+  in a weak tape — its next trial readout (BoxX-NoAF, H1 2027) sits outside the 90-day catalyst
+  window — while the same rule says a winner passes trivially. Found before the review, not during
+  it.*
+  - **Correction, 2026-10-05.** This note originally gave two failures, the first being "beta 1.26
+    keeps it out of the RISK-OFF defensive profile". **Beta is not a leg of that profile** and never
+    was: the legs are `rank_low_vol` and `vol_5_50` (and, until 10/05, `near_high`). The
+    90-day catalyst window is the gate ATRC actually failed, and the amendment's logic — quality
+    tests bind, capacity gates do not — does not depend on how many it failed. Found while
+    measuring the profile for the 10/05 amendment.
 
 ### Research cadence — trigger-based
 
@@ -516,12 +522,36 @@ and in their capacity under RISK-OFF.
 | Screener-sourced plays | up to 4 positions | permitted at **half the risk budget (1%)**, defensive profile only |
 | Total positions | 5–6 ceiling | 5–6 ceiling |
 
-- **RISK-OFF defensive profile** (all required), read from the watchlist columns: **`rank_low_vol`
-  ≥ 0.90** (top decile of calm among gate survivors), **`near_high` ≥ −5%** (within 5% of the 60-day
-  high), and **`vol_5_50` > 1.0** (this week's volume above its 50-day average). *Made concrete
-  2026-09-19:* the profile was first written without thresholds and the watchlist carried no
-  percentile rank, so it could not be applied consistently. On the 9/15 screen 6 of the top 50
-  met all three.
+- **RISK-OFF defensive profile** (both required), read from the watchlist columns:
+  **`rank_low_vol` ≥ 0.90** (top decile of calm among gate survivors) and **`vol_5_50` > 1.0**
+  (this week's volume above its 50-day average). *Made concrete 2026-09-19; `near_high` ≥ −5%
+  removed 2026-10-05 — see* `Rules Amendment History.md` *(2026-10-05) for the measurement.*
+  - **`near_high` was removed for three faults, not for being inconvenient.** It demanded names
+    within 5% of their 60-day high in a regime *defined* by the index sitting below its 50-day
+    average — the allowance was anti-correlated with the condition that invokes it. It was the only
+    **absolute** threshold among relative ones, so it tightened on its own as the tape fell: among
+    gate survivors the 90th percentile of `near_high` was **−8.1%**, meaning −5% selected roughly
+    the top 4% and shrinking, while `rank_low_vol` ≥ 0.90 passes exactly 10% every week by
+    construction. And it **double-counted**: `near_high` is already one of the six composite inputs
+    that build the top-100 list, so it was applied once to rank and again as a gate.
+  - **Removing it is a correctness fix, not a capacity fix — do not expect it to fill the book.**
+    Measured over four screens, buyable names (profile **and** above the 50-day SMA) went from
+    6 / 7 / 1 / 1 to 7 / 8 / 2 / 3. **The binding constraint is `rank_low_vol` ≥ 0.90 combined with
+    the above-the-50-day entry rule** — 17 / 9 / 4 / 7 of the top 100 — because in a falling market
+    a calm stock is often one drifting quietly down rather than one holding up.
+- **Two things about this profile are open, and both belong to the Phase 4 review below.**
+  - **The 0.90 threshold is the real lever and has no return evidence behind it.** Loosening the
+    calm leg to the top quartile (≥ 0.75) would have given 13 / 17 / 10 / 11 buyable names. That is
+    not adopted: four screens, all RISK-OFF, over three weeks is the sample size
+    `.claude/rules/research-methods.md` exists to refuse, and loosening "calm" is a material
+    increase in risk-taking in a weak tape.
+  - **`low_vol` does not measure what "defensive" normally means.** On the 10/02 screen the
+    top-decile calm names had a median **beta of 0.85 against 0.84 for every other name**, and
+    **18 of 54** carried beta above 1.0. `low_vol` is a stock's own 20-day return volatility; beta
+    is its sensitivity to the market. The profile is named for the second and tests the first. The
+    cost is concrete: **WK** (revenue +19.7%, Strong Buy, +24.1% to target, **beta 0.49**, forward
+    PE 19.3) was removed by `near_high` −11.58 — a genuinely defensive name failing a defensiveness
+    test. Whether beta belongs in the profile is a Phase 4 question, not a change made here.
 - **⏳ SUNSET — the RISK-OFF screener allowance expires at Phase 4** unless the pre-registered
   regime test confirms it. It rests on suggestive but incomplete evidence: Phase 2 found the
   signals' skill concentrates in weeks the median stock fell (IC 0.169 vs 0.009), but

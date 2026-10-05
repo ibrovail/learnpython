@@ -112,13 +112,21 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   drops out from the **10/10** screen onward. *Note for any later scoring pass: the Week 56
   research-log row for PLX reads `weak-catalyst`, not `prohibited`, because the determination
   post-dates it and the log is append-only.*
-- **Measured (10/05) — the RISK-OFF gate is anti-correlated with its own precondition.** Of 100
-  screened names: `rank_low_vol` ≥0.90 **54**, `vol_5_50` >1.0 **73**, **`near_high` ≥−5% just 16**;
-  all three **2**; all three plus above-the-50-day **1** (LTC, third week running, <5% upside on a
-  Hold). Pairwise, `near_high` is binding by 3–5×. It demands names near their 60-day highs in a
-  regime *defined* by the index being below its 50-day average. Cost this week: **WK** — revenue
-  +19.7%, Strong Buy, +24.1% target, beta 0.49, fwd PE 19.3 — killed only by `near_high` −11.58.
-  **Evidence for the Phase 4 sunset review, not a change made in a weekend report.**
+- **Adopted (10/05) — `near_high` removed from the RISK-OFF defensive profile.** Two legs remain:
+  `rank_low_vol` ≥ 0.90 and `vol_5_50` > 1.0. Three faults: anti-correlated with its own
+  precondition; the only **absolute** threshold among relative ones, so it tightened unattended (the
+  90th percentile of `near_high` among survivors was **−8.1%**, making −5% stricter than
+  top-decile, while `rank_low_vol` ≥ 0.90 passes exactly 10% weekly by construction); and it
+  **double-counted**, being already one of the six composite inputs that build the list.
+  **A correctness fix, not a capacity fix** — buyable names go 1 → 3, measured. The binding
+  constraint is `rank_low_vol` ∧ above-the-50-day (4–7 of the top 100), because in a falling market
+  a calm stock is often one drifting quietly down. **Deferred to Phase 4:** loosening the calm leg
+  to ≥ 0.75 (would give 10–11 names — declined on sample size, four RISK-OFF screens), and whether
+  **beta** belongs in the profile at all — top-decile calm names had median **beta 0.85 vs 0.84**
+  for everything else, so `low_vol` is not measuring defensiveness. **WK** (beta 0.49, Strong Buy,
+  +24.1% target) was the name `near_high` removed. Reasoning in `Rules Amendment History.md`
+  (2026-10-05). **Also corrected there:** the 9/28 amendment claimed beta 1.26 kept ATRC out of the
+  profile — **beta was never a leg**; the gate it failed was the 90-day catalyst window.
 - **HOPE post-mortem (9/29)**: stopped out at $13.48 for **−$7.20 = 0.99% of equity — the budgeted
   risk to the cent**, 6 sessions held. **No rule failed; the entry did.** It was bought **+0.15%
   above its 50-day SMA** — the thinnest possible pass of the hard trend gate, flagged in the Week 54
@@ -149,45 +157,15 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   restoration already spent, so it can never move down). Take the `near_high` measurement to the
   rules process — three weeks, same answer. Re-entry bans: HOPE ~10/13, ATRC ~10/15. Next screen
   10/10, into the mid-October earnings squeeze.
-- **Fixed (9/30 c)**: **session arithmetic now goes through the NYSE calendar**
-  (`_sessions_between`, `_add_sessions`). Three hand-rolled conversions were holiday-blind while
-  `last_completed_session()` had used `exchange_calendars` all along. The **30-session backstop**
-  scaled days by 5/7 (off +2 over a quarter, drifting with the gap) and now counts closed sessions;
-  the **earnings estimate** collapsed every past-due print to −1 via `pd.bdate_range`, which always
-  passed the −3..15 test and so pinned a **permanent spurious FULL review** on any holding with a
-  stale estimate.
-- **Complete (9/30 b)**: the **re-underwrite trigger fires before the threshold**. The review is
-  counted in sessions but only happens in a weekend report, so a holding crossing 60 mid-week was
-  reviewed late by construction — ATRC would have been raised at **64 sessions**.
-  `<research_trigger>` now emits a second reason within **5 sessions** of 60, naming the projected
-  date. **The threshold is still 60**, not 55 — the trigger is early, the standard is not lowered.
-- **Complete (9/30)**: the **trend-gate margin travels with the decision**. `research_log.csv`
-  records `pct_vs_sma50` (auto-filled; Weeks 54–55 backfilled from `screener_history/`), and the
-  six-section template now carries it in the **stage-1 table** (`vs 50d`), the stage-2 entry checks,
-  the **Sizing** bullet and the risk table — **a pass under +1.0% must be named** and carried
-  forward. Disclosure, not a size penalty: whether a thin pass deserves less size is still an open
-  question. PDF width checked — the ninth column changes no wrapping.
-- **Fixed (9/29)**: the **post-stop-out re-entry ban is now computed and printed** as
-  `<blackout>` in `<research_trigger>`, with reason code `re-entry-ban` in `log_research.py` and the
-  ban added to the stage-1 kill list. It had been prose in `portfolio_rules.md` that nothing
-  surfaced — the first run found **VTS 1 session inside its own ban**, unnoticed.
-- **Complete (9/29)**: **`research_log.csv` records `pct_vs_sma50`** — the candidate's margin above
-  its 50-day SMA at decision time, auto-filled from that week's watchlist so it cannot be forgotten
-  (`--pct-vs-sma50` overrides for off-list names). Weeks 54–55 backfilled from the committed
-  `screener_history` snapshots, so the HOPE post-mortem's question — does a **thin** trend-gate pass
-  predict a worse outcome? — is now queryable (HOPE +0.15% stopped out in 6 sessions; CON +6.16%
-  held). `log_research.py` also refuses to append when the file's header no longer matches its
-  columns, instead of writing silently misaligned rows.
-- **Complete (9/30)**: **the daily names each holding's sector proxy.** `<holding_review>` gained
-  **Sector** (the holding's sector-proxy ETF and its same-session move) and **vs sector** (the
-  holding's move minus it, in pp). Origin: ATRC fell 3.19% on 9/30 and the review compared it with
-  **XBI — a biotech ETF** carried in `DEFAULT_BENCHMARKS` from when this book held biotech — and
-  concluded the sector did not cover the move. **XLV was −1.35%** and the device peers fell
-  0.5–1.4%: about a third was sector. Reported, not gated. Plus **`perplexity_brief.py`**
-  (`make brief T=ATRC`): peers picked from the cached universe by industry and log market cap,
-  their moves and the sector proxy computed **locally from price history**, and the Perplexity
-  Finance URL printed for candidate *explanations* with a dating checklist — discovery and
-  evidence kept apart, as `price-data-integrity.md` requires.
+- **Engineering, 9/29–9/30** (detail in `.claude/docs/implementation-notes.md`): session
+  arithmetic routed through the **NYSE calendar** — the 30-session backstop had scaled days by 5/7,
+  and the earnings estimate collapsed every past-due print to −1 via `pd.bdate_range`, pinning a
+  **permanent spurious FULL review** on any holding with a stale estimate; the **re-underwrite
+  trigger now fires within 5 sessions of 60** so a mid-week crossing is not reviewed late (the
+  threshold is still 60); the **post-stop-out re-entry ban** is computed and printed as
+  `<blackout>`; `research_log.csv` records **`pct_vs_sma50`** and the weekend template carries it
+  through the stage-1 table, sizing and risk checks; `<holding_review>` names each holding's
+  **sector proxy** and `make brief` computes peers locally.
 - **Fixed (9/20–9/21)**: `inject_last_thesis.py` line-anchors its tags (it had deleted the weekend
   data block); `entry-discipline.md` now requires all three stop candidates — 1.75×ATR, the
   10-session low, the 50-day SMA — with the stop below the lowest, recomputed from the actual fill.
