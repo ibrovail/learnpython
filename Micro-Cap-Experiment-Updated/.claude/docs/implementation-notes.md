@@ -1689,3 +1689,30 @@ page: discovery proposes, price data and filings adjudicate. Handles an unknown 
 | `perplexity_brief.py` | New: peer selection, verified local moves, Perplexity URL, dating checklist |
 | `Makefile` | `brief` target |
 | `CLAUDE.md` | Commands, Key Files, Current State |
+
+## 2026-10-05 — PLX blocklisted: the exclusion a domicile field cannot catch
+
+Protalix BioTherapeutics ranked **#9** on the 10/05 screen and reached stage 1 of the funnel.
+Nothing in code would have stopped it, and neither would the obvious manual check: the quote page
+lists **Country "United States"** with a Hackensack, New Jersey headquarters, while the company's
+ProCellEx manufacturing and research base is in Israel. `portfolio_rules.md` excludes
+**Israeli-affiliated** companies — affiliation, not domicile — which is precisely why that file
+says the check cannot be screened by industry and must be made per name.
+
+In the report the name was killed on grounds that *were* verifiable (fails the RISK-OFF defensive
+profile at `rank_low_vol` 0.64; no analyst coverage at all on a $218M cap) and **no
+prohibited-business determination was recorded**, because the sources checked did not establish
+one. The user then made the determination. `PLX` is now in `_PROHIBITED_TICKERS`, so it drops out
+of the ranked universe from the **10/10** screen onward.
+
+Two things left deliberately alone. The committed 10/05 watchlist and its `screener_history`
+snapshot still contain PLX at #9 — rewriting them would churn a Phase 4 formation date for
+cosmetic tidiness. And the Week 56 research-log row still reads `weak-catalyst`: the log is
+append-only, the row records what was decided with the evidence available at the time, and a later
+scoring pass should read it that way rather than as a missed `prohibited` call.
+
+| File | Change |
+|------|--------|
+| `screener.py` | `PLX` added to `_PROHIBITED_TICKERS` under a new "Israeli-affiliated" heading, with the domicile-vs-affiliation trap recorded |
+| `Start Your Own/chatgpt_portfolio_update.csv` | CON stop raised to $33.69 / $33.54 via `--update-stops` |
+| `CLAUDE.md` | Current State: decision recorded, stop raise placed |

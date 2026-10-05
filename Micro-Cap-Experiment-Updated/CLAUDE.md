@@ -103,12 +103,15 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   0.4981**, $33.69 passes at 0.5083. CON's restoration was spent 9/22, so this stop can never move
   down. Equity **$712.20**, cash **$605.25 (85.0%)**, deployable **$498.42 (70.0%)**, **gap −3.73%**
   since re-base (−8.12% since inception), drawdown −3.33%, RISK-OFF (24 sessions).
-- **⚠️ Open decision — PLX (Protalix) and the Israeli-affiliation exclusion.** Ranked #9 on the
-  10/05 screen. Its quote page says **Country: United States, Hackensack NJ**, so the page does not
-  support the exclusion; its manufacturing base is understood to be in Israel, and the rule covers
-  **affiliation**, not domicile. Killed on verifiable grounds instead (fails the defensive profile,
-  **no analyst coverage** at a $218M cap) and **no prohibited-business determination recorded**.
-  Decide it: if it counts, add it to `screener.py`'s blocklist so it stops reaching the funnel.
+- **Decided (10/05) — PLX is prohibited (Israeli-affiliated) and is now blocklisted.** The user's
+  determination. It ranked **#9** on the 10/05 screen and **nothing in code or on the quote page
+  would have caught it**: stockanalysis lists Country "United States", HQ Hackensack NJ, while its
+  ProCellEx manufacturing and research base is in Israel. The exclusion covers **affiliation, not
+  domicile** — which is why `portfolio_rules.md` says Israeli affiliation cannot be screened by
+  industry and must be checked per name. Added to `screener.py`'s `_PROHIBITED_TICKERS`, so it
+  drops out from the **10/10** screen onward. *Note for any later scoring pass: the Week 56
+  research-log row for PLX reads `weak-catalyst`, not `prohibited`, because the determination
+  post-dates it and the log is append-only.*
 - **Measured (10/05) — the RISK-OFF gate is anti-correlated with its own precondition.** Of 100
   screened names: `rank_low_vol` ≥0.90 **54**, `vol_5_50` >1.0 **73**, **`near_high` ≥−5% just 16**;
   all three **2**; all three plus above-the-50-day **1** (LTC, third week running, <5% upside on a
@@ -142,10 +145,10 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   is a hold that **must name the gate in writing**. Reasoning and the honest accounting are in
   `Rules Amendment History.md` (2026-09-28). Deliberately left open: the review cadence *after* a
   pass — decide it when ATRC actually passes.
-- **Next**: **Place CON's stop raise ($33.69/$33.54) before the close**, then `run daily` to log
-  it. Decide the PLX exclusion question. Take the `near_high` measurement to the rules process —
-  three weeks, same answer. Re-entry bans: HOPE ~10/13, ATRC ~10/15. Next screen 10/10, into the
-  mid-October earnings squeeze.
+- **Next**: CON's stop raise is **placed and logged at $33.69 / $33.54** (risk 0.68% of equity;
+  restoration already spent, so it can never move down). Take the `near_high` measurement to the
+  rules process — three weeks, same answer. Re-entry bans: HOPE ~10/13, ATRC ~10/15. Next screen
+  10/10, into the mid-October earnings squeeze.
 - **Fixed (9/30 c)**: **session arithmetic now goes through the NYSE calendar**
   (`_sessions_between`, `_add_sessions`). Three hand-rolled conversions were holiday-blind while
   `last_completed_session()` had used `exchange_calendars` all along. The **30-session backstop**

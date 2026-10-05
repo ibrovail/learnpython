@@ -49,6 +49,15 @@ _PROHIBITED_TICKERS = frozenset({
     # by mainstream options" -- caught by the manual Credit Services review, which is
     # why that industry is flagged rather than trusted to this list.
     "CURO", "ENVA", "OPRT", "WRLD", "RM", "EZPW", "FCFS", "ELVT", "OPFI",
+    # Israeli-affiliated
+    # PLX added 2026-10-05 by the user's determination. Protalix BioTherapeutics
+    # ranked #9 on that week's screen and NOTHING here or on the quote page would
+    # have caught it: stockanalysis lists Country "United States", headquartered in
+    # Hackensack NJ, while its ProCellEx manufacturing and research base is in
+    # Israel. The exclusion covers AFFILIATION, not domicile -- which is exactly why
+    # portfolio_rules.md says Israeli affiliation cannot be screened by industry and
+    # must be checked per name. A domicile field will not do that check for you.
+    "PLX",
 })
 # Industries that contain prohibited businesses alongside legitimate ones. Not
 # auto-excluded -- any name from these reaching the watchlist is flagged so it is
