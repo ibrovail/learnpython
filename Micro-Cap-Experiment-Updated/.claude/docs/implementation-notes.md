@@ -1716,3 +1716,46 @@ scoring pass should read it that way rather than as a missed `prohibited` call.
 | `screener.py` | `PLX` added to `_PROHIBITED_TICKERS` under a new "Israeli-affiliated" heading, with the domicile-vs-affiliation trap recorded |
 | `Start Your Own/chatgpt_portfolio_update.csv` | CON stop raised to $33.69 / $33.54 via `--update-stops` |
 | `CLAUDE.md` | Current State: decision recorded, stop raise placed |
+
+## 2026-10-05 (b) — Lane capacity is printed; `source` becomes a controlled vocabulary
+
+`portfolio_rules.md` defines two buckets and named a pipeline for only one of them. The screener
+bucket says "sourced from the quantitative screener watchlist (`screener.py`)"; the catalyst bucket
+stated an eligibility test and no sourcing method. A funnel fills the bucket it has a pipeline for,
+so **40 of 40 rows in `research_log.csv` came from the screener and 0 from catalyst discovery**,
+and the RISK-OFF catalyst lane — 3 positions at the full 2% risk budget with **no**
+defensive-profile test — sat empty from 2026-09-17 while the book ran 85% cash.
+
+Two code changes support the rules amendment (`Rules Amendment History.md`, 2026-10-05 b):
+
+**`_position_lanes()` / `_lane_usage()` → a `<lanes>` line in `<research_trigger>`.** The ledger
+never recorded which bucket a position was bought into, so the lane is recovered from the research
+log's `source` field — the place the decision was actually written down. A holding with no log row
+(bought before 2026-09-20) reports as "unclassified" rather than being guessed at. Live output:
+
+```
+<lanes>catalyst 0/3 (full 2% risk, no defensive profile); screener 1/4 (half risk, profile
+       required) -- 3 catalyst slots open: source at least 3 dated non-binary catalyst
+       candidates this report, NOT only screener names</lanes>
+```
+
+This is the third instance of the same pattern in a week — the re-entry ban, `near_high`, and now
+lane capacity. **A rule that nothing prints does not get applied.** Printing it is the cheap part;
+noticing it was missing is the expensive part.
+
+**`SOURCE_RE` in `log_research.py`.** `source` was validated only for non-emptiness, but
+`trading_script.py` now reads it to decide which capacity cap a holding counts against, so a
+free-text typo would silently miscount a lane. It is now checked against
+`screener #N` / `extended #N` / `catalyst:<category>` / `off-list` and lowercased on write, the same
+treatment `reason_code` already had. Verified: all 31 distinct historical values pass, so no
+migration was needed; `Screener #12` normalises to `screener #12`; `catalyst` (no category),
+`screener 12` and free text are rejected with the vocabulary named in the error.
+
+| File | Change |
+|------|--------|
+| `trading_script.py` | `CATALYST_CAP`, `SCREENER_CAP`, `_position_lanes()`, `_lane_usage()`, the `<lanes>` line |
+| `log_research.py` | `SOURCE_RE`; `source` lowercased and validated |
+| `Start Your Own/portfolio_rules.md` | *Catalyst plays → Sourcing*: what qualifies, the index-add timing caveat, the logging convention |
+| `.claude/rules/analysis-workflow.md` | funnel **Stage 0** — ≥3 catalyst-sourced stage-1 names when a slot is open, reallocated not added |
+| `Start Your Own/weekend_summary.md` | section 2 reports lane occupancy; stage-1 `Source` accepts `catalyst:<category>`; new risk-table row |
+| `CLAUDE.md` | Current State (held at 200 lines) |

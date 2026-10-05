@@ -1518,6 +1518,60 @@ def _project_session_date(sessions_held: int, target: int) -> Optional[str]:
         return None
 
 
+# Lane capacity (portfolio_rules.md -> Allocation Framework). Two buckets: catalyst plays and
+# screener-sourced plays. Under RISK-OFF the catalyst lane allows 3 positions at the full 2% risk
+# budget with NO defensive-profile test, while the screener lane runs at half risk and must clear
+# the profile. That asymmetry was invisible: nothing printed it, the research funnel sources only
+# from the watchlist, and all 40 names in research_log.csv came from the screener -- so the catalyst
+# lane sat empty from the day it was widened (2026-09-17) while the book held 85% cash. Added
+# 2026-10-05.
+CATALYST_CAP = {"RISK-ON": 2, "RISK-OFF": 3}
+SCREENER_CAP = {"RISK-ON": 4, "RISK-OFF": 4}
+
+
+def _position_lanes() -> dict[str, str]:
+    """Map each current holding to "catalyst" or "screener" using research_log.csv.
+
+    The ledger does not record which bucket a position was bought into, so the lane is recovered
+    from the research log's `source` field, which is where the decision was written down. A holding
+    with no log row -- bought before the log existed on 2026-09-20 -- maps to "unknown" rather than
+    being guessed at.
+    """
+    try:
+        log = pd.read_csv(Path(DATA_DIR) / "research_log.csv")
+        if log.empty or "source" not in log.columns:
+            return {}
+        buys = log[log["decision"].astype(str).str.upper() == "BUY"]
+        out: dict[str, str] = {}
+        for _, r in buys.iterrows():
+            src = str(r.get("source", "")).lower()
+            out[str(r["ticker"]).upper()] = ("catalyst" if src.startswith("catalyst")
+                                             else "screener")
+        return out
+    except Exception:
+        return {}
+
+
+def _lane_usage(tickers: list[str], regime: Optional[str]) -> Optional[str]:
+    """One line of lane occupancy for <research_trigger>; None when the regime is unknown."""
+    if not regime:
+        return None
+    lanes = _position_lanes()
+    cat = sum(1 for t in tickers if lanes.get(t) == "catalyst")
+    scr = sum(1 for t in tickers if lanes.get(t) == "screener")
+    unk = len(tickers) - cat - scr
+    ccap, scap = CATALYST_CAP.get(regime, 2), SCREENER_CAP.get(regime, 4)
+    bits = [f"catalyst {cat}/{ccap} (full 2% risk, no defensive profile)",
+            f"screener {scr}/{scap} (half risk, profile required)"]
+    if unk:
+        bits.append(f"{unk} unclassified (bought before the research log)")
+    free = max(0, ccap - cat)
+    tail = (f" -- {free} catalyst slot{'' if free == 1 else 's'} open: source at least 3 "
+            f"dated non-binary catalyst candidates this report, NOT only screener names"
+            if free else "")
+    return "; ".join(bits) + tail
+
+
 def _ticker_sectors(tickers: list[str]) -> dict[str, str]:
     """Map tickers to GICS-style sectors from the cached screener universe."""
     out: dict[str, str] = {}
@@ -1895,6 +1949,9 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
         print(f"  <funnel>buys sought: {_buys}; stage-1 quick checks: {_stage1}"
               f"{' (extend to watchlist_extended.csv if the top 50 cannot supply them)' if _stage1 else ''}"
               f"</funnel>")
+        _lane = _lane_usage(tickers, regime_now)
+        if _lane:
+            print(f"  <lanes>{_lane}</lanes>")
         _bl = _reentry_blackout()
         if _bl:
             print("  <blackout>re-entry banned (portfolio_rules.md: 10 sessions after a "

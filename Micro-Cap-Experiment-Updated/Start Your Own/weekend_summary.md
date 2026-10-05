@@ -37,11 +37,18 @@ Then at most three sentences on what these numbers mean for this report's decisi
 
 ## 2. Deployment — the research funnel
 First line: this report's capacity under the regime rules, and the buys sought.
+Second line: **lane occupancy, copied from `<lanes>`** — `catalyst N/cap`, `screener N/cap`. If a
+catalyst slot is open, state how many of the stage-1 names are catalyst-sourced; the rule is **at
+least 3**, reallocated out of the stage-1 count rather than added to it. If fewer, say which
+category was searched and came back empty — "no catalyst candidates found" is a finding, but
+"did not look" is a rule violation.
 
 ### Stage 1 — quick checks
 | # | Ticker | Source | Sector | Mkt cap | Rev growth | vs 50d | Next earnings | Result |
 |---|---|---|---|---|---|---|---|---|
-Source = `screener #N`, `extended #N` or `off-list`. Result = `→ stage 2` or `PASS · <reason code>` —
+Source = `screener #N`, `extended #N`, `catalyst:<category>` or `off-list` — and it must match what
+goes into `log_research.py --source`, because that field is how a holding's lane is recovered.
+Result = `→ stage 2` or `PASS · <reason code>` —
 keep the cell short (the PDF table is narrow); the one-line reason goes in the research log.
 **vs 50d** = `pct_vs_sma50`, the percent above the 50-day SMA, straight from the watchlist
 (`+6.16%`). Below 0 is a hard kill — reason code `below-50d`. Three columns here are the three
@@ -113,7 +120,8 @@ enough. Measure against `<last_analyst_thesis>`: say what changed, not what didn
 | Sector cap | ≤3 positions per GICS sector | |
 | Position count | ceiling 5–6 | |
 | Slippage | each order ≤10% of average daily dollar volume | |
-| Regime capacity | RISK-OFF: ≤3 catalyst; screener at half risk, defensive profile only | |
+| Regime capacity | RISK-OFF: ≤3 catalyst at full 2% (no defensive profile); screener at half risk, profile required | |
+| Catalyst sourcing | ≥3 stage-1 names catalyst-sourced whenever a catalyst slot is open | |
 | Circuit breaker | current drawdown vs −20% / −30% | |
 | Exclusions | no prohibited business, binary thesis, earnings inside 10 sessions, or a ticker inside its post-stop-out re-entry ban (`<blackout>`) | |
 | Trend-gate margin | each buy above its 50-day SMA; report `vs 50d` and name any pass under +1.0% | |

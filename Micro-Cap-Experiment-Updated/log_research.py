@@ -24,6 +24,7 @@ import argparse
 import csv
 import json
 import sys
+import re
 from datetime import date
 from pathlib import Path
 
@@ -48,6 +49,9 @@ WATCHLISTS = (Path("Start Your Own") / "watchlist.csv",
 STAGES = {"1", "2"}
 
 DECISIONS = {"BUY", "PASS", "WATCH"}
+
+# Controlled vocabulary for `source` -- see the note in _row().
+SOURCE_RE = re.compile(r"^(?:(?:screener|extended) #\d+|catalyst:[a-z0-9][a-z0-9-]*|off-list)$")
 
 REASON_CODES = {
     # why a name was bought
@@ -103,8 +107,14 @@ def _row(d: dict) -> dict:
         errors.append(f"decision must be one of {sorted(DECISIONS)}")
     if row["reason_code"] not in REASON_CODES:
         errors.append(f"reason_code must be one of {sorted(REASON_CODES)}")
-    if not str(row["source"]).strip():
-        errors.append('source is required, e.g. "screener #12" or "off-list"')
+    row["source"] = str(row["source"]).strip().lower()
+    # The source field is not decoration: trading_script.py reads it to decide which capacity cap
+    # a holding counts against (catalyst vs screener), so a free-text typo silently miscounts a
+    # lane. Validated against a controlled vocabulary from 2026-10-05. Every one of the 40 rows
+    # written before that date matches "screener #N" or "extended #N", so no migration is needed.
+    if not SOURCE_RE.match(row["source"]):
+        errors.append('source must be "screener #N", "extended #N", "catalyst:<category>" '
+                      '(e.g. catalyst:index-add) or "off-list"')
     row["stage"] = str(row["stage"]).strip()
     if row["stage"] not in STAGES:
         errors.append("stage must be 1 (quick check) or 2 (full research)")

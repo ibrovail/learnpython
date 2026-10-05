@@ -501,6 +501,47 @@ and in their capacity under RISK-OFF.
   *(The former 15%-per-play cap existed solely because a stop cannot bound a binary gap. With
   binary-thesis entries prohibited, its justification no longer exists.)*
 
+**Sourcing — added 2026-10-05, because this bucket had none.** Until this date the catalyst bucket
+stated an *eligibility test* and no *sourcing method*, while the screener bucket below named
+`screener.py`. A funnel can only fill the bucket it has a pipeline for, so it filled one:
+**all 40 names in `research_log.csv` came from the screener watchlist, none from catalyst
+discovery.** The RISK-OFF catalyst lane — **3 positions at the full 2% risk budget with no
+defensive-profile test** — therefore sat empty from the day it was widened (2026-09-17) while the
+book ran 85% cash and the gate that *does* bind, the defensive profile, was blamed for it. The
+binding constraint on book size was never the profile; it was looking only where the profile
+applies. `<research_trigger>` now prints a `<lanes>` line so the open capacity cannot go unseen.
+
+- **What qualifies.** A catalyst is a **resolved fact with a dated earnings impact** — the event has
+  already happened or is contractually set, and what is dated is when it reaches the numbers:
+  - **index inclusion already announced** with an effective date (S&P DJI quarterly rebalance,
+    FTSE Russell reconstitution)
+  - a **contract or backlog already awarded**, converting on a stated schedule
+  - **guidance already raised**, with the next print dated
+  - a **cost or margin inflection already underway** — a plant ramp, a price increase in force —
+    landing in a dated quarter
+  - a **spin-off, separation or re-listing** with an announced completion date
+  - a **refinancing or maturity** resolved on a stated date
+- **What does not.** An **unresolved event with a dated announcement** is the binary case the rules
+  already prohibit: PDUFA dates, clinical readouts, contract award *deadlines*, permit or patent
+  rulings, M&A votes, litigation verdicts. The test is not how big the move might be — it is
+  whether the outcome is still a coin flip.
+- **⚠️ An index add is a catalyst only BEFORE its effective date.** Forced index buying stops on the
+  effective date and additions commonly give back part of the pre-inclusion run. *ATRC, this book's
+  own case: +12.8% in the ten sessions into the 2026-09-21 effective date, a 52-week high two
+  sessions later, then **−11.82% on the following week** against device peers −3.86% to +4.64%, on
+  1.8× volume with no news and no analyst action. Entering after the effective date is buying the
+  giveback, not the catalyst.*
+- **Every other gate still applies.** A catalyst play must clear the **50-day SMA** trend rule,
+  growing TTM revenue with a credible earnings path, the prohibited-business check, **no earnings
+  print within 10 trading sessions**, a stop placeable under the ATR rules inside the 30% ceiling,
+  and the driver and sector caps. What it does **not** face is the RISK-OFF defensive profile, and
+  it is sized at the **full 2%** rather than half. That asymmetry is the whole point of the lane:
+  it is the route to a position in a weak tape that does not require a calm, near-high chart.
+- **Log it as a catalyst.** `log_research.py --source "catalyst:<category>"` (for example
+  `catalyst:index-add`, `catalyst:contract-ramp`). The `source` field is how the lane is recovered
+  later — `trading_script.py` reads it to classify holdings — so a catalyst name logged as
+  `screener #N` is miscounted against the wrong cap.
+
 ### Screener-sourced plays
 *(formerly "momentum/technical plays" — renamed 2026-09-17)*
 

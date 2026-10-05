@@ -181,7 +181,30 @@ When `<weekly_context>` XML appears in the conversation output, **immediately be
    replacing a fixed 8–10.)* Historically ~10 names were researched per new buy (Weeks 40–53: 97
    researched, 10 bought), so a fixed count is too few when there is cash to deploy and more than
    needed once the book is full. `<research_trigger>` prints the **buys sought** and the
-   **stage-1 count** (~5 per buy, min 10, max 20).
+   **stage-1 count** (~5 per buy, min 10, max 20), and `<lanes>` prints which bucket has room.
+
+   **Stage 0 — check `<lanes>` and reserve slots for catalyst names.** *(Added 2026-10-05.)*
+   `<research_trigger>` prints lane occupancy: `catalyst N/cap`, `screener N/cap`. **Whenever a
+   catalyst slot is open, at least 3 of the stage-1 names must be catalyst-sourced, not drawn from
+   the watchlist.** This is a **reallocation of the stage-1 count, not an addition to it** — the
+   screener draw shrinks by however many catalyst names you bring, so total research volume is
+   unchanged.
+   - *Why this exists:* the catalyst bucket in `portfolio_rules.md` had an eligibility test and no
+     sourcing method, so **all 40 names ever logged came from the screener** and the RISK-OFF
+     catalyst lane — 3 positions at full 2% risk with **no defensive-profile test** — was never
+     staffed. Two consecutive no-buy weeks were attributed to the defensive profile; the profile
+     only gates the *screener* lane.
+   - **Where to look** (qualifying categories, the index-add timing caveat, and what counts as
+     binary are all in `portfolio_rules.md` → *Catalyst plays* → *Sourcing*): S&P DJI quarterly
+     rebalance releases, FTSE Russell reconstitution, dated contract or backlog conversion, an
+     already-raised guide with the next print dated, a spin-off or refinancing with an announced
+     date. WebSearch and `perplexity_brief.py` are **discovery**; the browser supplies the facts,
+     exactly as for any other name.
+   - **Log them as `--source "catalyst:<category>"`**, never as `screener #N` — the `source` field
+     is how `trading_script.py` recovers which cap a holding counts against.
+   - A catalyst candidate skips the **defensive profile** and is sized at the **full 2%**. It still
+     faces every other gate: 50-day SMA, growing revenue, prohibited business, the 10-session
+     earnings guard, a placeable stop inside the 30% ceiling, driver and sector caps.
 
    **Stage 1 — quick check, quote page only.** One `stockanalysis.com/stocks/TICKER/` fetch per
    name: TTM revenue growth, TTM EPS, the **next** earnings date, analyst rating/target, 52-week

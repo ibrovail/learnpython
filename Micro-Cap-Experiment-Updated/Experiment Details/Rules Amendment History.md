@@ -10,6 +10,82 @@ operating manual. The full superseded text is preserved in git at `e838891`.
 
 ---
 
+# 2026-10-05 (b) — The catalyst lane gets a sourcing method
+
+**The defect.** `portfolio_rules.md` defines two buckets. The screener bucket names its pipeline —
+"sourced from the quantitative screener watchlist (`screener.py`)". The catalyst bucket stated an
+**eligibility test** ("a confirmed, non-binary catalyst within 90 calendar days") and **no sourcing
+method at all**. A funnel can only fill the bucket it has a pipeline for, so it filled one:
+
+| Source of every name ever researched | Count |
+|---|---|
+| Screener watchlist / extended list | **40** |
+| Catalyst discovery | **0** |
+
+The RISK-OFF catalyst lane — **3 positions at the full 2% risk budget with no defensive-profile
+test** — therefore sat empty from the day it was widened on 2026-09-17, while the book ran one
+position and **85% cash**.
+
+**And it caused a misdiagnosis.** Weeks 55 and 56 produced no buy, and both were attributed to the
+RISK-OFF defensive profile being too tight. The profile gates the **screener** lane only. The
+binding constraint on book size was never the profile — it was looking only where the profile
+applies. The 2026-10-05 (a) amendment that removed `near_high` is still correct on its own terms,
+but it was never going to fill the book, and this is why.
+
+## The change
+
+- **Stage 0 in the funnel** (`.claude/rules/analysis-workflow.md`): whenever a catalyst slot is
+  open, **at least 3 stage-1 names must be catalyst-sourced**. This is a **reallocation of the
+  stage-1 count, not an addition** — the screener draw shrinks by however many catalyst names are
+  brought, so research volume is unchanged. The screener lane returned 0 buys from 25 stage-1 checks
+  across Weeks 55–56, so spending 3 of those checks elsewhere is a defensible trade of the same
+  effort.
+- **`<lanes>` in `<research_trigger>`**: prints `catalyst N/cap`, `screener N/cap` and, when a
+  catalyst slot is open, says to source at least 3. The lesson of the re-entry ban and of
+  `near_high` is the same one — **a rule nothing surfaces does not get applied** — so the capacity
+  is now printed every time the trigger runs.
+- **What qualifies, written down**: a catalyst is a **resolved fact with a dated earnings impact**
+  (announced index inclusion, awarded contract converting on a schedule, an already-raised guide
+  with the next print dated, a spin-off or refinancing with an announced date). The binary case the
+  rules already prohibit is the mirror image — **an unresolved event with a dated announcement**
+  (PDUFA, readouts, award *deadlines*, M&A votes). The test is not the size of the possible move; it
+  is whether the outcome is still a coin flip.
+- **The index-add timing caveat**, from this book's own worst week: forced index buying **stops** at
+  the effective date. ATRC ran +12.8% into 2026-09-21, set a 52-week high two sessions later, then
+  fell **−11.82%** on the week against peers −3.86% to +4.64%, on 1.8× volume with no news.
+  **Entering after the effective date buys the giveback, not the catalyst.**
+- **`source` is now a controlled vocabulary** (`log_research.py`): `screener #N`, `extended #N`,
+  `catalyst:<category>` or `off-list`, lowercased on write. It is not decoration —
+  `trading_script.py` reads it to decide which cap a holding counts against, so free text would
+  silently miscount a lane. All 40 existing rows validate, so no migration was needed.
+
+## What the lane asymmetry actually is
+
+| | Catalyst | Screener-sourced |
+|---|---|---|
+| RISK-OFF capacity | **3 positions** | — |
+| Risk budget | **full 2%** | half (1%) |
+| Defensive profile | **not required** | required |
+| Dated catalyst | required, ≤90 days, non-binary | not required |
+| 50-day SMA, revenue, prohibited, earnings guard, stop inside 30%, driver/sector caps | **all apply** | all apply |
+
+That asymmetry is the point of the lane: it is the route to a position in a weak tape that does not
+require a calm, near-high chart. Which is exactly what two no-buy weeks could not find.
+
+## Risks, stated rather than discovered later
+
+- **The hit rate is unknown.** Catalyst discovery has no pre-screen, so nothing says 3 catalyst
+  checks beat 3 screener checks. The screener lane's 0-from-25 makes the trade reasonable, not
+  proven. The research log now distinguishes the lanes, so this becomes measurable.
+- **Full 2% risk with no profile test is more risk per position** than the screener lane carries. The
+  stop still bounds the loss at 2% and every other gate still applies, but a poorly chosen catalyst
+  lane will lose money faster than a poorly chosen screener lane.
+- **Lane classification depends on a logged field.** A holding bought before 2026-09-20 has no log
+  row and reports as "unclassified"; CON classifies correctly as screener. The vocabulary check
+  stops new mislabels but cannot repair old ones, and the log is append-only by design.
+
+---
+
 # 2026-10-05 — `near_high` removed from the RISK-OFF defensive profile
 
 **The change.** The profile drops from three legs to two: `rank_low_vol` ≥ 0.90 and `vol_5_50` > 1.0

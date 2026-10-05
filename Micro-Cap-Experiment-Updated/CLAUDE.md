@@ -112,6 +112,21 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   drops out from the **10/10** screen onward. *Note for any later scoring pass: the Week 56
   research-log row for PLX reads `weak-catalyst`, not `prohibited`, because the determination
   post-dates it and the log is append-only.*
+- **Adopted (10/05 b) — the catalyst lane gets a sourcing method.** `portfolio_rules.md` named the
+  screener's pipeline but gave the catalyst bucket only an *eligibility test*, so the funnel filled
+  one bucket: **40 of 40 researched names came from the screener, 0 from catalyst discovery**, and
+  the RISK-OFF catalyst lane — **3 positions at full 2% risk with no defensive-profile test** — sat
+  empty from 9/17 while the book held 85% cash. **This is why Weeks 55–56 found nothing: the
+  profile gates the screener lane only, so it was never the binding constraint on book size.** Fix:
+  **Stage 0** in the funnel reserves **≥3 stage-1 slots for catalyst names** whenever a catalyst
+  slot is open (a *reallocation*, not extra work — the screener lane returned 0 buys from 25 checks);
+  `<research_trigger>` prints a **`<lanes>`** line so the open capacity cannot go unseen; qualifying
+  catalysts are defined as **a resolved fact with a dated earnings impact** (vs the prohibited
+  binary case, an unresolved event with a dated announcement); and **an index add counts only
+  BEFORE its effective date** — ATRC ran +12.8% into 9/21 then gave back −11.82%. `source` in
+  `log_research.py` is now a controlled vocabulary (`catalyst:<category>`), since
+  `trading_script.py` reads it to decide which cap a holding counts against. Reasoning in
+  `Rules Amendment History.md` (2026-10-05 b).
 - **Adopted (10/05) — `near_high` removed from the RISK-OFF defensive profile.** Two legs remain:
   `rank_low_vol` ≥ 0.90 and `vol_5_50` > 1.0. Three faults: anti-correlated with its own
   precondition; the only **absolute** threshold among relative ones, so it tightened unattended (the
@@ -135,10 +150,9 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   report as thin — and still sized to **28.8% of equity**, the largest position in the book. Its rate
   driver then inverted within three sessions (10-year highest since 2007 on 9/23). Two questions for
   a later review, **not rule changes on one case**: does a sub-1% trend-gate pass deserve reduced
-  size or none, and should a rate-path thesis be entered days after an FOMC? *(`research_log.csv`
-  now records `pct_vs_sma50`, auto-filled and backfilled, so the first is queryable — but 25 rows
-  over two research dates cannot answer it yet: no date has both BUY and PASS names with forward
-  data.)*
+  size or none, and should a rate-path thesis be entered days after an FOMC? *(`pct_vs_sma50` is
+  logged, so the first is queryable — but 40 rows over three dates cannot answer it: Week 54's buys
+  are the only ones with a BUY, and they mature ~mid-November.)*
 - **Complete (9/19)**: review items adopted — **one weekend question** (R1); **two-stage research funnel**
   sized to the buys sought, spread across ranks/sectors/size, extending to ranks 51–100 (R3); **research log** of buys *and* passes via `log_research.py`
   (R4); stop **raise target 2.0×ATR**, 1.5× floor applies at placement (R5); **regime computed**
