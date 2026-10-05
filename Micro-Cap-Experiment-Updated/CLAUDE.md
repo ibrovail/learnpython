@@ -96,17 +96,26 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   **no** horizon, and 20/40/60 sessions have too few independent observations for any verdict;
   effect sizes do rise with horizon. **Phase 4 (Dec) primary horizon = 20 sessions**; the
   40-session test waits for ~March 2027. Index changes are the fifth unexplained-move category.
-- **In progress**: **One position and 85% cash.** **ATRC closed 10/01 at $55.24 — realised
-  +$62.82, +61.05%**, 58 sessions, the book's largest single gain and the position that was simply
-  held. The stop filled at the trigger while the stock closed **$53.59** (low $52.60), so exiting
-  mechanically was worth **$1.65/share** against the close. Its 60th session was 10/05: **the
-  re-underwrite never happened, and the 9/28 amendment stands untested.** The exit completes the
-  post-inclusion unwind — −11.82% on the week against peers −3.86% to +4.64%, **−3.33pp vs XLV and
-  −3.32pp vs peer median** on the day, 1.8× volume, no news, no analyst action, consensus $53.33
-  now 0.49% below the price. **CON 3 @ $35.31** ($34.97, −1.0%), stop $33.19/$33.04 (1.78×ATR),
-  9 sessions; it rose 1.60% on a −1.32% day for XLV (**+2.92pp**). Equity **$710.16**, cash
-  **$605.25 (85.2%)**, **$498.73 deployable (70.2%)**, **gap −3.30%**, drawdown −3.61%, RISK-OFF
-  (23 sessions). **Re-entry bans: HOPE ~10/13, ATRC ~10/15.**
+- **In progress**: **One position, 85% cash, second consecutive no-buy week (Week 56).** CON 3 @
+  $35.31 ($35.65, **+1.0%**), 10 sessions, 15.0% of equity. **A stop raise qualifies for the first
+  time: $33.69 / $33.54** (2.0×ATR), cutting risk 0.89% → 0.68% — **pending placement**. Note the
+  rounding: the unrounded candidate $33.682573 passes the size test by 0.0007, **$33.68 fails at
+  0.4981**, $33.69 passes at 0.5083. CON's restoration was spent 9/22, so this stop can never move
+  down. Equity **$712.20**, cash **$605.25 (85.0%)**, deployable **$498.42 (70.0%)**, **gap −3.73%**
+  since re-base (−8.12% since inception), drawdown −3.33%, RISK-OFF (24 sessions).
+- **⚠️ Open decision — PLX (Protalix) and the Israeli-affiliation exclusion.** Ranked #9 on the
+  10/05 screen. Its quote page says **Country: United States, Hackensack NJ**, so the page does not
+  support the exclusion; its manufacturing base is understood to be in Israel, and the rule covers
+  **affiliation**, not domicile. Killed on verifiable grounds instead (fails the defensive profile,
+  **no analyst coverage** at a $218M cap) and **no prohibited-business determination recorded**.
+  Decide it: if it counts, add it to `screener.py`'s blocklist so it stops reaching the funnel.
+- **Measured (10/05) — the RISK-OFF gate is anti-correlated with its own precondition.** Of 100
+  screened names: `rank_low_vol` ≥0.90 **54**, `vol_5_50` >1.0 **73**, **`near_high` ≥−5% just 16**;
+  all three **2**; all three plus above-the-50-day **1** (LTC, third week running, <5% upside on a
+  Hold). Pairwise, `near_high` is binding by 3–5×. It demands names near their 60-day highs in a
+  regime *defined* by the index being below its 50-day average. Cost this week: **WK** — revenue
+  +19.7%, Strong Buy, +24.1% target, beta 0.49, fwd PE 19.3 — killed only by `near_high` −11.58.
+  **Evidence for the Phase 4 sunset review, not a change made in a weekend report.**
 - **HOPE post-mortem (9/29)**: stopped out at $13.48 for **−$7.20 = 0.99% of equity — the budgeted
   risk to the cent**, 6 sessions held. **No rule failed; the entry did.** It was bought **+0.15%
   above its 50-day SMA** — the thinnest possible pass of the hard trend gate, flagged in the Week 54
@@ -133,13 +142,10 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   is a hold that **must name the gate in writing**. Reasoning and the honest accounting are in
   `Rules Amendment History.md` (2026-09-28). Deliberately left open: the review cadence *after* a
   pass — decide it when ATRC actually passes.
-- **Next**: **Saturday 10/03 is a near-empty book, not a re-underwrite.** Three free slots, 70%
-  deployable, a RISK-OFF screen that yielded nothing in Week 55, the mid-October earnings squeeze
-  starting, and both recent exits banned from re-entry. Another no-buy week is the realistic
-  outcome. **The question worth posing before then:** is 85% cash through a 23-session RISK-OFF
-  stretch the rules working, or is the defensive profile (top-decile `rank_low_vol`, `near_high`
-  ≥ −5%, `vol_5_50` > 1.0 — **1 of 100 names in Week 55**) too tight to ever fill the book? That is
-  a strategy question for a rules session, not something to settle inside a weekend report.
+- **Next**: **Place CON's stop raise ($33.69/$33.54) before the close**, then `run daily` to log
+  it. Decide the PLX exclusion question. Take the `near_high` measurement to the rules process —
+  three weeks, same answer. Re-entry bans: HOPE ~10/13, ATRC ~10/15. Next screen 10/10, into the
+  mid-October earnings squeeze.
 - **Fixed (9/30 c)**: **session arithmetic now goes through the NYSE calendar**
   (`_sessions_between`, `_add_sessions`). Three hand-rolled conversions were holiday-blind while
   `last_completed_session()` had used `exchange_calendars` all along. The **30-session backstop**
