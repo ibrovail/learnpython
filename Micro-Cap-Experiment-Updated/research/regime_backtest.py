@@ -543,6 +543,244 @@ def stage_signals(args) -> None:
     print(f"\nwrote {OUT/'regime_backtest_panel_survivors.csv'}", flush=True)
 
 
+# ---------------------------------------------------------------------------
+# Stage: metrics
+# ---------------------------------------------------------------------------
+PRIMARY = 20                 # §1.6 primary horizon
+THRESHOLDS = (0.50, 0.60, 0.75, 0.80, 0.90)   # §1.8 Q2
+MIN_GROUP = 3                # a date needs this many names in the group to yield a spread
+MATERIALITY_PP = 0.5         # §1.8 R3/R4/R6
+T_CRIT = 2.0
+T_ABORT = 5.0                # §1.6: a larger |t| means a broken variance estimate, not a signal
+SIGNALS = ("low_vol", "near_high", "vol_5_50", "vol_ratio", "pct_vs_sma50")
+
+
+def nw_tstat(x: pd.Series, lags: int) -> tuple[float, float, int]:
+    """Newey-West t-statistic on a per-date series. Returns (mean, t, lags_used).
+
+    Bartlett kernel. The lag length is capped by the caller (§1.6): Phase 3.5 put 12 lags on 10
+    observations and printed t = 15.3, which is an undefined estimator rather than a conservative
+    one.
+    """
+    x = pd.Series(x).dropna().astype(float)
+    n = len(x)
+    if n < 3:
+        return (x.mean() if n else np.nan), np.nan, lags
+    xc = x - x.mean()
+    g0 = float((xc ** 2).sum() / n)
+    s = g0
+    for j in range(1, min(lags, n - 1) + 1):
+        gj = float((xc.iloc[j:].values * xc.iloc[:-j].values).sum() / n)
+        s += 2.0 * (1.0 - j / (lags + 1.0)) * gj
+    if s <= 0:
+        return float(x.mean()), np.nan, lags
+    return float(x.mean()), float(x.mean() / np.sqrt(s / n)), lags
+
+
+def lag_for(h: int, n_dates: int) -> tuple[int, bool]:
+    """§1.6: min(ceil(h/5), floor(n/5)). Second value says whether the cap bound."""
+    want = int(np.ceil(h / 5))
+    cap = max(0, int(n_dates // 5))
+    return min(want, cap), want > cap
+
+
+def effective_n(n_dates: int, h: int) -> float:
+    return n_dates / (h / 5)
+
+
+def profile_mask(df: pd.DataFrame, calm: float, use_near_high: bool = False) -> pd.Series:
+    """The defensive profile as portfolio_rules.md defines it, plus the hard trend rule.
+
+    Two legs since 2026-10-05 (`rank_low_vol`, `vol_5_50`); `use_near_high` restores the removed
+    third leg for Q3. `above_sma50` is a separate hard entry rule that applies in every lane.
+    """
+    m = (df.rank_low_vol >= calm) & (df.vol_5_50 > 1.0) & (df.above_sma50.astype(bool))
+    if use_near_high:
+        m &= df.near_high >= -5
+    return m
+
+
+def per_date_spread(panel: pd.DataFrame, h: int, calm: float,
+                    use_near_high: bool = False) -> pd.DataFrame:
+    """Group-vs-universe spread per formation date, mean-vs-mean AND median-vs-median (§1.7 #4).
+
+    Like for like: the group's mean against the universe's mean, the group's median against the
+    universe's median. Never a group mean against a universe median -- that error cost about half
+    the claimed edge in the first Phase 3.5 write-up.
+    """
+    col = f"fwd{h}"
+    rows = []
+    for d, g in panel.groupby("date"):
+        g = g[g[col].notna()]
+        if len(g) < MIN_NAMES:
+            continue
+        sel = g[profile_mask(g, calm, use_near_high)]
+        if len(sel) < MIN_GROUP:
+            rows.append({"date": d, "n_univ": len(g), "n_group": len(sel),
+                         "mm": np.nan, "dd": np.nan, "univ_med": g[col].median()})
+            continue
+        rows.append({"date": d, "n_univ": len(g), "n_group": len(sel),
+                     "mm": sel[col].mean() - g[col].mean(),
+                     "dd": sel[col].median() - g[col].median(),
+                     "univ_med": g[col].median()})
+    return pd.DataFrame(rows)
+
+
+def summarise(series: pd.Series, h: int, label: str) -> dict:
+    n = int(series.dropna().shape[0])
+    lags, bound = lag_for(h, n)
+    mean, t, _ = nw_tstat(series, lags)
+    return {"metric": label, "horizon": h, "n_dates": n, "effective_n": round(effective_n(n, h), 1),
+            "mean_pp": mean, "nw_t": t, "nw_lags": lags, "lag_cap_bound": bound}
+
+
+def stage_metrics(args) -> None:
+    path = OUT / "regime_backtest_panel_survivors.csv"
+    if not path.exists():
+        sys.exit("Run the 'signals' stage first.")
+    panel = pd.read_csv(path, parse_dates=["date"])
+    off = panel[panel.regime == "RISK-OFF"]
+    print(f"panel {len(panel)} rows | RISK-OFF {len(off)} rows "
+          f"({off.date.nunique()} dates of {panel.date.nunique()})", flush=True)
+
+    results, raw = [], {}
+
+    # ---- R12: the join must not have dropped delisted names -------------------------------
+    dl = panel.delisted.mean()
+    print(f"\n=== R12 -- point-in-time join intact? ===", flush=True)
+    ok12 = abs(dl - FRAME_DELISTED_SHARE) <= 0.12
+    print(f"  delisted share of usable rows {dl:.1%} vs frame {FRAME_DELISTED_SHARE:.1%} "
+          f"-> {'PASS' if ok12 else 'FAIL'}", flush=True)
+
+    # ---- Q1: does the profile beat the universe in RISK-OFF? ------------------------------
+    print("\n=== Q1 -- profile vs gate survivors, by regime ===", flush=True)
+    for regime, sub in (("RISK-OFF", off), ("RISK-ON", panel[panel.regime == "RISK-ON"])):
+        for h in HORIZONS:
+            sp = per_date_spread(sub, h, 0.90)
+            raw[f"q1_{regime}_{h}"] = sp
+            for key, lbl in (("mm", "mean-vs-mean"), ("dd", "median-vs-median")):
+                r = summarise(sp[key], h, f"Q1 {regime} {lbl}")
+                r["regime"] = regime
+                results.append(r)
+                if h == PRIMARY:
+                    print(f"  {regime:<9} {lbl:<18} {r['mean_pp']:+7.2f}pp  "
+                          f"t={r['nw_t']:+6.2f}  dates={r['n_dates']:<4} "
+                          f"eff_n={r['effective_n']:<5}"
+                          f"{'  [lag cap bound]' if r['lag_cap_bound'] else ''}", flush=True)
+
+    # ---- Q2: the threshold curve, paired ---------------------------------------------------
+    print(f"\n=== Q2 -- calm threshold curve, RISK-OFF, {PRIMARY} sessions ===", flush=True)
+    base = per_date_spread(off, PRIMARY, 0.90).set_index("date")
+    curve = []
+    for c in THRESHOLDS:
+        sp = per_date_spread(off, PRIMARY, c).set_index("date")
+        raw[f"q2_{c}"] = sp.reset_index()
+        row = {"calm": c, "median_group_n": sp.n_group.median()}
+        for key, lbl in (("mm", "mean_vs_mean"), ("dd", "median_vs_median")):
+            r = summarise(sp[key], PRIMARY, f"Q2 calm={c} {lbl}")
+            row[f"{lbl}_pp"], row[f"{lbl}_t"] = r["mean_pp"], r["nw_t"]
+            # paired difference against 0.90 -- same dates, same names
+            diff = (sp[key] - base[key]).dropna()
+            dr = summarise(diff, PRIMARY, f"Q2 paired {c}-0.90 {lbl}")
+            row[f"{lbl}_vs090_pp"], row[f"{lbl}_vs090_t"] = dr["mean_pp"], dr["nw_t"]
+            results.extend([r, dr])
+        curve.append(row)
+    curve = pd.DataFrame(curve)
+    print(curve[["calm", "median_group_n", "median_vs_median_pp", "median_vs_median_t",
+                 "median_vs_median_vs090_pp", "median_vs_median_vs090_t"]]
+          .to_string(index=False, float_format=lambda v: f"{v:7.2f}"), flush=True)
+
+    # ---- Q3: three legs vs two ------------------------------------------------------------
+    print(f"\n=== Q3 -- does near_high add anything? RISK-OFF, {PRIMARY} sessions ===", flush=True)
+    two = per_date_spread(off, PRIMARY, 0.90).set_index("date")
+    three = per_date_spread(off, PRIMARY, 0.90, use_near_high=True).set_index("date")
+    raw["q3_three_leg"] = three.reset_index()
+    q3 = {}
+    for key, lbl in (("mm", "mean-vs-mean"), ("dd", "median-vs-median")):
+        d = (three[key] - two[key]).dropna()
+        r = summarise(d, PRIMARY, f"Q3 three-minus-two {lbl}")
+        results.append(r); q3[key] = r
+        print(f"  {lbl:<18} three-leg minus two-leg {r['mean_pp']:+7.2f}pp  "
+              f"t={r['nw_t']:+6.2f}  dates={r['n_dates']}", flush=True)
+
+    # ---- raw output committed BEFORE interpretation (§1.8 R10) ----------------------------
+    OUT.mkdir(parents=True, exist_ok=True)
+    res = pd.DataFrame(results)
+    res.to_csv(OUT / "regime_backtest_results.csv", index=False)
+    curve.to_csv(OUT / "regime_backtest_threshold_curve.csv", index=False)
+    for k, v in raw.items():
+        v.to_csv(OUT / f"regime_backtest_raw_{k}.csv", index=False)
+    print(f"\nwrote {OUT/'regime_backtest_results.csv'} and "
+          f"{len(raw)+1} raw files -- commit these before interpreting (R10).", flush=True)
+
+    # ---- abort check (§1.6) ----------------------------------------------------------------
+    big = res[res.nw_t.abs() > T_ABORT]
+    if not big.empty:
+        print(f"\n!!! ABORT (§1.6): {len(big)} statistics with |t| > {T_ABORT}. A t this large on "
+              f"overlapping windows is evidence of a broken variance estimate, not a strong "
+              f"signal. Raw output is written; find the cause before reading any verdict.",
+              flush=True)
+        print(big[["metric", "horizon", "n_dates", "effective_n", "mean_pp", "nw_t"]]
+              .to_string(index=False), flush=True)
+        sys.exit(2)
+
+    # ---- the pre-registered verdicts, applied mechanically (§1.8) --------------------------
+    print("\n" + "=" * 72 + "\n=== VERDICTS (§1.8, applied mechanically) ===\n" + "=" * 72,
+          flush=True)
+    if not ok12:
+        print("R12 FAIL -- the point-in-time join looks broken. Every result below is void.",
+              flush=True)
+
+    q1 = {k: next(r for r in results
+                  if r["metric"] == f"Q1 RISK-OFF {v}" and r["horizon"] == PRIMARY)
+          for k, v in (("mm", "mean-vs-mean"), ("dd", "median-vs-median"))}
+    both_pos = all(q1[k]["mean_pp"] > 0 and q1[k]["nw_t"] >= T_CRIT for k in ("mm", "dd"))
+    print(f"\nQ1: {'R1 -- allowance CONFIRMED' if both_pos else 'R2 -- allowance REVERTS to a freeze at Phase 4'}",
+          flush=True)
+    for k in ("mm", "dd"):
+        print(f"     {q1[k]['metric']}: {q1[k]['mean_pp']:+.2f}pp t={q1[k]['nw_t']:+.2f} "
+              f"(eff_n {q1[k]['effective_n']})", flush=True)
+
+    # R3: loosest threshold that is not significantly worse and not worse by > 0.5pp
+    adopted = 0.90
+    for c in sorted(THRESHOLDS):
+        row = curve[curve.calm == c].iloc[0]
+        t_ok = not (row.median_vs_median_vs090_t <= -T_CRIT)
+        mat_ok = row.median_vs_median_vs090_pp >= -MATERIALITY_PP
+        if t_ok and mat_ok:
+            adopted = c
+            break
+    print(f"\nQ2: R3 adopts calm >= {adopted:.2f}", flush=True)
+    if adopted != 0.90:
+        row = curve[curve.calm == adopted].iloc[0]
+        # R5: sign disagreement between the two measures -> keep 0.90
+        if np.sign(row.median_vs_median_vs090_pp) != np.sign(row.mean_vs_mean_vs090_pp):
+            adopted = 0.90
+            print("     R5 overrides: the two measures disagree in sign -> keep 0.90", flush=True)
+        else:
+            # R5b: must win or tie in both halves
+            dates = sorted(off.date.unique())
+            mid = dates[len(dates) // 2]
+            halves = []
+            for lo, hi in ((dates[0], mid), (mid, dates[-1])):
+                sub = off[(off.date >= lo) & (off.date <= hi)]
+                a = per_date_spread(sub, PRIMARY, adopted).set_index("date")["dd"]
+                b = per_date_spread(sub, PRIMARY, 0.90).set_index("date")["dd"]
+                halves.append(float((a - b).dropna().mean()))
+            print(f"     R5b stability: half-1 {halves[0]:+.2f}pp, half-2 {halves[1]:+.2f}pp "
+                  f"(split {pd.Timestamp(mid).date()})", flush=True)
+            if min(halves) < -MATERIALITY_PP:
+                adopted = 0.90
+                print("     R5b VETO: loses in one half -> keep 0.90, report the instability",
+                      flush=True)
+    print(f"     => calm threshold: {adopted:.2f}", flush=True)
+
+    reinstate = (q3["dd"]["mean_pp"] > MATERIALITY_PP and q3["mm"]["mean_pp"] > MATERIALITY_PP)
+    print(f"\nQ3: {'R6 -- reinstate near_high as rank_near_high >= 0.90' if reinstate else 'R7 -- the removal STANDS'}",
+          flush=True)
+    print("\n(Record these in Part 2 of the pre-registration, then amend the rules.)", flush=True)
+
+
 def stage_todo(args) -> None:
     sys.exit(f"stage '{args.stage}' is not written yet -- see the module docstring for the order.")
 
@@ -553,8 +791,8 @@ def main() -> None:
     ap.add_argument("--refresh", action="store_true",
                     help="re-download the ticker snapshot (changes the recorded hash)")
     args = ap.parse_args()
-    {"sample": stage_sample, "prices": stage_prices,
-     "signals": stage_signals}.get(args.stage, stage_todo)(args)
+    {"sample": stage_sample, "prices": stage_prices, "signals": stage_signals,
+     "metrics": stage_metrics}.get(args.stage, stage_todo)(args)
 
 
 if __name__ == "__main__":
