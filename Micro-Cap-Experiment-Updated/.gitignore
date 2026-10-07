@@ -11,3 +11,8 @@ Performance Results/allocation_review_*.md
 
 .claude/worktrees/
 .DS_Store
+
+# API keys — never commit. Research scripts read .env (see .env.example).
+.env
+*.key
+secrets/
