@@ -80,15 +80,37 @@ call). The universe is far larger, so the study runs on a **stratified random sa
 tickers**, drawn once and fixed before any result is computed.
 
 **The frame, measured 2026-10-07.** US common stocks (NYSE / NASDAQ / AMEX / NYSE MKT, USD) whose
-listed interval overlaps the span: **15,352 names**, of which **47.7% delisted** before 2026-09.
-*(The sample run on 2026-10-07 re-downloaded the snapshot and saw 15,349 — the file is updated
-daily, so the count drifts by a few names. The delisted share is unchanged at 47.7%, so R12's
-reference holds. Each run records its own snapshot hash.)* Strata sizes: at-start/survived **3,008**, at-start/delisted **2,627**, mid-span/survived
-**5,019**, mid-span/delisted **4,698**. Median overlap with the span is 3.4 years (q25 1.5, q75 8.5).
+listed interval overlaps the span, after two exclusions found while building the download:
+**9,934 names**, of which **37.9% delisted** before 2026-09. Strata: at-start/survived **2,889**,
+at-start/delisted **1,953**, mid-span/survived **3,282**, mid-span/delisted **1,810**.
 
-A plain proportional 500-name draw leaves **187–282 names listed per formation date (median 245)**
-and **no date below `MIN_NAMES` = 100** before the liquidity gate. The liquidity gate will reduce
-that, by an amount only the download can establish; §1.3's fallback covers a shortfall.
+A proportional 500-name draw leaves **244–311 names listed per formation date (median 276)** and
+**no date below `MIN_NAMES` = 100** before the liquidity gate — which would have to remove more
+than 60% of names on a date to breach the floor.
+
+**Exclusion 1 — non-common share classes, 28.4% of the raw frame.** Tiingo's `assetType == "Stock"`
+includes **951 preferred shares, 1,840 warrants, 1,487 SPAC units and 94 rights**. Leaving them in
+would have invalidated *this* study in particular: preferreds are bond-like and SPAC units sit near
+$10 until their deal, so both are **calm by construction** and would have flooded
+`rank_low_vol` ≥ 0.90 — the exact leg under test. The headline would have read "the calm decile
+outperforms" when what it actually said was "the calm decile is full of preferred shares."
+*Found because the download's first four tickers happened to include `ABLLW` (a warrant) and
+`ABR-P-E` (Arbor Realty preferred series E).* The filter is anchored on Nasdaq's fifth-letter
+convention — a **five-character** ticker ending W/U/R is a warrant, unit or right, while a 3–4
+character one usually is not — and was validated on 24 known ordinary commons (none excluded,
+including `LOW`, `FLOW`, `PLOW`, `TWOU`, `U`) and 10 known non-commons (all excluded). Dual-class
+common (`BRK-B`, `HEI-A`, `LEN-B`) is common equity and is kept.
+
+**Exclusion 2 — recycled symbols, 695 of them (4.5%).** The same ticker names different companies
+in different eras: `AAC` is three of them. Tiingo's price endpoint is keyed by symbol alone, so a
+recycled symbol's history cannot be attributed to the right company, and joining it to one listing
+interval would splice two businesses into a single series. **10.8% of the first drawn sample were
+recycled symbols**, so this was not a rounding error. They are dropped rather than guessed at.
+
+Both exclusions are **administrative rather than performance-related** — share class and symbol
+reuse are facts about listing mechanics, not about a stock's returns — so removing them does not
+select on the outcome. They also move the frame closer to the live screener's universe, which holds
+common equity only.
 
 **Stratification**, so the sample is not quietly a survivor sample again:
 
@@ -142,7 +164,17 @@ against `regime_history.csv`. RISK-OFF share by year, measured: 2016 14%, 2017 2
 
 ### 1.5 Signals — price and volume only
 
-Reconstructed from unadjusted daily OHLCV, by the same formulas as `screener.py`:
+Reconstructed from **split- and dividend-adjusted** daily OHLCV, by the same formulas as
+`screener.py`:
+
+> **Corrected before the run, 2026-10-07.** This section first said *unadjusted*, to match
+> `screener.py`. That is right for the live screener, which looks at a 60-day window on current
+> data where splits are rare, and **wrong for a ten-year study**. In an unadjusted series a 2:1
+> split is a −50% daily return, which corrupts `low_vol` (the standard deviation of returns) and
+> `near_high` (distance from the 60-day high) for every name that ever split, and corrupts forward
+> returns outright. Adjusted prices are used for both signals and returns; the unadjusted series is
+> stored alongside but not used. Found while writing the download stage, before any result existed.
+
 
 | Signal | Definition |
 |---|---|
@@ -278,12 +310,14 @@ sits inside the noise.
   the measured precision.
 - **R12.** The delisted share of usable names per date (§1.7 metric 9) must be **materially above
   zero and broadly consistent with the sampling frame's own delisted share**, which for the
-  ten-year frame is **47.7%** (7,325 of 15,352 names overlapping the span). If it is near zero, the
+  ten-year frame is **37.9%** (of 9,934 common-equity names overlapping the span, after the two
+  exclusions in §1.3). If it is near zero, the
   point-in-time join has silently failed and every result is void.
   - *Corrected before the run, 2026-10-07.* This rule first said "consistent with the ~36%
     attrition of §1.2". That 36% is the **five-year** cohort figure; the frame for a **ten-year**
-    span is 47.7%, because a longer window gives every name more opportunity to delist. Checking a
-    47.7% truth against a 36% reference would have made the validity gate either permanently
+    span is 37.9%: a longer window gives every name more opportunity to delist, while the
+    share-class and recycled-symbol exclusions remove mostly short-lived listings. Checking a
+    37.9% truth against a 36% reference would have made the validity gate either permanently
     suspicious or quietly useless — and R12 exists precisely to catch a silent failure, so a wrong
     reference value defeats it. The two numbers measure different things and both are correct for
     what they measure.
