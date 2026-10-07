@@ -79,6 +79,17 @@ Tiingo's free tier allows **500 unique symbols per month** (50 requests/hour, fu
 call). The universe is far larger, so the study runs on a **stratified random sample of 500
 tickers**, drawn once and fixed before any result is computed.
 
+**The frame, measured 2026-10-07.** US common stocks (NYSE / NASDAQ / AMEX / NYSE MKT, USD) whose
+listed interval overlaps the span: **15,352 names**, of which **47.7% delisted** before 2026-09.
+*(The sample run on 2026-10-07 re-downloaded the snapshot and saw 15,349 — the file is updated
+daily, so the count drifts by a few names. The delisted share is unchanged at 47.7%, so R12's
+reference holds. Each run records its own snapshot hash.)* Strata sizes: at-start/survived **3,008**, at-start/delisted **2,627**, mid-span/survived
+**5,019**, mid-span/delisted **4,698**. Median overlap with the span is 3.4 years (q25 1.5, q75 8.5).
+
+A plain proportional 500-name draw leaves **187–282 names listed per formation date (median 245)**
+and **no date below `MIN_NAMES` = 100** before the liquidity gate. The liquidity gate will reduce
+that, by an amount only the download can establish; §1.3's fallback covers a shortfall.
+
 **Stratification**, so the sample is not quietly a survivor sample again:
 
 - Strata are **(delisting status × listing era)**: names that survived the span vs names that
@@ -266,8 +277,16 @@ sits inside the noise.
   spread being measured — **the study stops and reports that**, rather than reporting a result at
   the measured precision.
 - **R12.** The delisted share of usable names per date (§1.7 metric 9) must be **materially above
-  zero and broadly consistent with the ~36% attrition of §1.2**. If it is near zero, the
+  zero and broadly consistent with the sampling frame's own delisted share**, which for the
+  ten-year frame is **47.7%** (7,325 of 15,352 names overlapping the span). If it is near zero, the
   point-in-time join has silently failed and every result is void.
+  - *Corrected before the run, 2026-10-07.* This rule first said "consistent with the ~36%
+    attrition of §1.2". That 36% is the **five-year** cohort figure; the frame for a **ten-year**
+    span is 47.7%, because a longer window gives every name more opportunity to delist. Checking a
+    47.7% truth against a 36% reference would have made the validity gate either permanently
+    suspicious or quietly useless — and R12 exists precisely to catch a silent failure, so a wrong
+    reference value defeats it. The two numbers measure different things and both are correct for
+    what they measure.
 
 ### 1.9 What this study cannot answer
 
