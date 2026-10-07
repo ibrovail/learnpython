@@ -34,9 +34,12 @@ bundles certifi.
 from __future__ import annotations
 
 import argparse
+import atexit
 import hashlib
 import io
+import os
 import re
+import subprocess
 import sys
 import time
 import zipfile
@@ -278,7 +281,71 @@ def fetch_prices(session: requests.Session, ticker: str, key: str) -> tuple[str,
     return f"{STATUS_ERROR}: retries exhausted", pd.DataFrame()
 
 
+def _other_instances() -> list[tuple[int, str]]:
+    """Other live `prices` runs of this script, found in the process table.
+
+    The process table rather than a lock file alone: a lock can be stale after a SIGKILL, and a
+    run started before this guard existed has no lock at all. `ps` is read directly instead of
+    shelling out to pgrep, whose -f matching also picks up the pgrep invocation itself.
+    """
+    me = os.getpid()
+    try:
+        out = subprocess.run(["ps", "-Ao", "pid=,command="], capture_output=True, text=True,
+                             timeout=20).stdout
+    except Exception:
+        return []
+    found = []
+    for line in out.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        pid_s, _, cmd = line.partition(" ")
+        try:
+            pid = int(pid_s)
+        except ValueError:
+            continue
+        if pid == me or "regime_backtest.py" not in cmd:
+            continue
+        # A shell whose command text merely MENTIONS the script is not a running copy of it.
+        # Without this, any `bash -c "... regime_backtest.py prices ..."` -- including the shell
+        # that is about to launch the real thing -- counts as a conflict and blocks a legitimate
+        # start. Found 2026-10-07 while testing the guard, which flagged its own test harness.
+        if re.search(r"(?:^|/)(?:z?sh|bash|dash)\b", cmd) or " -c " in cmd:
+            continue
+        # Only a `prices` run conflicts; sample/signals/metrics are read-only and safe alongside.
+        if re.search(r"(?:^|/)python[\d.]*\s+\S*regime_backtest\.py\s+prices(?:\s|$)",
+                     cmd, re.I):
+            found.append((pid, cmd.strip()))
+    return found
+
+
+def _guard_single_instance() -> None:
+    """Refuse to start a second concurrent download.
+
+    Two copies share one to-do list, so they request the same tickers in parallel at twice the
+    paced rate -- 100/hour against Tiingo's 50/hour limit. That means 429 throttling, interleaved
+    writes to prices_status.csv, and symbol allowance spent twice over. Origin: 2026-10-07, a
+    second copy was started by hand while the first was still running and had to be killed before
+    it issued a request.
+    """
+    others = _other_instances()
+    if others:
+        print("REFUSING TO START: another download is already running.\n", file=sys.stderr)
+        for pid, cmd in others:
+            print(f"  pid {pid}: {cmd}", file=sys.stderr)
+        print("\nIt is resumable, so there is nothing to recover -- just let it run.\n"
+              "To take over deliberately:\n"
+              '  pkill -f "regime_backtest.py prices"; sleep 2; '
+              "then start this again.", file=sys.stderr)
+        sys.exit(3)
+    lock = DATA / "prices.lock"
+    DATA.mkdir(parents=True, exist_ok=True)
+    lock.write_text(f"{os.getpid()}\n{pd.Timestamp.now().isoformat()}\n")
+    atexit.register(lambda: lock.unlink(missing_ok=True))
+
+
 def stage_prices(args) -> None:
+    _guard_single_instance()
     key = _key()
     sample_csv = OUT / "regime_backtest_sample.csv"
     if not sample_csv.exists():
