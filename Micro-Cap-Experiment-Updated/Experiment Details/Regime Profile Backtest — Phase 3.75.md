@@ -308,19 +308,33 @@ sits inside the noise.
 - **R11.** If the sample-adequacy check in §1.3 fails — median per-date standard error exceeding the
   spread being measured — **the study stops and reports that**, rather than reporting a result at
   the measured precision.
-- **R12.** The delisted share of usable names per date (§1.7 metric 9) must be **materially above
-  zero and broadly consistent with the sampling frame's own delisted share**, which for the
-  ten-year frame is **37.9%** (of 9,934 common-equity names overlapping the span, after the two
-  exclusions in §1.3). If it is near zero, the
-  point-in-time join has silently failed and every result is void.
-  - *Corrected before the run, 2026-10-07.* This rule first said "consistent with the ~36%
-    attrition of §1.2". That 36% is the **five-year** cohort figure; the frame for a **ten-year**
-    span is 37.9%: a longer window gives every name more opportunity to delist, while the
-    share-class and recycled-symbol exclusions remove mostly short-lived listings. Checking a
-    37.9% truth against a 36% reference would have made the validity gate either permanently
-    suspicious or quietly useless — and R12 exists precisely to catch a silent failure, so a wrong
-    reference value defeats it. The two numbers measure different things and both are correct for
-    what they measure.
+- **R12 — do the gates select on survival?** *(Restated 2026-10-07, before any result. See the
+  note below: this rule was wrong three times, always the same way.)*
+  - **R12a.** For **every** gate, the share of rows it rejects must differ by **no more than 10pp**
+    between delisted and survived names. A gate that rejects delisted names disproportionately
+    reintroduces exactly the survivorship bias this design exists to remove, and would do so
+    invisibly. *Measured on the first 100 downloaded names: the liquidity gate rejects **24.5%** of
+    delisted rows against **26.1%** of survived rows — a −1.6pp differential, so it does not select
+    on survival.*
+  - **R12b.** The **name-weighted** delisted share of usable names must be materially above zero
+    (**≥ 15%**). *Measured: 26.5% against the frame's 37.9%.* Near zero would mean the
+    point-in-time join had silently failed.
+  - **Row-weighted shares are not comparable to name-weighted ones and must not be checked against
+    each other.** A delisted name is listed for less of the span by construction, so it appears on
+    fewer formation dates: survived names contribute a median of **421** formation-date rows,
+    delisted names **133**. The row-weighted share is therefore *correctly* lower — 13.9% against a
+    31.9% name-weighted share — and that gap is arithmetic, not bias.
+
+> **Three wrong versions of R12, all the same error.** It first read "~36%", the *five-year* cohort
+> attrition, against a *ten-year* frame. Corrected to 47.7%, it was then measured against a frame
+> that still contained preferred shares and recycled symbols; the clean frame is 37.9%. Corrected
+> again, it compared a **row-weighted** panel share against a **name-weighted** frame share.
+>
+> Every version compared two numbers measured on different bases — which is precisely what
+> `.claude/rules/research-methods.md` forbids for means and medians, in a guise the rule did not
+> name. The lesson is generalised there now. It is also the reason this rule is stated as a
+> **differential between two groups under the same gate** rather than as a level against a
+> reference: a differential cannot be wrong about its own units.
 
 ### 1.9 What this study cannot answer
 

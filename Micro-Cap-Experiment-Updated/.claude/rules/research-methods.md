@@ -16,6 +16,19 @@ Rules for any quantitative study of screener signals, gates or strategy performa
   1.0pp (2.1pp at 20 sessions), so a mean-vs-median comparison flatters any group by about that
   much. Two pre-registered Phase 2 metrics made this mistake.
 
+- **"Compare like with like" is not only about means and medians — it is about the unit of
+  observation.** A **name-weighted** share and a **row-weighted** share of the same population are
+  different quantities, and checking one against the other produces a false alarm or a false
+  reassurance. In the Phase 3.75 backtest, 37.9% of *names* in the frame had delisted while only
+  13.9% of panel *rows* belonged to delisted names — because a delisted name is listed for less of
+  the span and so appears on fewer formation dates (median 133 rows against 421 for survivors).
+  Nothing was wrong; the comparison was. **Before comparing two figures, say out loud what each one
+  is per — per name, per row, per date, per dollar.** The same error reached a validity rule three
+  times in one afternoon, each time looking like a finding.
+  - **Prefer a differential to a level.** A rule written as "group A's rejection rate vs group B's
+    rejection rate under the same gate" cannot be wrong about its units, whereas "this share should
+    be about 38%" depends on a reference that drifts every time the population is redefined.
+
 - **Never judge a signal on rank IC alone.** Report, beside it, the quintile spread on **mean**
   returns and an IC on winsorized (1%/99%) returns. In a universe whose median stock falls, rank
   IC rewards calm stocks sitting near zero: `low_vol` had the highest rank IC (0.113) while its

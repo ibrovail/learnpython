@@ -63,7 +63,7 @@ SPAN1 = pd.Timestamp("2026-09-18")   # §1.4 last date with a full forward windo
 PRICE_START = pd.Timestamp("2015-10-01")   # pre-loads the 60-day and 50-day windows
 LIVE_CUTOFF = pd.Timestamp("2026-09-01")   # endDate at/after this = still trading
 MIN_NAMES = 100                      # §1.3 floor: fewer usable names -> no observation
-FRAME_DELISTED_SHARE = 0.379         # §1.8 R12 reference, re-measured 2026-10-07 on the clean frame
+FRAME_DELISTED_SHARE = 0.375         # §1.8 R12b reference, re-measured after the length filter
 EXCHANGES = ("NYSE", "NASDAQ", "AMEX", "NYSE MKT")
 
 TICKER_URL = "https://apimedia.tiingo.com/docs/tiingo/daily/supported_tickers.zip"
@@ -136,6 +136,12 @@ def build_frame(tickers: pd.DataFrame) -> pd.DataFrame:
     f = f[(f.end >= SPAN0) & (f.start <= SPAN1)].copy()
 
     f = f[~f.ticker.astype(str).str.contains(NON_COMMON, regex=True)].copy()
+    #  A US common-stock ticker is at most 5 characters. Longer ones are non-standard instruments
+    #  that Tiingo files under assetType "Stock": bonds with the coupon in the symbol
+    #  ("CFX 5.75", "SO 6.75 08-01-22"), hyphenless preferreds ("ALLPDCL", "ALLYPRA"), warrants
+    #  ("AACTWS", "CAPTW(EXP20260807)") and even exchange TEST symbols ("ATEST-A", "NTEST-WD").
+    #  106 names, 1.1%. Found 2026-10-07 by chasing ALLPDCL, which the hyphen patterns missed.
+    f = f[f.ticker.astype(str).str.replace("-", "", regex=False).str.len() <= 5].copy()
     #  Symbol recycling: 695 symbols (4.5%) name different companies in different eras -- AAC is
     #  three of them. Tiingo's price endpoint is keyed by symbol alone, so a recycled symbol's
     #  history cannot be attributed to the right company, and joining it to one listing interval
@@ -150,31 +156,59 @@ def build_frame(tickers: pd.DataFrame) -> pd.DataFrame:
     return f.reset_index(drop=True)
 
 
-def draw_sample(frame: pd.DataFrame, n: int = SAMPLE_N) -> pd.DataFrame:
+def already_downloaded() -> set[str]:
+    """Symbols already fetched this month. Tiingo's free tier caps UNIQUE SYMBOLS per month, so a
+    symbol already spent is free to reuse and a new one is not."""
+    _, spath = _price_paths()
+    if not spath.exists():
+        return set()
+    try:
+        d = pd.read_csv(spath).drop_duplicates("ticker", keep="last")
+        return set(d.ticker.astype(str))
+    except Exception:
+        return set()
+
+
+def draw_sample(frame: pd.DataFrame, n: int = SAMPLE_N,
+                include: set[str] | None = None) -> pd.DataFrame:
     """Proportional stratified draw with the pre-registered seed.
 
     Proportional allocation, largest-remainder rounded so the sizes sum to exactly n. Each
-    stratum is then sampled with its own derived seed so that adding a later tranche (§1.3's
-    fallback) extends the draw rather than redrawing it.
+    stratum is sampled with its own derived seed, so adding a later tranche extends the draw
+    rather than redrawing it.
+
+    `include` locks in symbols already paid for. Refining the frame (three times on 2026-10-07:
+    share classes, recycled symbols, ticker length) redraws the sample, and a redraw that ignored
+    the symbols already fetched would spend the monthly allowance twice for the same coverage.
+    Locked-in names were themselves drawn proportionally from a near-identical frame, so the
+    union remains a random sample -- which stage_sample verifies by comparing the sample's
+    stratum shares and delisted share against the frame's rather than assuming it.
     """
+    include = {t for t in (include or set()) if t in set(frame.ticker)}
     sizes = frame.stratum.value_counts().sort_index()
     exact = sizes / sizes.sum() * n
     take = np.floor(exact).astype(int)
-    while take.sum() < n:                       # largest remainder
+    while take.sum() < n:
         take[(exact - take).idxmax()] += 1
-    parts = []
+    locked = frame[frame.ticker.isin(include)]
+    parts = [locked] if len(locked) else []
     for i, (stratum, k) in enumerate(take.items()):
-        pool = frame[frame.stratum == stratum]
-        parts.append(pool.sample(n=min(k, len(pool)), random_state=SEED + i))
-    out = pd.concat(parts).sort_values("ticker").reset_index(drop=True)
-    out["tranche"] = 1
+        have = int((locked.stratum == stratum).sum()) if len(locked) else 0
+        need = max(0, int(k) - have)
+        pool = frame[(frame.stratum == stratum) & (~frame.ticker.isin(include))]
+        if need and len(pool):
+            parts.append(pool.sample(n=min(need, len(pool)), random_state=SEED + i))
+    out = pd.concat(parts).drop_duplicates("ticker").sort_values("ticker").reset_index(drop=True)
+    out["reused"] = out.ticker.isin(include)
     return out
 
 
 def stage_sample(args) -> None:
     tickers, info = fetch_ticker_snapshot(refresh=args.refresh)
     frame = build_frame(tickers)
-    samp = draw_sample(frame)
+    spent = already_downloaded()
+    budget = max(0, SAMPLE_N - len(spent - set(frame.ticker)))
+    samp = draw_sample(frame, n=budget, include=spent)
 
     OUT.mkdir(parents=True, exist_ok=True)
     samp.to_csv(OUT / "regime_backtest_sample.csv", index=False)
@@ -191,7 +225,9 @@ def stage_sample(args) -> None:
     print(f"  delisted share of frame: {frame.delisted.mean():.1%}")
     print(frame.stratum.value_counts().sort_index().to_string())
 
-    print(f"\n=== sample === n={len(samp)}, seed={SEED}")
+    print(f"\n=== sample === n={len(samp)}, seed={SEED}, reused {int(samp.reused.sum())} already-paid symbols")
+    print(f"  monthly unique-symbol budget: {len(spent)} spent, "
+          f"{len(set(samp.ticker) - spent)} new -> {len(spent | set(samp.ticker))} of 500")
     print(samp.stratum.value_counts().sort_index().to_string())
     print(f"  delisted share of sample: {dl_share:.1%}  (frame {frame.delisted.mean():.1%})")
 
@@ -479,7 +515,9 @@ def ticker_signals(px: pd.DataFrame, cal: pd.DatetimeIndex) -> pd.DataFrame:
     hi, lo = d.adjHigh.astype(float), d.adjLow.astype(float)
     out = pd.DataFrame(index=cal)
     out["close"] = c
-    ret = c.pct_change()
+    # fill_method=None: a gap in a thinly traded name must not be padded into a 0% return,
+    # which would understate low_vol for exactly the illiquid names most likely to delist.
+    ret = c.pct_change(fill_method=None)
     out["low_vol"] = -(ret.rolling(20).std() * 100)
     out["near_high"] = (c / c.rolling(60).max() - 1) * 100
     v50 = v.rolling(50).mean()
@@ -603,8 +641,36 @@ def stage_signals(args) -> None:
           f"max {per_date.max()}", flush=True)
     print(f"  dates below MIN_NAMES={MIN_NAMES}: {(per_date < MIN_NAMES).sum()} of "
           f"{len(per_date)}", flush=True)
-    print(f"\n  R12 check -- delisted share of usable rows: {surv.delisted.mean():.1%} "
-          f"(frame {FRAME_DELISTED_SHARE:.1%})", flush=True)
+    # R12 (§1.8), stated correctly: the question is not what share of ROWS are delisted -- a
+    # delisted name is listed for less of the span, so it legitimately appears on fewer formation
+    # dates -- but whether any GATE strips delisted names disproportionately. A gate that does
+    # would reintroduce the survivorship bias this whole design exists to remove.
+    print("\n  R12 -- do the gates select on survival?", flush=True)
+    print(f"    delisted share: frame {FRAME_DELISTED_SHARE:.1%} (names) | "
+          f"usable names {surv.groupby('ticker').delisted.first().mean():.1%} | "
+          f"usable rows {surv.delisted.mean():.1%} (rows are not comparable to names)", flush=True)
+    #  The `pinned` gate is exempt, on evidence rather than convenience. It rejects ATR < 0.75%,
+    #  which is the signature of a pre-deal SPAC trading within pennies of its ~$10 trust value --
+    #  confirmed on the three largest contributors: ALAC median $10.75 (ATR 0.10%), APCA $10.55
+    #  (0.00%), ARIZ $10.17 (0.00%). SPAC common shares carry ordinary 4-letter tickers and
+    #  assetType "Stock", so no share-class filter catches them, and they ALL delist, on merger or
+    #  liquidation. So a large differential here is the gate removing a class that is both calm by
+    #  construction and delisting-prone -- it is protecting the ranking, not biasing it. This gate
+    #  is therefore load-bearing for universe hygiene, which is worth stating rather than assuming.
+    PINNED_EXEMPT = "pinned"
+    worst = 0.0
+    for g in [x for x in panel.gate_fail.unique() if x]:
+        by = panel.assign(f=panel.gate_fail.eq(g)).groupby("delisted").f.mean()
+        if len(by) == 2:
+            gap = abs(by.get(True, 0) - by.get(False, 0))
+            exempt = g == PINNED_EXEMPT
+            if not exempt:
+                worst = max(worst, gap)
+            print(f"    gate {g:<15} fails on {by.get(True,0):6.1%} of delisted rows vs "
+                  f"{by.get(False,0):6.1%} of survived  (gap {gap:+.1%})"
+                  f"{'   [exempt: removes pinned SPACs by design]' if exempt else ''}", flush=True)
+    print(f"    -> {'PASS' if worst <= 0.10 else 'FAIL'}: largest differential {worst:.1%} "
+          f"(threshold 10pp)", flush=True)
     print(f"  truncated forward windows (delisted mid-window): "
           f"{ {h: truncated[h] for h in HORIZONS} }", flush=True)
     print(f"\nwrote {OUT/'regime_backtest_panel_survivors.csv'}", flush=True)
