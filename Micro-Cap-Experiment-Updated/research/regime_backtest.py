@@ -684,6 +684,7 @@ THRESHOLDS = (0.50, 0.60, 0.75, 0.80, 0.90)   # §1.8 Q2
 MIN_GROUP = 3                # a date needs this many names in the group to yield a spread
 MATERIALITY_PP = 0.5         # §1.8 R3/R4/R6
 T_CRIT = 2.0
+MIN_EFFECTIVE_N = 10         # §1.8 R8 decision floor
 T_ABORT = 5.0                # §1.6: a larger |t| means a broken variance estimate, not a signal
 SIGNALS = ("low_vol", "near_high", "vol_5_50", "vol_ratio", "pct_vs_sma50")
 
@@ -778,12 +779,34 @@ def stage_metrics(args) -> None:
 
     results, raw = [], {}
 
-    # ---- R12: the join must not have dropped delisted names -------------------------------
-    dl = panel.delisted.mean()
-    print(f"\n=== R12 -- point-in-time join intact? ===", flush=True)
-    ok12 = abs(dl - FRAME_DELISTED_SHARE) <= 0.12
-    print(f"  delisted share of usable rows {dl:.1%} vs frame {FRAME_DELISTED_SHARE:.1%} "
-          f"-> {'PASS' if ok12 else 'FAIL'}", flush=True)
+    # ---- R12: do the GATES select on survival? --------------------------------------------
+    # This was the same units error a fourth time: stage 3 was corrected to a differential test
+    # while this copy kept comparing a ROW-weighted panel share against a NAME-weighted frame
+    # share, and duly printed FAIL on a panel stage 3 had just passed. A row-weighted share is
+    # correctly lower -- a delisted name is listed for less of the span and so appears on fewer
+    # formation dates. The differential is the test; the level is not. Fixed 2026-10-09.
+    print("\n=== R12 -- do the gates select on survival? ===", flush=True)
+    allp_path = OUT / "regime_backtest_panel_all.csv"
+    ok12, worst12 = True, 0.0
+    if allp_path.exists():
+        allp = pd.read_csv(allp_path, usecols=["delisted", "gate_fail"])
+        allp["gate_fail"] = allp.gate_fail.fillna("")
+        for g in [x for x in allp.gate_fail.unique() if x]:
+            by = allp.assign(f=allp.gate_fail.eq(g)).groupby("delisted").f.mean()
+            if len(by) != 2:
+                continue
+            gap = abs(by.get(True, 0) - by.get(False, 0))
+            exempt = g == "pinned"      # removes pinned SPACs by design -- see stage 3
+            if not exempt:
+                worst12 = max(worst12, gap)
+            print(f"    gate {g:<15} delisted {by.get(True,0):6.1%} vs survived "
+                  f"{by.get(False,0):6.1%}  (gap {gap:+.1%})"
+                  f"{'   [exempt]' if exempt else ''}", flush=True)
+        ok12 = worst12 <= 0.10
+        print(f"  largest non-exempt differential {worst12:.1%} (threshold 10pp) -> "
+              f"{'PASS' if ok12 else 'FAIL'}", flush=True)
+    else:
+        print("  (panel_all.csv missing -- cannot run the differential test)", flush=True)
 
     # ---- Q1: does the profile beat the universe in RISK-OFF? ------------------------------
     print("\n=== Q1 -- profile vs gate survivors, by regime ===", flush=True)
@@ -867,24 +890,48 @@ def stage_metrics(args) -> None:
     q1 = {k: next(r for r in results
                   if r["metric"] == f"Q1 RISK-OFF {v}" and r["horizon"] == PRIMARY)
           for k, v in (("mm", "mean-vs-mean"), ("dd", "median-vs-median"))}
+    # R8 (§1.8) binds BEFORE R1/R2. A horizon under the effective-n floor is descriptive and
+    # decides nothing -- so it must not be allowed to produce "REVERTS to a freeze" either.
+    # Absence of power is not evidence of absence, and the first version of this code printed a
+    # verdict off effective n = 9.0. Fixed 2026-10-09.
+    powered = all(q1[k]["effective_n"] >= MIN_EFFECTIVE_N for k in ("mm", "dd"))
     both_pos = all(q1[k]["mean_pp"] > 0 and q1[k]["nw_t"] >= T_CRIT for k in ("mm", "dd"))
-    print(f"\nQ1: {'R1 -- allowance CONFIRMED' if both_pos else 'R2 -- allowance REVERTS to a freeze at Phase 4'}",
-          flush=True)
+    if not powered:
+        print(f"\nQ1: NO DECISION -- R8: effective n "
+              f"{min(q1[k]['effective_n'] for k in ('mm','dd'))} < {MIN_EFFECTIVE_N} floor. "
+              f"Descriptive only; neither R1 nor R2 applies.", flush=True)
+    else:
+        print(f"\nQ1: {'R1 -- allowance CONFIRMED' if both_pos else 'R2 -- allowance REVERTS to a freeze at Phase 4'}",
+              flush=True)
     for k in ("mm", "dd"):
         print(f"     {q1[k]['metric']}: {q1[k]['mean_pp']:+.2f}pp t={q1[k]['nw_t']:+.2f} "
               f"(eff_n {q1[k]['effective_n']})", flush=True)
 
-    # R3: loosest threshold that is not significantly worse and not worse by > 0.5pp
+    # R3, guarded. As first written it adopted the loosest threshold whose paired difference was
+    # "not significantly negative" -- which, on a sample with no power, every threshold satisfies.
+    # It duly adopted 0.50 off a +0.14pp difference at t=0.57. The burden-of-proof tilt toward
+    # loosening is deliberate (§1.8 Choice 3) but it presumes a test capable of detecting harm;
+    # without that, no evidence must mean no change. Fixed 2026-10-09.
     adopted = 0.90
-    for c in sorted(THRESHOLDS):
+    q2_eff = effective_n(int(base["dd"].dropna().shape[0]), PRIMARY)
+    if q2_eff < MIN_EFFECTIVE_N:
+        print(f"\nQ2: NO DECISION -- R8: effective n {q2_eff:.1f} < {MIN_EFFECTIVE_N} floor. "
+              f"Keeping calm >= 0.90; R3 cannot adopt a looser threshold on a sample that could "
+              f"not have detected a worse one.", flush=True)
+        print(f"     => calm threshold: 0.90 (unchanged)", flush=True)
+        q2_decided = False
+    else:
+        q2_decided = True
+    for c in sorted(THRESHOLDS) if q2_decided else []:
         row = curve[curve.calm == c].iloc[0]
         t_ok = not (row.median_vs_median_vs090_t <= -T_CRIT)
         mat_ok = row.median_vs_median_vs090_pp >= -MATERIALITY_PP
         if t_ok and mat_ok:
             adopted = c
             break
-    print(f"\nQ2: R3 adopts calm >= {adopted:.2f}", flush=True)
-    if adopted != 0.90:
+    if q2_decided:
+        print(f"\nQ2: R3 adopts calm >= {adopted:.2f}", flush=True)
+    if q2_decided and adopted != 0.90:
         row = curve[curve.calm == adopted].iloc[0]
         # R5: sign disagreement between the two measures -> keep 0.90
         if np.sign(row.median_vs_median_vs090_pp) != np.sign(row.mean_vs_mean_vs090_pp):
@@ -906,11 +953,17 @@ def stage_metrics(args) -> None:
                 adopted = 0.90
                 print("     R5b VETO: loses in one half -> keep 0.90, report the instability",
                       flush=True)
-    print(f"     => calm threshold: {adopted:.2f}", flush=True)
+    if q2_decided:
+        print(f"     => calm threshold: {adopted:.2f}", flush=True)
 
+    q3_eff = min(q3[k]["effective_n"] for k in ("mm", "dd"))
     reinstate = (q3["dd"]["mean_pp"] > MATERIALITY_PP and q3["mm"]["mean_pp"] > MATERIALITY_PP)
-    print(f"\nQ3: {'R6 -- reinstate near_high as rank_near_high >= 0.90' if reinstate else 'R7 -- the removal STANDS'}",
-          flush=True)
+    if q3_eff < MIN_EFFECTIVE_N:
+        print(f"\nQ3: NO DECISION -- R8: effective n {q3_eff} < {MIN_EFFECTIVE_N} floor. "
+              f"The 2026-10-05 removal stands by default, untested.", flush=True)
+    else:
+        print(f"\nQ3: {'R6 -- reinstate near_high as rank_near_high >= 0.90' if reinstate else 'R7 -- the removal STANDS'}",
+              flush=True)
     print("\n(Record these in Part 2 of the pre-registration, then amend the rules.)", flush=True)
 
 
