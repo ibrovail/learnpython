@@ -682,6 +682,7 @@ def stage_signals(args) -> None:
 PRIMARY = 20                 # §1.6 primary horizon
 THRESHOLDS = (0.50, 0.60, 0.75, 0.80, 0.90)   # §1.8 Q2
 MIN_GROUP = 3                # a date needs this many names in the group to yield a spread
+MIN_GROUP_FOR_MEDIAN = 10    # ...but a MEDIAN needs this many to mean anything (added 10-09)
 MATERIALITY_PP = 0.5         # §1.8 R3/R4/R6
 T_CRIT = 2.0
 MIN_EFFECTIVE_N = 10         # §1.8 R8 decision floor
@@ -842,9 +843,22 @@ def stage_metrics(args) -> None:
             results.extend([r, dr])
         curve.append(row)
     curve = pd.DataFrame(curve)
-    print(curve[["calm", "median_group_n", "median_vs_median_pp", "median_vs_median_t",
-                 "median_vs_median_vs090_pp", "median_vs_median_vs090_t"]]
-          .to_string(index=False, float_format=lambda v: f"{v:7.2f}"), flush=True)
+    curve["se"] = (curve.median_vs_median_vs090_pp / curve.median_vs_median_vs090_t).abs()
+    curve["ci_low"] = curve.median_vs_median_vs090_pp - 1.96 * curve.se
+    curve["non_inferior"] = curve.ci_low > -MATERIALITY_PP
+    print(curve[["calm", "median_group_n", "median_vs_median_pp",
+                 "median_vs_median_vs090_pp", "median_vs_median_vs090_t", "ci_low",
+                 "non_inferior"]].to_string(index=False, float_format=lambda v: f"{v:7.2f}"),
+          flush=True)
+    # A real relationship between the calm threshold and forward return would be smooth. A
+    # pass/fail pattern that jumps around -- 0.60 and 0.80 clearing while 0.75 fails -- is the
+    # signature of noise, and it is visible without any significance test.
+    ni = curve.dropna(subset=["median_vs_median_vs090_t"]).sort_values("calm").non_inferior.tolist()
+    flips = sum(1 for a, b in zip(ni, ni[1:]) if a != b)
+    if flips > 1:
+        print(f"  ** NON-MONOTONIC: the non-inferiority verdict flips {flips} times across the "
+              f"threshold curve. A genuine threshold effect is smooth; this is noise. **",
+              flush=True)
 
     # ---- Q3: three legs vs two ------------------------------------------------------------
     print(f"\n=== Q3 -- does near_high add anything? RISK-OFF, {PRIMARY} sessions ===", flush=True)
@@ -914,7 +928,18 @@ def stage_metrics(args) -> None:
     # without that, no evidence must mean no change. Fixed 2026-10-09.
     adopted = 0.90
     q2_eff = effective_n(int(base["dd"].dropna().shape[0]), PRIMARY)
-    if q2_eff < MIN_EFFECTIVE_N:
+    # A median computed on 2-7 names is not a median; it is the average of whichever handful
+    # qualified. MIN_GROUP was pre-registered at 3, which is far too low, and the effective-n
+    # floor does not catch it -- effective n was 11.2, comfortably over, while the reference arm
+    # at calm 0.90 held TWO names. Added 2026-10-09.
+    min_group_seen = curve.median_group_n.min()
+    if min_group_seen < MIN_GROUP_FOR_MEDIAN:
+        print(f"\nQ2: NO DECISION -- median group size {min_group_seen:.0f} < "
+              f"{MIN_GROUP_FOR_MEDIAN} floor. A median on that many names is the average of "
+              f"whichever handful qualified, whatever the t-statistic says.", flush=True)
+        print(f"     => calm threshold: 0.90 (unchanged)", flush=True)
+        q2_decided = False
+    elif q2_eff < MIN_EFFECTIVE_N:
         print(f"\nQ2: NO DECISION -- R8: effective n {q2_eff:.1f} < {MIN_EFFECTIVE_N} floor. "
               f"Keeping calm >= 0.90; R3 cannot adopt a looser threshold on a sample that could "
               f"not have detected a worse one.", flush=True)
@@ -924,9 +949,16 @@ def stage_metrics(args) -> None:
         q2_decided = True
     for c in sorted(THRESHOLDS) if q2_decided else []:
         row = curve[curve.calm == c].iloc[0]
-        t_ok = not (row.median_vs_median_vs090_t <= -T_CRIT)
-        mat_ok = row.median_vs_median_vs090_pp >= -MATERIALITY_PP
-        if t_ok and mat_ok:
+        # NON-INFERIORITY, not "no significant harm found". The first version tested
+        # t > -2.0, which pure noise satisfies: a wide interval fails to reject anything.
+        # The right question is whether the 95% interval EXCLUDES a loss worse than the
+        # materiality margin -- positive evidence of non-inferiority rather than absence of
+        # evidence of inferiority. Fixed 2026-10-09.
+        d, t = row.median_vs_median_vs090_pp, row.median_vs_median_vs090_t
+        se = abs(d / t) if (np.isfinite(t) and t != 0) else np.inf
+        ci_low = d - 1.96 * se
+        non_inferior = ci_low > -MATERIALITY_PP
+        if non_inferior:
             adopted = c
             break
     if q2_decided:
