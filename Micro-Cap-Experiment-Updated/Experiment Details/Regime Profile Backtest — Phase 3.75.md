@@ -372,4 +372,71 @@ Stated now so no later reader mistakes its scope:
 
 ## Part 3 — Post-hoc observations
 
-*Empty. Anything not pre-registered in Part 1 belongs here, labelled as post hoc.*
+**All of this is post hoc.** None was pre-registered in Part 1; it was found while answering Q2
+and after the user asked whether the rules themselves are the right rules. It is weaker evidence
+than a planned test, and it is the reason `Capacity Rules Study — Phase 3.8` exists rather than a
+rule amendment.
+
+### P3.1 — Q2 is two questions, and the capacity half is answered
+
+Part 1's Q2 asked whether 0.90 is too strict, meaning *does loosening cost return*. That is
+unanswerable here (median group of 2 names). But "too strict" also means *does it pass enough
+names to fill the book*, and that **is** answered, decisively.
+
+Across 524 weeks, the two-leg profile plus the trend rule passes a **median of 2 companies a week
+at a 2.0% pass rate**, with a maximum ever of 9. In falling markets it passes 3 or more in 34% of
+weeks, 5 or more in 10%, and **10 or more in 0% of weeks**.
+
+The live screens agree exactly: Week 55 and Week 56 each passed 2 of 100. **So 2 names a week is
+not this market being difficult — it is what the filter does, always.** The mean pass count is
+2.1 in both RISK-OFF and RISK-ON. The explanation given in the 2026-10-05 amendment — that the gate
+tightens as the tape falls — is **wrong**: it does not tighten, it was always this tight.
+
+### P3.2 — Simulated: the current filter is already a freeze in all but name
+
+178 falling-market weeks, buy every qualifying name equal-weighted, hold 20 sessions, no
+qualifying name means cash at 0.00%:
+
+| Rule | Mean | Median week | Weeks in cash | Names held | Worst week |
+|---|---|---|---|---|---|
+| Freeze | 0.00% | 0.00% | 100% | 0 | 0.0% |
+| **calm ≥ 0.90 (in force)** | **+0.41%** (t 0.97) | **0.00%** | **19%** | 2.1 | −14.1% |
+| calm ≥ 0.80 | +0.99% (t 2.06) | +1.07% | 6% | 3.8 | −19.2% |
+| calm ≥ 0.75 | +0.84% (t 1.78) | +1.38% | 4% | 4.5 | −17.5% |
+| **calm ≥ 0.60** | **+1.38%** (t 2.51) | +1.26% | 3% | 6.5 | **−14.2%** |
+| calm ≥ 0.50 | +1.33% (t 2.44) | +1.51% | 3% | 7.7 | −13.9% |
+| no calm filter | +1.89% (t 2.32) | +2.35% | 0% | 107 | −27.1% |
+
+The filter in force earns **0.41% against a freeze's 0.00%, at t = 0.97** — not distinguishable
+from doing nothing. Its **median week earns exactly zero** and only 46% of weeks are positive.
+**0.60 keeps essentially all of the worst-week protection (−14.2% vs −14.1%) while earning three
+times as much**, and beat 0.90 in both halves of the decade. 0.75 did not (it lost in the second
+half), which matches its instability in the Part 1 threshold curve.
+
+### P3.3 — The finding that reframes everything: the regime signal is inverted
+
+Prompted by the question "is it really risk-off, or is it what we have defined as risk-off that is
+putting us at a disadvantage?", the most basic available test was run for the first time in this
+project's history.
+
+| | Weeks | Mean 20s fwd | Median week | % weeks +ve | Worst week | Mean ÷ sd |
+|---|---|---|---|---|---|---|
+| **RISK-OFF** | 178 | **+1.89%** | +1.94% | **66%** | **−27.1%** | **0.26** |
+| **RISK-ON** | 346 | **+0.53%** | +0.49% | 60% | −38.7% | 0.09 |
+
+**The weeks the rules restrict buying are the better weeks to buy, by +1.36pp per month.** Robust:
++1.29pp excluding 2020, positive in both halves, **RISK-OFF better in 8 of 11 years**, and the gap
+is **largest in the 2022–23 bear market (+2.35pp)**. It does not protect the downside either — the
+worst month of the decade fell in a **RISK-ON** week, and RISK-OFF weeks returned **three times as
+much per unit of risk**.
+
+**Mechanism:** RISK-OFF means small caps have already fallen, while the hard gates admit only
+stocks above their *own* 50-day average. The system therefore buys relative strength inside a weak
+index, which is a documented profitable pattern. **A trend-following rule on the index was applied
+at a mean-reverting horizon.**
+
+**Consequence for this file's own conclusions.** Part 1's Q1 verdict (R2, the allowance reverts to
+a freeze) and Q3 (R7, the `near_high` removal stands) were both pre-registered defaults reached on
+no power. They stand as recorded, but **the frame they were tested inside is itself in question**,
+which is a larger problem than either verdict. Phase 3.8 puts the capacity rules on trial, and
+**no rule is amended until that study's Part 2 is written.**
