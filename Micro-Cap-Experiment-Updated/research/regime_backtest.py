@@ -50,7 +50,13 @@ import pandas as pd
 import requests
 
 ROOT = Path(__file__).resolve().parent
-DATA, OUT = ROOT / "data", ROOT / "output"
+# data.nosync, not data: iCloud Drive skips any folder whose name ends ".nosync" (the same
+# convention this project already uses for venv.nosync). With "Optimise Mac Storage" on and only
+# ~9GB of LOCAL disk free, iCloud was evicting the price cache and the 24MB panels, so reads and
+# writes intermittently failed with TimeoutError errno 60 -- it killed the download at 374/499 and
+# stage 4 once. The cache is gitignored and rebuildable, so it has no reason to be synced at all.
+# Fixed 2026-10-09. The quota was never the issue; local free space was.
+DATA, OUT = ROOT / "data.nosync", ROOT / "output"
 PROJECT = ROOT.parent
 
 # ---------------------------------------------------------------------------
