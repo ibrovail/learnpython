@@ -209,7 +209,101 @@ names by composite score, equal-weighted, and separately at a **15% / 5% / 0% ca
 
 ## Part 2 — Results
 
-*Empty. To be filled only after Part 1 is committed and the script has been run.*
+Run 2026-10-09 on the completed sample: **499 symbols downloaded, 492 with price data, 373
+companies surviving the gates on at least one date, 529 weekly formation dates, 67,127 panel rows**.
+R12's gate-differential test **passed at 2.2pp** (threshold 10pp), so no gate selects on survival.
+52 of 529 dates fell below `MIN_NAMES`, against 356 at the partial sample. Primary horizon 40
+sessions, book of 10 equal-weighted names.
+
+### P2.1 — Q1 and Q2: the answer is not about which signal
+
+| variant | % weeks in cash | mean | mean ÷ sd | worst week |
+|---|---|---|---|---|
+| **none** | **0%** | **+2.03%** | **0.301** | −31.5% |
+| spy_50d | 26% | +1.26% | 0.209 | −31.5% |
+| current_200d | 28% | +1.33% | 0.226 | −31.5% |
+| **current (in force)** | **34%** | **+1.33%** | **0.227** | −31.5% |
+| drawdown | 34% | +1.15% | 0.199 | −31.5% |
+| vix_low | 48% | +0.86% | 0.205 | −25.0% |
+| vix_high | 57% | +0.97% | 0.181 | −31.5% |
+| inverted | 66% | +0.70% | 0.195 | **−14.8%** |
+| breadth | 66% | +0.63% | 0.147 | −25.0% |
+| drawdown_inv | 71% | +0.68% | 0.188 | **−14.8%** |
+
+**Not one variant beats holding no filter at all.** And the ordering is not about concept or
+direction — it tracks **time spent in cash**, at a correlation of **−0.964** with return and
+**−0.862** with return per unit of risk.
+
+**This supersedes the Phase 3.75 post-hoc finding rather than confirming it.** That finding read as
+"the regime signal is inverted". The fuller test says something simpler and more robust: **no
+market-timing signal tested here has any skill, in either direction.** `inverted` does *not* beat
+`current` (+0.70% against +1.33%) — it is worse, because it holds cash 66% of the time instead of
+34%. The sign was never the issue. Being out of the market is.
+
+**R3 therefore did not fire**, and the pre-registration's refusal to adopt inversion turned out to
+be protecting against a conclusion the data does not even support.
+
+**The honest counterweight.** Cash buys real tail protection: the two variants that sit in cash
+~70% of the time have a worst week of **−14.8%** against **−31.5%** with no filter. That is a
+genuine 17pp reduction in the worst 40-session outcome, and it is the one thing a capacity rule
+demonstrably does. It is not enough to rescue any variant on return per unit of risk, but it is not
+nothing — and **§1.7 applies with full force: this simulation carries no stops, so it cannot say
+whether the book's trailing stop already provides that protection more cheaply.**
+
+### P2.2 — Q3: the defensive profile is monotonically harmful
+
+| rule | mean | median | mean ÷ sd | names held | % weeks in cash |
+|---|---|---|---|---|---|
+| **no profile** | **+2.03%** | +1.92% | **0.301** | 10 | 0% |
+| calm ≥ 0.50 | +1.66% | +1.54% | 0.284 | 10 | 1% |
+| calm ≥ 0.60 | +1.54% | +1.58% | 0.263 | 9 | 1% |
+| calm ≥ 0.75 | +1.32% | +1.32% | 0.230 | 6 | 2% |
+| calm ≥ 0.80 | +1.29% | +1.16% | 0.226 | 4 | 4% |
+| **calm ≥ 0.90 (in force)** | **+1.16%** | +0.46% | **0.207** | **3** | 12% |
+
+**Perfectly monotonic on every column.** Stricter is worse on return, worse on median, worse on
+return per unit of risk, and holds fewer names. There is no threshold at which the profile earns
+its place — the question Phase 3.75 was built to answer (is 0.90 too strict?) has the answer
+"every setting is too strict, including none of them, because the leg itself costs money".
+
+Contrast with Phase 3.75's noisy, non-monotonic curve on the same question: at 529 weeks and
+10-name books the relationship is clean. That curve was noise; this is not.
+
+### P2.3 — Q4: book shape, and a flaw in my own test
+
+| rule | mean | mean ÷ sd | vs 5 names (t) | worst week |
+|---|---|---|---|---|
+| top 3 | +2.16% | 0.246 | −0.20 | −32.4% |
+| **top 5** | +2.19% | 0.291 | — | −33.6% |
+| top 8 | +2.23% | **0.302** | +0.19 | −31.2% |
+| top 12 | +1.90% | 0.290 | −1.59 | −30.2% |
+| top 20 | +1.87% | 0.317 | −1.65 | −31.0% |
+
+No count beats 5 names with t ≥ 2.0, so **R10 keeps ~5 positions**. Top 8 is marginally best on
+return per unit of risk but nowhere near significant.
+
+**The cash-floor test is uninformative by construction, and that is my error in the design.** A
+cash floor in this simulation simply multiplies every return by (1 − floor), so it cannot change
+mean ÷ standard deviation at all — 0.301 at every floor, and the mean differences (2.03% / 2.27% /
+2.39%) are exactly the 15% / 5% / 0% scaling. **R11's verdict is therefore vacuous**, not a finding
+that the floor is justified. Testing a cash floor honestly requires modelling what cash earns and
+what opportunities the floor forces you to decline, neither of which this simulation does. The 15%
+floor remains **untested**.
+
+### P2.4 — Verdicts, as the pre-registered rules produce them
+
+| Question | Rule | Verdict |
+|---|---|---|
+| Q1 regime filter | **R2** | **REMOVE.** Capacity becomes regime-independent |
+| Q2 replacement | **R5** | **None qualifies.** No regime signal is adopted |
+| Q3 defensive profile | **R7** | **REMOVE.** mean/sd 0.207 with it vs 0.301 without, t = −2.13 |
+| Q4 position count | R10 | Keep ~5 positions |
+| Q4 cash floor | R11 | **Vacuous — see P2.3.** The floor is untested |
+| Risk per trade | R12 | Unchanged at 2%. This study cannot speak to sizing |
+
+**R16 still binds: no rule in `portfolio_rules.md` is amended until an amendment is written that
+names the decision rule behind each change.** The three removals above are what the pre-registered
+rules produce on this evidence; they are not yet rules.*
 
 ---
 
