@@ -99,7 +99,9 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
         use_stops: bool = True, ceiling: int = POSITION_CEILING,
         slippage_bps: float = SLIPPAGE_BPS, max_hold: int = MAX_HOLD,
         raise_policy: str = "mechanical", rank_by: str = "composite",
-        cash_floor: float = CASH_FLOOR, liq_tercile: str | None = None) -> dict:
+        cash_floor: float = CASH_FLOOR, liq_tercile: str | None = None,
+        fractional: bool = False, risk_per_trade: float = RISK_PER_TRADE,
+        name_cap: float = SINGLE_NAME_CAP) -> dict:
     """raise_policy decides how the trailing stop is managed, and it dominates everything else.
 
     portfolio_rules.md makes raising a stop *eligible* mechanically but leaves the decision to
@@ -182,11 +184,12 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
             if not np.isfinite(stop) or stop >= entry:
                 continue
             risk_per_share = entry - stop
-            shares = int((eq * RISK_PER_TRADE) / risk_per_share)
-            shares = min(shares, int(eq * SINGLE_NAME_CAP / entry))
+            rnd = (lambda x: x) if fractional else int
+            shares = rnd((eq * risk_per_trade) / risk_per_share)
+            shares = min(shares, rnd(eq * name_cap / entry))
             spendable = bk.cash - eq * cash_floor
-            shares = min(shares, int(spendable / entry) if spendable > 0 else 0)
-            if shares < 1:
+            shares = min(shares, rnd(spendable / entry) if spendable > 0 else 0)
+            if shares < (0.0001 if fractional else 1):
                 continue
             cost = shares * entry
             bk.cash -= cost
