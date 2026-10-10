@@ -101,7 +101,8 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
         raise_policy: str = "mechanical", rank_by: str = "composite",
         cash_floor: float = CASH_FLOOR, liq_tercile: str | None = None,
         fractional: bool = False, risk_per_trade: float = RISK_PER_TRADE,
-        name_cap: float = SINGLE_NAME_CAP) -> dict:
+        name_cap: float = SINGLE_NAME_CAP, day1_rule: bool = False,
+        breaker: bool = False, reentry_ban: int = 0) -> dict:
     """raise_policy decides how the trailing stop is managed, and it dominates everything else.
 
     portfolio_rules.md makes raising a stop *eligible* mechanically but leaves the decision to
@@ -124,6 +125,9 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
     slip = slippage_bps / 10_000.0
     cand_by_date = {d: g for d, g in panel.groupby("date")}
     pending: list[str] = []          # decided on the formation date, executed next session
+    banned: dict[str, int] = {}      # ticker -> sessions remaining on its re-entry ban
+    peak = capital                   # running equity peak, for the drawdown circuit breaker
+    derisk = False
 
     for i, day in enumerate(cal):
         live = {t: px[t].loc[day] for t in list(bk.pos) if t in px}
@@ -142,15 +146,24 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
                     fill = r.adjOpen          # gapped through: the stop does NOT protect here
                 elif r.adjLow <= p["stop"]:
                     fill = p["stop"]
+            if fill is None and day1_rule and p["held"] == 1 and \
+               (r.adjClose / p["entry"] - 1) <= -0.08:
+                p["day1_flag"] = True      # exit at the next open, not at today's close
+            if fill is None and p.get("day1_flag") and p["held"] >= 2:
+                fill = r.adjOpen
             if fill is None and p["held"] >= max_hold:
                 fill = r.adjClose
             if fill is not None:
                 proceeds = p["shares"] * fill * (1 - slip)
                 bk.cash += proceeds
+                why = "stop" if p["held"] < max_hold else "hold_limit"
+                if p.get("day1_flag"):
+                    why = "day1"
+                if reentry_ban and why in ("stop", "day1"):
+                    banned[t] = reentry_ban
                 bk.trades.append({"ticker": t, "entry": p["entry"], "exit": fill,
                                   "held": p["held"], "shares": p["shares"],
-                                  "pnl": proceeds - p["cost"],
-                                  "reason": "stop" if p["held"] < max_hold else "hold_limit"})
+                                  "pnl": proceeds - p["cost"], "reason": why})
                 del bk.pos[t]
                 marks.pop(t, None)
 
@@ -170,8 +183,28 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
                     p["stop"] = cand
                     p["raises"] += 1
 
-        # ---- 3. execute what was decided on the previous formation date --------------------
+        # ---- 3. the drawdown circuit breaker, on the running peak ---------------------------
         eq = bk.equity(marks)
+        peak = max(peak, eq)
+        if breaker:
+            dd_now = eq / peak - 1
+            if dd_now <= -0.30:
+                # go to cash: liquidate everything at the close
+                for t in list(bk.pos):
+                    r = live.get(t)
+                    if r is None or not np.isfinite(r.adjClose):
+                        continue
+                    p = bk.pos[t]
+                    bk.cash += p["shares"] * r.adjClose * (1 - slip)
+                    bk.trades.append({"ticker": t, "entry": p["entry"],
+                                      "exit": r.adjClose, "held": p["held"],
+                                      "shares": p["shares"], "pnl": 0.0,
+                                      "reason": "breaker"})
+                    del bk.pos[t]; marks.pop(t, None)
+                pending = []
+            derisk = dd_now <= -0.20
+
+        # ---- 4. execute what was decided on the previous formation date --------------------
         for t in pending:
             if len(bk.pos) >= ceiling or t in bk.pos or t not in px:
                 continue
@@ -185,7 +218,8 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
                 continue
             risk_per_share = entry - stop
             rnd = (lambda x: x) if fractional else int
-            shares = rnd((eq * risk_per_trade) / risk_per_share)
+            rp = risk_per_trade * (0.5 if derisk else 1.0)
+            shares = rnd((eq * rp) / risk_per_share)
             shares = min(shares, rnd(eq * name_cap / entry))
             spendable = bk.cash - eq * cash_floor
             shares = min(shares, rnd(spendable / entry) if spendable > 0 else 0)
@@ -194,10 +228,15 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
             cost = shares * entry
             bk.cash -= cost
             bk.pos[t] = {"shares": shares, "entry": entry, "cost": cost, "stop": stop,
-                         "held": 0, "last": entry, "raises": 0}
+                         "held": 0, "last": entry, "raises": 0, "day1_flag": False}
         pending = []
 
-        # ---- 4. on a formation date, pick next session's buys ------------------------------
+        for t in list(banned):
+            banned[t] -= 1
+            if banned[t] <= 0:
+                del banned[t]
+
+        # ---- 5. on a formation date, pick next session's buys ------------------------------
         if day in cand_by_date and len(bk.pos) < ceiling:
             g = cand_by_date[day]
             if use_regime:
@@ -213,7 +252,7 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
                     g = g[g.dollar_vol_20 >= q.iloc[1]]
                 elif liq_tercile == "small":
                     g = g[g.dollar_vol_20 <= q.iloc[0]]
-            g = g[~g.ticker.isin(bk.pos)]
+            g = g[~g.ticker.isin(bk.pos) & ~g.ticker.isin(banned)]
             pending = g.nlargest(ceiling - len(bk.pos), rank_by).ticker.tolist()
 
         for t, p in bk.pos.items():
