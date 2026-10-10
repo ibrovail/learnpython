@@ -98,7 +98,8 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
         capital: float = 10_000.0, use_regime: bool = False, calm: float | None = None,
         use_stops: bool = True, ceiling: int = POSITION_CEILING,
         slippage_bps: float = SLIPPAGE_BPS, max_hold: int = MAX_HOLD,
-        raise_policy: str = "mechanical") -> dict:
+        raise_policy: str = "mechanical", rank_by: str = "composite",
+        cash_floor: float = CASH_FLOOR, liq_tercile: str | None = None) -> dict:
     """raise_policy decides how the trailing stop is managed, and it dominates everything else.
 
     portfolio_rules.md makes raising a stop *eligible* mechanically but leaves the decision to
@@ -183,7 +184,7 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
             risk_per_share = entry - stop
             shares = int((eq * RISK_PER_TRADE) / risk_per_share)
             shares = min(shares, int(eq * SINGLE_NAME_CAP / entry))
-            spendable = bk.cash - eq * CASH_FLOOR
+            spendable = bk.cash - eq * cash_floor
             shares = min(shares, int(spendable / entry) if spendable > 0 else 0)
             if shares < 1:
                 continue
@@ -200,8 +201,17 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
                 g = g[g.regime == "RISK-ON"]
             if calm is not None:
                 g = g[(g.rank_low_vol >= calm) & (g.vol_5_50 > 1.0) & (g.above_sma50.astype(bool))]
+            if liq_tercile is not None:
+                # size/liquidity tercile within that week's eligible names. The most liquid third
+                # returned 16.9% a year equal-weighted against the universe's 14.1%, which is the
+                # one lever found that clears SPY -- so it is testable rather than assumed.
+                q = g.dollar_vol_20.quantile([1/3, 2/3])
+                if liq_tercile == "large":
+                    g = g[g.dollar_vol_20 >= q.iloc[1]]
+                elif liq_tercile == "small":
+                    g = g[g.dollar_vol_20 <= q.iloc[0]]
             g = g[~g.ticker.isin(bk.pos)]
-            pending = g.nlargest(ceiling - len(bk.pos), "composite").ticker.tolist()
+            pending = g.nlargest(ceiling - len(bk.pos), rank_by).ticker.tolist()
 
         for t, p in bk.pos.items():
             if t in marks:
