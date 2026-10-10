@@ -102,7 +102,8 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
         cash_floor: float = CASH_FLOOR, liq_tercile: str | None = None,
         fractional: bool = False, risk_per_trade: float = RISK_PER_TRADE,
         name_cap: float = SINGLE_NAME_CAP, day1_rule: bool = False,
-        breaker: bool = False, reentry_ban: int = 0) -> dict:
+        breaker: bool = False, reentry_ban: int = 0,
+        earnings_guard: int = 0, earn_idx: dict | None = None) -> dict:
     """raise_policy decides how the trailing stop is managed, and it dominates everything else.
 
     portfolio_rules.md makes raising a stop *eligible* mechanically but leaves the decision to
@@ -163,7 +164,8 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
                     banned[t] = reentry_ban
                 bk.trades.append({"ticker": t, "entry": p["entry"], "exit": fill,
                                   "held": p["held"], "shares": p["shares"],
-                                  "pnl": proceeds - p["cost"], "reason": why})
+                                  "pnl": proceeds - p["cost"], "reason": why,
+                                  "planned_risk": p.get("planned_risk", np.nan)})
                 del bk.pos[t]
                 marks.pop(t, None)
 
@@ -228,7 +230,8 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
             cost = shares * entry
             bk.cash -= cost
             bk.pos[t] = {"shares": shares, "entry": entry, "cost": cost, "stop": stop,
-                         "held": 0, "last": entry, "raises": 0, "day1_flag": False}
+                         "held": 0, "last": entry, "raises": 0, "day1_flag": False,
+                         "planned_risk": shares * risk_per_share}
         pending = []
 
         for t in list(banned):
@@ -253,6 +256,21 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
                 elif liq_tercile == "small":
                     g = g[g.dollar_vol_20 <= q.iloc[0]]
             g = g[~g.ticker.isin(bk.pos) & ~g.ticker.isin(banned)]
+            if earnings_guard and earn_idx:
+                # No initiation within N sessions before a known earnings release. The
+                # rule's stated justification is tail control -- the 2026-09-19 study found
+                # 32% stop-outs against 12% -- not mean return, so the simulation reports
+                # stop-out rate and losses beyond plan, which is what it claimed.
+                keep = []
+                for tk in g.ticker:
+                    a = earn_idx.get(tk)
+                    if a is None:
+                        keep.append(True); continue
+                    nxt = a[a >= i]
+                    keep.append(not (len(nxt) and (nxt[0] - i) <= earnings_guard))
+                # dtype=bool matters: an empty list becomes a float64 array, which pandas
+                # reads as COLUMN selection and silently returns a column-less frame.
+                g = g.loc[np.array(keep, dtype=bool)] if keep else g.iloc[0:0]
             pending = g.nlargest(ceiling - len(bk.pos), rank_by).ticker.tolist()
 
         for t, p in bk.pos.items():
@@ -266,7 +284,7 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
     total = cur.iloc[-1] / capital - 1
     dd = (cur / cur.cummax() - 1).min()
     rets = cur.pct_change().dropna()
-    return {"final": cur.iloc[-1], "total_return": total,
+    return {"trades_df": tr, "final": cur.iloc[-1], "total_return": total,
             "cagr": (1 + total) ** (1 / yrs) - 1,
             "max_drawdown": dd,
             "sharpe_like": (rets.mean() / rets.std() * np.sqrt(252)) if rets.std() else np.nan,
