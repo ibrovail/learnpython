@@ -607,9 +607,13 @@ applies. `<research_trigger>` now prints a `<lanes>` line so the open capacity c
 - **Every other gate still applies.** A catalyst play must clear the **50-day SMA** trend rule,
   growing TTM revenue with a credible earnings path, the prohibited-business check, **no earnings
   print within 10 trading sessions**, a stop placeable under the ATR rules inside the 30% ceiling,
-  and the driver and sector caps. What it does **not** face is the RISK-OFF defensive profile, and
-  it is sized at the **full 2%** rather than half. That asymmetry is the whole point of the lane:
-  it is the route to a position in a weak tape that does not require a calm, near-high chart.
+  and the driver and sector caps. It is sized at the **full 2%**.
+  *(Revised 2026-10-11: this read "what it does not face is the RISK-OFF defensive profile, and it
+  is sized at the full 2% rather than half". Both halves are obsolete — the profile is removed, so
+  there is nothing to be exempt from, and the screener lane no longer runs at half risk because in
+  RISK-OFF it does not run at all. **The lane's advantage is no longer an exemption; it is that it
+  is the only lane open in a weak tape.** That makes staffing it the binding constraint on book
+  size rather than a nicety, which is what Stage 0 of the funnel exists to force.)*
 - **Log it as a catalyst.** `log_research.py --source "catalyst:<category>"` (for example
   `catalyst:index-add`, `catalyst:contract-ramp`). The `source` field is how the lane is recovered
   later — `trading_script.py` reads it to classify holdings — so a catalyst name logged as
