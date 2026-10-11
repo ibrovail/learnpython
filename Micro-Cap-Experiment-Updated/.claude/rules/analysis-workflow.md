@@ -219,6 +219,11 @@ When `<weekly_context>` XML appears in the conversation output, **immediately be
    within 10 sessions, prohibited, binary-thesis setup, **inside the post-stop-out re-entry ban**
    (read it off `<blackout>` in `<research_trigger>` — reason code `re-entry-ban`), or anything
    else that plainly fails a rule.
+   - **In RISK-OFF a screener-sourced name is killed by the closed lane before any of the above**
+     — log it `--reason-code lane-closed`, never `capacity`. The two mean different things and the
+     buy-vs-pass scoring needs them separable: `lane-closed` says nothing about the name, while
+     `capacity` says the book was full. Do not spend quote-page fetches on screener names in
+     RISK-OFF beyond what the research log needs. *(Added 2026-10-11 with the lane closure.)*
    - **Draw the stage-1 names as a spread:** ≥3 from ranks 1–15, ≥3 from ranks 16–50, ≥3 GICS
      sectors, **≥2 below $2Bn**. The ranking order has no demonstrated skill on independent data
      (Phase 3.5 Part 3), and the top of the list tilts toward larger, calmer names.
