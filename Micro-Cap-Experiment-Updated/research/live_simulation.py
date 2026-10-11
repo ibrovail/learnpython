@@ -106,7 +106,8 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
         earnings_guard: int = 0, earn_idx: dict | None = None,   # ticker -> earnings DATES
         sector_cap: int = 0, sectors: dict | None = None,
         calm_when: str = "all",
-        block_rate: float = 0.0, block_seed: int = 0) -> dict:
+        block_rate: float = 0.0, block_seed: int = 0,
+        cooldown_sessions: int = 0, cooldown_pct: float = 0.05) -> dict:
     """raise_policy decides how the trailing stop is managed, and it dominates everything else.
 
     portfolio_rules.md makes raising a stop *eligible* mechanically but leaves the decision to
@@ -143,9 +144,10 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
     # carry was the cost of refusing candidates at random. Indexing here cannot drift.
     rng = np.random.default_rng(block_seed)
     blocked = tot_cands = 0        # how much candidate supply the earnings guard removes
+    cool_blocked = cool_tot = 0    # and the post-earnings cooldown
     pos_of = {d: j for j, d in enumerate(cal)}
     eidx: dict[str, np.ndarray] = {}
-    if earnings_guard and earn_idx:
+    if (earnings_guard or cooldown_sessions) and earn_idx:
         for t, arr in earn_idx.items():
             v = [pos_of[pd.Timestamp(d)] for d in arr if pd.Timestamp(d) in pos_of]
             if v:
@@ -304,6 +306,35 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
                 tot_cands += len(keep)
                 blocked += int(len(keep) - sum(keep))
                 g = g.loc[np.array(keep, dtype=bool)] if keep else g.iloc[0:0]
+            if cooldown_sessions and eidx and len(g):
+                # POST-EARNINGS COOLDOWN (entry-discipline.md): no buy within N sessions AFTER a
+                # print at a price more than cooldown_pct above the post-print close. Both
+                # conditions, as written -- a name that has come back DOWN to its post-print close
+                # is not blocked. "Post-print close" is the first session strictly after the
+                # filing date, because companies release after the close and file that day or the
+                # next, so that session is the first full one reflecting the print.
+                keep2 = []
+                for tk in g.ticker:
+                    a = eidx.get(tk)
+                    if a is None or tk not in px:
+                        keep2.append(True); continue
+                    prev = a[a <= i]
+                    if not len(prev) or (i - prev[-1]) > cooldown_sessions:
+                        keep2.append(True); continue
+                    j = prev[-1] + 1
+                    if j >= len(cal) or j > i:
+                        keep2.append(True); continue
+                    try:
+                        post = px[tk].loc[cal[j]].adjClose
+                        now = px[tk].loc[day].adjClose
+                    except KeyError:
+                        keep2.append(True); continue
+                    if not (np.isfinite(post) and np.isfinite(now)) or post <= 0:
+                        keep2.append(True); continue
+                    keep2.append(now <= post * (1 + cooldown_pct))
+                cool_blocked += int(len(keep2) - sum(keep2))
+                cool_tot += len(keep2)
+                g = g.loc[np.array(keep2, dtype=bool)] if keep2 else g.iloc[0:0]
             if block_rate > 0 and len(g):
                 # PLACEBO for the earnings guard: refuse the same SHARE of candidates at random.
                 # If refusing candidates at this rate helps on its own, the guard is not doing
@@ -373,6 +404,7 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
             "avg_hold": float(tr.held.mean()) if len(tr) else np.nan,
             "pct_time_invested": float((cur.index.map(lambda d: 1) * 0).mean()) if False else None,
             "guard_block_rate": (blocked / tot_cands) if tot_cands else 0.0,
+            "cooldown_block_rate": (cool_blocked / cool_tot) if cool_tot else 0.0,
             "sector_max": max(conc) if conc else np.nan,
             "sector_ge3": float(np.mean(np.array(conc) >= 3)) if conc else np.nan,
             "sector_ge4": float(np.mean(np.array(conc) >= 4)) if conc else np.nan,
