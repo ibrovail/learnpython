@@ -274,13 +274,20 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
                 # reads as COLUMN selection and silently returns a column-less frame.
                 g = g.loc[np.array(keep, dtype=bool)] if keep else g.iloc[0:0]
             room = ceiling - len(bk.pos)
-            if sector_cap and sectors:
+            g = g[g[rank_by].notna()]
+            if sectors is not None:
                 # At most sector_cap positions in one sector. Walk the ranked list greedily,
                 # counting what is already held plus what has been chosen on this date -- which
                 # is how the weekend report applies it: take the best name whose sector has room,
                 # not the best name outright. A name with no sector label counts as its own
                 # sector, so an unlabelled name is never refused by the cap (the conservative
                 # direction: it understates the cap's bite rather than inventing one).
+                #
+                # sector_cap=0 runs this same walk with the cap check disabled, so the uncapped
+                # baseline is produced by identical code. Taking it from the nlargest branch
+                # instead moved test drawdown by 2.8pp on its own -- nlargest drops NaN ranks
+                # while sort_values keeps them last, which changes what a thin candidate date
+                # fills the book with. A control has to differ in the ONE thing under test.
                 held = {}
                 for t in bk.pos:
                     sec = sectors.get(t)
@@ -291,7 +298,7 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
                     if len(pending) >= room:
                         break
                     sec = sectors.get(t)
-                    if sec and held.get(sec, 0) >= sector_cap:
+                    if sector_cap and sec and held.get(sec, 0) >= sector_cap:
                         continue
                     pending.append(t)
                     if sec:

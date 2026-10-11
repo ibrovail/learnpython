@@ -22,10 +22,21 @@ S2  The cap's stated purpose is correlated-risk control, not return, so it is ju
     improve test max drawdown. A rule that costs return and gives no risk reduction has no
     remaining justification.
 S3  KEEP at 3 if it improves test max drawdown by >= 1.0pp at a test CAGR cost <= 1.0pp.
+    (Sign note, corrected after the first run: drawdowns are negative, so "improves" means the
+    difference is POSITIVE -- shallower. The first implementation tested <= -0.01 and so could
+    only ever fire on a WORSE drawdown. The thresholds are unchanged; the comparison was wrong.)
 S4  CHANGE the number only if another cap value beats 3 on BOTH train and test, on both CAGR
     and drawdown. One-sided improvement is not enough -- 160 configurations of this book have
     already shown how easily a single split rewards an arbitrary threshold.
 S5  Both variants (full panel, labelled-only) must agree for any verdict other than "unclear".
+S6  PLACEBO, added after the first run on an observation the pre-registration had not
+    anticipated: a cap of FIVE, which never changes the largest same-sector count the book
+    actually holds, improved test drawdown almost as much as a cap of three. If merely
+    perturbing which names get picked improves drawdown, then the cap's apparent benefit is not
+    correlated-risk control. So the cap is also run at 3 against SHUFFLED sector labels, 12
+    seeds, preserving the sector size distribution. If the real labels sit inside the placebo
+    distribution, the verdict is that the cap does nothing identifiable and the earlier
+    S3 "KEEP" is an artifact. This is post hoc and labelled as such.
 
     venv/bin/python research/sector_cap_test.py
 """
@@ -135,6 +146,40 @@ def main() -> None:
                 r["d_dd"] = b["max_drawdown"] - base["test_dd"]
             rows.append(r)
         print()
+    # --- 3. placebo: the same cap on shuffled labels (post hoc, see S6) --------------------
+    print("=== 3. PLACEBO -- cap 3 on SHUFFLED sector labels (post hoc) ===")
+    print("    if random labels diversify just as well, the cap is not doing what it claims")
+    tr_c, te_c = cal[cal < SPLIT], cal[cal >= SPLIT]
+    tr_p, te_p = panel[panel.date < SPLIT], panel[panel.date >= SPLIT]
+    real = pd.DataFrame(rows).query("variant.str.startswith('full') and cap == 3").iloc[0]
+    tk, sc = list(sectors), list(sectors.values())
+    pl = []
+    for seed in range(12):
+        rng = np.random.default_rng(seed)
+        shuf = dict(zip(tk, rng.permutation(sc)))
+        kw = {**BASE, "sectors": shuf, "sector_cap": 3}
+        a = L.run(tr_p, px, tr_c, capital=CAPITAL, **kw)
+        b = L.run(te_p, px, te_c, capital=CAPITAL, **kw)
+        pl.append(dict(variant="placebo (shuffled labels)", cap=3, seed=seed,
+                       train=a["cagr"], test=b["cagr"], test_dd=b["max_drawdown"],
+                       trades=b["trades"], sector_max=b["sector_max"],
+                       sector_ge3=b["sector_ge3"], sector_ge4=b["sector_ge4"],
+                       train_dd=a["max_drawdown"]))
+    pl = pd.DataFrame(pl)
+    print(f"{'':<12}{'train':>8}{'TEST':>8}{'test DD':>9}")
+    print(f"{'real labels':<12}{real.train:>7.1%}{real.test:>8.1%}{real.test_dd:>9.1%}")
+    print(f"{'placebo mean':<12}{pl.train.mean():>7.1%}{pl.test.mean():>8.1%}"
+          f"{pl.test_dd.mean():>9.1%}")
+    print(f"{'placebo min':<12}{pl.train.min():>7.1%}{pl.test.min():>8.1%}"
+          f"{pl.test_dd.min():>9.1%}")
+    print(f"{'placebo max':<12}{pl.train.max():>7.1%}{pl.test.max():>8.1%}"
+          f"{pl.test_dd.max():>9.1%}")
+    pct_dd = float((pl.test_dd < real.test_dd).mean())
+    pct_ret = float((pl.test < real.test).mean())
+    print(f"\n  real labels beat {pct_dd:.0%} of placebos on test drawdown and "
+          f"{pct_ret:.0%} on test return")
+    rows += pl.to_dict("records")
+
     res = pd.DataFrame(rows)
     res.to_csv(OUT / "sector_cap_results.csv", index=False)
     print(f"wrote {OUT/'sector_cap_results.csv'} -- commit before interpreting (R15)\n")
@@ -142,7 +187,7 @@ def main() -> None:
     print("=" * 78)
     print("=== VERDICT (decision rules applied as written) ===")
     print("=" * 78)
-    for variant in res.variant.unique():
+    for variant in [x for x in res.variant.unique() if not x.startswith("placebo")]:
         v = res[res.variant == variant]
         none = v[v.cap == 0].iloc[0]
         three = v[v.cap == 3].iloc[0]
@@ -156,9 +201,9 @@ def main() -> None:
         dte, ddd = three.d_test, three.d_dd
         print(f"  cap 3 vs none: test CAGR {dte:+.1%}, test drawdown {ddd:+.1%} "
               f"(negative = deeper)")
-        if dte < 0 and ddd >= 0:
+        if dte < 0 and ddd <= 0:
             print("  S2 -> DROP. It costs test return and does not reduce drawdown.")
-        elif ddd <= -0.01 and dte >= -0.01:
+        elif ddd >= 0.01 and dte >= -0.01:
             print("  S3 -> KEEP at 3. Drawdown improves by >=1pp at a cost of <=1pp.")
         else:
             print("  neither S2 nor S3 fires -> unclear on the pre-registered thresholds.")
@@ -169,6 +214,10 @@ def main() -> None:
                   f"{', '.join(str(int(c)) for c in better.cap)}")
         else:
             print("  S4 -> no other cap value dominates 3 on both splits; the number stands.")
+    print(f"\n  S6 placebo: real labels beat {pct_dd:.0%} of 12 shuffled-label runs on test")
+    print(f"  drawdown and {pct_ret:.0%} on test return. Under 75% on drawdown means the cap's")
+    print(f"  apparent benefit is selection perturbation, not sector diversification, and the")
+    print(f"  S3 KEEP above does not survive.")
 
 
 if __name__ == "__main__":

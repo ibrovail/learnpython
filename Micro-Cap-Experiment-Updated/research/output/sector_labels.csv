@@ -1,0 +1,333 @@
+ticker,cik,sic,sic_desc,company,delisted,sector
+AARD,0001774857,2834,Pharmaceutical Preparations,"Aardvark Therapeutics, Inc.",False,Health Care
+ABAT,0001576873,1400,Mining & Quarrying of  Nonmetallic Minerals (No Fuels),AMERICAN BATTERY TECHNOLOGY Co,False,Materials
+ABOS,0001576885,2836,"Biological Products, (No Diagnostic Substances)","Acumen Pharmaceuticals, Inc.",False,Health Care
+ABUS,0001447028,2834,Pharmaceutical Preparations,Arbutus Biopharma Corp,False,Health Care
+ABVX,0001956827,2834,Pharmaceutical Preparations,Abivax S.A.,False,Health Care
+ACH,0000075252,5047,"Wholesale-Medical, Dental & Hospital Equipment & Supplies",ACCENDRA HEALTH INC/VA/,False,Industrials
+ACHR,0001824502,3721,Aircraft,Archer Aviation Inc.,False,Industrials
+ACNT,0000095953,2800,Chemicals & Allied Products,ASCENT INDUSTRIES CO.,False,Materials
+ACRS,0001557746,2834,Pharmaceutical Preparations,"Aclaris Therapeutics, Inc.",False,Health Care
+ACRV,0001781174,2834,Pharmaceutical Preparations,"Acrivon Therapeutics, Inc.",False,Health Care
+ACXP,0001736243,2834,Pharmaceutical Preparations,"Acurx Pharmaceuticals, Inc.",False,Health Care
+AEIS,0000927003,3679,"Electronic Components, NEC",ADVANCED ENERGY INDUSTRIES INC,False,Information Technology
+AEP,0000004904,4911,Electric Services,AMERICAN ELECTRIC POWER CO INC,False,Utilities
+AERI,0001337553,2836,"Biological Products, (No Diagnostic Substances)",AERIE PHARMACEUTICALS INC,True,Health Care
+AET,0000874389,3081,Unsupported Plastics Film & Sheet,APPLIED EXTRUSION TECHNOLOGIES INC /DE,True,Materials
+AFJK,0001979005,6770,Blank Checks,"Aimei Health Technology Co., Ltd.",False,Financials
+AGCB,0001830232,6770,Blank Checks,Altimeter Growth Corp. 2,True,Financials
+AIIO,0001932737,3711,Motor Vehicles & Passenger Car Bodies,ROBO.AI INC.,False,Consumer Discretionary
+AIRO,0001927958,3721,Aircraft,"AIRO Group Holdings, Inc.",False,Industrials
+AISP,0001842566,7372,Services-Prepackaged Software,"Airship AI Holdings, Inc.",False,Information Technology
+AKTS,0002035832,2834,Pharmaceutical Preparations,"Aktis Oncology, Inc.",False,Health Care
+ALE,0000892222,2082,Malt Beverages,"CRAFT BREW ALLIANCE, INC.",False,Consumer Staples
+ALEX,0001545654,6798,Real Estate Investment Trusts,"Alexander & Baldwin, Inc.",True,Real Estate
+ALK,0000766421,4512,"Air Transportation, Scheduled","ALASKA AIR GROUP, INC.",False,Industrials
+ALLK,0001564824,2834,Pharmaceutical Preparations,Allakos Inc.,True,Health Care
+ALMU,0001828805,3674,Semiconductors & Related Devices,"Aeluma, Inc.",False,Information Technology
+ALOG,0000006284,3825,Instruments For Meas & Testing of  Electricity & Elec Signals,ANALOGIC CORP,True,Health Care
+ALSK,0001089511,4813,Telephone Communications (No Radiotelephone),ALASKA COMMUNICATIONS SYSTEMS GROUP INC,True,Communication Services
+AMAL,0001823608,6022,State Commercial Banks,Amalgamated Financial Corp.,False,Financials
+AMCX,0001514991,4841,Cable & Other Pay Television Services,AMC Global Media Inc.,False,Communication Services
+AMSC,0000880807,3621,Motors & Generators,AMERICAN SUPERCONDUCTOR CORP /DE/,False,Information Technology
+AMWL,0001393584,7389,"Services-Business Services, NEC",American Well Corp,False,Information Technology
+ANCX,0001176316,6035,"Savings Institution, Federally Chartered",ACCESS NATIONAL CORP,True,Financials
+ANDE,0000821026,5150,Wholesale-Farm Product Raw Materials,"Andersons, Inc.",False,Industrials
+ANDX,0001507615,4610,Pipe Lines (No Natural Gas),ANDEAVOR LOGISTICS LP,True,Energy
+ANSS,0001013462,7372,Services-Prepackaged Software,ANSYS INC,False,Information Technology
+APAD,0001956439,7990,Services-Miscellaneous Amusement & Recreation,Enhanced Group Inc.,False,Consumer Discretionary
+APFH,0001669792,2000,Food and Kindred Products,"AdvancePierre Foods Holdings, Inc.",True,Consumer Staples
+ARCE,0001540615,6770,Blank Checks,"PUGET TECHNOLOGIES, INC.",True,Financials
+AREN,0000894871,4841,Cable & Other Pay Television Services,"Paradium.AI, Inc.",True,Communication Services
+ARKO,0001823794,5412,Retail-Convenience Stores,ARKO Corp.,False,Consumer Staples
+ARLO,0001736946,7381,"Services-Detective, Guard & Armored Car Services","Arlo Technologies, Inc.",False,Information Technology
+AROC,0001389050,4922,Natural Gas Transmission,"Archrock, Inc.",False,Utilities
+ARW,0000007536,5065,"Wholesale-Electronic Parts & Equipment, NEC","ARROW ELECTRONICS, INC.",False,Industrials
+ASAQ,0001819510,6770,Blank Checks,Atlantic Avenue Acquisition Corp,True,Financials
+ASBP,0001814114,3841,Surgical & Medical Instruments & Apparatus,"Orchestra BioMed Holdings, Inc.",False,Health Care
+ASTH,0001083446,8742,Services-Management Consulting Services,"Astrana Health, Inc.",False,Industrials
+ASX,0001131343,2834,Pharmaceutical Preparations,ALTERITY THERAPEUTICS LTD,False,Health Care
+AUPH,0001600620,2834,Pharmaceutical Preparations,Aurinia Pharmaceuticals Inc.,False,Health Care
+AUUD,0001554818,7374,Services-Computer Processing & Data Preparation,AUDDIA INC.,False,Information Technology
+AVCT,0001708055,7373,Services-Computer Integrated Systems Design,Ribbon Communications Inc.,True,Information Technology
+AVPT,0001777921,7372,Services-Prepackaged Software,"AvePoint, Inc.",False,Information Technology
+AXLL,0000805264,2821,"Plastic Materials, Synth Resins & Nonvulcan Elastomers",AXIALL CORP/DE/,True,Materials
+AXNX,0001603756,3841,Surgical & Medical Instruments & Apparatus,"Axonics, Inc.",True,Health Care
+BAER,0001941536,7389,"Services-Business Services, NEC","Bridger Aerospace Group Holdings, Inc.",False,Information Technology
+BAND,0001514416,7372,Services-Prepackaged Software,Bandwidth Inc.,False,Information Technology
+BB,0001070235,7372,Services-Prepackaged Software,BLACKBERRY Ltd,False,Information Technology
+BBCQ,0002088295,6770,Blank Checks,Bleichroeder Acquisition Corp. II,False,Financials
+BBD,0001552111,6189,Asset-Backed Securities,Barclays Dryrock Issuance Trust,False,Financials
+BBNX,0001674632,3841,Surgical & Medical Instruments & Apparatus,"Beta Bionics, Inc.",False,Health Care
+BBQ,0001021270,5812,Retail-Eating  Places,"BBQ HOLDINGS, INC.",True,Consumer Discretionary
+BBT,0001108134,6036,"Savings Institutions, Not Federally Chartered",Beacon Financial Corp,False,Financials
+BC,0000014930,3510,Engines & Turbines,BRUNSWICK CORP,False,Information Technology
+BCAR,0002109869,7372,Services-Prepackaged Software,Exascale Labs Holdings Inc.,True,Information Technology
+BCC,0001328581,5030,Wholesale-Lumber & Other Construction Materials,BOISE CASCADE Co,False,Industrials
+BCYC,0001761612,2834,Pharmaceutical Preparations,BICYCLE THERAPEUTICS PLC,False,Health Care
+BDC,0000913142,3357,Drawing & Insulating of  Nonferrous Wire,BELDEN INC.,False,Materials
+BDXB,0000010795,3841,Surgical & Medical Instruments & Apparatus,BECTON DICKINSON & CO,True,Health Care
+BERZ,0000927971,6029,"Commercial Banks, NEC",BANK OF MONTREAL /CAN/,False,Financials
+BESS,0001066764,4911,Electric Services,Bimergen Energy Corp,False,Utilities
+BETA,0001784570,3721,Aircraft,"BETA Technologies, Inc.",False,Industrials
+BFH,0001101215,6141,Personal Credit Institutions,"BREAD FINANCIAL HOLDINGS, INC.",False,Financials
+BGLC,0001737523,8071,Services-Medical Laboratories,BioNexus Gene Lab Corp,False,Health Care
+BHE,0000863436,3672,Printed Circuit Boards,BENCHMARK ELECTRONICS INC,False,Information Technology
+BHFAM,0001685040,6311,Life Insurance,"Brighthouse Financial, Inc.",False,Financials
+BHI,0000921503,3990,Miscellaneous Manufacturing Industries,BLYTH INC,True,Consumer Discretionary
+BHP,0000811809,1000,Metal Mining,BHP Group Ltd,False,Materials
+BIO,0000012208,3826,Laboratory Analytical Instruments,"BIO-RAD LABORATORIES, INC.",False,Health Care
+BJ,0001531152,5331,Retail-Variety Stores,"BJ's Wholesale Club Holdings, Inc.",False,Consumer Discretionary
+BLBD,0001589526,3713,Truck & Bus Bodies,Blue Bird Corp,False,Consumer Discretionary
+BLCT,0001791278,7374,Services-Computer Processing & Data Preparation,BlueCity Holdings Ltd,True,Information Technology
+BLD,0001633931,1700,Construction - Special Trade Contractors,"QXO Insulation, LLC",True,Industrials
+BLDR,0001316835,5211,Retail-Lumber & Other Building Materials Dealers,"Builders FirstSource, Inc.",False,Consumer Discretionary
+BLNE,0001534708,6162,Mortgage Bankers & Loan Correspondents,"Beeline Holdings, Inc.",False,Financials
+BLOX,0000058361,2711,Newspapers: Publishing or  Publishing & Printing,"LEE ENTERPRISES, Inc",True,Communication Services
+BLU,0001597264,2834,Pharmaceutical Preparations,Blueprint Medicines Corp,True,Health Care
+BMEA,0001840439,2834,Pharmaceutical Preparations,"Biomea Fusion, Inc.",False,Health Care
+BNCL,0001378020,6035,"Savings Institution, Federally Chartered",Beneficial Mutual Bancorp Inc,True,Financials
+BNED,0001634117,5940,Retail-Miscellaneous Shopping Goods Stores,"Barnes & Noble Education, Inc.",False,Consumer Discretionary
+BNKK,0001760903,2844,"Perfumes, Cosmetics & Other Toilet Preparations","BONK, INC.",False,Materials
+BNT,0001001085,6512,Opeators of  Nonresidential Buildings,BROOKFIELD Corp /ON/,False,Real Estate
+BOKF,0000875357,6021,National Commercial Banks,BOK FINANCIAL CORP,False,Financials
+BONA,0001504796,7822,Services-Motion Picture & Video Tape Distribution,Bona Film Group Ltd,True,Communication Services
+BOOM,0000034067,3390,Miscellaneous Primary Metal Products,DMC Global Inc.,False,Materials
+BPL,0000805022,4610,Pipe Lines (No Natural Gas),"BUCKEYE PARTNERS, L.P.",True,Energy
+BPMP,0001708301,4610,Pipe Lines (No Natural Gas),BP Midstream Partners LP,True,Energy
+BQ,0001815021,5990,"Retail-Retail Stores, NEC",Boqii Holding Ltd,False,Consumer Discretionary
+BRC,0000746598,3990,Miscellaneous Manufacturing Industries,BRADY CORP,False,Consumer Discretionary
+BROS,0001866581,5810,Retail-Eating & Drinking Places,Dutch Bros Inc.,False,Consumer Discretionary
+BRTX,0001505497,8090,"Services-Misc Health & Allied Services, NEC","BioRestorative Therapies, Inc.",False,Health Care
+BRY,0001705873,1311,Crude Petroleum & Natural Gas,Berry Corp (bry),True,Energy
+BSX,0000885725,3841,Surgical & Medical Instruments & Apparatus,BOSTON SCIENTIFIC CORP,False,Health Care
+BSY,0001031308,7372,Services-Prepackaged Software,BENTLEY SYSTEMS INC,False,Information Technology
+BTSG,0001865782,8082,Services-Home Health Care Services,"BrightSpring Health Services, Inc.",False,Health Care
+BVN,0001013131,1000,Metal Mining,BUENAVENTURA MINING CO INC,False,Materials
+BXC,0001301787,5031,"Wholesale-Lumber, Plywood, Millwork & Wood Panels",BlueLinx Holdings Inc.,False,Industrials
+BYFC,0001001171,6035,"Savings Institution, Federally Chartered",BROADWAY FINANCIAL CORP \DE\,False,Financials
+BZAI,0001871638,3674,Semiconductors & Related Devices,"Blaize Holdings, Inc.",False,Information Technology
+C,0000831001,6021,National Commercial Banks,CITIGROUP INC,False,Financials
+CAAP,0001717393,4581,"Airports, Flying Fields & Airport Terminal Services",CORPORACION AMERICA AIRPORTS S.A.,False,Industrials
+CAKE,0000887596,5812,Retail-Eating  Places,CHEESECAKE FACTORY INC,False,Consumer Discretionary
+CAPL,0001538849,5172,Wholesale-Petroleum & Petroleum Products (No Bulk Stations),CrossAmerica Partners LP,False,Industrials
+CAR,0000723612,7510,Services-Auto Rental & Leasing (No Drivers),"AVIS BUDGET GROUP, INC.",False,Consumer Discretionary
+CATO,0000018255,5621,Retail-Women's Clothing Stores,CATO CORP,False,Consumer Discretionary
+CAVA,0001639438,5812,Retail-Eating  Places,"CAVA GROUP, INC.",False,Consumer Discretionary
+CBI,0001042418,2834,Pharmaceutical Preparations,"Inhibitor Therapeutics, Inc.",True,Health Care
+CBNK,0001419536,6021,National Commercial Banks,Capital Bancorp Inc,False,Financials
+CBRL,0001067294,5812,Retail-Eating  Places,"CRACKER BARREL OLD COUNTRY STORE, INC",False,Consumer Discretionary
+CCB,0001437958,6022,State Commercial Banks,COASTAL FINANCIAL CORP,False,Financials
+CCCC,0001662579,2836,"Biological Products, (No Diagnostic Substances)","C4 Therapeutics, Inc.",False,Health Care
+CCCM,0002056263,6770,Blank Checks,Columbus Circle Capital Corp. I,True,Financials
+CFFI,0000913341,6022,State Commercial Banks,C & F FINANCIAL CORP,False,Financials
+CGEM,0001789972,2836,"Biological Products, (No Diagnostic Substances)","Cullinan Therapeutics, Inc.",False,Health Care
+CHRD,0001486159,1311,Crude Petroleum & Natural Gas,Chord Energy Corp,False,Energy
+CHT,0001496454,6798,Real Estate Investment Trusts,"CNL Healthcare Properties, Inc.",False,Real Estate
+CHWY,0001766502,5961,Retail-Catalog & Mail-Order Houses,"Chewy, Inc.",False,Consumer Discretionary
+CI,0001739940,6324,Hospital & Medical Service Plans,Cigna Group,False,Financials
+CINT,0001868995,7371,Services-Computer Programming Services,CI&T Inc,False,Information Technology
+CLBT,0001854587,7372,Services-Prepackaged Software,Cellebrite DI Ltd.,False,Information Technology
+CLXT,0001705843,2870,Agricultural Chemicals,"Cibus, Inc.",True,Materials
+CMTV,0000718413,6021,National Commercial Banks,COMMUNITY BANCORP /VT,False,Financials
+CNCE,0001367920,2834,Pharmaceutical Preparations,"CONCERT PHARMACEUTICALS, INC.",True,Health Care
+CODA,0001334325,3812,"Search, Detection, Navigation, Guidance, Aeronautical Sys","Coda Octopus Group, Inc.",False,Health Care
+COKE,0000317540,2086,Bottled & Canned Soft Drinks & Carbonated Waters,"Coca-Cola Consolidated, Inc.",False,Consumer Staples
+CRCL,0001876042,6199,Finance Services,"Circle Internet Group, Inc.",False,Financials
+CRGY,0001866175,1311,Crude Petroleum & Natural Gas,Crescent Energy Co,False,Energy
+CSAI,0001709628,7370,"Services-Computer Programming, Data Processing, Etc.","CLOUDASTRUCTURE, INC.",False,Information Technology
+CSGP,0001057352,7389,"Services-Business Services, NEC","COSTAR GROUP, INC.",False,Information Technology
+CST,0001562039,5500,Retail-Auto Dealers & Gasoline Stations,"CST BRANDS, LLC",True,Consumer Discretionary
+CSTR,0001676479,6022,State Commercial Banks,"CapStar Financial Holdings, Inc.",True,Financials
+CTCM,0001354513,4833,Television Broadcasting Stations,"CTC Media, Inc.",True,Communication Services
+CVRX,0001235912,3841,Surgical & Medical Instruments & Apparatus,"CVRx, Inc.",False,Health Care
+CWT,0001035201,4941,Water Supply,CALIFORNIA WATER SERVICE GROUP,False,Utilities
+DAO,0001954925,6199,Finance Services,P/E Capital DAO LLC,False,Financials
+DEN,0001674988,2834,Pharmaceutical Preparations,Zealand Pharma A/S,True,Health Care
+DKI,0002058584,7372,Services-Prepackaged Software,DarkIris Inc.,False,Information Technology
+DMND,0001320947,2090,Miscellaneous Food Preparations & Kindred Products,Diamond Foods Inc,True,Consumer Staples
+DMRA,0001800315,2834,Pharmaceutical Preparations,"Damora Therapeutics, Inc.",False,Health Care
+DNUT,0001857154,5400,Retail-Food Stores,"Krispy Kreme, Inc.",False,Consumer Staples
+DOX,0001062579,7371,Services-Computer Programming Services,AMDOCS LTD,False,Information Technology
+DRIO,0001533998,3841,Surgical & Medical Instruments & Apparatus,DarioHealth Corp.,False,Health Care
+DSEY,0001831617,2842,"Specialty Cleaning, Polishing and Sanitation Preparations","Diversey Holdings, Ltd.",True,Materials
+DSSI,0001761940,4700,Transportation Services,Diamond S Shipping Inc.,True,Industrials
+DTY,0000936340,4911,Electric Services,DTE ENERGY CO,True,Utilities
+DVA,0000927066,8090,"Services-Misc Health & Allied Services, NEC",DAVITA INC.,False,Health Care
+DVAX,0001029142,2834,Pharmaceutical Preparations,DYNAVAX TECHNOLOGIES CORP,True,Health Care
+E,0000019617,6021,National Commercial Banks,JPMORGAN CHASE & CO,False,Financials
+EAF,0000931148,3620,Electrical Industrial Apparatus,GRAFTECH INTERNATIONAL LTD,False,Information Technology
+ENVB,0000890821,2834,Pharmaceutical Preparations,"Enveric Biosciences, Inc.",False,Health Care
+EPAY,0001029199,6099,"Functions Related To Depository Banking, NEC","EURONET WORLDWIDE, INC.",True,Financials
+ESMT,0001863105,7372,Services-Prepackaged Software,"EngageSmart, Inc.",True,Information Technology
+ETAC,0001844224,3690,"Miscellaneous Electrical Machinery, Equipment & Supplies",FREYR Battery,True,Information Technology
+EW,0001099800,3842,"Orthopedic, Prosthetic & Surgical Appliances & Supplies",Edwards Lifesciences Corp,False,Health Care
+EXAC,0000913165,3842,"Orthopedic, Prosthetic & Surgical Appliances & Supplies",EXACTECH INC,True,Health Care
+EXK,0001277866,1040,Gold and Silver Ores,ENDEAVOUR SILVER CORP,False,Materials
+FCB,0001476651,6021,National Commercial Banks,"FCB FINANCIAL HOLDINGS, INC.",True,Financials
+FCCO,0000932781,6022,State Commercial Banks,FIRST COMMUNITY CORP /SC/,False,Financials
+FCHL,0002023796,7990,Services-Miscellaneous Amusement & Recreation,Fitness Champs Holdings Ltd,False,Consumer Discretionary
+FGH,0000946454,3861,Photographic Equipment & Supplies,FG Group Holdings Inc.,True,Health Care
+FHI,0001056288,6282,Investment Advice,"FEDERATED HERMES, INC.",False,Financials
+FLTX,0001526160,7372,Services-Prepackaged Software,Fleetmatics Group Ltd,True,Information Technology
+FMSA,0001010858,1400,Mining & Quarrying of  Nonmetallic Minerals (No Fuels),"Bison Merger Sub I, LLC",True,Materials
+FNB,0000037808,6021,National Commercial Banks,FNB CORP/PA/,False,Financials
+FOCS,0001651052,6282,Investment Advice,Focus Financial Partners Inc.,True,Financials
+FOFO,0002060083,8742,Services-Management Consulting Services,"Hang Feng Technology Innovation Co., Ltd.",False,Industrials
+FOMX,0001606645,2833,Medicinal Chemicals & Botanical Products,Foamix Pharmaceuticals Ltd.,True,Health Care
+FSBW,0001530249,6036,"Savings Institutions, Not Federally Chartered","FS Bancorp, Inc.",False,Financials
+GALE,0001067063,6798,Real Estate Investment Trusts,"Veris Residential, L.P.",True,Real Estate
+GBR,0000105744,1311,Crude Petroleum & Natural Gas,"New Concept Energy, Inc.",False,Energy
+GDOT,0001386278,6199,Finance Services,GREEN DOT CORP,False,Financials
+GEO,0000923796,1520,General Bldg Contractors - Residential Bldgs,GEO GROUP INC,False,Industrials
+GFGD,0001876714,3714,Motor Vehicle Parts & Accessories,Growth for Good Acquisition Corp,True,Consumer Discretionary
+GFLU,0001780232,4953,Refuse Systems,GFL Environmental Inc.,True,Utilities
+GG,0001316656,3510,Engines & Turbines,Dresser-Rand Group Inc.,True,Information Technology
+GGP,0000895648,6798,Real Estate Investment Trusts,"GGP, Inc. (fka General Growth Properties Inc. & predecessor to General Growth Properties, Inc.)",True,Real Estate
+GLOP,0001598655,4400,Water Transportation,GasLog Partners LP,True,Industrials
+GMED,0001237831,3841,Surgical & Medical Instruments & Apparatus,GLOBUS MEDICAL INC,False,Health Care
+GOGO,0001537054,4899,"Communications Services, NEC",Gogo Inc.,False,Communication Services
+GOSS,0001728117,2834,Pharmaceutical Preparations,"Gossamer Bio, Inc.",False,Health Care
+GRPN,0001490281,7311,Services-Advertising Agencies,"Groupon, Inc.",False,Information Technology
+GSUM,0001647338,7372,Services-Prepackaged Software,Gridsum Holding Inc.,True,Information Technology
+HCLP,0001549848,1400,Mining & Quarrying of  Nonmetallic Minerals (No Fuels),Hi-Crush Inc.,True,Materials
+HHH,0001981792,6798,Real Estate Investment Trusts,Howard Hughes Holdings Inc.,False,Real Estate
+HNST,0001530979,5961,Retail-Catalog & Mail-Order Houses,"Honest Company, Inc.",False,Consumer Discretionary
+HRB,0000012659,7200,Services-Personal Services,H&R BLOCK INC,False,Consumer Discretionary
+HTH,0001265131,6022,State Commercial Banks,Hilltop Holdings Inc.,False,Financials
+IACI,0001127055,4941,Water Supply,VIVENDI,True,Utilities
+IBKC,0000933141,6022,State Commercial Banks,IBERIABANK CORP,True,Financials
+IDN,0001040896,7372,Services-Prepackaged Software,"Intellicheck, Inc.",False,Information Technology
+IESC,0001048268,1731,Electrical Work,"IES Holdings, Inc.",False,Industrials
+INPX,0001529113,7371,Services-Computer Programming Services,"XTI Aerospace, Inc.",True,Information Technology
+IPW,0001830072,5200,"Retail-Building Materials, Hardware, Garden Supply",iPower Inc.,False,Consumer Discretionary
+ISBA,0000842517,6022,State Commercial Banks,ISABELLA BANK CORP,False,Financials
+ISCA,0000051548,7948,"Services-Racing, Including Track Operation",INTERNATIONAL SPEEDWAY CORP,True,Consumer Discretionary
+ITAC,0001816696,3674,Semiconductors & Related Devices,"Industrial Tech Acquisitions, Inc.",True,Information Technology
+ITIC,0000720858,6361,Title Insurance,INVESTORS TITLE CO,False,Financials
+ITT,0000216228,3561,Pumps & Pumping Equipment,ITT INC.,False,Information Technology
+JAGX,0001585608,2834,Pharmaceutical Preparations,"Jaguar Health, Inc.",False,Health Care
+JAX,0001617227,5812,Retail-Eating  Places,"J. Alexander's Holdings, Inc.",True,Consumer Discretionary
+JG,0001235010,2836,"Biological Products, (No Diagnostic Substances)",MOMENTA PHARMACEUTICALS INC,False,Health Care
+JJSF,0000785956,2052,Cookies & Crackers,J&J SNACK FOODS CORP,False,Consumer Staples
+K,0000357294,1531,Operative Builders,HOVNANIAN ENTERPRISES INC,True,Industrials
+KIDS,0001425450,3841,Surgical & Medical Instruments & Apparatus,ORTHOPEDIATRICS CORP,False,Health Care
+KRTX,0001771917,2834,Pharmaceutical Preparations,"Karuna Therapeutics, Inc.",False,Health Care
+KYNB,0000921299,2834,Pharmaceutical Preparations,"KYNTRA BIO, INC.",False,Health Care
+KZIA,0001075880,2834,Pharmaceutical Preparations,KAZIA THERAPEUTICS LTD,False,Health Care
+KZR,0001645666,2834,Pharmaceutical Preparations,"Kezar Life Sciences, Inc.",True,Health Care
+LEAF,0001283582,6021,National Commercial Banks,First Clover Leaf Financial Corp.,True,Financials
+LEE,0000058361,2711,Newspapers: Publishing or  Publishing & Printing,"LEE ENTERPRISES, Inc",False,Communication Services
+LMB,0001606163,1700,Construction - Special Trade Contractors,"Limbach Holdings, Inc.",False,Industrials
+LOGC,0001664106,2836,"Biological Products, (No Diagnostic Substances)","LogicBio Therapeutics, Inc.",True,Health Care
+LSF,0001650696,2000,Food and Kindred Products,"Laird Superfood, Inc.",False,Consumer Staples
+LU,0000029002,3674,Semiconductors & Related Devices,DIODES INC /DEL/,False,Information Technology
+LXEH,0001814067,8200,Services-Educational Services,Lixiang Education Holding Co. Ltd.,False,Consumer Discretionary
+LZ,0001286139,7374,Services-Computer Processing & Data Preparation,"LEGALZOOM.COM, INC.",False,Information Technology
+MAAC,0001819263,6770,Blank Checks,Montes Archimedes Acquisition Corp,True,Financials
+MDXG,0001376339,3841,Surgical & Medical Instruments & Apparatus,"MIMEDX GROUP, INC.",False,Health Care
+MESO,0001760026,5990,"Retail-Retail Stores, NEC",Regenerative Medical Technology Group Inc.,False,Consumer Discretionary
+MGX,0001785279,2836,"Biological Products, (No Diagnostic Substances)","Metagenomi Therapeutics, Inc.",False,Health Care
+MIRA,0001904286,2834,Pharmaceutical Preparations,"MIRA PHARMACEUTICALS, INC.",False,Health Care
+MSCI,0001408198,7389,"Services-Business Services, NEC",MSCI Inc.,False,Information Technology
+MUR,0000717423,1311,Crude Petroleum & Natural Gas,MURPHY OIL CORP,False,Energy
+MWH,0002065636,1600,Heavy Construction Other Than Bldg Const - Contractors,"SOLV Energy, Inc.",False,Industrials
+NAGE,0001386570,2833,Medicinal Chemicals & Botanical Products,"Niagen Bioscience, Inc.",False,Health Care
+NEWA,0001678022,4950,Sanitary Services,"Newater Technology, Inc.",True,Utilities
+NGS,0001084991,1389,"Oil & Gas Field Services, NEC",NATURAL GAS SERVICES GROUP INC,False,Energy
+NIO,0001736541,3711,Motor Vehicles & Passenger Car Bodies,NIO Inc.,False,Consumer Discretionary
+NOC,0001133421,3812,"Search, Detection, Navigation, Guidance, Aeronautical Sys",NORTHROP GRUMMAN CORP /DE/,False,Health Care
+NPK,0000080172,3480,"Ordnance & Accessories, (No Vehicles/Guided Missiles)",NATIONAL PRESTO INDUSTRIES INC,False,Industrials
+NSC,0000702165,4011,"Railroads, Line-Haul Operating",NORFOLK SOUTHERN CORP,False,Industrials
+NTI,0001533454,2911,Petroleum Refining,Northern Tier Energy LP,True,Energy
+NWBI,0001471265,6021,National Commercial Banks,"Northwest Bancshares, Inc.",False,Financials
+NWN,0001733998,4924,Natural Gas Distribution,Northwest Natural Holding Co,False,Utilities
+NXPL,0001058307,4813,Telephone Communications (No Radiotelephone),NextPlat Corp,False,Communication Services
+NXRT,0001620393,6798,Real Estate Investment Trusts,"NexPoint Residential Trust, Inc.",False,Real Estate
+NXTS,0001789192,2834,Pharmaceutical Preparations,Nexentis Technologies Inc.,False,Health Care
+NYRT,0001474464,6798,Real Estate Investment Trusts,New York REIT Liquidating LLC,True,Real Estate
+OGEN,0001174940,2834,Pharmaceutical Preparations,ORAGENICS INC,False,Health Care
+OGS,0001587732,4924,Natural Gas Distribution,"ONE Gas, Inc.",False,Utilities
+OKS,0000909281,4922,Natural Gas Transmission,ONEOK Partners LP,True,Utilities
+ORBC,0001361983,4899,"Communications Services, NEC",ORBCOMM Inc.,True,Communication Services
+OS,0001795091,2834,Pharmaceutical Preparations,OS Therapies Inc,False,Health Care
+OWL,0001823945,6282,Investment Advice,BLUE OWL CAPITAL INC.,False,Financials
+OWLT,0001816708,3829,"Measuring & Controlling Devices, NEC","Owlet, Inc.",False,Health Care
+PACW,0001102112,6021,National Commercial Banks,PACWEST BANCORP,True,Financials
+PBCT,0001378946,6035,"Savings Institution, Federally Chartered","People's United Financial, Inc.",True,Financials
+PEN,0001321732,3841,Surgical & Medical Instruments & Apparatus,Penumbra Inc,False,Health Care
+PERI,0000780127,3842,"Orthopedic, Prosthetic & Surgical Appliances & Supplies",SYNOVIS LIFE TECHNOLOGIES INC,False,Health Care
+PFPT,0001212458,7374,Services-Computer Processing & Data Preparation,PROOFPOINT INC,True,Information Technology
+PFS,0001178970,6035,"Savings Institution, Federally Chartered",PROVIDENT FINANCIAL SERVICES INC,False,Financials
+PGND,0001633142,8742,Services-Management Consulting Services,"Press Ganey Holdings, Inc.",True,Industrials
+PME,0001517130,0900,"Fishing, Hunting and Trapping",Pingtan Marine Enterprise Ltd.,True,Consumer Staples
+PRXL,0000799729,8731,Services-Commercial Physical & Biological Research,PAREXEL INTERNATIONAL CORP,True,Health Care
+PSFE,0001833835,7389,"Services-Business Services, NEC",Paysafe Ltd,False,Information Technology
+PSTB,0001507277,6022,State Commercial Banks,Park Sterling Corp,True,Financials
+PTEST,0001963439,3690,"Miscellaneous Electrical Machinery, Equipment & Supplies","Turbo Energy, S.A.",False,Information Technology
+QBTS,0001907982,7374,Services-Computer Processing & Data Preparation,D-Wave Quantum Inc.,False,Information Technology
+QMMM,0001971542,7311,Services-Advertising Agencies,QMMM Holdings Ltd,False,Information Technology
+QUCY,0001874252,2834,Pharmaceutical Preparations,Quantum Cyber N.V.,False,Health Care
+QUNR,0001551060,7370,"Services-Computer Programming, Data Processing, Etc.",Qunar Cayman Islands Ltd.,True,Information Technology
+RARX,0001481512,2834,Pharmaceutical Preparations,"Ra Pharmaceuticals, Inc.",True,Health Care
+RFIL,0000740664,3678,Electronic Connectors,R F INDUSTRIES LTD,False,Information Technology
+RHLD,0002039497,6199,Finance Services,"Resolute Holdings Management, Inc.",False,Financials
+RICE,0001588238,1311,Crude Petroleum & Natural Gas,"EQT RE, LLC",True,Energy
+RKLB,0001819994,3760,Guided Missiles & Space Vehicles & Parts,Rocket Lab Corp,False,Industrials
+RMBS,0000917273,3674,Semiconductors & Related Devices,RAMBUS INC,False,Information Technology
+RMD,0000943819,3841,Surgical & Medical Instruments & Apparatus,RESMED INC,False,Health Care
+ROX,0001311538,2080,Beverages,Castle Brands Inc,True,Consumer Staples
+RPM,0000110621,2851,"Paints, Varnishes, Lacquers, Enamels & Allied Prods",RPM INTERNATIONAL INC/DE/,False,Materials
+RRBI,0001071236,6022,State Commercial Banks,RED RIVER BANCSHARES INC,False,Financials
+SABR,0001597033,7370,"Services-Computer Programming, Data Processing, Etc.",Sabre Corp,False,Information Technology
+SAMG,0001549966,6282,Investment Advice,Silvercrest Asset Management Group Inc.,False,Financials
+SBR,0000710752,6792,Oil Royalty Traders,SABINE ROYALTY TRUST,False,Financials
+SCCO,0001001838,1000,Metal Mining,SOUTHERN COPPER CORP/,False,Materials
+SCPE,0001764301,6770,Blank Checks,SC Health Corp,True,Financials
+SEER,0001726445,3826,Laboratory Analytical Instruments,"Seer, Inc.",False,Health Care
+SGC,0000095574,2300,Apparel & Other Finishd Prods of  Fabrics & Similar Matl,"SUPERIOR GROUP OF COMPANIES, INC.",False,Consumer Discretionary
+SIGI,0000230557,6331,"Fire, Marine & Casualty Insurance",SELECTIVE INSURANCE GROUP INC,False,Financials
+SLH,0001324245,7370,"Services-Computer Programming, Data Processing, Etc.","SOLERA HOLDINGS, INC",True,Information Technology
+SM,0000893538,1311,Crude Petroleum & Natural Gas,SM Energy Co,False,Energy
+SMTX,0001108320,3672,Printed Circuit Boards,SMTC CORP,True,Information Technology
+SNPS,0000883241,7372,Services-Prepackaged Software,SYNOPSYS INC,False,Information Technology
+SOFI,0001818874,6199,Finance Services,"SoFi Technologies, Inc.",False,Financials
+SOJC,0000092122,4911,Electric Services,SOUTHERN CO,False,Utilities
+SPFR,0001843205,6770,Blank Checks,Jaws Hurricane Acquisition Corp,True,Financials
+SPRB,0001683553,2834,Pharmaceutical Preparations,"SPRUCE BIOSCIENCES, INC.",False,Health Care
+SPRC,0001611746,2834,Pharmaceutical Preparations,SciSparc Ltd.,False,Health Care
+SRCE,0000034782,6022,State Commercial Banks,1ST SOURCE CORP,False,Financials
+SRUN,0001690769,1311,Crude Petroleum & Natural Gas,"Alta Mesa Resources, Inc. /DE",True,Energy
+STRA,0001013934,8200,Services-Educational Services,"Strategic Education, Inc.",False,Consumer Discretionary
+SZYM,0001311230,2860,Industrial Organic Chemicals,"TerraVia Holdings, Inc.",True,Materials
+TBNK,0001447051,6035,"Savings Institution, Federally Chartered",Territorial Bancorp Inc.,False,Financials
+TCAP,0001022899,2834,Pharmaceutical Preparations,"Protagenic Therapeutics, Inc.\new",True,Health Care
+THRD,0001923840,2834,Pharmaceutical Preparations,"Third Harmonic Bio, Inc.",False,Health Care
+TITN,0001409171,5990,"Retail-Retail Stores, NEC",Titan Machinery Inc.,False,Consumer Discretionary
+TMCR,0002087398,1040,Gold and Silver Ores,Metals Royalty Co Inc.,False,Materials
+TMHC,0001562476,1531,Operative Builders,Taylor Morrison Home Corp,True,Industrials
+TRT,0000732026,3559,"Special Industry Machinery, NEC",TRIO-TECH INTERNATIONAL,False,Information Technology
+TRVG,0001683825,7374,Services-Computer Processing & Data Preparation,trivago N.V.,False,Information Technology
+TSC,0001053691,2834,Pharmaceutical Preparations,CervoMed Inc.,True,Health Care
+TSCO,0000916365,5200,"Retail-Building Materials, Hardware, Garden Supply",TRACTOR SUPPLY CO /DE/,False,Consumer Discretionary
+TSM,0001171662,6321,Accident & Health Insurance,TRIPLE-S MANAGEMENT CORP,False,Financials
+TSN,0000100493,2015,Poultry Slaughtering and Processing,"TYSON FOODS, INC.",False,Consumer Staples
+TSRO,0001491576,2834,Pharmaceutical Preparations,"TESARO, Inc.",True,Health Care
+UNT,0000798949,1311,Crude Petroleum & Natural Gas,UNIT CORP,True,Energy
+UNTY,0000920427,6022,State Commercial Banks,UNITY BANCORP INC /NJ/,False,Financials
+URG,0001375205,1040,Gold and Silver Ores,UR-ENERGY INC,False,Materials
+VACH,0002006815,2836,"Biological Products, (No Diagnostic Substances)",Voyager Acquisition Corp./Cayman Islands,True,Health Care
+VANI,0001266806,3845,Electromedical & Electrotherapeutic Apparatus,"Vivani Medical, Inc.",False,Health Care
+VERU,0000863894,2834,Pharmaceutical Preparations,VERU INC.,False,Health Care
+VHC,0001082324,6794,Patent Owners & Lessors,VirnetX Holding Corp,False,Financials
+VOSO,0001822888,6770,Blank Checks,Virtuoso Acquisition Corp.,True,Financials
+VRAX,0001885827,2835,In Vitro & In Vivo Diagnostic Substances,Virax Biolabs Group Ltd,False,Health Care
+VRE,0000924901,6798,Real Estate Investment Trusts,"Veris Residential, Inc.",True,Real Estate
+VTR,0000740260,6798,Real Estate Investment Trusts,"Ventas, Inc.",False,Real Estate
+VVV,0001674910,2990,Miscellaneous Products of  Petroleum & Coal,VALVOLINE INC,False,Energy
+WDH,0001823986,6411,"Insurance Agents, Brokers & Service",Waterdrop Inc.,False,Financials
+WTM,0000776867,6331,"Fire, Marine & Casualty Insurance",WHITE MOUNTAINS INSURANCE GROUP LTD,False,Financials
+WU,0001365135,7389,"Services-Business Services, NEC",Western Union CO,False,Information Technology
+WYY,0001034760,7373,Services-Computer Integrated Systems Design,WIDEPOINT CORP,False,Information Technology
+X,0001474098,6798,Real Estate Investment Trusts,Pebblebrook Hotel Trust,True,Real Estate
+XYF,0001725033,6199,Finance Services,X Financial,False,Financials
