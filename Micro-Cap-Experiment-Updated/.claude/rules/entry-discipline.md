@@ -55,6 +55,14 @@ only against Friday's low ($34.78). The 9/09 swing low ($33.32) and the 50-day S
 below it, and the $35.31 fill cut its distance to 1.57×ATR; one −1.97% session later it was 0.94×ATR
 from the price.*
 
+**The default is not to raise at all (adopted 2026-10-11).** Raising a stop whenever the tests
+pass costs **10.3pp of test return** over 11 years of survivorship-free history: it takes the
+stop-out rate from 9% to 98% and the average hold from 57 sessions to 14, converting a 40–60
+session system into a two-week one. A raise is an **exception**, argued in writing, naming what
+changed about the thesis. The numbers below govern a raise that is made; they are not a reason to
+make one. *(`research/rule_ablation.py`; reasoning in `Experiment Details/Rules Amendment
+History.md`, 2026-10-11.)*
+
 **1.5×ATR is the placement floor; 1.75×ATR is the entry target; 2.0×ATR is the raise target.**
 No stop may be *placed* (at entry or by a raise) less than 1.5×ATR below the price. Price can later
 walk a stop inside that band — expected, and handled by the once-per-entry restoration check in

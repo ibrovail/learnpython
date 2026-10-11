@@ -32,13 +32,22 @@ something went wrong, the origin is named in one line and the full account is in
 - Out-of-cycle capital injections may be declared in `<capital_injection>`. When `planned=true`,
   add `<amount>` to the `Cash Balance` shown in `<portfolio_snapshot>` and use the combined total
   as available capital for all sizing calculations.
-- **Cash floor: 15% of equity.** Standing rule. Capital below this line is not deployable.
+- **Cash floor: 5% of equity.** Standing rule. Capital below this line is not deployable.
+  *(15% until 2026-10-11. Measured: 12.2% test CAGR against 11.8% at a 15% floor, identical
+  drawdown — the smallest change in the rule audit, adopted because it is free and because ten
+  positions cannot be funded behind a 15% floor. Phase 3.8 R11.)*
 
 ---
 
 ## Execution Limits
 
-- Long-only. Full shares only (no fractional).
+- Long-only. **Fractional shares are permitted** *(whole-shares-only until 2026-10-11)*.
+  - *Why it changed:* whole shares were never a finding — they were an inherited default from the
+    original ChatGPT experiment. Measured, they cost **3.2pp of test return at the live book's
+    $710** and **nothing at $10,000**. The reason is arithmetic: at $710 a tenth of the book is
+    $71, so a $35 stock is two shares and rounding 2.47 → 2 discards 19% of the intended position.
+    **This is a small-book rule. The larger the book, the less it matters.**
+  - Round to 4 decimal places; a position below 0.0001 shares is not opened.
 - No options, shorting, leverage, margin, or derivatives.
 
 ---
@@ -119,7 +128,26 @@ written** (`.claude/rules/analysis-workflow.md`).
   fires; for a book whose measured edge is *holding winners*, being shaken out by noise is the
   more expensive failure.
 
-### Raising a stop — anti-ratchet minimum
+### Raising a stop — the default is DO NOT
+
+**Adopted 2026-10-11, and it is the largest measured effect in the rule audit.** The standing
+default is that **a stop is not raised.** Raising is an exception that must be argued in writing
+in the daily or weekend report, naming what has changed about the thesis — not merely that the
+raise tests pass.
+
+| Stop-raise policy, on the adopted rule set | Test CAGR | Test drawdown | Stop-outs | Avg hold |
+|---|---|---|---|---|
+| **Never raise (adopted)** | **12.2%** | **−15.4%** | **9%** | **57 sessions** |
+| Raise once per position | 11.3% | −18.6% | 70% | 29 sessions |
+| Raise whenever eligible | 1.9% | −16.3% | 98% | 14 sessions |
+
+Raising whenever eligible costs **10.3pp of test return** and converts a 40–60 session system
+into a 14-session one. This file already said *"Eligibility is mechanical; using it is not. A
+qualifying stop MAY be reset, not MUST be"* — the live book exercised that discretion sparingly
+and was 10.3pp better for it. The amendment makes the default match the practice.
+
+**The tests below still govern any raise that is made.** They are necessary conditions, not a
+reason to raise.
 
 Do **not** raise a stop unless the raise is **≥ 0.5 × ATR(14)** *and* the new level still leaves
 **≥ 1.5 × ATR** of room below the reference price. Both conditions, every time.
@@ -165,10 +193,14 @@ it is the one case where a stop moves down, so it moves the minimum.)*
 - **Single-name ceiling: 30% of portfolio equity.**
 - Actual size is the **minimum** of the risk-based figure, the 30% ceiling, and available cash
   above the floor.
+- **Position ceiling: 10.** *(5–6 until 2026-10-11.)* Measured: a ceiling of 5 costs **3.9pp of
+  test return** at every book size tested. With fractional shares permitted the arithmetic that
+  forced a small count no longer applies.
 - *Note on position count:* at 2% risk with 1.75×ATR stops, a position works out to roughly
-  `0.02 / (1.75 × ATR%)` of equity — about 19–29% for a typical small cap. Against an 85%
-  deployable book that fits roughly **four** positions. The 5–6 position figure in the Allocation
-  Framework is a **ceiling, not a plan.**
+  `0.02 / (1.75 × ATR%)` of equity — about 19–29% for a typical small cap, so the 30% single-name
+  ceiling and the risk budget, not the position ceiling, are what bind first. **10 is a ceiling,
+  not a plan**, and at the current book size four to five funded positions remains the realistic
+  shape.
 - **No averaging down:** once a position falls >5% from entry, do not add shares unless a material
   new positive catalyst is confirmed by ≥2 independent sources.
 - **Slippage guard:** if the intended order size exceeds 10% of the stock's average daily dollar
@@ -218,6 +250,19 @@ setting, not the weaker one: starting at the peak means any −20% decline from 
   report.** An unnamed driver is a rule violation, not an omission.
 - **Backstop — GICS sector cap: at most 3 positions in any one sector.** Uniform across all
   sectors; no per-sector exception.
+  - **Measured 2026-10-11, and it is the one rule in the audit that is material, verified and
+    free:** test drawdown **−15.4% with the cap against −18.4% without**, at no cost in return.
+    An uncapped book sat on 3+ names in one sector **40% of the time**.
+  - **It passed a placebo, which is why it is believed.** The same cap on *shuffled* sector
+    labels, 40 seeds, gave a mean drawdown of **−18.6%** — i.e. the uncapped number. Capping on
+    random labels does nothing; capping on real sectors does. Real labels beat **40 of 40**
+    placebos (one-sided p < 0.025). *(Caveat: labels came from EDGAR SIC codes, which agree with
+    the screener's Finviz sector on 64% of overlapping names. The cap is adopted on a proxy, and
+    the placebo is what makes that defensible.)*
+  - **Apply it to the names you are recommending, counting the ones already held** — the greedy
+    rule the backtest used: take the best candidate whose sector has room, not the best candidate
+    outright. A loose cap on real sectors did nearly as well as a tight one, so when in doubt the
+    cap is cheap.
 - *Why both:* GICS sector is a crude proxy for correlated risk — too tight (a device maker and a
   clinical-stage biotech are both "Health Care" and share nothing) and too loose (an oil-services
   name and a tanker operator sit in different sectors and share one crude price). The driver cap
@@ -346,7 +391,7 @@ to decide. `trading_script.py` prints a `<research_trigger>` block computing the
 | Regime flip | RISK-ON ↔ RISK-OFF between the last report and now (`regime_history.csv`) |
 | **Backstop** | **≥ 30 sessions since the last report** |
 
-*Deployable cash = cash − the 15% floor.*
+*Deployable cash = cash − the 5% floor.*
 
 - **The regime is computed, not looked up** (since 2026-09-19): `trading_script.py` derives it from
   IWM's daily closes and a 50-session simple average, prints `<market_regime>`, and saves every
@@ -470,6 +515,33 @@ hold or exit at market. Log the assessment in the daily analysis.
     The *average* return was higher (+2.2% vs +1.1%, carried by a few big winners) but the
     **typical outcome was worse** (median +0.28% vs +0.68%). A lottery-shaped payoff; the guard
     stays. Shortening the window would not help: the risk sits in the report day itself.
+  - **Re-tested 2026-10-11 on 11 years of survivorship-free history** — earnings dates harvested
+    free from SEC EDGAR 8-K Item 2.02 filings, which *are* the releases and survive delisting
+    (303 tickers, 11,814 dates, 82% of panel rows; delisted coverage 3% → 52%). **The guard is
+    kept, on drawdown, and the return claim is withdrawn:**
+
+    | Guard length | Test CAGR | Test drawdown |
+    |---|---|---|
+    | Off | 12.2% | −15.4% |
+    | 5 sessions | 11.9% | −15.3% |
+    | **10 sessions (the rule)** | 13.8% | **−12.2%** |
+    | 15 sessions | 11.0% | −12.0% |
+    | 20 sessions | 13.1% | −11.0% |
+
+    Return is **not monotone** in guard length — 11.9, 13.8, 11.0, 13.1 is noise, and a placebo
+    refusing the same 12% of candidates at random beat the real guard on return 15% of the time.
+    **So the +1.5pp is not claimed.** Drawdown **is** monotone with no exception, and the placebo
+    buys 0.5pp of drawdown where the real guard buys 3.2pp (one-sided p = 0.10 — short of
+    significance, and said so). The 2026-09-19 study's 32% stop-out figure was measured on stops
+    that **tracked the price**; under the never-raise default adopted 2026-10-11 the simulated
+    stop-out rate is **9%**, matching that study's *control* group, so the guard's protection is
+    smaller than first claimed — but it is in the right direction and it costs nothing.
+  - **⚠️ A verdict was published and withdrawn on 2026-10-11.** The guard was first measured as
+    costing 3.5pp and was announced as removed. That measurement was wrong: earnings dates had
+    been indexed against the full calendar and then used on a test-period run, shifting every
+    index by the length of the train period, so the guard blocked candidates off the wrong dates.
+    **It looked like it was working, which is why the error survived review.** Recorded because
+    the removal reached the user before the error was found.
 - **No re-entry ban:** once a ticker is stopped out it is banned from re-entry for 10 trading
   sessions. Flag any proposed re-entry inside the blackout window. **The script computes the
   window** and prints it as `<blackout>` in `<research_trigger>` (`make trigger`), counting from
@@ -559,52 +631,55 @@ applies. `<research_trigger>` now prints a `<lanes>` line so the open capacity c
 
 | | RISK-ON | RISK-OFF |
 |---|---|---|
-| Catalyst plays | up to 2 positions | **up to 3 positions**, standard sizing |
-| Screener-sourced plays | up to 4 positions | permitted at **half the risk budget (1%)**, defensive profile only |
-| Total positions | 5–6 ceiling | 5–6 ceiling |
+| Catalyst plays | up to 3 positions | **up to 3 positions**, standard sizing |
+| Screener-sourced plays | up to 7 positions | **closed** *(revised 2026-10-11)* |
+| Total positions | 10 ceiling | 10 ceiling |
 
-- **RISK-OFF defensive profile** (both required), read from the watchlist columns:
-  **`rank_low_vol` ≥ 0.90** (top decile of calm among gate survivors) and **`vol_5_50` > 1.0**
-  (this week's volume above its 50-day average). *Made concrete 2026-09-19; `near_high` ≥ −5%
-  removed 2026-10-05 — see* `Rules Amendment History.md` *(2026-10-05) for the measurement.*
-  - **`near_high` was removed for three faults, not for being inconvenient.** It demanded names
-    within 5% of their 60-day high in a regime *defined* by the index sitting below its 50-day
-    average — the allowance was anti-correlated with the condition that invokes it. It was the only
-    **absolute** threshold among relative ones, so it tightened on its own as the tape fell: among
-    gate survivors the 90th percentile of `near_high` was **−8.1%**, meaning −5% selected roughly
-    the top 4% and shrinking, while `rank_low_vol` ≥ 0.90 passes exactly 10% every week by
-    construction. And it **double-counted**: `near_high` is already one of the six composite inputs
-    that build the top-100 list, so it was applied once to rank and again as a gate.
-  - **Removing it is a correctness fix, not a capacity fix — do not expect it to fill the book.**
-    Measured over four screens, buyable names (profile **and** above the 50-day SMA) went from
-    6 / 7 / 1 / 1 to 7 / 8 / 2 / 3. **The binding constraint is `rank_low_vol` ≥ 0.90 combined with
-    the above-the-50-day entry rule** — 17 / 9 / 4 / 7 of the top 100 — because in a falling market
-    a calm stock is often one drifting quietly down rather than one holding up.
-- **Two things about this profile are open, and both belong to the Phase 4 review below.**
-  - **The 0.90 threshold is the real lever and has no return evidence behind it.** Loosening the
-    calm leg to the top quartile (≥ 0.75) would have given 13 / 17 / 10 / 11 buyable names. That is
-    not adopted: four screens, all RISK-OFF, over three weeks is the sample size
-    `.claude/rules/research-methods.md` exists to refuse, and loosening "calm" is a material
-    increase in risk-taking in a weak tape.
-  - **`low_vol` does not measure what "defensive" normally means.** On the 10/02 screen the
-    top-decile calm names had a median **beta of 0.85 against 0.84 for every other name**, and
-    **18 of 54** carried beta above 1.0. `low_vol` is a stock's own 20-day return volatility; beta
-    is its sensitivity to the market. The profile is named for the second and tests the first.
-    **WK** is the cleanest demonstration: revenue +19.7%, Strong Buy, +24.1% to target, forward
-    PE 19.3 and **beta 0.51** — genuinely defensive — rejected because its `rank_low_vol` is
-    **0.505**, mid-pack on its own 20-day volatility. Whether beta belongs in the profile is a
-    Phase 4 question, not a change made here.
-  - **What dropping `near_high` actually admitted, on the 10/02 screen: DRH and HRMY** — beta
-    **1.03** and **1.01**. The change let in two market-sensitive names and still excludes the
-    beta-0.51 one. The capacity problem and the defensiveness problem are **separate**, and this
-    amendment addresses neither cleanly: it removes a leg that was wrong, nothing more.
-- **⏳ SUNSET — the RISK-OFF screener allowance expires at Phase 4** unless the pre-registered
-  regime test confirms it. It rests on suggestive but incomplete evidence: Phase 2 found the
-  signals' skill concentrates in weeks the median stock fell (IC 0.169 vs 0.009), but
-  "falling-median week" and "RISK-OFF week" are different measurements, and the only direct
-  RISK-OFF evidence is **2 formation dates** pointing the other way. If Phase 4 does not confirm
-  it, this row reverts to a full freeze automatically. The top-decile threshold is likewise
-  provisional — it was chosen by judgment, not by the study.
+**Revised 2026-10-11 — the RISK-OFF defensive profile is removed and the screener lane closes
+instead.** The profile's two legs (`rank_low_vol` ≥ 0.90, `vol_5_50` > 1.0) were measured against
+closing the lane outright:
+
+| RISK-OFF screener policy | Test CAGR | Test drawdown |
+|---|---|---|
+| **Lane closed (adopted)** | **12.2%** | **−15.4%** |
+| Lane open on the defensive profile | 9.4% | −12.1% |
+| Lane open with no profile at all | 8.4% | −16.7% |
+
+The profile **cost 2.8pp of return to buy 3.3pp of drawdown**, and Phase 3.8 **R7** — *"its
+stated purpose is defensive, so return alone cannot justify it"* — is what rejects it, because it
+is not defensive: top-decile calm names had median **beta 0.85 against 0.84** for everything
+else. **A leg that does not change beta is not a defensive leg.** The regime filter does the
+defending, better; holding the screener lane shut in RISK-OFF is worth 3.8pp against having no
+regime gate at all. Reasoning in `Rules Amendment History.md` (2026-10-11).
+
+**The catalyst lane is unaffected and is now the only lane open in RISK-OFF** — 3 positions at
+the full 2% risk budget, with no profile test, sourced per *Catalyst plays → Sourcing* above.
+That is deliberate: it is also the case the backtest **cannot** model, since history carries no
+catalyst labels, so the 12.2% figure above treats RISK-OFF as fully closed and is the
+**pessimistic** case.
+
+- **The defensive profile, as it stood until 2026-10-11** (kept here because the reasoning still
+  matters for Phase 4): both legs required, read from the watchlist columns — **`rank_low_vol`
+  ≥ 0.90** (top decile of calm among gate survivors) and **`vol_5_50` > 1.0**. `near_high` ≥ −5%
+  was a third leg until 2026-10-05.
+  - It was removed because it **failed on its own terms**, not because it was inconvenient. It
+    gates on a stock's own 20-day return volatility while being named for defensiveness, which is
+    sensitivity to the market (beta). On the 10/02 screen the top-decile calm names had median
+    **beta 0.85 against 0.84 for every other name**, and **18 of 54** carried beta above 1.0.
+    **WK** remains the cleanest demonstration: revenue +19.7%, Strong Buy, +24.1% to target,
+    forward PE 19.3, **beta 0.51** — genuinely defensive — rejected because its `rank_low_vol`
+    was **0.505**, mid-pack on its own volatility. The last change made under the profile, on
+    10/05, admitted **DRH** (beta 1.03) and **HRMY** (beta 1.01): two market-sensitive names in,
+    the defensive one still out.
+  - **Carried to Phase 4, now as an open question rather than a live rule:** whether **beta**
+    belongs in any future defensive test at all. The 0.90 threshold is moot — the profile is gone.
+
+- **✅ SUNSET RESOLVED 2026-10-11 — the allowance has expired, as the clause provided.** The
+  sunset said the RISK-OFF screener allowance reverts to a full freeze unless a pre-registered
+  regime test confirmed it. The test ran (`research/rule_ablation.py`) and did not confirm it:
+  opening the lane on the defensive profile cost 2.8pp of test return. **The row reverted to a
+  freeze exactly as written, with no discretion exercised.** Recording that because a sunset
+  clause that is quietly extended is worse than no sunset clause.
 - *Why raise catalyst capacity under RISK-OFF:* the previous combination — freezing screener
   entries while capping catalyst plays at 1 position / 15% — made high cash **arithmetically
   unavoidable** rather than a market judgment. Catalyst returns are idiosyncratic and largely

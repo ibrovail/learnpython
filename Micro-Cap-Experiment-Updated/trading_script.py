@@ -1520,13 +1520,19 @@ def _project_session_date(sessions_held: int, target: int) -> Optional[str]:
 
 # Lane capacity (portfolio_rules.md -> Allocation Framework). Two buckets: catalyst plays and
 # screener-sourced plays. Under RISK-OFF the catalyst lane allows 3 positions at the full 2% risk
-# budget with NO defensive-profile test, while the screener lane runs at half risk and must clear
-# the profile. That asymmetry was invisible: nothing printed it, the research funnel sources only
+# budget, while the screener lane used to run at half risk behind a defensive profile.
+# That asymmetry was invisible: nothing printed it, the research funnel sources only
 # from the watchlist, and all 40 names in research_log.csv came from the screener -- so the catalyst
 # lane sat empty from the day it was widened (2026-09-17) while the book held 85% cash. Added
 # 2026-10-05.
-CATALYST_CAP = {"RISK-ON": 2, "RISK-OFF": 3}
-SCREENER_CAP = {"RISK-ON": 4, "RISK-OFF": 4}
+#
+# Revised 2026-10-11 by the rule audit. The RISK-OFF defensive profile is REMOVED and the screener
+# lane now CLOSES in RISK-OFF instead: opening it on the profile cost 2.8pp of test return over 11
+# years, and the profile was not defensive anyway (top-decile calm names had median beta 0.85
+# against 0.84 for everything else). So in RISK-OFF the catalyst lane is the only one open, which
+# makes staffing it the binding constraint on book size rather than a nicety.
+CATALYST_CAP = {"RISK-ON": 3, "RISK-OFF": 3}
+SCREENER_CAP = {"RISK-ON": 7, "RISK-OFF": 0}
 
 
 def _position_lanes() -> dict[str, str]:
@@ -1560,14 +1566,22 @@ def _lane_usage(tickers: list[str], regime: Optional[str]) -> Optional[str]:
     cat = sum(1 for t in tickers if lanes.get(t) == "catalyst")
     scr = sum(1 for t in tickers if lanes.get(t) == "screener")
     unk = len(tickers) - cat - scr
-    ccap, scap = CATALYST_CAP.get(regime, 2), SCREENER_CAP.get(regime, 4)
-    bits = [f"catalyst {cat}/{ccap} (full 2% risk, no defensive profile)",
-            f"screener {scr}/{scap} (half risk, profile required)"]
+    ccap, scap = CATALYST_CAP.get(regime, 3), SCREENER_CAP.get(regime, 7)
+    bits = [f"catalyst {cat}/{ccap} (full 2% risk)",
+            f"screener {scr}/{scap}" + (
+                # A holding already open when the lane closed is NOT a violation: the 2026-09-28
+                # amendment settled that regime CAPACITY gates govern new capital only, and a
+                # failed capacity gate is a hold that must name the gate in writing.
+                " -- lane CLOSED in RISK-OFF since 2026-10-11; holdings already open are "
+                "grandfathered (capacity gates govern new capital only)"
+                if scap == 0 else " (full 2% risk)")]
     if unk:
         bits.append(f"{unk} unclassified (bought before the research log)")
     free = max(0, ccap - cat)
     tail = (f" -- {free} catalyst slot{'' if free == 1 else 's'} open: source at least 3 "
-            f"dated non-binary catalyst candidates this report, NOT only screener names"
+            f"dated non-binary catalyst candidates this report"
+            + (", the ONLY lane open in this regime" if scap == 0 else
+               ", NOT only screener names")
             if free else "")
     return "; ".join(bits) + tail
 
@@ -1865,7 +1879,11 @@ def _print_research_trigger(portfolio_df, cash: float, equity: float,
     into "whenever I feel like it". The 30-session backstop is the guard against
     that: no matter how quiet things are, research never goes stale indefinitely.
     """
-    POSITION_CEILING, CASH_FLOOR, MIN_POSITION = 5, 0.15, 0.10
+    # Ceiling 5 -> 10 and floor 15% -> 5% on 2026-10-11, measured: a ceiling of 5 cost 3.9pp of
+    # test return at every book size tested, and the 15% floor 0.5pp. See Rules Amendment
+    # History (2026-10-11). MIN_POSITION is unchanged -- it is the smallest deployable share
+    # worth flagging a free slot for, not a sizing rule.
+    POSITION_CEILING, CASH_FLOOR, MIN_POSITION = 10, 0.05, 0.10
     CASH_TRIGGER, BACKSTOP_SESSIONS, REVIEW_SESSIONS = 0.25, 30, 60
     # The re-underwrite threshold is counted in SESSIONS but the review only happens in a weekend
     # REPORT, so a holding crossing 60 mid-week was always reviewed late: ATRC stood at 59 on
@@ -2884,7 +2902,7 @@ def print_weekend_summary(chatgpt_portfolio: pd.DataFrame | list[dict[str, Any]]
     _focus = (session_directives or {}).get("research_focus")
     print(f"- Research focus: {_focus if _focus else 'none — wide net across all permitted sectors'}")
     print("- Fixed by portfolio_rules.md, not chosen weekly: holding horizon 40–60 sessions; "
-          "catalyst window 90 days, non-binary only; 2% risk per trade; 5–6 position ceiling "
+          "catalyst window 90 days, non-binary only; 2% risk per trade; 10 position ceiling "
           "(about 4 fit at current sizing); risk posture set by the regime filter and the "
           "drawdown circuit breaker.")
     print("- Research funnel (analysis-workflow.md Step 2): stage 1 = quick quote-page checks, "

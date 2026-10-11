@@ -115,10 +115,10 @@ enough. Measure against `<last_analyst_thesis>`: say what changed, not what didn
 |---|---|---|
 | Position size | ≤30% of equity each | |
 | Risk per trade | ≤2% of equity at the stop | |
-| Cash floor | ≥15% of equity after trades | |
+| Cash floor | ≥5% of equity after trades | |
 | Driver cap | ≤2 positions per primary driver (list the drivers) | |
 | Sector cap | ≤3 positions per GICS sector | |
-| Position count | ceiling 5–6 | |
+| Position count | ceiling 10 | |
 | Slippage | each order ≤10% of average daily dollar volume | |
 | Regime capacity | RISK-OFF: ≤3 catalyst at full 2% (no defensive profile); screener at half risk, profile required | |
 | Catalyst sourcing | ≥3 stage-1 names catalyst-sourced whenever a catalyst slot is open | |
@@ -371,7 +371,7 @@ Re-entry bans: PAR expired ~9/29, VTS ~9/30.
 <execution_requests>
 <session_directives>
 - Research focus: Wide net across the screener for the 3 buys sought. Plus: if the RISK-OFF defensive profile again yields nothing, quantify the constraint - how many of the 100 screened names clear each of the three thresholds separately and together - so the question of whether the gate can ever be satisfied has evidence rather than one week's anecdote.
-- Fixed by portfolio_rules.md, not chosen weekly: holding horizon 40–60 sessions; catalyst window 90 days, non-binary only; 2% risk per trade; 5–6 position ceiling (about 4 fit at current sizing); risk posture set by the regime filter and the drawdown circuit breaker.
+- Fixed by portfolio_rules.md, not chosen weekly: holding horizon 40–60 sessions; catalyst window 90 days, non-binary only; 2% risk per trade; 10 position ceiling (about 4–5 fit at current sizing); risk posture set by the regime filter and the drawdown circuit breaker.
 - Research funnel (analysis-workflow.md Step 2): stage 1 = quick quote-page checks, ~5 per buy sought (the count is in <research_trigger>), spread across ranks, sectors and size, extending to watchlist_extended.csv (ranks 51–100) if the top 50 cannot supply them; stage 2 = full research on the survivors. Log every name at both stages with log_research.py.
 </session_directives>
 
@@ -409,7 +409,7 @@ Write the report in the six-section format in <output_format> above: scoreboard,
 - Maximum 5 concurrent positions.
 - Maximum 6 concurrent positions.
 - No single position should exceed 30% of equity.
-- Maintain at least 15% cash reserve.
+- Maintain at least 5% cash reserve.
 - Flag any holding where the thesis has weakened, even if the stop has not been breached.
 
 <!-- OUTPUT PREFERENCES -->

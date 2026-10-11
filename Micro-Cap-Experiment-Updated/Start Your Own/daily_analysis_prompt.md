@@ -154,6 +154,6 @@ Ask the user **one** optional question, then pass the answer as `make weekend FO
 > *(Default: no — wide net across all permitted sectors.)*
 
 Everything the four retired questions used to set is now fixed by `portfolio_rules.md`: holding
-horizon 40–60 sessions; catalyst window 90 days, non-binary only; 2% risk per trade; a 5–6
+horizon 40–60 sessions; catalyst window 90 days, non-binary only; 2% risk per trade; a 10
 position ceiling (about 4 fit at current sizing); risk posture governed by the regime filter and
 the drawdown circuit breaker. Then proceed to the full deep-research report.

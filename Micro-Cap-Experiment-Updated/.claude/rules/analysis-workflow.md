@@ -158,7 +158,7 @@ make weekend FOCUS="<answer, or leave empty>"
 
 **The four questions used until 2026-09-19 are retired.** Timing, risk posture and position count
 are set by the rules, not chosen weekly: holding horizon 40–60 sessions, catalyst window 90 days
-(non-binary only), 2% risk per trade, a 5–6 position ceiling (about 4 fit at current sizing), and
+(non-binary only), 2% risk per trade, a 10 position ceiling (about 4–5 fit at current sizing), and
 risk posture governed by the regime filter and the drawdown circuit breaker. Two of the retired
 options worked against the rules — "Aggressive, we are trailing the benchmark" is gap-chasing (the
 pressure behind TYRA), and "Tighten all stops by one ATR" contradicted the stop rules outright.

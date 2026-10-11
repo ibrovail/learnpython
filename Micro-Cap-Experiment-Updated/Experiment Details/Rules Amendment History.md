@@ -10,6 +10,210 @@ operating manual. The full superseded text is preserved in git at `e838891`.
 
 ---
 
+# 2026-10-11 — The rule audit: eleven rules measured, four changed
+
+**This is the largest amendment the book has had, and the first one produced by measurement
+rather than by reasoning or by a post-mortem on a single trade.** It is also the amendment that
+Phase 3.8's **R16** has been blocking: *"no rule is amended until Part 2 of the pre-registration
+is written and names the decision rule that produced each change."* Every change below names it.
+
+## What prompted it
+
+> *"Does any of this not open the question — are the rules 'the right rules'? RISK off for a
+> number of weeks now; but is it really risk off or is it what we've defined as risk off that is
+> putting us at a disadvantage? I don't see much questioning of the entire universe rules from
+> you and that is concerning as you are meant to have absolute control over this portfolio to
+> drive the alpha goal."*
+
+The symptoms: one position, **85% cash**, two consecutive no-buy weeks, 24 sessions of RISK-OFF,
+gap −3.73% since re-base. The deeper problem was that **not one rule in `portfolio_rules.md` had
+ever been measured against the alternative of not having it.** Every rule was adopted on
+reasoning (the 9/17 revision), on a single incident (HOPE's stop-out, ARLO's post-print entry,
+LXU's stale driver), or on a one-season study. A rule adopted after one bad trade can easily cost
+more than that trade did, and nothing in the process would have revealed it.
+
+## What was built
+
+| Stage | What it does | Why it was necessary |
+|---|---|---|
+| **Survivorship-free universe** (`research/regime_backtest.py`, stages 1–2) | Tiingo's ticker file carries delisting dates, so the universe is rebuilt as it stood each week. **499 tickers, 2016–2026, 37.5% of names in the frame had delisted.** | Free data serves only companies that still exist. A backtest on those tests "stocks that survived", which always flatters. |
+| **Cleaning** | Removed 28.4% of the first download that was not common stock (951 preferreds, 1,840 warrants, 1,487 SPAC units) and 695 **recycled symbols** — AAC had been three different companies. | Warrants and SPAC units are the calmest instruments on the exchange. They would have flooded `rank_low_vol`, the leg under test. |
+| **Daily event-driven simulation** (`research/live_simulation.py`) | Walks forward one session at a time: buys at the **next** open, 25bps slippage each side, real ATR stops, risk-based sizing, gap fills, cash floor, position ceiling, hold limit. | The first two study phases compared *groups of stocks*. That cannot answer "would this rule have made money" — it ignores cash, limits, stops, slippage and share rounding. |
+| **Train/test split at 2021-06-30** | Rules developed on 2016–2021, judged only on 2021–2026. | Protection against overfitting. 144 configurations were searched on train; **none beat SPY on test.** |
+| **Sector labels from EDGAR SIC codes** (`research/sector_labels.py`) | 332 of 373 names, **102 of them delisted.** | yfinance and Finviz label current listings only. Either would have re-imported the survivor bias the panel exists to remove. |
+| **Earnings dates from EDGAR 8-K Item 2.02** (`research/earnings_dates.py`) | 303 tickers, 11,814 dates, 82% of panel rows; delisted coverage 3% → 52%. | Same reason. The filings *are* the releases and they survive delisting. |
+| **One clean ablation** (`research/rule_ablation.py`) | Fixes the final rule set, flips one rule back to what the rules say today, measures. | Rules interact. Figures gathered as the audit went were each measured against a different baseline, so they were not comparable. **Every number below comes from this one file.** |
+
+## Two errors in my own work, both found by a control rather than by inspection
+
+**1. The earnings-guard verdict was wrong, and I published it.** `run()` counts sessions with an
+index into the calendar it is handed. The first portfolio test of the guard pre-indexed earnings
+dates against the **full** calendar and then ran the test period as a separate call, so every
+index was shifted by the length of the train period. The guard still blocked candidates — off
+*train-period* earnings dates while trading the test period. **It looked like it was working,
+which is exactly why the error survived.** The reported "3.5pp cost" was the cost of refusing
+candidates at random. `run()` now takes dates and indexes them itself. *(The differential test is
+unaffected: it mapped panel dates and earnings dates through the same index.)*
+
+**2. A decision rule of mine was inverted.** The sector-cap rule read "keep if drawdown improves
+by ≥1pp" and was implemented as `≤ −0.01`. Drawdowns are negative, so an improvement is a
+**positive** difference — the test could only ever have fired on a *worse* drawdown. Same class
+as the three verdict bugs in the regime backtest's stage 4, and the reason `research-methods.md`
+now carries the units rule.
+
+**What both have in common: the raw numbers were correct and the comparison was wrong.** Neither
+was visible in the output. The first was caught by asking why a row showed exactly 0.0, the
+second by asking why a cap of 5 — which changes nothing the book holds — looked as good as a cap
+of 3. **A row that looks sensible is not evidence; a row that behaves identically to no rule at
+all is.**
+
+---
+
+## The changes
+
+All figures: test-period CAGR (2021-06-30 → 2026-09-18, never fitted) and test-period max
+drawdown, at the live book's **$710**, from `research/output/rule_ablation.csv`. The baseline is
+the adopted set; each row is that rule flipped back to today's wording.
+
+### 1. REMOVED — the RISK-OFF defensive profile
+
+| | Test CAGR | Test drawdown |
+|---|---|---|
+| Adopted (regime gate closes the screener lane in RISK-OFF) | **12.2%** | **−15.4%** |
+| As written (RISK-OFF opens on `rank_low_vol ≥ 0.90` ∧ `vol_5_50 > 1.0`) | 9.4% | −12.1% |
+
+**Decision rule: Phase 3.8 R7** — *"Its stated purpose is defensive, so return alone cannot
+justify it"*; judged on return per unit of volatility. **Costs 2.8pp of return and buys 3.3pp of
+drawdown**, and R7's own basis rejects it: top-decile calm names had median **beta 0.85 against
+0.84** for everything else. **A leg that does not change beta is not a defensive leg.** The
+regime gate already does the defending, better and for free.
+
+### 2. CHANGED — the trailing stop is never raised by default
+
+| | Test CAGR | Test drawdown | Stop-outs | Avg hold |
+|---|---|---|---|---|
+| Adopted (never raise) | **12.2%** | **−15.4%** | **9%** | **57** |
+| Raise once only | 11.3% | −18.6% | 70% | 29 |
+| As written, raise whenever eligible | 1.9% | −16.3% | 98% | 14 |
+
+**Decision rule: the rules' own words** — *"Eligibility is mechanical; using it is not. A
+qualifying stop MAY be reset, not MUST be."* **This is the single largest number in the audit:
+10.3pp.** Applying the raise mechanically turns a 40–60 session system into a 14-session one and
+stops out of 98% of positions. Your live book runs 32% stop-outs and 46–58 session holds —
+because you did not raise mechanically. **Your discretion was worth more than every other rule
+combined.** The amendment makes the default match the practice: *do not raise; raising is an
+exception that must be argued in writing.*
+
+### 3. CHANGED — position ceiling 5 → 10, and fractional shares permitted
+
+| | Test CAGR | At $10,000 |
+|---|---|---|
+| Adopted (fractional, ceiling 10) | **12.2%** | **12.2%** |
+| Ceiling 5 | 8.3% | 8.3% |
+| Whole shares only | 9.0% | 12.7% |
+| Both, as written today | 8.9% | 7.4% |
+
+**Decision rule: Phase 3.8 R10** (book shape judged on return per unit of volatility, no count
+adopted without t ≥ 2.0 against 5). **The ceiling is worth 3.9pp at any size.** Fractional shares
+are worth **3.2pp at $710 and nothing at $10,000** — which is the **opposite of the condition I
+stated earlier in the session, and it is now corrected.** The reason is arithmetic: at $710 a
+tenth of the book is $71, so a $35 stock is two shares and rounding 2.47 → 2 discards 19% of the
+intended position. The bigger the book, the less rounding matters. **Fractional shares are a
+small-book rule, not a large-book one.**
+
+> `documentation.md` carries the now-false rule *"Never suggest fractional shares — the
+> experiment is full shares only."* It is removed by this amendment. **Whole shares were never a
+> finding; they were an inherited default from the original ChatGPT experiment.**
+
+### 4. CHANGED — cash floor 15% → 5%
+
+12.2% against 11.8%, identical drawdown. **Decision rule: Phase 3.8 R11.** Worth 0.5pp — the
+smallest change here, adopted because it is free and consistent with the ceiling change: ten
+positions cannot be funded behind a 15% floor.
+
+### 5. KEPT, with evidence behind it for the first time
+
+| Rule | Flipping it back costs | Decision rule |
+|---|---|---|
+| **Regime filter** (IWM vs its 50-day SMA) | 3.8pp of return vs no gate at all | Phase 3.8 **R2 — and this amendment REVERSES R2's published verdict.** R2 said remove the filter; it was computed on a cross-sectional test with no cash, no stops and no slippage. The realistic simulation reverses it. The error was the method, not the arithmetic. |
+| **3-per-sector cap** | 3.0pp of drawdown, at no cost in return | New, pre-registered in `research/sector_cap_test.py`. **The only rule in the audit that is material, verified and free.** Cap on shuffled sector labels, 40 seeds: placebo mean drawdown **−18.6%**, which is the *uncapped* book's −18.4%. Real labels beat **40 of 40** (p < 0.025). Capping on random labels does nothing; capping on real sectors does. |
+| **2% risk per trade** | 5.4pp of return, for 7.3pp less drawdown at 1% | Phase 3.8 R12. **This is a genuine trade-off, not a free win, and the call is mine:** 1% risk yields 6.8% test CAGR, which cannot approach the benchmark. **2% stands.** |
+| **$5Bn market-cap ceiling** | lifting it tested worse (2.8% vs 6.2%) | **I withdraw the recommendation to lift it that I made earlier in this session.** |
+| **Day-1 −8% drawdown rule** | 1.2pp of return | Real but thin — it fires **once in 150 trades**. Kept because it is nearly free and the one case it catches is a thesis that broke on day one. |
+| **10-session pre-earnings guard** | see below | **KEPT, reversing the removal I published three hours earlier.** |
+
+**The earnings guard, stated precisely, because I got it wrong once.** On the corrected
+measurement:
+
+| Guard length | Test CAGR | Test drawdown |
+|---|---|---|
+| Off | 12.2% | −15.4% |
+| 5 sessions | 11.9% | −15.3% |
+| **10 sessions (the rule)** | **13.8%** | **−12.2%** |
+| 15 sessions | 11.0% | −12.0% |
+| 20 sessions | 13.1% | −11.0% |
+
+Return is **not monotone** — 11.9, 13.8, 11.0, 13.1 is the signature of noise, and a placebo
+refusing the same 12% of candidates at random beat the real guard on return 15% of the time.
+**So the +1.5pp of return is not claimed.** Drawdown **is** monotone in guard length, with no
+exception, and the placebo buys 0.5pp of drawdown where the real guard buys 3.2pp (p = 0.10).
+**Verdict: keep, on drawdown, at p = 0.10 — short of significance, and said so.** The burden was
+always on *removing* a standing rule, and the evidence for removal was a measurement error.
+
+### 6. KEPT, and labelled honestly
+
+| Rule | Label |
+|---|---|
+| **−20%/−30% drawdown circuit breaker** | **Keep. Fires in train, not in test** — switching it on improves train by 1.7pp (the 2020 crash) and changes the test period by exactly 0.0, because the worst test drawdown was −15.4% against its −20% trigger. *Correction: I earlier said it "never fired". It fired in 2020 and helped.* |
+| **Post-stop-out re-entry ban** | **Keep, inert.** Identical results at 10 and 20 sessions, to the decimal. A trend-based ranking cannot place a just-stopped-out name near the top, so the ban forbids something that does not happen. A belt over a belt. |
+
+---
+
+## What could not be tested, and will not be claimed
+
+- **Driver cap (2 per primary thesis driver)** and the **binary-thesis prohibition** — "driver"
+  and "binary" are human labels that exist nowhere in historical data. A correlation-cluster
+  proxy for the driver cap is possible and is not built.
+- **Post-earnings cooldown** (3 sessions / +5% above the post-print close) — testable with the
+  EDGAR dates already harvested. **Not yet run.**
+- **The catalyst lane.** The simulation treats RISK-OFF as fully closed, because history carries
+  no catalyst labels. The adopted column is therefore the **pessimistic** case: in practice the
+  catalyst lane stays open in RISK-OFF at full risk.
+- **Sector labels are a SIC proxy for GICS**, agreeing with the screener's Finviz labels on
+  **64%** of the 50 overlapping names (usually Industrials vs Information Technology). The cap is
+  adopted on a proxy, and the placebo is what makes that defensible rather than the labels being
+  exact.
+
+## The honest accounting
+
+The goal set for this session was a rule set beating **SPY's 15.6%** over the full window.
+
+| | Train | Test | Max drawdown |
+|---|---|---|---|
+| **Adopted set** | 15.7% | **12.2%** | **−15.4%** |
+| Adopted set, with the earnings guard's unclaimed return gain | 15.9% | 13.8% | −12.2% |
+| **SPY** | 18.0% | **13.2%** | **−24.5%** |
+| RSP (S&P 500 equal-weighted) | 16.4% | 8.5% | −39.0% |
+| IJR (small-cap 600) | 17.1% | 5.7% | −44.4% |
+
+**The goal was not met, and I am not reporting that it was.** The adopted set lands at or just
+below SPY on return, at roughly **half** the drawdown. The higher 13.8% figure is the one whose
+return advantage failed its own placebo, so it is not the number of record.
+
+**Why the gap is not a rule problem.** SPY beats the *equal-weighted* S&P by 4.7pp and small caps
+by 7.5pp on the test period. That is **cap-weighting** — the index's largest holdings being the
+mega-caps — not stock-picking skill. This book is equal-weighted by construction, and the gates
+beat equal-weighted exposure by 3.7pp and small caps by 6.5pp. **The rules are not what is
+costing the gap; the weighting scheme is.** That is why a separate session was opened on holding
+mega-caps and on leverage: those are the two levers that address a cap-weighting gap, and neither
+of them is a rule change. Nothing in this amendment can close it.
+
+**One finding worth carrying forward, which is not a rule.** Ranking candidates by distance above
+the 50-day SMA beat ranking by the screener's own six-signal composite by **4.9pp** on the test
+period. The composite remains **sourcing, not conviction** — now with a number attached.
+
+---
+
 # 2026-10-05 (b) — The catalyst lane gets a sourcing method
 
 **The defect.** `portfolio_rules.md` defines two buckets. The screener bucket names its pipeline —

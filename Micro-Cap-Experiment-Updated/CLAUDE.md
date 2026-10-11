@@ -96,6 +96,25 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   **no** horizon, and 20/40/60 sessions have too few independent observations for any verdict;
   effect sizes do rise with horizon. **Phase 4 (Dec) primary horizon = 20 sessions**; the
   40-session test waits for ~March 2027. Index changes are the fifth unexplained-move category.
+- **ADOPTED (10/11) — the rule audit: eleven rules measured, four changed.** The largest
+  amendment the book has had and the first produced by measurement rather than reasoning or a
+  single-trade post-mortem. Built on a **survivorship-free** 11-year frame (499 tickers, 37.5% of
+  names delisted; `research/`), a **daily event-driven simulation** with real slippage, stops,
+  sizing and share rounding, and a **train/test split at 2021-06-30** — every figure from one
+  clean ablation (`research/rule_ablation.py`), so the numbers are comparable to each other.
+  **Changed:** RISK-OFF **defensive profile removed** and the screener lane **closes** in RISK-OFF
+  instead (+2.8pp) — its sunset clause expired as written; **stops are not raised by default**
+  (+10.3pp, the largest effect in the audit); **fractional shares permitted** (+3.2pp at $710,
+  nothing at $10,000 — a small-book rule); **position ceiling 5 → 10** (+3.9pp); **cash floor
+  15% → 5%** (+0.5pp). **Kept with evidence:** regime filter (+3.8pp, **reversing Phase 3.8's
+  R2**), **3-per-sector cap** (3.0pp less drawdown at no cost, and it beats **40 of 40** shuffled-
+  label placebos), 2% risk, the $5Bn cap (**lifting it tested worse — recommendation withdrawn**),
+  the Day-1 rule, and the **10-session earnings guard — a removal I published and then withdrew**
+  after finding a session-index bug in my own test. Breaker kept (fires in 2020, not in test);
+  re-entry ban kept and **inert**. **The goal was not met:** 12.2% test CAGR against SPY's 13.2%,
+  at −15.4% drawdown against SPY's −24.5%. The gap is **cap-weighting**, not the rules — SPY beats
+  equal-weighted S&P by 4.7pp on the same window — which is why mega-caps and leverage are a
+  separate session. Reasoning in `Rules Amendment History.md` (2026-10-11).
 - **In progress**: **One position, 85% cash, second consecutive no-buy week (Week 56).** CON 3 @
   $35.31 ($35.65, **+1.0%**), 10 sessions, 15.0% of equity. **A stop raise qualifies for the first
   time: $33.69 / $33.54** (2.0×ATR), cutting risk 0.89% → 0.68% — **pending placement**. Note the
@@ -127,23 +146,13 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   `log_research.py` is now a controlled vocabulary (`catalyst:<category>`), since
   `trading_script.py` reads it to decide which cap a holding counts against. Reasoning in
   `Rules Amendment History.md` (2026-10-05 b).
-- **Adopted (10/05) — `near_high` removed from the RISK-OFF defensive profile.** Two legs remain:
-  `rank_low_vol` ≥ 0.90 and `vol_5_50` > 1.0. Three faults: anti-correlated with its own
-  precondition; the only **absolute** threshold among relative ones, so it tightened unattended (the
-  90th percentile of `near_high` among survivors was **−8.1%**, making −5% stricter than
-  top-decile, while `rank_low_vol` ≥ 0.90 passes exactly 10% weekly by construction); and it
-  **double-counted**, being already one of the six composite inputs that build the list.
-  **A correctness fix, not a capacity fix** — buyable names go 1 → 3, measured. The binding
-  constraint is `rank_low_vol` ∧ above-the-50-day (4–7 of the top 100), because in a falling market
-  a calm stock is often one drifting quietly down. **Deferred to Phase 4:** loosening the calm leg
-  to ≥ 0.75 (would give 10–11 names — declined on sample size, four RISK-OFF screens), and whether
-  **beta** belongs in the profile at all — top-decile calm names had median **beta 0.85 vs 0.84**
-  for everything else, so `low_vol` is not measuring defensiveness — **WK** (beta **0.51**, Strong
-  Buy, +24.1% target) is rejected by `rank_low_vol` **0.505**, not by `near_high` as the Week 56
-  report said. What the change actually admits on the 10/02 screen is **DRH** (beta 1.03) and
-  **HRMY** (beta 1.01) — two market-sensitive names in, the defensive one still out. Reasoning in
-  `Rules Amendment History.md` (2026-10-05). **Also corrected there:** the 9/28 amendment claimed beta 1.26 kept ATRC out of the
-  profile — **beta was never a leg**; the gate it failed was the 90-day catalyst window.
+- **Superseded (10/05) — `near_high` removed from the RISK-OFF defensive profile.** Kept here only
+  as the trail: the whole profile was removed on 10/11, so its remaining legs and the deferred
+  0.90-threshold question are moot. What survives is the **open Phase 4 question of whether beta
+  belongs in any future defensive test** — top-decile calm names had median beta **0.85 vs 0.84**,
+  so `low_vol` was never measuring defensiveness. Full reasoning, including the corrected claim
+  that beta had kept ATRC out of the profile (**beta was never a leg**), in
+  `Rules Amendment History.md` (2026-10-05 and 2026-10-11).
 - **HOPE post-mortem (9/29)**: stopped out at $13.48 for **−$7.20 = 0.99% of equity — the budgeted
   risk to the cent**, 6 sessions held. **No rule failed; the entry did.** It was bought **+0.15%
   above its 50-day SMA** — the thinnest possible pass of the hard trend gate, flagged in the Week 54
@@ -153,14 +162,13 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   size or none, and should a rate-path thesis be entered days after an FOMC? *(`pct_vs_sma50` is
   logged, so the first is queryable — but 40 rows over three dates cannot answer it: Week 54's buys
   are the only ones with a BUY, and they mature ~mid-November.)*
-- **Complete (9/19)**: review items adopted — **one weekend question** (R1); **two-stage research funnel**
-  sized to the buys sought, spread across ranks/sectors/size, extending to ranks 51–100 (R3); **research log** of buys *and* passes via `log_research.py`
-  (R4); stop **raise target 2.0×ATR**, 1.5× floor applies at placement (R5); **regime computed**
-  by the script → `<market_regime>`, `regime_history.csv`, flip trigger (R7); **small-cap** label +
-  size control for Phase 4 (R8). **Six-section report** replaces the ten (R2);
-  the `weekly-portfolio-report` skill is **retired** (predates every rule; conflicts with four).
-  **Dailies by exception** — `<holding_review>` marks FULL/LINE (R6); **regime ±1% band** — 17 → 7
-  regime changes a year, same RISK-OFF share (D3). Nothing left under discussion.
+- **Complete (9/19)**: review items adopted — one weekend question (R1); two-stage research funnel
+  sized to the buys sought and extending to ranks 51–100 (R3); research log of buys *and* passes
+  via `log_research.py` (R4); stop raise target 2.0×ATR (R5); regime computed by the script with a
+  ±1% band → `<market_regime>`, `regime_history.csv` (R7, D3); small-cap label + size control
+  (R8); six-section report (R2); dailies by exception via `<holding_review>` (R6). The
+  `weekly-portfolio-report` skill is **retired** — it predates every current rule and conflicts
+  with four. Detail in `Rules Amendment History.md` (2026-09-19 a–f).
 - **Complete (9/28)**: **the 60-session re-underwrite now says what it tests** — the **quality**
   tests (revenue, earnings path, driver freshness, non-binary, prohibited business, trend and
   distance-from-base, earnings guard, placeable stop inside the 30% ceiling), **not** the regime
@@ -169,10 +177,14 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   is a hold that **must name the gate in writing**. Reasoning and the honest accounting are in
   `Rules Amendment History.md` (2026-09-28). Deliberately left open: the review cadence *after* a
   pass — decide it when ATRC actually passes.
-- **Next**: CON's stop raise is **placed and logged at $33.69 / $33.54** (risk 0.68% of equity;
-  restoration already spent, so it can never move down). Take the `near_high` measurement to the
-  rules process — three weeks, same answer. Re-entry bans: HOPE ~10/13, ATRC ~10/15. Next screen
-  10/10, into the mid-October earnings squeeze.
+- **Next**: **Week 57 is DUE and the screener lane is now shut in RISK-OFF — the catalyst lane is
+  the only way to add a position.** 3 catalyst slots open, 79% deployable (the 5% floor freed 9pp).
+  CON's stop stands at **$33.69 / $33.54** and **will not be raised again** unless the thesis
+  changes in writing. Re-entry bans: HOPE ~10/13, ATRC ~10/15. Still untested: the **post-earnings
+  cooldown** (EDGAR dates already harvested — the cheapest remaining test), the **driver cap** and
+  the **binary-thesis prohibition** (human labels, no data). Also open: ranking by distance above
+  the 50-day SMA beat the screener's six-signal composite by **4.9pp** on test — a diagnostic, not
+  yet a rule.
 - **Engineering, 9/29–9/30** (detail in `.claude/docs/implementation-notes.md`): session
   arithmetic routed through the **NYSE calendar** — the 30-session backstop had scaled days by 5/7,
   and the earnings estimate collapsed every past-due print to −1 via `pd.bdate_range`, pinning a

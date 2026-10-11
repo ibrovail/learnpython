@@ -21,7 +21,11 @@ After every mistake or correction caught during a session:
 
 Examples of good rules:
 - "When reading chatgpt_portfolio_update.csv, always check for the Stop Limit column and default missing values to Stop Loss"
-- "Never suggest fractional shares — the experiment is full shares only"
+- "When a stop raise qualifies, state that the default is NOT to raise and name what changed
+  about the thesis before proposing one" *(the former example here — "never suggest fractional
+  shares, the experiment is full shares only" — was itself falsified on 2026-10-11: whole
+  shares cost 3.2pp of test return at the live book's size. A specific, testable rule can
+  still be wrong; replace it when it is measured, and say so.)*
 
 Examples of bad rules:
 - "Be more careful with CSV files"
