@@ -99,10 +99,20 @@ regime gate already does the defending, better and for free.
 **Decision rule: the rules' own words** — *"Eligibility is mechanical; using it is not. A
 qualifying stop MAY be reset, not MUST be."* **This is the single largest number in the audit:
 10.3pp.** Applying the raise mechanically turns a 40–60 session system into a 14-session one and
-stops out of 98% of positions. Your live book runs 32% stop-outs and 46–58 session holds —
-because you did not raise mechanically. **Your discretion was worth more than every other rule
-combined.** The amendment makes the default match the practice: *do not raise; raising is an
-exception that must be argued in writing.*
+stops out of 98% of positions. The book's realised record is 32% stop-outs and 46–58 session
+holds, because the raise was not applied mechanically. The amendment makes the default match
+that: *do not raise; raising is an exception that must be argued in writing.*
+
+**Correction, same day, from the live session.** This paragraph originally read that the book had
+exercised the discretion "sparingly" and credited it with the 10.3pp. That was true of ATRC —
+whose stop still sat at 1.35×ATR after 58 sessions — and **not** true of the position open while
+the audit ran: **three CON raises were recommended in five sessions, each justified only by the
+2.0×ATR tests passing.** Two were placed and are irreversible; the third was withdrawn on
+2026-10-11. So this amendment did not formalise an existing good practice — **it caught a live
+drift toward the exact behaviour the ablation priced at 1.9% CAGR and a 98% stop-out rate.** The
+10.3pp is the gap between the rule as written and the rule as it was being applied, and
+describing it as settled practice would have been flattery. *(CON's placed stop is nonetheless
+safe: $34.49 is 2.95×ATR below the 10/09 close, against a 1.5×ATR floor.)*
 
 ### 3. CHANGED — position ceiling 5 → 10, and fractional shares permitted
 

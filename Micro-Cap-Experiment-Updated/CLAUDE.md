@@ -118,9 +118,9 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   sessions, two placed and irreversible, the third withdrawn on 10/11 under the new never-raise
   default.** The stop is safe — **2.95×ATR** of room (ATR(14) $0.916) against a 1.5×ATR floor, and
   max loss against entry is $2.46 = **0.34% of equity** — but note it now sits **above the
-  10-session low ($34.05)**, so a −7.3% pullback takes it out. **No further raise without a written
-  thesis change.** Restoration was spent 9/22, so it can never move down. **Gap −3.73%** since
-  re-base (−8.12% since inception), RISK-OFF; the 5% floor lifted deployable to **79%**.
+  10-session low ($34.05)**, so a −7.3% pullback takes it out. **No further raise without a
+  written thesis change.** **Gap −3.73%** since re-base (−8.12% since inception), RISK-OFF; the
+  5% floor lifted deployable to **79%**.
 - **Decided (10/05) — PLX is prohibited (Israeli-affiliated) and is blocklisted.** The user's
   determination. It ranked **#9** on the 10/05 screen and **nothing in code or on the quote page
   would have caught it**: stockanalysis lists Country "United States", HQ Hackensack NJ, while its
