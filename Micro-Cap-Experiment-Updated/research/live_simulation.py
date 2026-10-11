@@ -104,7 +104,8 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
         name_cap: float = SINGLE_NAME_CAP, day1_rule: bool = False,
         breaker: bool = False, reentry_ban: int = 0,
         earnings_guard: int = 0, earn_idx: dict | None = None,
-        sector_cap: int = 0, sectors: dict | None = None) -> dict:
+        sector_cap: int = 0, sectors: dict | None = None,
+        calm_when: str = "all") -> dict:
     """raise_policy decides how the trailing stop is managed, and it dominates everything else.
 
     portfolio_rules.md makes raising a stop *eligible* mechanically but leaves the decision to
@@ -247,7 +248,17 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
             if use_regime:
                 g = g[g.regime == "RISK-ON"]
             if calm is not None:
-                g = g[(g.rank_low_vol >= calm) & (g.vol_5_50 > 1.0) & (g.above_sma50.astype(bool))]
+                ok = ((g.rank_low_vol >= calm) & (g.vol_5_50 > 1.0)
+                      & (g.above_sma50.astype(bool)))
+                if calm_when == "risk_off":
+                    # portfolio_rules.md as WRITTEN: RISK-ON buys freely, RISK-OFF buys only
+                    # profile-passing names. Neither use_regime nor calm expresses that alone --
+                    # use_regime closes RISK-OFF entirely, calm filters every date. Modelling the
+                    # status quo faithfully needs this third option, or the ablation is comparing
+                    # the adopted set against a rule the book does not actually run.
+                    g = g[(g.regime == "RISK-ON") | ok]
+                else:
+                    g = g[ok]
             if liq_tercile is not None:
                 # size/liquidity tercile within that week's eligible names. The most liquid third
                 # returned 16.9% a year equal-weighted against the universe's 14.1%, which is the
