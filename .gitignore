@@ -1,0 +1,5 @@
+
+# Git database moved out of iCloud sync 2026-10-11: iCloud duplicated refs and the
+# index ("main 2", "index 2"), breaking fetches. .nosync is excluded from iCloud,
+# the same trick venv.nosync uses. .git is a symlink to it.
+.git.nosync/
