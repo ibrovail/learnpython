@@ -352,8 +352,9 @@ to a fresh buy. If it would not be bought today, exit it.
   business; above the 50-day SMA and inside the distance-from-base limits; no earnings print within
   the next 10 sessions; a stop still placeable under the ATR rules with the position inside the 30%
   ceiling.
-- **It does not apply the regime capacity gates** — the RISK-OFF defensive profile, the half risk
-  budget, the 90-day catalyst-window requirement, or the position-count ceiling. Those govern
+- **It does not apply the regime capacity gates** — the closed RISK-OFF screener lane, the
+  90-day catalyst-window requirement, or the position-count ceiling. *(Until 2026-10-11 this list
+  also named the RISK-OFF defensive profile and the half risk budget; both are gone.)* Those govern
   **committing new capital**, not holding exposure already owned. A holding that would be *sized*
   differently if bought fresh today is not thereby a sell; a holding whose *thesis* has failed is.
 - **If a quality test fails, exit. If only a capacity gate fails, hold — and write down which gate

@@ -73,6 +73,12 @@ REASON_CODES = {
     "correlated": "would breach the driver cap or the sector cap",
     "deal-pinned": "trading under a pending acquisition",
     "capacity": "no slot or no cash; a good name that could not be bought",
+    # Added 2026-10-11 with the lane closure. In RISK-OFF the screener lane is shut
+    # (SCREENER_CAP["RISK-OFF"] = 0), so this is the commonest reason a perfectly good screener
+    # name is passed -- and it was being logged as "capacity", which means the same thing for a
+    # cash shortage and for a regime closure. Scoring buys against passes needs them separable:
+    # a lane-closed pass says nothing about the name, a capacity pass says the book was full.
+    "lane-closed": "screener lane closed by the regime (RISK-OFF); the name itself is not at fault",
     "other": "anything else -- say what in --reason",
 }
 

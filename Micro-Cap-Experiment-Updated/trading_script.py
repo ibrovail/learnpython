@@ -2110,7 +2110,15 @@ def _holding_review_rows(portfolio_df) -> list[dict]:
             if r["room"] == r["room"] and r["room"] < 1.0:
                 r["flags"].append(f"stop only {r['room']:.2f}×ATR away")
             if r["raise_to"] is not None:
-                r["flags"].append(f"stop raise qualifies (to ~${cand:.2f})")
+                # Worded as EVIDENCE, not as an instruction. This flag read "stop raise
+                # qualifies (to ~$X)" until 2026-10-11, which is the script telling the analyst
+                # to raise -- and three CON raises in five sessions were recommended on exactly
+                # that reading. The never-raise default makes eligibility information: the
+                # position has run far enough that its stop is a long way behind, which is worth
+                # a FULL review for thesis and add-case reasons, not for the raise.
+                r["flags"].append(
+                    f"ran up -- stop {r['room']:.1f}xATR behind; raise ELIGIBLE to ~${cand:.2f} "
+                    f"but default is HOLD (needs a written thesis change)")
         except Exception as e:
             r["flags"].append(f"price history unavailable ({type(e).__name__}) — review by hand")
         try:  # estimated next report: Finviz's column is the LAST one; add a quarter

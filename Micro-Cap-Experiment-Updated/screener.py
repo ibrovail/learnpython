@@ -724,10 +724,14 @@ WATCHLIST_COLS = [
     "low_vol", "near_high", "pct_vs_sma20", "pct_vs_sma50", "atr_pct", "sales_qq",
     "eps_qq", "fwd_pe", "recom", "target_upside", "beta", "earnings", "short_float",
     "review_flag", "data_confidence", "composite_score", "composite_legacy", "composite_dedup",
-    # Percentile ranks among gate survivors (added 2026-09-19): the RISK-OFF defensive profile
-    # needs "top-decile low_vol", which the raw low_vol value cannot express on its own.
-    # rank_near_high is NOT a profile leg -- the near_high leg was removed 2026-10-05. It is kept
-    # because near_high remains a composite input and the rank is useful for diagnostics.
+    # Percentile ranks among gate survivors (added 2026-09-19). These existed to serve the
+    # RISK-OFF defensive profile ("top-decile low_vol"), which the raw low_vol value cannot
+    # express on its own. THE PROFILE WAS REMOVED 2026-10-11 -- it cost 2.8pp of test return and
+    # was not defensive (top-decile calm names had median beta 0.85 against 0.84 for everything
+    # else) -- so none of these three is a gate any more. They are kept because all three are
+    # composite inputs and the ranks are the right unit for diagnostics and for the research
+    # studies in research/, which read them from the saved watchlists. Do not reintroduce any of
+    # them as an entry gate without a pre-registered test.
     "rank_low_vol", "rank_near_high", "rank_vol_5_50",
 ]
 

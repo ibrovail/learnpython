@@ -113,14 +113,23 @@ The quantitative screener (`screener.py`) scans the full small-cap universe (up 
 
 **Allocation Framework** (see `portfolio_rules.md`):
 - **Catalyst plays**: dated **non-binary** catalyst within 90 days. Sized by the standard 2% risk
-  budget — no separate size cap. RISK-ON up to 2 positions, RISK-OFF up to 3.
+  budget — no separate size cap. RISK-ON up to 3 positions, RISK-OFF up to 3 — and in RISK-OFF this is the **only** lane open.
   **Binary-thesis entries are prohibited** (a stop cannot bound an overnight gap).
 - **Screener-sourced plays**: sourced from the screener watchlist, no catalyst required.
-  RISK-ON up to 4 positions; RISK-OFF permitted at half the risk budget on a defensive profile
-  (this allowance sunsets at Phase 4 unless the regime test confirms it).
+  RISK-ON up to 7 positions at the full 2% risk budget; **RISK-OFF closed** (revised 2026-10-11).
+  The RISK-OFF defensive profile is removed and its sunset clause expired as written rather than
+  being extended: opening the lane on the profile cost 2.8pp of test return. Holdings already
+  open when the lane closed are grandfathered.
 - **Correlated-risk caps**: max **2 positions sharing a primary thesis driver**; max **3 positions
   in any one GICS sector**. Neither is gated in code — `trading_script.py` prints a
-  `<position_limits>` block so both are visible at research time.
+  `<position_limits>` block so both are visible at research time. The **sector cap is the one rule
+  the 10/11 audit verified as material and free** (3.0pp less drawdown at no cost in return,
+  beating 40 of 40 shuffled-label placebos); the driver cap cannot be tested at all, because
+  "driver" is a human label — which makes the analyst its only control.
+- **Position ceiling 10, cash floor 5%, fractional shares permitted** (all revised 2026-10-11).
+- **Stops are not raised by default.** Raising whenever the ATR tests pass measured at 1.9% CAGR
+  with a 98% stop-out rate, against 12.2% and 9% for never raising — the largest single effect in
+  the audit. A raise needs a named, written thesis change.
 - **Exits**: the trailing stop is the only exit. No mechanical partials. Any holding at
   **60 sessions** must be re-underwritten in writing or exited.
 

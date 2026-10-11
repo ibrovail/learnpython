@@ -292,6 +292,31 @@ floor remains **untested**.
 
 ### P2.4 — Verdicts, as the pre-registered rules produce them
 
+> ### ⚠️ READ THIS BEFORE THE TABLE — two of these verdicts were REVERSED on 2026-10-11
+>
+> This study is a **cross-sectional** simulation: equal weights, no stops, no slippage, no share
+> rounding, no cash mechanics. It answers "do these names outperform", not "would this rule have
+> made the book money". A daily event-driven simulation
+> (`research/live_simulation.py`, `research/rule_ablation.py`) was built afterwards and **reversed
+> R2 and R10 outright**. The arithmetic below is not in question; the method was too coarse to
+> support the verdicts drawn from it, and the table is kept unedited as the record.
+>
+> | Rule | This study said | The realistic simulation found | Adopted |
+> |---|---|---|---|
+> | **R2** regime filter | **REMOVE** | keeping it is worth **+3.8pp** of test return | **KEPT** |
+> | R5 replacement signal | none qualifies | not re-tested | none adopted |
+> | **R7** defensive profile | **REMOVE** | confirmed: costs **2.8pp**, and beta 0.85 vs 0.84 says it was never defensive | **REMOVED** |
+> | **R10** position count | keep ~5 | a ceiling of 5 costs **3.9pp**; 10 adopted | **CHANGED to 10** |
+> | R11 cash floor | vacuous, untested | 15% costs 0.5pp against 5% | **CHANGED to 5%** |
+> | R12 risk per trade | cannot speak to sizing | 1% costs 5.4pp of return to buy 7.3pp of drawdown | **KEPT at 2%** |
+>
+> **The lesson, recorded in `.claude/rules/research-methods.md` terms:** a pre-registered decision
+> rule applied mechanically to the wrong measurement produces a confident wrong answer, and the
+> pre-registration does nothing to catch it. R16 — "no rule is amended until an amendment names
+> the decision rule behind each change" — is what stopped these verdicts from reaching
+> `portfolio_rules.md` in the three weeks before the better simulation existed. **R16 did its job
+> here, and it is the reason this file needs an addendum rather than a retraction.**
+
 | Question | Rule | Verdict |
 |---|---|---|
 | Q1 regime filter | **R2** | **REMOVE.** Capacity becomes regime-independent |
