@@ -202,9 +202,15 @@ When `<weekly_context>` XML appears in the conversation output, **immediately be
      exactly as for any other name.
    - **Log them as `--source "catalyst:<category>"`**, never as `screener #N` — the `source` field
      is how `trading_script.py` recovers which cap a holding counts against.
-   - A catalyst candidate skips the **defensive profile** and is sized at the **full 2%**. It still
-     faces every other gate: 50-day SMA, growing revenue, prohibited business, the 10-session
-     earnings guard, a placeable stop inside the 30% ceiling, driver and sector caps.
+   - **Revised 2026-10-11 — in RISK-OFF the catalyst lane is now the ONLY lane open**, so Stage 0
+     stops being a quota and becomes the whole report. The defensive profile is removed (there is
+     nothing left to skip) and `SCREENER_CAP["RISK-OFF"]` is **0**: a screener-sourced BUY
+     proposed in RISK-OFF is a rule violation, not a judgement call. In RISK-ON both lanes run at
+     the full 2% — up to 3 catalyst and 7 screener.
+   - A catalyst candidate is sized at the **full 2%** and still faces every other gate: 50-day
+     SMA, growing revenue, prohibited business, the **10-session earnings guard** (kept — a
+     removal was published on 10/11 and withdrawn the same day after a measurement error), a
+     placeable stop inside the 30% ceiling, and the driver and sector caps.
 
    **Stage 1 — quick check, quote page only.** One `stockanalysis.com/stocks/TICKER/` fetch per
    name: TTM revenue growth, TTM EPS, the **next** earnings date, analyst rating/target, 52-week
