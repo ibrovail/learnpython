@@ -185,8 +185,7 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   signature silently shifted every index when a split was run separately, which is what produced
   the withdrawn earnings-guard verdict.
 - **Fixed (9/20–9/21)**: `inject_last_thesis.py` line-anchors its tags (it had deleted the weekend
-  data block); `entry-discipline.md` requires all three stop candidates — 1.75×ATR, the 10-session
-  low, the 50-day SMA — with the stop below the lowest, recomputed from the actual fill.
+  data block); entry stops need all three candidates — 1.75×ATR, 10-session low, 50-day SMA.
 ## Documentation
 
 Reference docs (not auto-loaded — read on demand):
