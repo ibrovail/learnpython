@@ -122,15 +122,14 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   0.4981**, $33.69 passes at 0.5083. CON's restoration was spent 9/22, so this stop can never move
   down. Equity **$712.20**, cash **$605.25 (85.0%)**, deployable **$498.42 (70.0%)**, **gap −3.73%**
   since re-base (−8.12% since inception), drawdown −3.33%, RISK-OFF (24 sessions).
-- **Decided (10/05) — PLX is prohibited (Israeli-affiliated) and is now blocklisted.** The user's
+- **Decided (10/05) — PLX is prohibited (Israeli-affiliated) and is blocklisted.** The user's
   determination. It ranked **#9** on the 10/05 screen and **nothing in code or on the quote page
   would have caught it**: stockanalysis lists Country "United States", HQ Hackensack NJ, while its
-  ProCellEx manufacturing and research base is in Israel. The exclusion covers **affiliation, not
-  domicile** — which is why `portfolio_rules.md` says Israeli affiliation cannot be screened by
-  industry and must be checked per name. Added to `screener.py`'s `_PROHIBITED_TICKERS`, so it
-  drops out from the **10/10** screen onward. *Note for any later scoring pass: the Week 56
-  research-log row for PLX reads `weak-catalyst`, not `prohibited`, because the determination
-  post-dates it and the log is append-only.*
+  ProCellEx manufacturing and research base is in Israel. **The exclusion covers affiliation, not
+  domicile** — which is why it cannot be screened by industry and must be checked per name. In
+  `screener.py`'s `_PROHIBITED_TICKERS` since the **10/10** screen. *(The Week 56 research-log row
+  reads `weak-catalyst`, not `prohibited`: the determination post-dates it and the log is
+  append-only.)*
 - **Adopted (10/05 b) — the catalyst lane gets a sourcing method, and since 10/11 it is the ONLY
   lane open in RISK-OFF.** The catalyst bucket had an eligibility test and no pipeline, so the
   funnel filled one bucket: **40 of 40 researched names came from the screener, 0 from catalyst
@@ -150,15 +149,13 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   so `low_vol` was never measuring defensiveness. Full reasoning, including the corrected claim
   that beta had kept ATRC out of the profile (**beta was never a leg**), in
   `Rules Amendment History.md` (2026-10-05 and 2026-10-11).
-- **HOPE post-mortem (9/29)**: stopped out at $13.48 for **−$7.20 = 0.99% of equity — the budgeted
-  risk to the cent**, 6 sessions held. **No rule failed; the entry did.** It was bought **+0.15%
-  above its 50-day SMA** — the thinnest possible pass of the hard trend gate, flagged in the Week 54
-  report as thin — and still sized to **28.8% of equity**, the largest position in the book. Its rate
-  driver then inverted within three sessions (10-year highest since 2007 on 9/23). Two questions for
-  a later review, **not rule changes on one case**: does a sub-1% trend-gate pass deserve reduced
-  size or none, and should a rate-path thesis be entered days after an FOMC? *(`pct_vs_sma50` is
-  logged, so the first is queryable — but 40 rows over three dates cannot answer it: Week 54's buys
-  are the only ones with a BUY, and they mature ~mid-November.)*
+- **HOPE post-mortem (9/29)**: stopped out at $13.48 for **−$7.20 = 0.99% of equity, the budgeted
+  risk to the cent**, 6 sessions held. **No rule failed; the entry did.** Bought **+0.15% above its
+  50-day SMA** — the thinnest possible pass of the hard trend gate, flagged as thin in the Week 54
+  report — and still sized to **28.8% of equity**. Its rate driver inverted within three sessions.
+  **Still open after the 10/11 audit** (which tested rules, not entry quality): does a sub-1%
+  trend-gate pass deserve reduced size or none? `pct_vs_sma50` is logged, so it is queryable once
+  enough BUY rows mature.
 - **Complete (9/19)**: review items adopted — one weekend question (R1); two-stage research funnel
   sized to the buys sought and extending to ranks 51–100 (R3); research log of buys *and* passes
   via `log_research.py` (R4); stop raise target 2.0×ATR (R5); regime computed by the script with a
