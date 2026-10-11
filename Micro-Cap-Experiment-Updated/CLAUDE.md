@@ -113,13 +113,14 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   at −15.4% drawdown against SPY's −24.5%. The gap is **cap-weighting**, not the rules — SPY beats
   equal-weighted S&P by 4.7pp on the same window — which is why mega-caps and leverage are a
   separate session. Reasoning in `Rules Amendment History.md` (2026-10-11).
-- **In progress**: **One position, 85% cash, second consecutive no-buy week (Week 56).** CON 3 @
-  $35.31 ($35.65, **+1.0%**), 10 sessions, 15.0% of equity. **A stop raise qualifies for the first
-  time: $33.69 / $33.54** (2.0×ATR), cutting risk 0.89% → 0.68% — **pending placement**. Note the
-  rounding: the unrounded candidate $33.682573 passes the size test by 0.0007, **$33.68 fails at
-  0.4981**, $33.69 passes at 0.5083. CON's restoration was spent 9/22, so this stop can never move
-  down. Equity **$712.20**, cash **$605.25 (85.0%)**, deployable **$498.42 (70.0%)**, **gap −3.73%**
-  since re-base (−8.12% since inception), drawdown −3.33%, RISK-OFF (24 sessions).
+- **In progress**: **One position, ~85% cash, Week 57 DUE.** CON 3 @ $35.31, last close **$37.19
+  (+5.3%)**, stop **$34.49 / $34.34** as placed on 10/06. **Three raises were recommended in five
+  sessions, two placed and irreversible, the third withdrawn on 10/11 under the new never-raise
+  default.** The stop is safe — **2.95×ATR** of room (ATR(14) $0.916) against a 1.5×ATR floor, and
+  max loss against entry is $2.46 = **0.34% of equity** — but note it now sits **above the
+  10-session low ($34.05)**, so a −7.3% pullback takes it out. **No further raise without a written
+  thesis change.** Restoration was spent 9/22, so it can never move down. **Gap −3.73%** since
+  re-base (−8.12% since inception), RISK-OFF; the 5% floor lifted deployable to **79%**.
 - **Decided (10/05) — PLX is prohibited (Israeli-affiliated) and is blocklisted.** The user's
   determination. It ranked **#9** on the 10/05 screen and **nothing in code or on the quote page
   would have caught it**: stockanalysis lists Country "United States", HQ Hackensack NJ, while its
