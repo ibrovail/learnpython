@@ -89,29 +89,27 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 - **Complete**: **Indefinite-system rules revision (9/17)** — horizon **40–60 sessions**; the
   trailing stop is the only **mechanical** exit (partials deleted); **binary-thesis entries
   prohibited**; risk-per-trade **2%**; **drawdown circuit breaker** (−20% de-risk / −30% cash, on
-  the injection-neutral series from the re-based peak); driver cap 2 + sector cap 3; RISK-OFF
-  capacity raised; weekend **report** is trigger-based while the **screen** stays weekly. Standing
-  rules in `portfolio_rules.md`, reasons in `Experiment Details/Rules Amendment History.md`.
+  the injection-neutral series from the re-based peak); driver cap 2 + sector cap 3. *Several of
+  these were measured for the first time on 10/11 — see the audit entry below.*
 - **Complete**: **Phase 3.5** — on non-overlapping formation dates the composite clears t=2.0 at
   **no** horizon, and 20/40/60 sessions have too few independent observations for any verdict;
-  effect sizes do rise with horizon. **Phase 4 (Dec) primary horizon = 20 sessions**; the
-  40-session test waits for ~March 2027. Index changes are the fifth unexplained-move category.
+  effect sizes do rise with horizon. **Phase 4 (Dec) primary horizon = 20 sessions.** Index changes
+  are the fifth unexplained-move category.
 - **ADOPTED (10/11) — the rule audit: eleven rules measured, four changed.** The largest
   amendment the book has had and the first produced by measurement rather than reasoning or a
   single-trade post-mortem. Built on a **survivorship-free** 11-year frame (499 tickers, 37.5% of
   names delisted; `research/`), a **daily event-driven simulation** with real slippage, stops,
   sizing and share rounding, and a **train/test split at 2021-06-30** — every figure from one
   clean ablation (`research/rule_ablation.py`), so the numbers are comparable to each other.
-  **Changed:** RISK-OFF **defensive profile removed** and the screener lane **closes** in RISK-OFF
-  instead (+2.8pp) — its sunset clause expired as written; **stops are not raised by default**
-  (+10.3pp, the largest effect in the audit); **fractional shares permitted** (+3.2pp at $710,
-  nothing at $10,000 — a small-book rule); **position ceiling 5 → 10** (+3.9pp); **cash floor
-  15% → 5%** (+0.5pp). **Kept with evidence:** regime filter (+3.8pp, **reversing Phase 3.8's
+  **Changed:** RISK-OFF **defensive profile removed**, the screener lane **closing** in RISK-OFF
+  instead (+2.8pp, its sunset clause expiring as written); **stops not raised by default**
+  (+10.3pp, the largest effect); **fractional shares permitted** (+3.2pp at $710, nothing at
+  $10,000 — a small-book rule); **ceiling 5 → 10** (+3.9pp); **cash floor 15% → 5%** (+0.5pp). **Kept with evidence:** regime filter (+3.8pp, **reversing Phase 3.8's
   R2**), **3-per-sector cap** (3.0pp less drawdown at no cost, and it beats **40 of 40** shuffled-
   label placebos), 2% risk, the $5Bn cap (**lifting it tested worse — recommendation withdrawn**),
   the Day-1 rule, and the **10-session earnings guard — a removal I published and then withdrew**
-  after finding a session-index bug in my own test. Breaker kept (fires in 2020, not in test);
-  re-entry ban kept and **inert**. **The goal was not met:** 12.2% test CAGR against SPY's 13.2%,
+  after finding a session-index bug in my own test. Breaker kept (fires in 2020, not in test); the
+  re-entry ban is **inert**. **The goal was not met:** 12.2% test CAGR against SPY's 13.2%,
   at −15.4% drawdown against SPY's −24.5%. The gap is **cap-weighting**, not the rules — SPY beats
   equal-weighted S&P by 4.7pp on the same window — which is why mega-caps and leverage are a
   separate session. Reasoning in `Rules Amendment History.md` (2026-10-11).
@@ -128,8 +126,7 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   ProCellEx manufacturing and research base is in Israel. **The exclusion covers affiliation, not
   domicile** — which is why it cannot be screened by industry and must be checked per name. In
   `screener.py`'s `_PROHIBITED_TICKERS` since the **10/10** screen. *(The Week 56 research-log row
-  reads `weak-catalyst`, not `prohibited`: the determination post-dates it and the log is
-  append-only.)*
+  reads `weak-catalyst`: the determination post-dates it and the log is append-only.)*
 - **Adopted (10/05 b) — the catalyst lane gets a sourcing method, and since 10/11 it is the ONLY
   lane open in RISK-OFF.** The catalyst bucket had an eligibility test and no pipeline, so the
   funnel filled one bucket: **40 of 40 researched names came from the screener, 0 from catalyst
@@ -142,13 +139,12 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   `log_research.py` is a controlled vocabulary (`catalyst:<category>`) because
   `trading_script.py` reads it to decide which cap a holding counts against. Reasoning in
   `Rules Amendment History.md` (2026-10-05 b).
-- **Superseded (10/05) — `near_high` removed from the RISK-OFF defensive profile.** Kept here only
-  as the trail: the whole profile was removed on 10/11, so its remaining legs and the deferred
-  0.90-threshold question are moot. What survives is the **open Phase 4 question of whether beta
-  belongs in any future defensive test** — top-decile calm names had median beta **0.85 vs 0.84**,
-  so `low_vol` was never measuring defensiveness. Full reasoning, including the corrected claim
-  that beta had kept ATRC out of the profile (**beta was never a leg**), in
-  `Rules Amendment History.md` (2026-10-05 and 2026-10-11).
+- **Superseded (10/05) — `near_high` removed from the RISK-OFF defensive profile.** The whole
+  profile went on 10/11, so its remaining legs and the deferred 0.90-threshold question are moot.
+  What survives is the **open Phase 4 question of whether beta belongs in any future defensive
+  test** — top-decile calm names had median beta **0.85 vs 0.84**, so `low_vol` never measured
+  defensiveness. Full reasoning, including the corrected claim that beta had kept ATRC out of the
+  profile (**beta was never a leg**), in `Rules Amendment History.md` (2026-10-05, 2026-10-11).
 - **HOPE post-mortem (9/29)**: stopped out at $13.48 for **−$7.20 = 0.99% of equity, the budgeted
   risk to the cent**, 6 sessions held. **No rule failed; the entry did.** Bought **+0.15% above its
   50-day SMA** — the thinnest possible pass of the hard trend gate, flagged as thin in the Week 54
@@ -171,14 +167,13 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   is a hold that **must name the gate in writing**. Reasoning and the honest accounting are in
   `Rules Amendment History.md` (2026-09-28). Deliberately left open: the review cadence *after* a
   pass — decide it when ATRC actually passes.
-- **Next**: **Week 57 is DUE and the screener lane is now shut in RISK-OFF — the catalyst lane is
-  the only way to add a position.** 3 catalyst slots open, 79% deployable (the 5% floor freed 9pp).
+- **Next**: **Week 57 is DUE and the screener lane is shut in RISK-OFF — the catalyst lane is the
+  only way to add a position.** 3 catalyst slots open, 79% deployable (the 5% floor freed 9pp).
   CON's stop stands at **$33.69 / $33.54** and **will not be raised again** unless the thesis
   changes in writing. Re-entry bans: HOPE ~10/13, ATRC ~10/15. Still untested: the **post-earnings
-  cooldown** (EDGAR dates already harvested — the cheapest remaining test), the **driver cap** and
-  the **binary-thesis prohibition** (human labels, no data). Also open: ranking by distance above
-  the 50-day SMA beat the screener's six-signal composite by **4.9pp** on test — a diagnostic, not
-  yet a rule.
+  cooldown** (EDGAR dates in hand — the cheapest remaining test), the **driver cap** and the
+  **binary-thesis prohibition** (human labels, no data). Ranking by distance above the 50-day SMA
+  beat the screener composite by **4.9pp** on test — a diagnostic, not yet a rule.
 - **Engineering, 9/29–10/11** (detail in `.claude/docs/implementation-notes.md`): session
   arithmetic routed through the **NYSE calendar** (the 30-session backstop had scaled days by 5/7,
   and `pd.bdate_range` collapsed every past-due earnings estimate to −1, pinning a permanent
