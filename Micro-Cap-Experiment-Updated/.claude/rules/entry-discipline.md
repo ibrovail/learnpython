@@ -9,6 +9,18 @@ Hard rules for new-position selection in the weekend deep research and daily ana
 - **Never recommend a buy within 3 trading days of an earnings print** at a price more than +5% above the post-print close.
 - Reason: ARLO Week 34 (entered $15.25 Monday, three trading days after Wednesday close of $13.60 pre-print, post-print closed $15.32 — bought at the post-print high, gave back -10.9% on entry day).
 - Wait for ≥1 trading week of post-print consolidation showing a higher-low base.
+- **Tested 2026-10-11 and found INERT — kept as a discipline, not as a measured control.** On 11
+  years of survivorship-free history with EDGAR earnings dates, the rule as written blocks
+  **0.3% of candidate rows**. The pre-registered floor was 2%, so nothing can separate it from
+  having no rule at all. *Why it is inert:* three rules point at the same window and the other
+  two get there first — the **10-session pre-earnings guard** removes most names in the
+  neighbourhood of a print, and a name trading more than 5% above its post-print close is usually
+  already failing the distance-from-base limits below. Note also that the ARLO case it was
+  written for would **not** have been blocked by it: the $15.25 entry was *below* the $15.32
+  post-print close. It costs nothing and it is the right instinct, so it stays — but do not cite
+  it as evidence-backed. *(`research/cooldown_test.py`; a wider variant looked better on the test
+  split and was deliberately NOT adopted — picking the best of seven cells on the holdout is the
+  overfitting the pre-registration exists to prevent.)*
 - **"Enter pre-print (binary risk acknowledged)" is no longer an option.** `portfolio_rules.md`
   prohibits initiation within **10 trading sessions before a known earnings date**. This cooldown
   covers the window after a print; that guard covers the window before it. Together they close

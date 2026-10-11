@@ -31,9 +31,17 @@ One table. Take every figure from the script's blocks — do not recompute or lo
 | Gap vs S&P-equivalent, since inception | | context only |
 | Current drawdown from peak | | clear / DE-RISK at −20% / CASH at −30% |
 | Regime | RISK-ON or RISK-OFF, IWM ±X.XX% vs its 50-day | from `<market_regime>` |
-| Equity · cash · deployable above the 15% floor | | |
+| Equity · cash · deployable above the 5% floor | | *(15% until 2026-10-11)* |
 | Buys sought · stage-1 checks | | from `<research_trigger>` |
 Then at most three sentences on what these numbers mean for this report's decisions.
+
+**Do not gap-chase.** A widening gap is not a reason to raise risk, shorten the horizon or lower
+a gate. The 10/11 audit measured where this book's edge actually is: the adopted rules trail SPY
+by about **1pp of return** and run roughly **half its drawdown** (−15.4% against −24.5%), and the
+rules that *looked* like they bought return by taking more risk — mechanical stop raising, a
+tighter risk budget — tested worse on both. The retired weekend question "Aggressive, we are
+trailing the benchmark" was gap-chasing and is the pressure that produced TYRA. If the gap is
+widening in a falling market, say so and leave the gates alone.
 
 ## 2. Deployment — the research funnel
 First line: this report's capacity under the regime rules, and the buys sought.
@@ -63,6 +71,19 @@ Below the table, confirm the spread — ≥3 from ranks 1–15, ≥3 from ranks 
 $2Bn — or state which quota could not be met and why.
 
 ### Stage 2 — full research
+**Why this stage carries the whole burden.** The 10/11 audit searched for a mechanical selector
+worth ≥1.5pp and found none — 15 signals and 160 rule configurations, all with a holdout, none
+clearing it. So no ranking formula is going to produce alpha here: **if this book has an edge
+beyond its drawdown control, it is created at this stage or not at all.** Two consequences worth
+holding while you write:
+- **Prefer `vs 50d` to rank order when choosing what to promote.** Over 11 years, ranking by
+  distance above the 50-day SMA beat the screener's six-signal composite by **4.9pp** on the test
+  period. Composite rank remains *sourcing, not conviction*; `pct_vs_sma50` is the one selector
+  with a measured margin. Neither is a rule — both are better than the list's order.
+- **The driver cap and the binary-thesis prohibition cannot be tested or coded.** They are human
+  labels, so the audit is silent on them and the analyst is their only control. That makes them
+  more important here, not less: an unnamed driver is a rule violation, not an omission.
+
 One block per stage-1 survivor:
 **TICKER — BUY / PASS / WATCH · conviction X/5**
 - **Thesis:** one or two sentences. **Primary driver:** its latest dated value and 4-week direction.
@@ -93,7 +114,9 @@ One bullet block per order. Every field present; write N/A where it does not app
 - **Intended execution:** YYYY-MM-DD — run the pre-open check in `entry-discipline.md` first
 - **Stop loss / stop limit:** $X.XX / $X.XX — distance in ATR (entry target 1.75×, floor 1.5×),
   below the recent session lows
-- **Sizing:** risk $ = 2% of equity; shares = risk ÷ (entry − stop); % of equity after the trade;
+- **Sizing:** risk $ = 2% of equity; shares = risk ÷ (entry − stop), **fractional, 4 dp** (whole
+  shares cost 3.2pp of test return at this book's size — at $710 a tenth of the book is $71, so
+  rounding a $35 stock from 2.47 to 2 discards 19% of the position); % of equity after the trade;
   order size ÷ average daily dollar volume (≤10%); **trend-gate margin** (`vs 50d`) — if it is under
   +1.0%, say so on this line and justify the size chosen
 - **Rationale:** one line
@@ -105,7 +128,8 @@ One table row per holding (after proposed trades):
 |---|---|---|---|---|---|---|---|
 Start from `<holding_review>`: a holding it marks **FULL** gets a paragraph. Beyond those flags,
 write a full paragraph **only** for a holding with: news or a move that needs explaining; a stop
-action (show the anti-ratchet tests, or restoration eligibility); a thesis-exit case (would it be
+action (restoration eligibility, or a raise with its named thesis change — report the anti-ratchet
+tests, but the default is HOLD); a thesis-exit case (would it be
 bought today, at this price?); an event within 10 sessions (post-event playbook); or ≥60 sessions
 held (the written re-underwrite). Otherwise "No change — thesis intact" in the Status column is
 enough. Measure against `<last_analyst_thesis>`: say what changed, not what didn't.
@@ -117,10 +141,12 @@ enough. Measure against `<last_analyst_thesis>`: say what changed, not what didn
 | Risk per trade | ≤2% of equity at the stop | |
 | Cash floor | ≥5% of equity after trades | |
 | Driver cap | ≤2 positions per primary driver (list the drivers) | |
-| Sector cap | ≤3 positions per GICS sector | |
+| Sector cap | ≤3 positions per GICS sector — **the one rule in the audit that is material, verified and free** (3.0pp less drawdown at no cost in return; beat 40 of 40 shuffled-label placebos). Apply it greedily: take the best candidate whose sector has room, not the best candidate outright | |
 | Position count | ceiling 10 | |
 | Slippage | each order ≤10% of average daily dollar volume | |
-| Regime capacity | RISK-OFF: ≤3 catalyst at full 2% (no defensive profile); screener at half risk, profile required | |
+| Regime capacity | RISK-OFF: ≤3 catalyst at full 2%, **screener lane CLOSED** (0, revised 2026-10-11 — the defensive profile is removed and its sunset expired). RISK-ON: ≤3 catalyst, ≤7 screener, both at full 2%. Holdings open before the closure are grandfathered | |
+| Stop raises | **default is DO NOT raise.** Any raise proposed must name a written thesis change; the ATR tests are necessary, not sufficient | |
+| Share rounding | fractional permitted (4 dp) — worth 3.2pp at this book size, ~0 by $10,000 | |
 | Catalyst sourcing | ≥3 stage-1 names catalyst-sourced whenever a catalyst slot is open | |
 | Circuit breaker | current drawdown vs −20% / −30% | |
 | Exclusions | no prohibited business, binary thesis, earnings inside 10 sessions, or a ticker inside its post-stop-out re-entry ban (`<blackout>`) | |
@@ -141,8 +167,10 @@ would change the view.
 <thinking_approach>
 Before writing, work through these steps:
 1. Read the scoreboard, regime, trigger and position-limits blocks — they set this report's capacity.
-2. Holdings: has anything changed since `<last_analyst_thesis>`? Does any stop qualify for a raise
-   under the anti-ratchet tests? Is any holding at 60 sessions or facing an event?
+2. Holdings: has anything changed since `<last_analyst_thesis>`? Is any holding at 60 sessions or
+   facing an event? **Do not go looking for a stop raise** — the default since 2026-10-11 is not
+   to raise, and raising whenever eligible measured at 1.9% CAGR with a 98% stop-out rate against
+   12.2% and 9%. Report eligibility if it arises; propose a raise only with a named thesis change.
 3. Run the funnel: stage-1 quick checks on the quote page, then full research on the survivors.
 4. Verify every ticker, price and catalyst on a live, timestamped source (the PRV gate).
 5. Size each order by the 2% risk rule and check it against every cap.

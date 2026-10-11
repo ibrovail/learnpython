@@ -13,7 +13,16 @@ Daily Portfolio Review — [DATE]
 
 ---
 
-1. Market Regime Check
+1. Scoreboard and Regime
+
+   **Gap vs S&P-equivalent: ±X.XX% since re-base (2026-09-11)** — equity $X.XX against
+   S&P-equivalent $X.XX, both from <portfolio_snapshot>. This is the scoreboard; lead with it.
+   *(Added 2026-10-11: the daily had no scoreboard line at all, so the one number the book is
+   judged on appeared only in weekend reports. The 10/11 audit also established where the
+   realistic edge is — the adopted rules trail SPY by ~1pp on return but run roughly HALF its
+   drawdown — so a widening gap in a falling market is not automatically a process failure.
+   Say which it is.)*
+   Drawdown from peak: ±X.XX% [from <risk_metrics>] — clear / DE-RISK at −20% / CASH at −30%
 
    IWM: $[price] | 50-day SMA: $[value] | [±X.XX%] (source: the script's <market_regime> block —
    computed from IWM closes; do not look it up elsewhere)
@@ -54,7 +63,14 @@ Daily Portfolio Review — [DATE]
    - [Risk factors or negative signals]
    Sources: [Name — URL], [Name — URL]
 
-   Stop-Loss Update (portfolio_rules.md → "Raising a stop — anti-ratchet minimum"):
+   Stop-Loss Update (portfolio_rules.md → "Raising a stop — the default is DO NOT"):
+   **The default is HOLD. Do not raise.** Adopted 2026-10-11 and measured at **10.3pp** — raising
+   whenever the tests pass takes the stop-out rate from 9% to 98% and the average hold from 57
+   sessions to 14. The tests below are **necessary, not sufficient**: a passing raise is still
+   declined unless you can name what changed about the thesis, in writing, in this review.
+   Compute and report them anyway — eligibility is information — then default to HOLD.
+   *(This block previously ended "RAISE only if ALL pass", which treated eligibility as
+   sufficient. Three CON raises were recommended in five sessions on exactly that reading.)*
    - ATR(14): $X.XX — computed from yfinance price history, never estimated or searched
    - Close / today's low / 10-day low: $X.XX / $X.XX / $X.XX
    - Current stop: $X.XX = X.XX×ATR below the close   (1.5×ATR floor applies when PLACING a stop;
@@ -63,11 +79,14 @@ Daily Portfolio Review — [DATE]
    - Test 1, raise size:   (candidate − current stop) ÷ ATR = X.XX   ≥ 0.50 → PASS / FAIL
    - Test 2, room left:    (close − candidate) ÷ ATR = X.XX          ≥ 1.50 → PASS / FAIL
    - Range check: candidate below today's low → PASS / FAIL
-   Action: RAISE to $X.XX / $X.XX only if ALL pass; otherwise HOLD. A failing raise is declined,
-   not reduced. If the current stop already sits below 1.5×ATR through price movement alone,
-   say so and state whether this entry's one restoration is still available.
+   Action: **HOLD** — the default, even when all three tests pass. Propose RAISE to $X.XX / $X.XX
+   only with a named, written thesis change (not "price rose", not "the tests pass"). A failing
+   raise is declined, not reduced. If the current stop already sits below 1.5×ATR through price
+   movement alone, say so and state whether this entry's one restoration is still available —
+   restoration is a separate, mechanical allowance and is unaffected by the never-raise default.
 
-   Add Shares? (FULL reviews only — and only if a slot and deployable cash exist; routine
+   Add Shares? (FULL reviews only — and only if a slot and deployable cash above the **5%** floor
+   exist; routine
    deployment decisions belong to the research report)
    - Risk budget: $[equity] × 2% = $[amount]
    - Risk per share at $[entry] entry / $[new stop] stop: $[diff]
@@ -81,11 +100,18 @@ Daily Portfolio Review — [DATE]
 
 3. New Positions
 
-   [RISK-OFF regime — capacity per portfolio_rules.md → Allocation Framework: up to 3 non-binary
-   catalyst positions at standard 2% sizing, plus screener-sourced entries at half the risk
-   budget (1%) on the defensive profile only (top-decile low_vol plus volume confirmation; the
-   `near_high` leg was removed 2026-10-05; this allowance sunsets at Phase 4). Name the capacity
-   used and what remains.]
+   State the capacity this regime allows, copied from `<lanes>`, and what remains.
+
+   **RISK-OFF (revised 2026-10-11):** up to **3 non-binary catalyst positions at the full 2%**,
+   and the **screener lane is CLOSED** — `SCREENER_CAP["RISK-OFF"] = 0`. A screener-sourced buy
+   recommended in RISK-OFF is a rule violation, not a judgement call. The RISK-OFF defensive
+   profile is **removed** (it cost 2.8pp of test return and was not defensive: top-decile calm
+   names had median beta 0.85 against 0.84 for everything else), and its sunset clause expired
+   as written rather than being extended. A holding already open when the lane closed is
+   **grandfathered** — `<lanes>` printing `screener 1/0` is expected, because capacity gates
+   govern new capital only.
+   **RISK-ON:** up to 3 catalyst and up to 7 screener positions, both at the full 2%.
+   **Either regime:** ceiling 10 positions, ≤3 per GICS sector, ≤2 per primary driver.
 
    [If screening candidates:]
    | Ticker | Thesis | Catalyst (≥2 sources) | Liquidity | Bear Case | Sizing |
@@ -99,7 +125,7 @@ Daily Portfolio Review — [DATE]
 
    ACTION:        [BUY / SELL / UPDATE STOP / HOLD]
    Ticker:        [symbol]
-   Shares:        [integer — omit for stop updates]
+   Shares:        [fractional permitted since 2026-10-11 — round to 4 dp; omit for stop updates]
    Limit Price:   $[price — omit for stop updates]
    New Stop-Loss: $[price]
    New Stop-Limit:$[price]
@@ -114,7 +140,7 @@ Daily Portfolio Review — [DATE]
 
    | Scenario      | Action                                                        |
    |---------------|---------------------------------------------------------------|
-   | Positive      | [hold; recalculate the trailing stop under the standard rule]  |
+   | Positive      | [hold; do NOT raise the stop — price rising is not a thesis change] |
    | Negative      | [the stop governs the exit; 10-session re-entry ban if hit]    |
    | Delay / Other | [post-catalyst reassessment within 1 session; re-rate thesis]  |
 
