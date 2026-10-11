@@ -104,9 +104,14 @@ def main() -> None:
     print(f"SPY buy-and-hold: train {bar['train']:.1%}  test {bar['test']:.1%}  "
           f"(the scoreboard)\n", flush=True)
 
+    # ticker -> earnings DATES (not indices; run() indexes them against its own calendar)
+    e = pd.read_csv(DATA / "earnings_dates.csv", parse_dates=["earnings_date"])
+    earn = {tk: g.earnings_date.values for tk, g in e.groupby("ticker")}
+    print(f"earnings dates for {len(earn)} tickers\n", flush=True)
+
     def sim(kw, cap):
-        a = L.run(tr_p, px, tr_c, capital=cap, sectors=sectors, **kw)
-        b = L.run(te_p, px, te_c, capital=cap, sectors=sectors, **kw)
+        a = L.run(tr_p, px, tr_c, capital=cap, sectors=sectors, earn_idx=earn, **kw)
+        b = L.run(te_p, px, te_c, capital=cap, sectors=sectors, earn_idx=earn, **kw)
         return a, b
 
     rows = []
@@ -155,7 +160,7 @@ def main() -> None:
                   f"{dd:>7}{r.trades:>6.0f}{r.stop_rate:>7.0%}{r.avg_hold:>6.0f}")
         b = v[v.config == "ADOPTED SET (baseline)"].iloc[0]
         print(f"\n  vs SPY on test: adopted {b.test:.1%} against {bar['test']:.1%} "
-              f"= {b.test - bar['test']:+.1f}pp, at {b.test_dd:.1%} drawdown")
+              f"= {(b.test - bar['test']) * 100:+.1f}pp, at {b.test_dd:.1%} drawdown")
     print(f"\nwrote {OUT/'rule_ablation.csv'} -- commit before interpreting (R15)", flush=True)
 
 

@@ -103,9 +103,10 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
         fractional: bool = False, risk_per_trade: float = RISK_PER_TRADE,
         name_cap: float = SINGLE_NAME_CAP, day1_rule: bool = False,
         breaker: bool = False, reentry_ban: int = 0,
-        earnings_guard: int = 0, earn_idx: dict | None = None,
+        earnings_guard: int = 0, earn_idx: dict | None = None,   # ticker -> earnings DATES
         sector_cap: int = 0, sectors: dict | None = None,
-        calm_when: str = "all") -> dict:
+        calm_when: str = "all",
+        block_rate: float = 0.0, block_seed: int = 0) -> dict:
     """raise_policy decides how the trailing stop is managed, and it dominates everything else.
 
     portfolio_rules.md makes raising a stop *eligible* mechanically but leaves the decision to
@@ -132,6 +133,23 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
     peak = capital                   # running equity peak, for the drawdown circuit breaker
     conc: list[int] = []             # per-session largest same-sector holding count
     derisk = False
+
+    # Earnings dates are now taken as DATES and indexed against THIS call's calendar. They used
+    # to be passed in pre-indexed, which was a footgun: run() counts sessions with `i`, an index
+    # into the calendar it was handed, so a caller that indexed against the FULL calendar and
+    # then ran a test-period split had every index shifted by the length of the train period.
+    # The guard then fired off train-period earnings dates while running the test period -- it
+    # blocked candidates, so it looked like it was working, and the 3.5pp cost it appeared to
+    # carry was the cost of refusing candidates at random. Indexing here cannot drift.
+    rng = np.random.default_rng(block_seed)
+    blocked = tot_cands = 0        # how much candidate supply the earnings guard removes
+    pos_of = {d: j for j, d in enumerate(cal)}
+    eidx: dict[str, np.ndarray] = {}
+    if earnings_guard and earn_idx:
+        for t, arr in earn_idx.items():
+            v = [pos_of[pd.Timestamp(d)] for d in arr if pd.Timestamp(d) in pos_of]
+            if v:
+                eidx[t] = np.sort(np.asarray(v))
 
     for i, day in enumerate(cal):
         live = {t: px[t].loc[day] for t in list(bk.pos) if t in px}
@@ -269,21 +287,28 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
                 elif liq_tercile == "small":
                     g = g[g.dollar_vol_20 <= q.iloc[0]]
             g = g[~g.ticker.isin(bk.pos) & ~g.ticker.isin(banned)]
-            if earnings_guard and earn_idx:
+            if earnings_guard and eidx:
                 # No initiation within N sessions before a known earnings release. The
                 # rule's stated justification is tail control -- the 2026-09-19 study found
                 # 32% stop-outs against 12% -- not mean return, so the simulation reports
                 # stop-out rate and losses beyond plan, which is what it claimed.
                 keep = []
                 for tk in g.ticker:
-                    a = earn_idx.get(tk)
+                    a = eidx.get(tk)
                     if a is None:
                         keep.append(True); continue
                     nxt = a[a >= i]
                     keep.append(not (len(nxt) and (nxt[0] - i) <= earnings_guard))
                 # dtype=bool matters: an empty list becomes a float64 array, which pandas
                 # reads as COLUMN selection and silently returns a column-less frame.
+                tot_cands += len(keep)
+                blocked += int(len(keep) - sum(keep))
                 g = g.loc[np.array(keep, dtype=bool)] if keep else g.iloc[0:0]
+            if block_rate > 0 and len(g):
+                # PLACEBO for the earnings guard: refuse the same SHARE of candidates at random.
+                # If refusing candidates at this rate helps on its own, the guard is not doing
+                # what it claims -- the same control that settled the sector cap.
+                g = g[rng.random(len(g)) >= block_rate]
             room = ceiling - len(bk.pos)
             g = g[g[rank_by].notna()]
             if sectors is not None:
@@ -347,6 +372,7 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
             "win_rate": float((tr.pnl > 0).mean()) if len(tr) else np.nan,
             "avg_hold": float(tr.held.mean()) if len(tr) else np.nan,
             "pct_time_invested": float((cur.index.map(lambda d: 1) * 0).mean()) if False else None,
+            "guard_block_rate": (blocked / tot_cands) if tot_cands else 0.0,
             "sector_max": max(conc) if conc else np.nan,
             "sector_ge3": float(np.mean(np.array(conc) >= 3)) if conc else np.nan,
             "sector_ge4": float(np.mean(np.array(conc) >= 4)) if conc else np.nan,
