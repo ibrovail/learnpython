@@ -214,10 +214,14 @@ def main() -> None:
                   f"{', '.join(str(int(c)) for c in better.cap)}")
         else:
             print("  S4 -> no other cap value dominates 3 on both splits; the number stands.")
-    print(f"\n  S6 placebo: real labels beat {pct_dd:.0%} of 12 shuffled-label runs on test")
-    print(f"  drawdown and {pct_ret:.0%} on test return. Under 75% on drawdown means the cap's")
-    print(f"  apparent benefit is selection perturbation, not sector diversification, and the")
-    print(f"  S3 KEEP above does not survive.")
+    print(f"\n  S6 placebo ({len(pl)} seeds here; research/sector_cap_placebo.py runs 40, which")
+    print(f"  is the figure of record -- 12 seeds resolve only to 1/12 = 8%):")
+    print(f"    real labels beat {pct_dd:.0%} of placebos on test drawdown, {pct_ret:.0%} on return")
+    if pct_dd >= 0.75:
+        print("    -> the drawdown gain is NOT selection perturbation; the S3 KEEP survives.")
+    else:
+        print("    -> random labels diversify as well as real ones. The cap's apparent benefit")
+        print("       is selection perturbation and the S3 KEEP above does not survive.")
 
 
 if __name__ == "__main__":
