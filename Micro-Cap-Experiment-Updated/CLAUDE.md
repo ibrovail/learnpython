@@ -131,19 +131,16 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   drops out from the **10/10** screen onward. *Note for any later scoring pass: the Week 56
   research-log row for PLX reads `weak-catalyst`, not `prohibited`, because the determination
   post-dates it and the log is append-only.*
-- **Adopted (10/05 b) — the catalyst lane gets a sourcing method.** `portfolio_rules.md` named the
-  screener's pipeline but gave the catalyst bucket only an *eligibility test*, so the funnel filled
-  one bucket: **40 of 40 researched names came from the screener, 0 from catalyst discovery**, and
-  the RISK-OFF catalyst lane — **3 positions at full 2% risk with no defensive-profile test** — sat
-  empty from 9/17 while the book held 85% cash. **This is why Weeks 55–56 found nothing: the
-  profile gates the screener lane only, so it was never the binding constraint on book size.** Fix:
-  **Stage 0** in the funnel reserves **≥3 stage-1 slots for catalyst names** whenever a catalyst
-  slot is open (a *reallocation*, not extra work — the screener lane returned 0 buys from 25 checks);
-  `<research_trigger>` prints a **`<lanes>`** line so the open capacity cannot go unseen; qualifying
-  catalysts are defined as **a resolved fact with a dated earnings impact** (vs the prohibited
-  binary case, an unresolved event with a dated announcement); and **an index add counts only
-  BEFORE its effective date** — ATRC ran +12.8% into 9/21 then gave back −11.82%. `source` in
-  `log_research.py` is now a controlled vocabulary (`catalyst:<category>`), since
+- **Adopted (10/05 b) — the catalyst lane gets a sourcing method, and since 10/11 it is the ONLY
+  lane open in RISK-OFF.** The catalyst bucket had an eligibility test and no pipeline, so the
+  funnel filled one bucket: **40 of 40 researched names came from the screener, 0 from catalyst
+  discovery**, and the lane sat empty from 9/17 while the book held 85% cash. Fix: **Stage 0**
+  reserves **≥3 stage-1 slots for catalyst names** whenever a slot is open (a *reallocation* — the
+  screener lane returned 0 buys from 25 checks); `<research_trigger>` prints a **`<lanes>`** line;
+  a qualifying catalyst is **a resolved fact with a dated earnings impact** (vs the prohibited
+  binary case, an unresolved event with a dated announcement); **an index add counts only BEFORE
+  its effective date** — ATRC ran +12.8% into 9/21 then gave back −11.82%. `source` in
+  `log_research.py` is a controlled vocabulary (`catalyst:<category>`) because
   `trading_script.py` reads it to decide which cap a holding counts against. Reasoning in
   `Rules Amendment History.md` (2026-10-05 b).
 - **Superseded (10/05) — `near_high` removed from the RISK-OFF defensive profile.** Kept here only
@@ -185,19 +182,18 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   the **binary-thesis prohibition** (human labels, no data). Also open: ranking by distance above
   the 50-day SMA beat the screener's six-signal composite by **4.9pp** on test — a diagnostic, not
   yet a rule.
-- **Engineering, 9/29–9/30** (detail in `.claude/docs/implementation-notes.md`): session
-  arithmetic routed through the **NYSE calendar** — the 30-session backstop had scaled days by 5/7,
-  and the earnings estimate collapsed every past-due print to −1 via `pd.bdate_range`, pinning a
-  **permanent spurious FULL review** on any holding with a stale estimate; the **re-underwrite
-  trigger now fires within 5 sessions of 60** so a mid-week crossing is not reviewed late (the
-  threshold is still 60); the **post-stop-out re-entry ban** is computed and printed as
-  `<blackout>`; `research_log.csv` records **`pct_vs_sma50`** and the weekend template carries it
-  through the stage-1 table, sizing and risk checks; `<holding_review>` names each holding's
-  **sector proxy** and `make brief` computes peers locally.
+- **Engineering, 9/29–10/11** (detail in `.claude/docs/implementation-notes.md`): session
+  arithmetic routed through the **NYSE calendar** (the 30-session backstop had scaled days by 5/7,
+  and `pd.bdate_range` collapsed every past-due earnings estimate to −1, pinning a permanent
+  spurious FULL review); the re-underwrite trigger fires within **5 sessions** of 60; the
+  post-stop-out **re-entry ban** prints as `<blackout>`; `research_log.csv` records
+  **`pct_vs_sma50`**; `<holding_review>` names each holding's sector proxy. **10/11:**
+  `live_simulation.run()` takes earnings **dates** rather than pre-indexed sessions — the old
+  signature silently shifted every index when a split was run separately, which is what produced
+  the withdrawn earnings-guard verdict.
 - **Fixed (9/20–9/21)**: `inject_last_thesis.py` line-anchors its tags (it had deleted the weekend
-  data block); `entry-discipline.md` now requires all three stop candidates — 1.75×ATR, the
-  10-session low, the 50-day SMA — with the stop below the lowest, recomputed from the actual fill.
-
+  data block); `entry-discipline.md` requires all three stop candidates — 1.75×ATR, the 10-session
+  low, the 50-day SMA — with the stop below the lowest, recomputed from the actual fill.
 ## Documentation
 
 Reference docs (not auto-loaded — read on demand):

@@ -1759,3 +1759,47 @@ migration was needed; `Screener #12` normalises to `screener #12`; `catalyst` (n
 | `.claude/rules/analysis-workflow.md` | funnel **Stage 0** — ≥3 catalyst-sourced stage-1 names when a slot is open, reallocated not added |
 | `Start Your Own/weekend_summary.md` | section 2 reports lane occupancy; stage-1 `Source` accepts `catalyst:<category>`; new risk-table row |
 | `CLAUDE.md` | Current State (held at 200 lines) |
+
+---
+
+## 2026-10-11 — The rule audit: measurement infrastructure and the four rule changes
+
+The rule audit (reasoning in `Experiment Details/Rules Amendment History.md`, 2026-10-11) needed
+three things that did not exist: a survivorship-free price frame, sector labels that survive
+delisting, and a portfolio simulation realistic enough that a rule's cost shows up. All three are
+in `research/`. Four rules changed as a result — the RISK-OFF defensive profile removed with the
+screener lane closing in RISK-OFF instead, stops not raised by default, fractional shares
+permitted, position ceiling 5 → 10 and cash floor 15% → 5%.
+
+**Two bugs in the research code are worth remembering, because both produced output that looked
+correct.**
+
+*Session-index drift.* `live_simulation.run()` counts sessions with `i`, an index into the
+calendar it is handed. Callers were pre-indexing earnings dates against the **full** calendar and
+then invoking `run()` on a train or test slice, so every index was shifted by the length of the
+earlier slice. The pre-earnings guard then blocked candidates off the wrong dates — it still
+blocked, so it looked functional, and it produced a "the guard costs 3.5pp" verdict that was
+published and had to be withdrawn. `run()` now accepts earnings **dates** and builds the index
+against its own calendar, so the drift cannot recur. **Rule of thumb: a function that takes
+pre-computed indices into one of its own arguments is a footgun — take the raw values.**
+
+*A control that was not a control.* The uncapped sector-cap baseline used `nlargest` while the
+capped runs used a greedy sort-and-walk. `nlargest` drops NaN ranks; `sort_values` keeps them
+last. On a thin candidate date the two filled the book differently, so the "no cap" column
+differed from the capped columns in two ways rather than one. `sector_cap=0` now runs the
+identical walk with the check disabled.
+
+| File | Change |
+|---|---|
+| `research/regime_backtest.py` | Survivorship-free frame: 499 tickers, 2016–2026, 37.5% of names delisted. Non-common-equity and recycled-symbol filters; `nw_tstat`/`lag_for`/`effective_n` |
+| `research/live_simulation.py` | Daily event-driven simulation. Added `sector_cap`/`sectors`, `calm_when` (RISK-ON free / RISK-OFF profile — the status quo, which no existing flag could express), `block_rate`/`block_seed` for placebos, and the earnings-date fix above. Reports `sector_max`/`sector_ge3`/`sector_ge4` and `guard_block_rate` |
+| `research/sector_labels.py` | **New.** Sector labels from EDGAR SIC codes, which survive delisting: 332 of 373 panel names, 102 of them delisted. Agreement with the screener's Finviz labels is printed, not assumed (64%) |
+| `research/sector_cap_test.py`, `research/sector_cap_placebo.py` | **New.** The cap, and the 40-seed shuffled-label placebo that is the reason it is believed |
+| `research/earnings_dates.py` | **New.** Earnings dates from EDGAR 8-K Item 2.02 filings; CIK recovery via full-text search validated against each ticker's Tiingo listing window |
+| `research/earnings_guard_test.py`, `research/earnings_guard_recheck.py` | **New.** The differential test, then the corrected portfolio test with a length sweep and a random-refusal placebo |
+| `research/rule_ablation.py` | **New.** One baseline, one rule flipped at a time, at $710 and $10,000. Every figure in the amendment comes from here |
+| `trading_script.py` | `POSITION_CEILING` 5 → 10, `CASH_FLOOR` 0.15 → 0.05; `SCREENER_CAP["RISK-OFF"]` → 0 with holdings already open grandfathered in the `<lanes>` line; `CATALYST_CAP["RISK-ON"]` 2 → 3 |
+| `Start Your Own/portfolio_rules.md` | The four rule changes, the sunset clause recorded as expired rather than extended, and the evidence attached to each kept rule |
+| `.claude/rules/entry-discipline.md` | The stop-raise default is now **do not raise**; the ATR numbers govern a raise that is made |
+| `.claude/rules/documentation.md` | Its own example rule, "never suggest fractional shares", was falsified and replaced |
+| `Start Your Own/weekend_summary.md`, `daily_analysis_prompt.md`, `.claude/rules/analysis-workflow.md` | Floor and ceiling figures brought in line |
