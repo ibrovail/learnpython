@@ -103,7 +103,8 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
         fractional: bool = False, risk_per_trade: float = RISK_PER_TRADE,
         name_cap: float = SINGLE_NAME_CAP, day1_rule: bool = False,
         breaker: bool = False, reentry_ban: int = 0,
-        earnings_guard: int = 0, earn_idx: dict | None = None) -> dict:
+        earnings_guard: int = 0, earn_idx: dict | None = None,
+        sector_cap: int = 0, sectors: dict | None = None) -> dict:
     """raise_policy decides how the trailing stop is managed, and it dominates everything else.
 
     portfolio_rules.md makes raising a stop *eligible* mechanically but leaves the decision to
@@ -128,6 +129,7 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
     pending: list[str] = []          # decided on the formation date, executed next session
     banned: dict[str, int] = {}      # ticker -> sessions remaining on its re-entry ban
     peak = capital                   # running equity peak, for the drawdown circuit breaker
+    conc: list[int] = []             # per-session largest same-sector holding count
     derisk = False
 
     for i, day in enumerate(cal):
@@ -271,12 +273,46 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
                 # dtype=bool matters: an empty list becomes a float64 array, which pandas
                 # reads as COLUMN selection and silently returns a column-less frame.
                 g = g.loc[np.array(keep, dtype=bool)] if keep else g.iloc[0:0]
-            pending = g.nlargest(ceiling - len(bk.pos), rank_by).ticker.tolist()
+            room = ceiling - len(bk.pos)
+            if sector_cap and sectors:
+                # At most sector_cap positions in one sector. Walk the ranked list greedily,
+                # counting what is already held plus what has been chosen on this date -- which
+                # is how the weekend report applies it: take the best name whose sector has room,
+                # not the best name outright. A name with no sector label counts as its own
+                # sector, so an unlabelled name is never refused by the cap (the conservative
+                # direction: it understates the cap's bite rather than inventing one).
+                held = {}
+                for t in bk.pos:
+                    sec = sectors.get(t)
+                    if sec:
+                        held[sec] = held.get(sec, 0) + 1
+                pending = []
+                for t in g.sort_values(rank_by, ascending=False).ticker:
+                    if len(pending) >= room:
+                        break
+                    sec = sectors.get(t)
+                    if sec and held.get(sec, 0) >= sector_cap:
+                        continue
+                    pending.append(t)
+                    if sec:
+                        held[sec] = held.get(sec, 0) + 1
+            else:
+                pending = g.nlargest(room, rank_by).ticker.tolist()
 
         for t, p in bk.pos.items():
             if t in marks:
                 p["last"] = marks[t]
         bk.curve.append((day, bk.equity(marks)))
+        if sectors and bk.pos:
+            # concentration diagnostic: the largest same-sector count held on this session.
+            # Reported whether or not the cap is on, so an UNCAPPED run says how often the cap
+            # would have bound at all -- the question that decides whether the rule does anything.
+            c = {}
+            for t in bk.pos:
+                sec = sectors.get(t)
+                if sec:
+                    c[sec] = c.get(sec, 0) + 1
+            conc.append(max(c.values()) if c else 0)
 
     cur = pd.Series(dict(bk.curve))
     tr = pd.DataFrame(bk.trades)
@@ -293,6 +329,9 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
             "win_rate": float((tr.pnl > 0).mean()) if len(tr) else np.nan,
             "avg_hold": float(tr.held.mean()) if len(tr) else np.nan,
             "pct_time_invested": float((cur.index.map(lambda d: 1) * 0).mean()) if False else None,
+            "sector_max": max(conc) if conc else np.nan,
+            "sector_ge3": float(np.mean(np.array(conc) >= 3)) if conc else np.nan,
+            "sector_ge4": float(np.mean(np.array(conc) >= 4)) if conc else np.nan,
             "curve": cur}
 
 
