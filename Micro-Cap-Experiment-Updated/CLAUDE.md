@@ -144,8 +144,10 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   "≥6.67% minimum stop width" is `risk ÷ name_cap` = 2%/30% — **a ratio of two rule constants,
   independent of book size** — and it **excludes nothing** (size is the minimum of the three, so a
   tighter stop just deploys less risk). Tested: the ceiling binds **5%** of entries, so 2% risk is
-  real, and no ceiling change is adopted. It bites on the **composite-ranked** watchlist (90% of
-  names) but not on `pct_vs_sma50` selections — a second argument for that selector. Blackouts
+  real, and no ceiling change is adopted. **The real exposure is under-deployment:** 86% of the
+  100 watchlist names sit below the 3.81% ATR a 1.75×ATR stop needs, so the median candidate
+  carries **1.49% risk — 74% of the budget**. It bites on **composite-ranked** names, not on
+  `pct_vs_sma50` selections — a second argument for that selector. Blackouts
   expire this week (HOPE ~10/13, ATRC ~10/15). CON's $35.36 raise stays **declined in writing**.
 - **Engineering, 9/29–10/11** (detail in `.claude/docs/implementation-notes.md`): session arithmetic
   routed through the **NYSE calendar** (the backstop had scaled days by 5/7, and `pd.bdate_range`
