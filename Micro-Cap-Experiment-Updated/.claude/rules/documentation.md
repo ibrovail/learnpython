@@ -30,3 +30,28 @@ Examples of good rules:
 Examples of bad rules:
 - "Be more careful with CSV files"
 - "Handle edge cases appropriately"
+
+---
+
+## Never let a commit message outrun the edits (2026-10-11)
+
+**In a Bash call that both edits files and commits, join the steps with `&&` — never a newline.**
+Each line of a multi-line Bash command runs **regardless of the previous line's exit code**, so an
+edit script that dies on an `AssertionError` partway through still hands control to the next line,
+and `git commit` lands with a message asserting changes that were never applied.
+
+This happened **twice in one session** during the repo-wide rule audit. Both times the per-edit
+assertions (`s.count(old) == 1`) were correct and fired correctly; the shell ran the commit anyway.
+Half the edits were on disk, the rest were not, and the message claimed all of them.
+
+**A false commit message is worse than a failed edit.** The next grep catches missing code; nothing
+catches the message, and the history stops being a reliable record of what the repo says — which
+matters more here than in most projects, because `Rules Amendment History.md` and these commits
+*are* the audit trail for a real-money process.
+
+Specific actions:
+1. `python - <<'PY' … PY && git add -A && git commit …` — one `&&` chain.
+2. For more than ~3 edits, run the edit script in its **own** tool call, read the per-edit `ok`
+   lines, then commit in a second call.
+3. Have each edit print `ok <file>`, and count them against the number attempted.
+4. If a wrong message does go out, correct it **in the next commit message**, not just in code.
