@@ -113,7 +113,7 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   at −15.4% drawdown against SPY's −24.5%. The gap is **cap-weighting**, not the rules — SPY beats
   equal-weighted S&P by 4.7pp on the same window — which is why mega-caps and leverage are a
   separate session. Reasoning in `Rules Amendment History.md` (2026-10-11).
-- **In progress**: **One position, ~84% cash; Week 57 done — no buy.** CON 3 @ $35.31, last close **$37.19
+- **In progress**: **One position, ~84% cash; no buy since 9/22.** CON 3 @ $35.31, last close **$37.19
   (+5.3%)**, stop **$34.49 / $34.34** as placed on 10/06. **Three raises were recommended in five
   sessions, two placed and irreversible, the third withdrawn on 10/11 under the new never-raise
   default.** The stop is safe — **2.95×ATR** of room (ATR(14) $0.916) against a 1.5×ATR floor, and
@@ -121,71 +121,77 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   10-session low ($34.05)**, so a −7.3% pullback takes it out. **No further raise without a
   written thesis change.** **Gap −3.73%** since re-base (−8.12% since inception), RISK-OFF; the
   5% floor lifted deployable to **79%**.
-- **Decided (10/05) — PLX is prohibited (Israeli-affiliated) and is blocklisted.** The user's
-  determination. It ranked **#9** on the 10/05 screen and **nothing in code or on the quote page
-  would have caught it**: stockanalysis lists Country "United States", HQ Hackensack NJ, while its
-  ProCellEx manufacturing and research base is in Israel. **The exclusion covers affiliation, not
-  domicile** — which is why it cannot be screened by industry and must be checked per name. In
-  `screener.py`'s `_PROHIBITED_TICKERS` since the **10/10** screen. *(The Week 56 research-log row
-  reads `weak-catalyst`: the determination post-dates it and the log is append-only.)*
-- **Adopted (10/05 b) — the catalyst lane gets a sourcing method, and since 10/11 it is the ONLY
-  lane open in RISK-OFF.** The catalyst bucket had an eligibility test and no pipeline, so the
-  funnel filled one bucket: **40 of 40 researched names came from the screener, 0 from catalyst
-  discovery**, and the lane sat empty from 9/17 while the book held 85% cash. Fix: **Stage 0**
-  reserves **≥3 stage-1 slots for catalyst names** whenever a slot is open (a *reallocation* — the
-  screener lane returned 0 buys from 25 checks); `<research_trigger>` prints a **`<lanes>`** line;
-  a qualifying catalyst is **a resolved fact with a dated earnings impact** (vs the prohibited
-  binary case, an unresolved event with a dated announcement); **an index add counts only BEFORE
-  its effective date** — ATRC ran +12.8% into 9/21 then gave back −11.82%. `source` in
-  `log_research.py` is a controlled vocabulary (`catalyst:<category>`) because
-  `trading_script.py` reads it to decide which cap a holding counts against. Reasoning in
-  `Rules Amendment History.md` (2026-10-05 b).
-- **Superseded (10/05) — `near_high` removed from the RISK-OFF defensive profile.** The whole
-  profile went on 10/11, so its remaining legs and the deferred 0.90-threshold question are moot.
-  What survives is the **open Phase 4 question of whether beta belongs in any future defensive
-  test** — top-decile calm names had median beta **0.85 vs 0.84**, so `low_vol` never measured
-  defensiveness. Full reasoning, including the corrected claim that beta had kept ATRC out of the
-  profile (**beta was never a leg**), in `Rules Amendment History.md` (2026-10-05, 2026-10-11).
-- **HOPE post-mortem (9/29)**: stopped out at $13.48 for **−$7.20 = 0.99% of equity, the budgeted
-  risk to the cent**, 6 sessions held. **No rule failed; the entry did.** Bought **+0.15% above its
-  50-day SMA** — the thinnest possible pass of the hard trend gate, flagged as thin in the Week 54
-  report — and still sized to **28.8% of equity**. Its rate driver inverted within three sessions.
-  **Still open after the 10/11 audit** (which tested rules, not entry quality): does a sub-1%
-  trend-gate pass deserve reduced size or none? `pct_vs_sma50` is logged, so it is queryable once
-  enough BUY rows mature.
-- **Complete (9/19)**: review items adopted — one weekend question (R1); two-stage research funnel
-  sized to the buys sought and extending to ranks 51–100 (R3); research log of buys *and* passes
-  via `log_research.py` (R4); stop raise target 2.0×ATR (R5); regime computed by the script with a
-  ±1% band → `<market_regime>`, `regime_history.csv` (R7, D3); small-cap label + size control
-  (R8); six-section report (R2); dailies by exception via `<holding_review>` (R6). The
-  `weekly-portfolio-report` skill is **retired** — it predates every current rule and conflicts
-  with four. Detail in `Rules Amendment History.md` (2026-09-19 a–f).
-- **Complete (9/28)**: **the 60-session re-underwrite now says what it tests** — the **quality**
-  tests (revenue, earnings path, driver freshness, non-binary, prohibited business, trend and
+- **Decided — three names prohibited in eight days, and the detention exclusion now covers
+  SUPPLIERS: PLX (10/05), AISP and FIRY (10/12).** The user's determinations, all blocklisted in
+  `screener.py`. **All three were invisible to every coded check**, each failing a different one:
+  PLX lists Country "United States", HQ Hackensack NJ, while its ProCellEx base is in Israel;
+  **AISP** reads industry *Software — Infrastructure* and sells DHS video/data platforms, so it was
+  not a detention *operator* under the old wording — now widened, a **vendor to a detention or
+  immigration-enforcement agency is prohibited though it runs no facility**; **FIRY** (ex-Skillz) is
+  NYSE/Las Vegas with Israel in its operating footprint. So `_PROHIBITED_TICKERS` is **a record of
+  determinations, not a filter that generalises** — it catches a name the second time, never the
+  first. Only the PRV prohibited-business check, run against what a company *does* rather than any
+  field, catches a first encounter, which is why it is ordered first. Reasoning in
+  `Rules Amendment History.md` (2026-10-12). *(The Week 56 PLX research-log row reads
+  `weak-catalyst`: the determination post-dates it and the log is append-only.)*
+- **Adopted (10/05 b) — the catalyst lane has a sourcing method, and since 10/11 it is the ONLY
+  lane open in RISK-OFF.** It had an eligibility test and no pipeline, so **40 of 40 researched
+  names came from the screener**. Fix: **Stage 0** reserves **≥3 stage-1 slots for catalyst names**
+  whenever a slot is open (a *reallocation*); `<research_trigger>` prints a **`<lanes>`** line; a
+  qualifying catalyst is **a resolved fact with a dated earnings impact** (vs the prohibited binary
+  case, an unresolved event with a dated announcement); **an index add counts only BEFORE its
+  effective date** — ATRC ran +12.8% into 9/21 then gave back −11.82%. `source` is a controlled
+  vocabulary (`catalyst:<category>`) because `trading_script.py` reads it for cap classification.
+  (`Rules Amendment History.md`, 2026-10-05 b.)
+- **Superseded (10/05) — `near_high` removed from the RISK-OFF defensive profile**, and the whole
+  profile went on 10/11, so its legs and the 0.90-threshold question are moot. What survives is the
+  **open Phase 4 question of whether beta belongs in any future defensive test** — top-decile calm
+  names had median beta **0.85 vs 0.84**, so `low_vol` never measured defensiveness (and **beta was
+  never a leg**, correcting an earlier claim). `Rules Amendment History.md` (10-05, 10-11).
+- **HOPE post-mortem (9/29)**: stopped out for **−$7.20 = 0.99% of equity, the budgeted risk to the
+  cent**, 6 sessions. **No rule failed; the entry did** — bought **+0.15% above its 50-day SMA**,
+  the thinnest possible pass of the trend gate, yet sized to **28.8% of equity**. **Still open after
+  the 10/11 audit** (which tested rules, not entry quality): does a sub-1% trend-gate pass deserve
+  reduced size or none? `pct_vs_sma50` is logged, so it is queryable once BUY rows mature.
+- **Complete (9/19)**: R1–R8 adopted — one weekend question; two-stage funnel sized to the buys
+  sought, extending to ranks 51–100; research log of buys *and* passes (`log_research.py`); regime
+  computed by the script with a ±1% band → `<market_regime>`, `regime_history.csv`; six-section
+  report; dailies by exception via `<holding_review>`. The `weekly-portfolio-report` skill is
+  **retired** — it predates every current rule and conflicts with four. (`Rules Amendment
+  History.md`, 2026-09-19 a–f.)
+- **Complete (9/28)**: **the 60-session re-underwrite says what it tests** — the **quality** tests
+  (revenue, earnings path, driver freshness, non-binary, prohibited business, trend and
   distance-from-base, earnings guard, placeable stop inside the 30% ceiling), **not** the regime
-  **capacity** gates (defensive profile, half risk budget, 90-day catalyst window, position
-  ceiling), which govern new capital only. A failed quality test is an exit; a failed capacity gate
-  is a hold that **must name the gate in writing**. Reasoning and the honest accounting are in
-  `Rules Amendment History.md` (2026-09-28). Deliberately left open: the review cadence *after* a
-  pass — decide it when ATRC actually passes.
-- **Next**: **Week 57 found no catalyst candidate** — four categories searched, 5 names logged (the
-  first catalyst-sourced rows in 45). Three fell to **timing or exclusion**, not quality: ZIM
-  (Israeli-affiliated — second week after PLX), WK and FRSH (SmallCap 600 adds past their effective
-  dates), TORO (spin-off completed 10/08); only NNBR failed on merit (net income −$47.9M, beta
-  2.66). The lane is short of events *still ahead of us* — **watch the December S&P rebalance
-  announcement from late November.** Blackouts expire this week (HOPE ~10/13, ATRC ~10/15). CON: the
-  $35.36 raise is eligible and **declined in writing**; no add into a closed lane.
-- **Engineering, 9/29–10/11** (detail in `.claude/docs/implementation-notes.md`): session
-  arithmetic routed through the **NYSE calendar** (the 30-session backstop had scaled days by 5/7,
-  and `pd.bdate_range` collapsed every past-due earnings estimate to −1, pinning a permanent
-  spurious FULL review); the re-underwrite trigger fires within **5 sessions** of 60; the
-  post-stop-out **re-entry ban** prints as `<blackout>`; `research_log.csv` records
-  **`pct_vs_sma50`**; `<holding_review>` names each holding's sector proxy. **10/11:**
-  `live_simulation.run()` takes earnings **dates** rather than pre-indexed sessions — the old
-  signature silently shifted every index when a split was run separately, which is what produced
-  the withdrawn earnings-guard verdict.
-- **Fixed (9/20–9/21)**: `inject_last_thesis.py` line-anchors its tags (it had deleted the weekend
-  data block); entry stops need all three candidates — 1.75×ATR, 10-session low, 50-day SMA.
+  **capacity** gates (half risk budget, 90-day window, position ceiling), which govern new capital
+  only. A failed quality test is an exit; a failed capacity gate is a hold that **must name the gate
+  in writing**. Left open: the review cadence *after* a pass. (`Rules Amendment History.md`, 9-28.)
+- **Decided (10/12) — two TFSA sleeves, operating separately; no transfer path.** A second
+  experiment account (mega-cap / no market-cap limit) is being initialised by the cloud session.
+  **No capital moves between sleeves and no `--cash-flow` path is to be built** — reasoning in
+  `Rules Amendment History.md` (2026-10-12 b), including that the gap arithmetic is already
+  correct for withdrawals, and that the "lifting the $5Bn cap tested worse" result does **not**
+  transfer to a sleeve with its own rules. **Idle cash here is a risk budget, not spare capital.**
+- **Next**: **catalyst sourcing audit (10/12) — all 6 categories searched, 6 names, 0 survive**
+  (`Weekly Deep Research (MD)/Week 58 Catalyst Sourcing Audit.md`). Week 57 had searched only **3 of
+  6**; the three it missed produced 4 of today's names, so the lane was under-searched. But **the
+  constraint is not sourcing** — 4 of 6 died on earnings quality or size, and NNBR/BORR/FIRY all on
+  the same code. **Dated-catalyst small caps skew loss-making.** Two new findings: the index lane
+  **cannot be sourced on a weekend cadence** (both October adds were intra-quarter M&A replacements
+  with 3–5 days' notice; December announcement ~12/04), and at 2% risk inside the 30% ceiling a
+  stop must sit **≥6.67% below entry** or the position cannot be built — a **minimum stop width set
+  by book size** that excludes low-vol names and killed TREX by 0.57pp. Blackouts expire this week
+  (HOPE ~10/13, ATRC ~10/15). CON: the $35.36 raise stays **declined in writing**; no add into a
+  closed lane.
+- **Engineering, 9/29–10/11** (detail in `.claude/docs/implementation-notes.md`): session arithmetic
+  routed through the **NYSE calendar** (the backstop had scaled days by 5/7, and `pd.bdate_range`
+  collapsed past-due earnings estimates to −1, pinning a spurious FULL review); re-underwrite
+  trigger fires within **5 sessions** of 60; **re-entry ban** prints as `<blackout>`;
+  `research_log.csv` records **`pct_vs_sma50`**; `<holding_review>` names each sector proxy.
+  **10/11:** `live_simulation.run()` takes earnings **dates** not pre-indexed sessions — the old
+  signature silently shifted every index when a split ran separately, which produced the withdrawn
+  earnings-guard verdict.
+- **Fixed (9/20–9/21)**: `inject_last_thesis.py` line-anchors its tags; entry stops need all three
+  candidates — 1.75×ATR, 10-session low, 50-day SMA. *(Detail in implementation-notes.md.)*
 ## Documentation
 
 Reference docs (not auto-loaded — read on demand):

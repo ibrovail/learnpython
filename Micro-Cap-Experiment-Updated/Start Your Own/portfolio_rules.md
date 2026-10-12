@@ -79,7 +79,12 @@ something went wrong, the origin is named in one line and the full account is in
 - Bankrupt or halted issuers
 
 **Prohibited businesses — never recommend, regardless of screen rank or fundamentals**
-- **Prisons and detention centers** — private corrections and immigration-detention operators
+- **Prisons and detention centers** — private corrections and immigration-detention operators,
+  **and the vendors that supply them**. A company selling surveillance, data-management or
+  enforcement platforms to a detention or immigration-enforcement agency is prohibited even
+  though it operates no facility. *(Widened 2026-10-12 by the user's determination on AISP —
+  AI video/data platforms sold to DHS components. The bullet previously read "operators",
+  which is precisely why AISP cleared every coded check.)*
 - **Weapons, defence and firearms** — defence contractors, arms makers, gun and ammunition companies
 - **Predatory lending** — payday lenders, pawn lenders, high-cost subprime installment credit
 - **Israeli-affiliated companies**
@@ -90,8 +95,9 @@ something went wrong, the origin is named in one line and the full account is in
 blocklist. Two industries mix prohibited and legitimate businesses — **Security & Protection
 Services** and **Credit Services** — and are **not** auto-excluded; any candidate in them must be
 checked by hand. **Israeli affiliation cannot be screened by industry** and must be checked per
-name. **Every candidate is checked against this list at the PRV gate, before a recommendation is
-written** (`.claude/rules/analysis-workflow.md`).
+name — and neither can **supplier** status: AISP's industry reads *Software — Infrastructure*, so
+no industry filter and no hand-check flag fires on it. **Every candidate is checked against this
+list at the PRV gate, before a recommendation is written** (`.claude/rules/analysis-workflow.md`).
 
 *Origin: 2026-09-14, CXW. See amendment history.*
 

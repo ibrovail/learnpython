@@ -41,7 +41,15 @@ _EXCLUDED_TICKER_SUFFIX = r"(?:-U|-UN|-WS|-R|\.U|\.WS)$"
 _PROHIBITED_INDUSTRIES = ("AEROSPACE & DEFENSE",)
 _PROHIBITED_TICKERS = frozenset({
     # prisons & immigration detention
-    "CXW", "GEO",
+    # AISP added 2026-10-12 by the user's determination, and it WIDENS this category
+    # from operators to suppliers: Airship AI runs no facility. It sells AI video and
+    # data-management platforms to Department of Homeland Security components, and
+    # announced $29.0M of "brand-name-only" firm-fixed-price DHS awards on 2026-10-01.
+    # Nothing here or on the quote page would have caught it -- its industry reads
+    # "Software - Infrastructure", so neither _PROHIBITED_INDUSTRIES nor the
+    # _REVIEW_INDUSTRIES hand-check flag fires. It also arrived from CATALYST sourcing,
+    # not the screener watchlist, so this list now has to cover both lanes.
+    "CXW", "GEO", "AISP",
     # firearms & ammunition
     "RGR", "SWBI", "POWW", "AOUT",
     # payday, pawn and high-cost subprime consumer lenders
@@ -58,6 +66,11 @@ _PROHIBITED_TICKERS = frozenset({
     # portfolio_rules.md says Israeli affiliation cannot be screened by industry and
     # must be checked per name. A domicile field will not do that check for you.
     "PLX",
+    # FIRY added 2026-10-12 by the user's determination. Firy Inc. (formerly Skillz),
+    # NYSE-listed with a Las Vegas address, operates its mobile-game platform in "the
+    # United States, Israel, China, Malta, Hong Kong, Cyprus". Same basis as PLX:
+    # affiliation, read off the operating footprint, not the domicile field.
+    "FIRY",
 })
 # Industries that contain prohibited businesses alongside legitimate ones. Not
 # auto-excluded -- any name from these reaching the watchlist is flagged so it is
@@ -276,7 +289,8 @@ def _validate_enriched(df: pd.DataFrame) -> pd.DataFrame:
             _prohibited |= _ind.str.contains(_name, regex=False, na=False)
     if _prohibited.any():
         print(f"  Prohibited businesses: removed {int(_prohibited.sum())} "
-              f"(prisons/detention, defence & firearms, predatory lending)")
+              f"(prisons/detention and their suppliers, defence & firearms, "
+              f"predatory lending, Israeli-affiliated)")
     df = df[~_prohibited]
 
     if {"price", "latest_price"}.issubset(df.columns):

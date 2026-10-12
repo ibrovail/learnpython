@@ -10,6 +10,101 @@ operating manual. The full superseded text is preserved in git at `e838891`.
 
 ---
 
+# 2026-10-12 (b) — Two sleeves, operating separately. No transfer path will be built.
+
+**The user's decision**, recorded because the alternative was about to be engineered. A **second
+TFSA experiment account** is being initialised by the cloud session discussing the mega-cap
+mandate and leverage, so there will be two experiment sleeves rather than a widened mandate here.
+**They operate separately: no capital moves between them, and no transfer path is to be built.**
+
+**What this closes.** I had recommended building a signed `--cash-flow` entry point, because the
+ledger can record money coming *in* (`log_capital_injection`, gated behind `if inject_amount > 0`)
+and has no way at all to record money going *out* — hand-editing `chatgpt_portfolio_update.csv` is
+banned after the 6/23 incident that truncated it to 0 bytes, and faking a withdrawal as a sell
+would corrupt the trade log and the win-rate stats. **That path is not needed and is not being
+built.** If a withdrawal ever does happen, the gap arithmetic is already correct for it — a
+negative amount buys negative S&P-equivalent shares at the withdrawal date, and the
+injection-neutral drawdown series handles the sign — so only the entry point would be missing.
+Recorded so the finding is not lost and the work is not done speculatively.
+
+**What this preserves, and it is the better outcome.** A separate uncapped sleeve attacks the
+cap-weighting gap — the audit's central unresolved finding, worth 4.7pp on the test period —
+**without contaminating the selection experiment here.** Had the $5Bn ceiling simply been widened
+in this book, the gap metric would have stopped measuring selection skill. Two sleeves keep the
+capped and uncapped strategies separately measurable.
+
+**One caution for whoever reads the audit.** The 10/11 result that *lifting the $5Bn cap tested
+worse* (2.8% against 6.2%) was measured **on this book's gates, horizon, sizing and ranking**. It
+does **not** transfer to a separate uncapped sleeve with its own rules, and should not be quoted
+at the new sleeve as evidence against it.
+
+---
+
+# 2026-10-12 — Two names prohibited, and the detention exclusion widens from operators to suppliers
+
+**The user's determination, on two names surfaced by the Week 58 catalyst sourcing audit.** Both
+were already dead on other gates, so no trade turned on either. The amendment is what the second
+one does to the *category*.
+
+## AISP — the exclusion now covers suppliers
+
+Airship AI sells AI video and data-management platforms to Department of Homeland Security
+components, and announced **$29.0M of "brand-name-only" firm-fixed-price DHS awards on
+2026-10-01**. It operates no facility.
+
+The bullet in `portfolio_rules.md` read **"private corrections and immigration-detention
+operators"**. On that wording AISP is not prohibited — which is why it cleared every coded check:
+its industry reads *Software — Infrastructure*, so `_PROHIBITED_INDUSTRIES` does not fire and
+neither does the `_REVIEW_INDUSTRIES` hand-check flag that exists for *Security & Protection
+Services* and *Credit Services*. The bullet now covers **the vendors that supply them**: selling
+surveillance, data-management or enforcement platforms to a detention or immigration-enforcement
+agency is prohibited whether or not you run the facility.
+
+This is a **widening of an existing rule**, not a new one. It applies to the supply relationship,
+so it cannot be screened by industry any more than Israeli affiliation can — it has to be read
+off what the company says it sells and to whom.
+
+## FIRY — the second Israeli-affiliation call in eight days
+
+Firy Inc. (formerly Skillz), NYSE-listed with a Las Vegas address, operates its mobile-game
+platform in **"the United States, Israel, China, Malta, Hong Kong, Cyprus"**. Same basis as PLX
+on 2026-10-05: **affiliation read off the operating footprint, not the domicile field.**
+
+## The pattern worth recording
+
+**All three per-name exclusions added in the last eight days — PLX, AISP, FIRY — were invisible to
+every coded check**, and each failed a different one:
+
+| Name | What the data said | Why no filter fired |
+|---|---|---|
+| PLX | Country "United States", HQ Hackensack NJ | ProCellEx base is in Israel; domicile field is not affiliation |
+| AISP | Industry *Software — Infrastructure* | a DHS supplier is not a detention *operator* under the old wording |
+| FIRY | NYSE, Las Vegas address | Israel is in the operating footprint, not the domicile |
+
+So `_PROHIBITED_TICKERS` is **a record of human determinations, not a filter that generalises.**
+It catches a name the second time it is seen, never the first. The only mechanism that catches a
+first encounter is the prohibited-business check at the PRV gate, run against *what the company
+actually does* rather than against any field — which is why that check is ordered first, before
+anything else.
+
+## Honest accounting
+
+- **This is a determination, not a measurement.** There is no track record and none is possible:
+  the question is not whether excluding these names earns more, it is that the user will not own
+  them. Return evidence is not the standard and should not be offered as one.
+- **It has a real cost, and in the worst possible lane.** The catalyst lane is the only lane open
+  in RISK-OFF. AISP was the best-gated catalyst name of the week before its own trend kill —
+  revenue +32.2%, beta 0.63, next print 24 sessions out, 19.8% above its 50-day SMA. The
+  supplier widening will remove names from the one funnel that can currently produce a position.
+- **AISP would not have been bought this week regardless.** It failed distance-from-base twice
+  over: **+21.11% above its 20-day SMA** against a 20% limit, and a new 20-day high after
+  **+14.15% in five sessions**. The determination and the gate agreed; only the gate was checkable.
+- **What to watch:** whether the supplier wording starts catching names nobody intended. Defence
+  and detention supply chains run deep into industrials and software, and a rule written as "sells
+  to an enforcement agency" could reach a company whose federal business is incidental. If that
+  happens, the fix is a materiality threshold on the agency revenue, not a retreat to "operators".
+  Nothing has hit that case yet.
+
 # 2026-10-11 — The rule audit: eleven rules measured, four changed
 
 **This is the largest amendment the book has had, and the first one produced by measurement
