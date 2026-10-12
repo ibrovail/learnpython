@@ -86,33 +86,22 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
 
 ## Current State
 
-- **Complete**: **Indefinite-system rules revision (9/17)** — horizon **40–60 sessions**; the
-  trailing stop is the only **mechanical** exit (partials deleted); **binary-thesis entries
-  prohibited**; risk-per-trade **2%**; **drawdown circuit breaker** (−20% de-risk / −30% cash, on
-  the injection-neutral series from the re-based peak); driver cap 2 + sector cap 3. *Several of
-  these were measured for the first time on 10/11 — see the audit entry below.*
-- **Complete**: **Phase 3.5** — on non-overlapping formation dates the composite clears t=2.0 at
-  **no** horizon, and 20/40/60 sessions have too few independent observations for any verdict;
-  effect sizes do rise with horizon. **Phase 4 (Dec) primary horizon = 20 sessions.** Index changes
-  are the fifth unexplained-move category.
-- **ADOPTED (10/11) — the rule audit: eleven rules measured, four changed.** The largest
-  amendment the book has had and the first produced by measurement rather than reasoning or a
-  single-trade post-mortem. Built on a **survivorship-free** 11-year frame (499 tickers, 37.5% of
-  names delisted; `research/`), a **daily event-driven simulation** with real slippage, stops,
-  sizing and share rounding, and a **train/test split at 2021-06-30** — every figure from one
-  clean ablation (`research/rule_ablation.py`), so the numbers are comparable to each other.
-  **Changed:** RISK-OFF **defensive profile removed**, the screener lane **closing** in RISK-OFF
-  instead (+2.8pp, its sunset clause expiring as written); **stops not raised by default**
-  (+10.3pp, the largest effect); **fractional shares permitted** (+3.2pp at $710, nothing at
-  $10,000 — a small-book rule); **ceiling 5 → 10** (+3.9pp); **cash floor 15% → 5%** (+0.5pp). **Kept with evidence:** regime filter (+3.8pp, **reversing Phase 3.8's
-  R2**), **3-per-sector cap** (3.0pp less drawdown at no cost, and it beats **40 of 40** shuffled-
-  label placebos), 2% risk, the $5Bn cap (**lifting it tested worse — recommendation withdrawn**),
-  the Day-1 rule, and the **10-session earnings guard — a removal I published and then withdrew**
-  after finding a session-index bug in my own test. Breaker kept (fires in 2020, not in test); the
-  re-entry ban is **inert**. **The goal was not met:** 12.2% test CAGR against SPY's 13.2%,
-  at −15.4% drawdown against SPY's −24.5%. The gap is **cap-weighting**, not the rules — SPY beats
-  equal-weighted S&P by 4.7pp on the same window — which is why mega-caps and leverage are a
-  separate session. Reasoning in `Rules Amendment History.md` (2026-10-11).
+- **ADOPTED (10/11) — the rule audit: eleven rules measured, four changed.** The first amendment
+  produced by measurement rather than reasoning or a single-trade post-mortem. Built on a
+  **survivorship-free** 11-year frame (499 tickers, 37.5% delisted), a **daily event-driven
+  simulation** with real slippage, stops, sizing and share rounding, and a **train/test split at
+  2021-06-30** — every figure from one clean ablation, so they are comparable.
+  **Changed:** defensive profile **removed** with the screener lane **closing** in RISK-OFF instead
+  (+2.8pp, its sunset expiring as written); **stops not raised by default** (+10.3pp, the largest
+  effect); **fractional shares** (+3.2pp at $710, ~0 at $10,000 — a small-book rule); **ceiling
+  5 → 10** (+3.9pp); **cash floor 15% → 5%**. **Kept with evidence:** regime filter (+3.8pp,
+  **reversing Phase 3.8 R2**), **3-per-sector cap** (3.0pp less drawdown, free, beats **40 of 40**
+  placebos), 2% risk, the $5Bn cap (**lifting it tested worse — recommendation withdrawn**), the
+  Day-1 rule, and the **earnings guard — a removal I published then withdrew** after finding a
+  session-index bug in my own test. Breaker fires in 2020, not in test; re-entry ban **inert**.
+  **The goal was not met:** 12.2% test CAGR vs SPY 13.2%, at −15.4% drawdown vs −24.5%. The gap is
+  **cap-weighting** — SPY beats equal-weighted S&P by 4.7pp — which is why mega-caps are a separate
+  sleeve. (`Rules Amendment History.md`, 2026-10-11.)
 - **In progress**: **One position, ~84% cash; no buy since 9/22.** CON 3 @ $35.31, last close **$37.19
   (+5.3%)**, stop **$34.49 / $34.34** as placed on 10/06. **Three raises were recommended in five
   sessions, two placed and irreversible, the third withdrawn on 10/11 under the new never-raise
@@ -134,54 +123,30 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   field, catches a first encounter, which is why it is ordered first. Reasoning in
   `Rules Amendment History.md` (2026-10-12). *(The Week 56 PLX research-log row reads
   `weak-catalyst`: the determination post-dates it and the log is append-only.)*
-- **Adopted (10/05 b) — the catalyst lane has a sourcing method, and since 10/11 it is the ONLY
-  lane open in RISK-OFF.** It had an eligibility test and no pipeline, so **40 of 40 researched
-  names came from the screener**. Fix: **Stage 0** reserves **≥3 stage-1 slots for catalyst names**
-  whenever a slot is open (a *reallocation*); `<research_trigger>` prints a **`<lanes>`** line; a
-  qualifying catalyst is **a resolved fact with a dated earnings impact** (vs the prohibited binary
-  case, an unresolved event with a dated announcement); **an index add counts only BEFORE its
-  effective date** — ATRC ran +12.8% into 9/21 then gave back −11.82%. `source` is a controlled
-  vocabulary (`catalyst:<category>`) because `trading_script.py` reads it for cap classification.
-  (`Rules Amendment History.md`, 2026-10-05 b.)
-- **Superseded (10/05) — `near_high` removed from the RISK-OFF defensive profile**, and the whole
-  profile went on 10/11, so its legs and the 0.90-threshold question are moot. What survives is the
-  **open Phase 4 question of whether beta belongs in any future defensive test** — top-decile calm
-  names had median beta **0.85 vs 0.84**, so `low_vol` never measured defensiveness (and **beta was
-  never a leg**, correcting an earlier claim). `Rules Amendment History.md` (10-05, 10-11).
-- **HOPE post-mortem (9/29)**: stopped out for **−$7.20 = 0.99% of equity, the budgeted risk to the
-  cent**, 6 sessions. **No rule failed; the entry did** — bought **+0.15% above its 50-day SMA**,
-  the thinnest possible pass of the trend gate, yet sized to **28.8% of equity**. **Still open after
-  the 10/11 audit** (which tested rules, not entry quality): does a sub-1% trend-gate pass deserve
-  reduced size or none? `pct_vs_sma50` is logged, so it is queryable once BUY rows mature.
-- **Complete (9/19)**: R1–R8 adopted — one weekend question; two-stage funnel sized to the buys
-  sought, extending to ranks 51–100; research log of buys *and* passes (`log_research.py`); regime
-  computed by the script with a ±1% band → `<market_regime>`, `regime_history.csv`; six-section
-  report; dailies by exception via `<holding_review>`. The `weekly-portfolio-report` skill is
-  **retired** — it predates every current rule and conflicts with four. (`Rules Amendment
-  History.md`, 2026-09-19 a–f.)
-- **Complete (9/28)**: **the 60-session re-underwrite says what it tests** — the **quality** tests
-  (revenue, earnings path, driver freshness, non-binary, prohibited business, trend and
-  distance-from-base, earnings guard, placeable stop inside the 30% ceiling), **not** the regime
-  **capacity** gates (half risk budget, 90-day window, position ceiling), which govern new capital
-  only. A failed quality test is an exit; a failed capacity gate is a hold that **must name the gate
-  in writing**. Left open: the review cadence *after* a pass. (`Rules Amendment History.md`, 9-28.)
 - **Decided (10/12) — two TFSA sleeves, operating separately; no transfer path.** A second
   experiment account (mega-cap / no market-cap limit) is being initialised by the cloud session.
   **No capital moves between sleeves and no `--cash-flow` path is to be built** — reasoning in
   `Rules Amendment History.md` (2026-10-12 b), including that the gap arithmetic is already
   correct for withdrawals, and that the "lifting the $5Bn cap tested worse" result does **not**
   transfer to a sleeve with its own rules. **Idle cash here is a risk budget, not spare capital.**
+- **Earlier state — moved out of this file 2026-10-12** to keep it inside the 200-line cap
+  `documentation.md` sets: the 9/17 indefinite-system revision, Phase 3.5, the 9/19 R1–R8
+  adoptions, the 9/28 re-underwrite clarification, the 9/20–21 fixes, the HOPE post-mortem,
+  and the two 10/05 amendments. All of it is in **`.claude/docs/state-history.md`**, with the
+  full reasoning in `Experiment Details/Rules Amendment History.md`.
 - **Next**: **catalyst sourcing audit (10/12) — all 6 categories searched, 6 names, 0 survive**
-  (`Weekly Deep Research (MD)/Week 58 Catalyst Sourcing Audit.md`). Week 57 had searched only **3 of
-  6**; the three it missed produced 4 of today's names, so the lane was under-searched. But **the
-  constraint is not sourcing** — 4 of 6 died on earnings quality or size, and NNBR/BORR/FIRY all on
-  the same code. **Dated-catalyst small caps skew loss-making.** Two new findings: the index lane
-  **cannot be sourced on a weekend cadence** (both October adds were intra-quarter M&A replacements
-  with 3–5 days' notice; December announcement ~12/04), and at 2% risk inside the 30% ceiling a
-  stop must sit **≥6.67% below entry** or the position cannot be built — a **minimum stop width set
-  by book size** that excludes low-vol names and killed TREX by 0.57pp. Blackouts expire this week
-  (HOPE ~10/13, ATRC ~10/15). CON: the $35.36 raise stays **declined in writing**; no add into a
-  closed lane.
+  (`Weekly Deep Research (MD)/Week 58 Catalyst Sourcing Audit.md`). Week 57 searched only **3 of 6**
+  and the missing three produced 4 of the names, so the lane was under-searched — but **the
+  constraint is not sourcing**: 4 of 6 died on earnings quality or size, NNBR/BORR/FIRY on the same
+  code. **Dated-catalyst small caps skew loss-making.** The **index check moves to the daily** (both
+  October adds were intra-quarter M&A replacements with 3–5 days' notice; next release ~12/04), and
+  **a demotion is not a promotion** (OLN left the MidCap 400 the same morning). **Correction:** the
+  "≥6.67% minimum stop width" is `risk ÷ name_cap` = 2%/30% — **a ratio of two rule constants,
+  independent of book size** — and it **excludes nothing** (size is the minimum of the three, so a
+  tighter stop just deploys less risk). Tested: the ceiling binds **5%** of entries, so 2% risk is
+  real, and no ceiling change is adopted. It bites on the **composite-ranked** watchlist (90% of
+  names) but not on `pct_vs_sma50` selections — a second argument for that selector. Blackouts
+  expire this week (HOPE ~10/13, ATRC ~10/15). CON's $35.36 raise stays **declined in writing**.
 - **Engineering, 9/29–10/11** (detail in `.claude/docs/implementation-notes.md`): session arithmetic
   routed through the **NYSE calendar** (the backstop had scaled days by 5/7, and `pd.bdate_range`
   collapsed past-due earnings estimates to −1, pinning a spurious FULL review); re-underwrite
@@ -190,8 +155,6 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   **10/11:** `live_simulation.run()` takes earnings **dates** not pre-indexed sessions — the old
   signature silently shifted every index when a split ran separately, which produced the withdrawn
   earnings-guard verdict.
-- **Fixed (9/20–9/21)**: `inject_last_thesis.py` line-anchors its tags; entry stops need all three
-  candidates — 1.75×ATR, 10-session low, 50-day SMA. *(Detail in implementation-notes.md.)*
 ## Documentation
 
 Reference docs (not auto-loaded — read on demand):
