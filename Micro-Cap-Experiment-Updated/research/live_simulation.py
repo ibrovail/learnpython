@@ -150,6 +150,7 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
     rng = np.random.default_rng(block_seed)
     blocked = tot_cands = 0        # how much candidate supply the earnings guard removes
     cool_blocked = cool_tot = 0    # and the post-earnings cooldown
+    cap_bound = risk_bound = 0     # which sizing constraint binds at entry
     pos_of = {d: j for j, d in enumerate(cal)}
     eidx: dict[str, np.ndarray] = {}
     if (earnings_guard or cooldown_sessions) and earn_idx:
@@ -261,7 +262,16 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
             rnd = (lambda x: x) if fractional else int
             rp = risk_per_trade * (0.5 if derisk else 1.0)
             shares = rnd((eq * rp) / risk_per_share)
-            shares = min(shares, rnd(eq * name_cap / entry))
+            # Which constraint actually binds? The 2% risk budget is nominal whenever the 30%
+            # single-name ceiling bites first, and that happens for any stop tighter than
+            # risk_per_trade / name_cap = 6.67% -- a ratio of two rule constants, independent of
+            # book size. Counted so the simulation can say how often "2% risk per trade" is real.
+            cap_shares = rnd(eq * name_cap / entry)
+            if cap_shares < shares:
+                cap_bound += 1
+            else:
+                risk_bound += 1
+            shares = min(shares, cap_shares)
             spendable = bk.cash - eq * cash_floor
             shares = min(shares, rnd(spendable / entry) if spendable > 0 else 0)
             if shares < (0.0001 if fractional else 1):
@@ -454,6 +464,8 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
             "guard_block_rate": (blocked / tot_cands) if tot_cands else 0.0,
             "cooldown_block_rate": (cool_blocked / cool_tot) if cool_tot else 0.0,
             "park_switches": bk.park_switches,
+            "cap_bound_share": (cap_bound / (cap_bound + risk_bound)
+                                if (cap_bound + risk_bound) else float("nan")),
             "sector_max": max(conc) if conc else np.nan,
             "sector_ge3": float(np.mean(np.array(conc) >= 3)) if conc else np.nan,
             "sector_ge4": float(np.mean(np.array(conc) >= 4)) if conc else np.nan,
