@@ -39,12 +39,40 @@ all of them):
   prints a `<position_limits>` block with live sector counts and a driver-cap reminder; the driver
   itself must be written by you. An unnamed driver is a rule violation, not an omission.
 - **⛔ Prohibited-business check — first, before anything else.** Confirm the company is not a
-  prison/detention operator, a weapons/defence/firearms business, a predatory lender, or
-  Israeli-affiliated (`portfolio_rules.md` → *Exclusions*). The quote page's **Industry** field
-  is the starting point; **Security & Protection Services** and **Credit Services** require
-  reading what the company actually does. A name that fails is dropped without further
-  research, however well it scores. Origin: 2026-09-14, CXW recommended despite being a
-  private prison operator.
+  prison/detention operator **or a vendor supplying one**, a weapons/defence/firearms business, a
+  predatory lender, or Israeli-affiliated (`portfolio_rules.md` → *Exclusions*). A name that fails
+  is dropped without further research, however well it scores. Origin: 2026-09-14, CXW recommended
+  despite being a private prison operator.
+
+  **⛔ How to run it — read operations, not summary fields.** *(Method added 2026-10-12 after three
+  determinations in eight days.)* `screener.py`'s `_PROHIBITED_TICKERS` is a **record of
+  determinations, not a filter that generalises** — it catches a name the second time it is seen
+  and never the first. The only thing that catches a first encounter is this check, and it only
+  works if it is run against what the company *does*:
+
+  | Name | The field that said "fine" | What was actually true |
+  |---|---|---|
+  | **PLX** (10/05) | `Country` = United States | ProCellEx manufacturing and research base in Israel |
+  | **AISP** (10/12) | `Industry` = Software — Infrastructure | AI video/data platforms sold to DHS components |
+  | **FIRY** (10/12) | HQ address = Las Vegas | operates in "United States, **Israel**, China, Malta, Hong Kong, Cyprus" |
+
+  **Three names, three different fields, each of them clean.** `Country`, `Industry` and the HQ
+  address are facts about *registration*; the exclusions are about *affiliation and activity*,
+  which are facts about operations. **A field that summarises a company cannot answer a question
+  about what the company does.** So read these three instead, every time:
+  1. **The business description** — what it sells and to whom. Named customers are the tell.
+  2. **The geographic operations or segment disclosure** — the countries it *operates in*, not
+     the one it is incorporated in. FIRY's own description lists them.
+  3. **The news feed and contract announcements** — for agency names. AISP's DHS awards were in
+     its own 2026-10-01 release.
+
+  **Triggers to read further, not conclusions:** any federal or law-enforcement customer, and any
+  non-US operating geography. Either one means keep reading; neither one alone decides.
+  **Industry remains the starting point only** — **Security & Protection Services** and **Credit
+  Services** still require the hand-check, and AISP showed that a clean industry proves nothing.
+  **If the determination is genuinely unclear, surface it to the user rather than deciding it:**
+  all three of these were the user's calls, and the supplier question has an open watch item on
+  materiality (`Rules Amendment History.md`, 2026-10-12) that a judgement call here could pre-empt.
 - **Extended-hours volume**, when quoting a pre/post-market price. A 332-share print is
   not a price (PAR, 2026-08-17). Report volume alongside the timestamp or don't use the quote.
 - **Live news-feed check** (`stocktitan.net/news/TICKER/`) for any recommendation, to
