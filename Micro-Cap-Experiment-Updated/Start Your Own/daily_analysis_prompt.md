@@ -40,6 +40,16 @@ Daily Portfolio Review — [DATE]
    **Every holding, every day — the news check:** open its live news feed (browser) and state
    "nothing new since the last close [timestamp]" or what landed. The script cannot see news.
 
+   **Also every day, when a catalyst slot is open — the index-change check.** One fetch of
+   `press.spglobal.com` for S&P DJI index announcements. *(Added 2026-10-12.)* This lives in the
+   **daily**, not the weekend, for a measured reason: both October 2026 additions were M&A-driven
+   **intra-quarter replacements announced with 3–5 days' notice** (WK for FORM, effective Oct 6;
+   FRSH for BLFS, effective Oct 8). A weekend-only check structurally sees those *after* the
+   effective date, which is exactly how Week 57 found both and had to kill them on timing — the
+   forced buying ends at the effective date. **The surface is productive; the cadence was wrong.**
+   State "no new S&P DJI release since [date]" or name the add, its effective date, and whether
+   there are sessions left before it.
+
    **LINE holdings — one line each:**
    [TICKER] — $X.XX (±X.XX%), P&L ±X.X%, stop $X.XX (X.XX×ATR room), driver unchanged, news: nothing new [time]
 

@@ -103,3 +103,7 @@ def main() -> None:
     b0 = rows[0]
     print(f"\nN1 -> at the live 2%/30%, the CEILING bound {b0['cap_bound']:.0%} of entries. "
           f"{'2% risk per trade is NOMINAL.' if b0['cap_bound'] > 0.5 else 'The risk budget mostly binds.'}")
+
+
+if __name__ == "__main__":
+    main()

@@ -614,6 +614,13 @@ applies. `<research_trigger>` now prints a `<lanes>` line so the open capacity c
   RISK-OFF it does not run at all. **The lane's advantage is no longer an exemption; it is that it
   is the only lane open in a weak tape.** That makes staffing it the binding constraint on book
   size rather than a nicety, which is what Stage 0 of the funnel exists to force.)*
+- **⚠️ A demotion is not a promotion, even though both print as an "addition".** *(Added
+  2026-10-12.)* On 2026-10-01 **OLN** was added to the S&P SmallCap 600 and **deleted from the
+  MidCap 400 the same morning**. The index being left is the larger one, so its funds' selling
+  dominates the smaller index's buying and the net forced flow is **negative**. Before treating
+  an index add as a catalyst, check the same release for a **deletion from a larger index**: if
+  the name is moving *down* the ladder, the category does not apply and the expected flow is the
+  wrong sign.
 - **Log it as a catalyst.** `log_research.py --source "catalyst:<category>"` (for example
   `catalyst:index-add`, `catalyst:contract-ramp`). The `source` field is how the lane is recovered
   later — `trading_script.py` reads it to classify holdings — so a catalyst name logged as
