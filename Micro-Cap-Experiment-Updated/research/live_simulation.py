@@ -407,7 +407,11 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
             if np.isfinite(px_spy) and px_spy > 0:
                 eq_now = bk.equity(marks)
                 target = max(0.0, bk.cash - eq_now * cash_floor) if ok_to_park else 0.0
-                if target > 0.01:
+                # Only sweep a MEANINGFUL amount. Without this the sleeve re-parks a few dollars
+                # almost every session as equity drifts and the floor moves with it, paying 25bps
+                # on trivial sums and inflating the switch count -- which would let the friction
+                # explain a result that is really about imported drawdown.
+                if target > 0.02 * eq_now:
                     buy = target
                     bk.cash -= buy
                     bk.park += buy * (1 - slip) / px_spy
