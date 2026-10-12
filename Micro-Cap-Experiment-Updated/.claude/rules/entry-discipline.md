@@ -82,6 +82,18 @@ walk a stop inside that band — expected, and handled by the once-per-entry res
 sit below", which declared an ordinary state impermissible with no remedy once restoration was
 used.)*
 
+**A binding ceiling reduces risk; it never blocks a trade. Never write "cannot be sized".**
+`portfolio_rules.md` → *Position sizing* sets actual size as the **minimum** of the risk-based
+figure, the 30% single-name ceiling and available cash above the floor. So a name whose stop is
+narrow enough that 2% risk would exceed 30% of equity is still buildable — the ceiling binds
+instead of the risk budget and the position simply carries **less** than 2% risk. **State the risk
+the capped position would carry, rather than declaring the position impossible.** *Origin:
+2026-10-12 — TREX was reported killed partly because "5.3 shares = $236 = 32.8% of equity, over the
+30% ceiling". At the ceiling it is 4.8 shares carrying ~1.8% risk, a normal trade. The real kill was
+the trend gate (−1.77% below its 50-day SMA), found independently.* At a 1.75×ATR stop the
+crossover is **ATR = 3.81% of price**; below that the ceiling binds, and **86% of the live
+watchlist sits below it**, so under-deploying the risk budget is the normal case, not an edge case.
+
 If the required stop would create a max-loss exceeding **2% of equity** — the standing
 risk-per-trade budget — **reduce position size**, do not tighten the stop. *(The 5% figure that
 formerly appeared in `portfolio_rules.md` was a standing contradiction with this line; resolved in

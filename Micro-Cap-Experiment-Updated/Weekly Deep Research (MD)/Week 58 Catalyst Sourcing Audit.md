@@ -92,24 +92,50 @@ PT **$55.26 = +23.5%**, next print **Nov 4**. Catalyst: FY26 guidance raised **2
 margin lifted to ~38% on **Little Rock starting production in Q3 with the ramp pulled forward six
 months**. On the written test this is a resolved fact — the plant is running and the guide is out.
 
-**KILL, three ways:**
+**KILL, two ways:**
 1. **Below the 50-day SMA: −1.77%.** The hard trend gate requires ≥0%. This alone is a stage-1 kill
    (`below-sma50`).
-2. **Cannot be sized inside the 30% ceiling.** Widest stop candidate is $42.05 (1.75×ATR; the
-   10-session low $42.10 and the 50-day SMA $45.59 both sit above it), a $2.73 risk per share.
-   2% of $721 = $14.42 → **5.3 shares = $236 = 32.8% of equity**, over the 30% ceiling.
-3. The margin accretion management actually points to is **2027** ("half the lines operational by
+2. The margin accretion management actually points to is **2027** ("half the lines operational by
    year-end to support 2027 margin accretion") — **outside the 90-day catalyst window**. The
    July raise is a three-month-old fact whose forward impact is dated beyond the horizon the rule
    allows.
 
-**New structural constraint, worth the rules session's attention.** Kill #2 is not about TREX. At
-$721 of equity, 2% risk and a 30% position ceiling, the stop must be at least
-**risk ÷ (0.30 × equity) = $14.42 ÷ $216.30 = 6.67% below entry** or the position cannot be built.
-TREX's widest stop is **6.1%** — it fails by 0.57pp. So the book's size imposes a **minimum
-stop-width of ~6.7%**, which systematically excludes **low-volatility names** — precisely what the
-screener composite is built to favour. This is an interaction between the 2% rule, the 30% ceiling
-and book size that has not been written down anywhere, and it will relax as equity grows.
+> **Corrected 2026-10-12, after the rules session checked it.** This section originally claimed a
+> third kill — that TREX "cannot be sized inside the 30% ceiling" — and drew a structural finding
+> from it. **Both were wrong**, and the rules session was right to reject them (`ab22c01`,
+> `ce87857`).
+>
+> - **Nothing is excluded.** `portfolio_rules.md` → *Position sizing* says actual size is the
+>   **minimum** of the risk-based figure, the 30% ceiling and available cash. So a tight-stop name
+>   is buildable at any stop width; the ceiling simply binds instead of the risk budget and the
+>   position carries **less** than 2% risk. TREX would have been a 30%-of-equity position at
+>   $216 carrying **~1.8% risk**, not an impossible one.
+> - **It is not set by book size.** The 6.67% figure is `risk_per_trade ÷ name_cap` = 2% ÷ 30%, a
+>   **ratio of two rule constants**. Both scale with equity, so equity cancels: it is identical at
+>   $721 and at $100,000. Computing it as "$14.42 ÷ $216.30" made a scale-invariant ratio look
+>   like a small-book constraint.
+>
+> **TREX's no-buy stands on kill #1,** which is a hard gate and was found independently.
+
+**What the arithmetic actually says, and it is the opposite shape.** The 6.67% threshold is real,
+but it is the point where the **ceiling takes over from the risk budget** — not an exclusion. At a
+1.75×ATR stop that corresponds to **ATR ≥ 3.81% of price** to deploy the full 2%. Measured on this
+week's own lists:
+
+| | n | median ATR | below 3.81% | can carry full 2% risk |
+|---|---|---|---|---|
+| watchlist top 50 | 50 | 2.71% | **90%** | 10% |
+| extended, ranks 51–100 | 50 | 3.01% | 82% | 18% |
+| **combined** | 100 | 2.83% | **86%** | 14% |
+
+So for **86% of live candidates the ceiling binds, not the risk budget**, and the median name at a
+1.75×ATR stop carries **1.49% risk — 74% of the 2% budget.** The exposure is therefore *under*-use
+of the risk budget, not exclusion of names. The rules session traced the cause to the **selector**:
+the backtest ranks by `pct_vs_sma50`, which picks extended and so more volatile names (only 5% of
+its selections fall below the threshold), while the watchlist is composite-ranked and the composite
+is **built** to favour low volatility. Their separate finding is that composite ranking tests
+**4.9pp worse** than `pct_vs_sma50` on the test period. Two results converge on the same selector —
+weigh it when choosing which stage-1 names to promote.
 
 ### 5. Spin-off / separation with announced date — EMPTY for a qualifying name (c)
 
@@ -136,44 +162,53 @@ announcement, i.e. the prohibited binary case. Correctly killed by the "if it su
 
 **Six of six categories searched. Six names produced. Zero survive stage 1.**
 
-The reason is not sourcing. **Four of the six died on earnings quality or universe size, not on
-the catalyst** — and three of the last six catalyst names across W57–W58 died on the *same* code:
-NNBR −$47.9M, BORR −$243.6M, FIRY −$70.8M. Dated-catalyst small caps skew heavily loss-making,
-and "growing TTM revenue with a credible earnings path" is the gate that kills them. The one
-profitable, growing, in-universe, Buy-rated name found (TREX) died on the trend gate and on book
-size, not on its catalyst.
+**The reason is not sourcing, and not the catalysts.** By binding reason code: two **prohibited**
+(AISP, FIRY), one out of **universe** on size (VAL), one **loss-making** (BORR), one **below its
+50-day SMA** (TREX), one **binary** (MOD). Not one died because its catalyst was weak or undated.
+
+Underneath the codes, the **earnings-quality** observation still holds and is the one to carry
+forward: of the six names, **three were loss-making** — BORR −$243.6M, FIRY −$70.8M, and NNBR
+−$47.9M from Week 57. (FIRY's *binding* code is now `prohibited`, but it was loss-making
+independently of that.) Dated-catalyst small caps skew heavily loss-making, and "growing TTM
+revenue with a credible earnings path" is the gate that kills them. The one profitable, growing,
+in-universe, Buy-rated name found — TREX — died on the **trend gate**.
 
 So: the catalyst lane is not short of events. It is short of events attached to **profitable**
-companies whose price is **above its 50-day SMA** and whose stop is **wide enough to size** in a
-$721 book.
+companies trading **above their 50-day SMA**. *(An earlier version of this paragraph added "and
+whose stop is wide enough to size in a $721 book" — withdrawn; see the correction above. Stop
+width excludes nothing.)*
 
-## Two exclusion questions for the user — not mine to decide
+## Both exclusion questions are DECIDED — AISP and FIRY are prohibited
 
-Both names below are **already dead on other gates**, so nothing turns on them this week. Flagged
-now because each would otherwise pass the coded checks and recur:
+**The user's determination, 2026-10-12.** Both are in `screener.py`'s `_PROHIBITED_TICKERS`
+(`dbd51c9`), which covers **both lanes**, so neither can return by any route. **AISP will not come
+back after it consolidates** — the earlier note in this file saying it would is void.
 
-1. **AISP — Department of Homeland Security exposure.** Its $29.0M award is "brand-name-only"
-   contracts from a DHS agency for public-safety video/data platforms. Industry reads
-   *Software — Infrastructure*, so no `REVIEW` flag fires. DHS contains components that operate
-   detention. The exclusion covers **prisons/detention** operators; AISP is a software vendor, not
-   an operator. Precedent cuts both ways: CXW was dropped for being a prison operator, and PLX was
-   blocked on **affiliation rather than domicile**. Its backlog converts over two quarters, so the
-   catalyst persists and the name will come back once it consolidates. **Needs a determination.**
-2. **FIRY — Israel among its operating countries.** Profile: "operates a mobile game platform in
-   the United States, **Israel**, China, Malta, Hong Kong, Cyprus". Same shape as the PLX call,
-   which was made on operational base, not domicile. **Needs a determination.**
+1. **AISP — prohibited, and it widened the category.** Its $29.0M of "brand-name-only" DHS awards
+   are public-safety video/data platforms; it operates no facility. The detention bullet in
+   `portfolio_rules.md` read **"operators"**, under which AISP was not prohibited — which is
+   exactly why nothing coded caught a company whose industry reads *Software — Infrastructure*.
+   The rule now covers **the vendors that supply them**.
+2. **FIRY — prohibited (Israeli-affiliated).** "Operates a mobile game platform in the United
+   States, **Israel**, China, Malta, Hong Kong, Cyprus" — same basis as PLX: affiliation read off
+   the operating footprint, not the domicile field.
+
+Reasoning and the honest accounting: `Rules Amendment History.md` (2026-10-12).
 
 ## For the Week 58 run
 
 1. **Re-verify every price at the PRV gate** — these are 10-09 closes read on 10-12.
 2. **Log these six rows** with the codes below. They are not yet in `research_log.csv`; this file
    is the evidence, the log is the record, and the report is what writes it.
+   **AISP and FIRY are `prohibited`, not `extended` or `negative-earnings`** — the exclusion is the
+   binding reason and it outranks every other gate (same handling as ZIM in Week 57). The log is
+   **append-only**, so these two rows are the permanent precedent for the widened category.
    ```
-   AISP  catalyst:contract-ramp      PASS  extended          (+21.11% vs 20d SMA, limit 20%; new 20d high after +14.15%/5d)
+   AISP  catalyst:contract-ramp      PASS  prohibited        (DHS detention-agency supplier; user's determination 10/12, blocklisted)
    VAL   catalyst:contract-ramp      PASS  market-cap        ($5.81Bn > $5Bn; also revenue -13.2%, PT -18.4%)
    BORR  catalyst:contract-ramp      PASS  negative-earnings (TTM net income -$243.6M, EPS -$0.83)
-   TREX  catalyst:margin-inflection  PASS  below-sma50       (-1.77% vs 50d; also 32.8% of equity > 30% ceiling; accretion dated 2027)
-   FIRY  catalyst:refinancing        PASS  negative-earnings (TTM net income -$70.76M, EPS -$4.53, beta 4.63)
+   TREX  catalyst:margin-inflection  PASS  below-sma50       (-1.77% vs 50d; accretion dated 2027, outside the 90-day window)
+   FIRY  catalyst:refinancing        PASS  prohibited        (Israeli-affiliated; user's determination 10/12, blocklisted)
    MOD   catalyst:spin-off           PASS  binary-thesis     (RMT conditioned on shareholder vote + IRS letter)
    ```
 3. **Do not re-search the index category** before December unless an intra-quarter replacement is

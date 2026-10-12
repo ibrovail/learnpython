@@ -29,6 +29,16 @@ Rules for any quantitative study of screener signals, gates or strategy performa
     rejection rate under the same gate" cannot be wrong about its units, whereas "this share should
     be about 38%" depends on a reference that drifts every time the population is redefined.
 
+- **Before calling a threshold a consequence of book size, check whether it is a ratio of two rule
+  constants.** If both terms scale with equity, equity cancels and the threshold is identical at
+  every book size. **Write the formula symbolically before writing it in dollars.** 2026-10-12: the
+  "minimum stop width" was reported as `$14.42 ÷ $216.30 = 6.67%`, described as "set by book size"
+  and "relaxes as equity grows". It is `risk_per_trade ÷ name_cap` = `0.02 ÷ 0.30` — the same at
+  $721 and at $100,000. Substituting dollar figures for two proportional quantities made a
+  scale-invariant ratio look like a small-book constraint, and the dollar arithmetic was correct,
+  which is what made it convincing. This is the same failure as the name-weighted/row-weighted
+  error above: **say what each figure is per, and cancel the units before interpreting.**
+
 - **Never judge a signal on rank IC alone.** Report, beside it, the quintile spread on **mean**
   returns and an IC on winsorized (1%/99%) returns. In a universe whose median stock falls, rank
   IC rewards calm stocks sitting near zero: `low_vol` had the highest rank IC (0.113) while its
