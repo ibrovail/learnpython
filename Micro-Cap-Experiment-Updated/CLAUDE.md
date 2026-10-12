@@ -168,14 +168,13 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   is a hold that **must name the gate in writing**. Reasoning and the honest accounting are in
   `Rules Amendment History.md` (2026-09-28). Deliberately left open: the review cadence *after* a
   pass — decide it when ATRC actually passes.
-- **Next**: **Week 57 found no catalyst candidate** — all four categories searched, 5 names logged
-  (first catalyst-sourced rows in 45). Three failed on **timing or exclusion**, not quality: ZIM
-  (Israeli-affiliated, killed at the first gate — second week after PLX), WK and FRSH (SmallCap 600
-  adds already past their effective dates), TORO (spin-off completed 10/08); only NNBR failed on
-  merit (net income −$47.9M, beta 2.66) — the lane is short of events *still ahead of us*, not of
-  events. **Watch the December S&P rebalance announcement from late November.** Blackouts expire
-  this week (HOPE ~10/13, ATRC ~10/15). CON: raise to $35.36 eligible and **declined in writing**;
-  no add — grandfathering covers holding, not new capital into a closed lane.
+- **Next**: **Week 57 found no catalyst candidate** — four categories searched, 5 names logged (the
+  first catalyst-sourced rows in 45). Three fell to **timing or exclusion**, not quality: ZIM
+  (Israeli-affiliated — second week after PLX), WK and FRSH (SmallCap 600 adds past their effective
+  dates), TORO (spin-off completed 10/08); only NNBR failed on merit (net income −$47.9M, beta
+  2.66). The lane is short of events *still ahead of us* — **watch the December S&P rebalance
+  announcement from late November.** Blackouts expire this week (HOPE ~10/13, ATRC ~10/15). CON: the
+  $35.36 raise is eligible and **declined in writing**; no add into a closed lane.
 - **Engineering, 9/29–10/11** (detail in `.claude/docs/implementation-notes.md`): session
   arithmetic routed through the **NYSE calendar** (the 30-session backstop had scaled days by 5/7,
   and `pd.bdate_range` collapsed every past-due earnings estimate to −1, pinning a permanent
