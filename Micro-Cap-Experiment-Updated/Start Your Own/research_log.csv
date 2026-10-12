@@ -39,3 +39,8 @@ date,week,ticker,source,rank,sector,market_cap_bn,stage,decision,reason_code,rea
 2026-10-05,56,NTCT,screener #40,40,Technology,2.96,1,PASS,valuation,"PT $43.38 is +6.43%, and near_high -9.54 fails the profile",40.79,,,5.00
 2026-10-05,56,LILAK,screener #42,42,Communication Services,1.66,1,PASS,negative-earnings,"TTM net income -$100M, EPS -$0.50, Hold, and PT $7.20 is 15.19% BELOW the price",8.5,,,0.87
 2026-10-05,56,TH,screener #49,49,Industrials,1.88,1,PASS,negative-earnings,"TTM net income -$37.68M, EPS -$0.38, beta 1.51; a Strong Buy with +33.8% upside does not survive losses at this size",18.83,,,4.27
+2026-10-12,57,ZIM,catalyst:guidance-raise,,Industrials,,1,PASS,prohibited,"Raised FY26 guidance 2026-10-06 (adj EBITDA to $2.7-3.0Bn), but ZIM Integrated Shipping is Israeli-affiliated - killed at the prohibited-business check before any other gate",0,,,
+2026-10-12,57,NNBR,catalyst:guidance-raise,,Industrials,0.37,1,PASS,negative-earnings,"Raised FY26 sales and EBITDA guidance 2026-09-22 with the next print dated 10/28 (12 sessions, clears the guard), revenue +5.1% - but TTM net income -$47.92M, EPS -$0.96, beta 2.66",3.95,,,
+2026-10-12,57,WK,catalyst:index,,Technology,3.94,1,PASS,weak-catalyst,"Joined the S&P SmallCap 600 effective 2026-10-06; an index add counts only BEFORE its effective date (portfolio_rules.md, after ATRC gave back 11.8% post-inclusion)",72.34,,,
+2026-10-12,57,FRSH,catalyst:index,,Technology,,1,PASS,weak-catalyst,"Joined the S&P SmallCap 600 effective 2026-10-08, announced 10/05; effective date already passed",0,,,9.75
+2026-10-12,57,TORO,catalyst:spin-off,,Energy,,1,PASS,weak-catalyst,"AI OKTO LPG-carrier spin-off distributed on or about 2026-10-08, record date 10/01 - completed, so no dated forward catalyst remains",0,,,

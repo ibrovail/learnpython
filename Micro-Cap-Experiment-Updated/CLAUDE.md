@@ -113,7 +113,7 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   at −15.4% drawdown against SPY's −24.5%. The gap is **cap-weighting**, not the rules — SPY beats
   equal-weighted S&P by 4.7pp on the same window — which is why mega-caps and leverage are a
   separate session. Reasoning in `Rules Amendment History.md` (2026-10-11).
-- **In progress**: **One position, ~85% cash, Week 57 DUE.** CON 3 @ $35.31, last close **$37.19
+- **In progress**: **One position, ~84% cash; Week 57 done — no buy.** CON 3 @ $35.31, last close **$37.19
   (+5.3%)**, stop **$34.49 / $34.34** as placed on 10/06. **Three raises were recommended in five
   sessions, two placed and irreversible, the third withdrawn on 10/11 under the new never-raise
   default.** The stop is safe — **2.95×ATR** of room (ATR(14) $0.916) against a 1.5×ATR floor, and
@@ -168,13 +168,14 @@ Complete rules (universe, execution limits, risk control, sizing, exclusions) ar
   is a hold that **must name the gate in writing**. Reasoning and the honest accounting are in
   `Rules Amendment History.md` (2026-09-28). Deliberately left open: the review cadence *after* a
   pass — decide it when ATRC actually passes.
-- **Next**: **Week 57 is DUE and the screener lane is shut in RISK-OFF — the catalyst lane is the
-  only way to add a position.** 3 catalyst slots open, 79% deployable (the 5% floor freed 9pp).
-  CON's stop stands at **$33.69 / $33.54** and **will not be raised again** unless the thesis
-  changes in writing. Re-entry bans: HOPE ~10/13, ATRC ~10/15. Still untested: the **post-earnings
-  cooldown** (EDGAR dates in hand — the cheapest remaining test), the **driver cap** and the
-  **binary-thesis prohibition** (human labels, no data). Ranking by distance above the 50-day SMA
-  beat the screener composite by **4.9pp** on test — a diagnostic, not yet a rule.
+- **Next**: **Week 57 found no catalyst candidate** — all four categories searched, 5 names logged
+  (first catalyst-sourced rows in 45). Three failed on **timing or exclusion**, not quality: ZIM
+  (Israeli-affiliated, killed at the first gate — second week after PLX), WK and FRSH (SmallCap 600
+  adds already past their effective dates), TORO (spin-off completed 10/08); only NNBR failed on
+  merit (net income −$47.9M, beta 2.66) — the lane is short of events *still ahead of us*, not of
+  events. **Watch the December S&P rebalance announcement from late November.** Blackouts expire
+  this week (HOPE ~10/13, ATRC ~10/15). CON: raise to $35.36 eligible and **declined in writing**;
+  no add — grandfathering covers holding, not new capital into a closed lane.
 - **Engineering, 9/29–10/11** (detail in `.claude/docs/implementation-notes.md`): session
   arithmetic routed through the **NYSE calendar** (the 30-session backstop had scaled days by 5/7,
   and `pd.bdate_range` collapsed every past-due earnings estimate to −1, pinning a permanent
