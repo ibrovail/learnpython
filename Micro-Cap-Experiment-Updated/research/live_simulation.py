@@ -65,9 +65,13 @@ class Book:
         self.pos: dict[str, dict] = {}
         self.curve: list[tuple[pd.Timestamp, float]] = []
         self.trades: list[dict] = []
+        self.park = 0.0          # SPY shares held as the idle-cash sleeve
+        self.park_px = 0.0       # last SPY mark, so equity() needs no extra argument
+        self.park_switches = 0   # round trips, for the friction audit
 
     def equity(self, px: dict[str, float]) -> float:
-        return self.cash + sum(p["shares"] * px.get(t, p["last"]) for t, p in self.pos.items())
+        return (self.cash + self.park * self.park_px
+                + sum(p["shares"] * px.get(t, p["last"]) for t, p in self.pos.items()))
 
 
 def load_prices(tickers: set[str], cal: pd.DatetimeIndex) -> dict[str, pd.DataFrame]:
@@ -107,7 +111,8 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
         sector_cap: int = 0, sectors: dict | None = None,
         calm_when: str = "all",
         block_rate: float = 0.0, block_seed: int = 0,
-        cooldown_sessions: int = 0, cooldown_pct: float = 0.05) -> dict:
+        cooldown_sessions: int = 0, cooldown_pct: float = 0.05,
+        park_idle: str = "none", spy: pd.DataFrame | None = None) -> dict:
     """raise_policy decides how the trailing stop is managed, and it dominates everything else.
 
     portfolio_rules.md makes raising a stop *eligible* mechanically but leaves the decision to
@@ -228,6 +233,17 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
                     del bk.pos[t]; marks.pop(t, None)
                 pending = []
             derisk = dd_now <= -0.20
+
+        # ---- 3b. unpark before funding buys -------------------------------------------------
+        # A buy decided on the previous formation date is executed at THIS session's open, so the
+        # parked sleeve has to be sold first -- one extra slippage round trip per deployment,
+        # which is the real cost of parking and the reason it is modelled rather than assumed.
+        if pending and bk.park > 0 and spy is not None and day in spy.index:
+            px_spy = float(spy.at[day, "adjOpen"])
+            if np.isfinite(px_spy):
+                bk.cash += bk.park * px_spy * (1 - slip)
+                bk.park = 0.0
+                bk.park_switches += 1
 
         # ---- 4. execute what was decided on the previous formation date --------------------
         for t in pending:
@@ -373,6 +389,34 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
             else:
                 pending = g.nlargest(room, rank_by).ticker.tolist()
 
+        # ---- 6. sweep idle cash into SPY ---------------------------------------------------
+        # "none"      -- cash sits, as the rules say today.
+        # "spy"       -- always park deployable cash. Imports SPY's drawdown wholesale, including
+        #                -24.5% in the test period, against the book's own -15.4%.
+        # "spy_trend" -- park only while SPY is above its OWN 50-day SMA. This mirrors the
+        #                existing regime filter rather than inventing a threshold: the book is
+        #                RISK-OFF on IWM, which is a SMALL-CAP signal and says nothing about
+        #                large caps. On 2026-10-09 SPY sat +1.60% above its 50-day while IWM was
+        #                -4.11% below its own.
+        if park_idle != "none" and spy is not None and day in spy.index:
+            px_spy = float(spy.at[day, "adjClose"])
+            bk.park_px = px_spy if np.isfinite(px_spy) else bk.park_px
+            ok_to_park = park_idle == "spy" or (
+                park_idle == "spy_trend" and np.isfinite(spy.at[day, "sma50"])
+                and px_spy > float(spy.at[day, "sma50"]))
+            if np.isfinite(px_spy) and px_spy > 0:
+                eq_now = bk.equity(marks)
+                target = max(0.0, bk.cash - eq_now * cash_floor) if ok_to_park else 0.0
+                if target > 0.01:
+                    buy = target
+                    bk.cash -= buy
+                    bk.park += buy * (1 - slip) / px_spy
+                    bk.park_switches += 1
+                elif not ok_to_park and bk.park > 0:
+                    bk.cash += bk.park * px_spy * (1 - slip)
+                    bk.park = 0.0
+                    bk.park_switches += 1
+
         for t, p in bk.pos.items():
             if t in marks:
                 p["last"] = marks[t]
@@ -405,6 +449,7 @@ def run(panel: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, *,
             "pct_time_invested": float((cur.index.map(lambda d: 1) * 0).mean()) if False else None,
             "guard_block_rate": (blocked / tot_cands) if tot_cands else 0.0,
             "cooldown_block_rate": (cool_blocked / cool_tot) if cool_tot else 0.0,
+            "park_switches": bk.park_switches,
             "sector_max": max(conc) if conc else np.nan,
             "sector_ge3": float(np.mean(np.array(conc) >= 3)) if conc else np.nan,
             "sector_ge4": float(np.mean(np.array(conc) >= 4)) if conc else np.nan,
