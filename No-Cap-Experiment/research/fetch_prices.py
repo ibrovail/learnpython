@@ -42,18 +42,39 @@ def universe() -> list[str]:
     return sorted(u)
 
 
+def yahoo_symbol(ticker: str) -> str:
+    """Index tickers use dots for share classes; Yahoo uses hyphens.
+
+    BRK.B 404s while BRK-B returns 4,024 rows. Without this, two S&P 500 members are
+    silently dropped from the panel as if they had never existed.
+    """
+    return ticker.replace(".", "-")
+
+
 def fetch_one(ticker: str) -> pd.DataFrame | None:
-    """Daily OHLC + adjusted close. Returns None when Yahoo has no history."""
-    params = {
-        "period1": PERIOD1, "period2": PERIOD2, "interval": "1d",
-        "events": "div|split", "includeAdjustedClose": "true",
-    }
+    """Daily OHLC + adjusted close. Returns None only when Yahoo has no history at all.
+
+    A 400 means "no data in the requested window", NOT "unknown symbol": AVB answers 400
+    for a 2010 start yet has 427 rows under range=max. Discarding a ticker on 400 threw
+    away every name whose Yahoo history begins later than the window, so this re-asks for
+    the full range and keeps what exists. Partial history is usable -- the engine scores a
+    year only when that year has prices.
+    """
+    sym = yahoo_symbol(ticker)
+    windowed = {"period1": PERIOD1, "period2": PERIOD2, "interval": "1d",
+                "events": "div|split", "includeAdjustedClose": "true"}
+    full = {"range": "max", "interval": "1d",
+            "events": "div|split", "includeAdjustedClose": "true"}
     delay = 2.0
     for attempt in range(1, MAX_TRIES + 1):
+        params = windowed if attempt == 1 else full
         try:
-            r = requests.get(BASE.format(ticker), params=params, headers=UA, timeout=45)
-            if r.status_code in (404, 400):
-                return None            # genuinely unknown symbol; not a transient failure
+            r = requests.get(BASE.format(sym), params=params, headers=UA, timeout=45)
+            if r.status_code == 404:
+                return None            # symbol genuinely unknown to Yahoo
+            if r.status_code == 400 and attempt < MAX_TRIES:
+                time.sleep(1.0)
+                continue               # no data in that window -- retry with range=max
             if r.status_code == 200:
                 res = r.json().get("chart", {}).get("result")
                 if not res:
@@ -61,13 +82,19 @@ def fetch_one(ticker: str) -> pd.DataFrame | None:
                 res = res[0]
                 q = res["indicators"]["quote"][0]
                 adj = res["indicators"].get("adjclose", [{}])[0].get("adjclose")
+                if not res.get("timestamp"):
+                    return None
                 df = pd.DataFrame({
                     "date": pd.to_datetime(res["timestamp"], unit="s").normalize(),
                     "close": q.get("close"),
                     "low": q.get("low"),
                     "adjclose": adj if adj is not None else q.get("close"),
                 })
-                return df.dropna(subset=["date"]).set_index("date")
+                df = df.dropna(subset=["date"]).set_index("date")
+                lo = pd.Timestamp(PERIOD1, unit="s")
+                hi = pd.Timestamp(PERIOD2, unit="s")
+                df = df[(df.index >= lo) & (df.index <= hi)]
+                return df if not df.empty else None
         except Exception:
             pass
         time.sleep(delay)
