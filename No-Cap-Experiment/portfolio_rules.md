@@ -54,6 +54,37 @@ spreads can take longer to close than this book's horizon.
 **Satellite (25–35%, per §2)** — direct holdings. Multi-year holds. This is where alpha is
 attempted and where it may fail.
 
+### 3.1 Satellite universe
+
+**US and Canadian listings. US is the primary hunting ground.** No OTC or pink sheets.
+
+Not because US companies are better, but because the TSX cannot supply a diversified
+concentrated book. Financials, energy and materials are roughly 60% of the S&P/TSX Composite
+and healthcare is about 0.3% of it, so a 3–5 name Canadian satellite is a sector bet on a
+commodity economy wearing the costume of a stock portfolio. Two further reasons:
+
+- **The book is already Canadian.** Income, savings and the currency are all CAD, and the
+  loonie tracks oil. The satellite exists to diversify that exposure, not to double it.
+- **The benchmark is the S&P 500.** Competing with it from a universe missing most of
+  technology and nearly all of healthcare is a handicap taken on by choice.
+
+**A Canadian name that is genuinely the best idea is bought.** This rule governs where to look,
+not what may be owned. The conversion saved is a small bonus, never a reason to pick it.
+
+**Rejected: Canadian Depositary Receipts.** They remove the conversion but are currency-hedged,
+which discards the USD diversification that is half the point, and their embedded hedging cost
+of up to ~0.60% a year exceeds the FX cost they save.
+
+### 3.2 Yield is a tiebreak in the satellite
+
+**Prefer low-yield growth names over dividend payers.** A tiebreak between otherwise equal
+candidates, never a gate.
+
+US dividends in a TFSA lose 15% to withholding and it cannot be reclaimed — an RRSP has treaty
+relief, a TFSA does not. The drag scales with yield: about **0.075%** a year at a 0.5% yield,
+about **0.45%** at 3%. A TFSA is a growth container, so holding low-yield names costs nothing
+this book wants and removes its only structural tax penalty.
+
 ---
 
 ## 4. Deposits and rebalancing
@@ -136,3 +167,29 @@ computed**, with a **train/test split**, and whose **raw output was committed be
 interpreted**. See `.claude/rules/research-methods.md`.
 
 **A backtest that passes only on recent data is rejected**, however large its headline.
+
+---
+
+## 9. Account and broker
+
+**Account:** TFSA. See §5 on why the turnover budget is a tax rule and not a preference.
+
+**Broker: Wealthsimple.** Revisit at **CAD $25,000 of balance, or $10,000 of annual currency
+conversion, whichever comes first.**
+
+The binding constraint below $5,000 is **fractional shares**, not FX cost. With a $200 book
+split 70/30 the satellite is $60, which buys no whole share of anything worth owning. Zero
+commission and an interface simple enough to actually follow the rules matter more at this size
+than the conversion rate.
+
+The FX premium over the cheapest option (Interactive Brokers, ~0.002%) is roughly **$20 a year**
+at current deposits, because only the satellite converts — the core is Canadian-listed by §3.
+That is a fair price for not abandoning the system in month three. It stops being fair at the
+revisit trigger, by which point there will also be two years of operating experience to spend
+on a harder platform.
+
+**Norbert's Gambit is not used below ~$10,000 of annual conversion.** It saves about 1.4% per
+conversion — roughly $21 a year at current volumes — which does not pay for the risk of a
+failed journal.
+
+**Fee schedules move. Verify before acting on any figure in this section.**
