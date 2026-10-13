@@ -143,8 +143,10 @@ this document is labelled POST HOC in stage 3.
 ## 8. Status
 
 - [x] Stage 0 — pre-registered and committed
-- [ ] Stage 1 — **blocked: this environment's network policy denies external data hosts.**
-      Needs Wikipedia (membership) and a price source reachable from the session.
+- [x] Stage 1a — membership reconstructed and quality-tested. **See
+      `Study 01 — Stage 1 findings.md`: the 1997–2011 train period cannot be built and the
+      span is amended to 2012–2025.** That amendment was made before any return was computed.
+- [ ] Stage 1b — ticker reuse/rename map, then prices with delisted coverage
 - [ ] Stage 2
 - [ ] Stage 3
 
