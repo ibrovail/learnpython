@@ -73,10 +73,22 @@ def load_prices(kind: str = "close") -> pd.DataFrame:
 
 
 def coverage_report(membership: dict[int, set[str]], prices: pd.DataFrame) -> pd.DataFrame:
-    """Member-years present in the price panel, per year. Run and commit BEFORE results.
+    """A LOOSE UPPER BOUND on coverage: member-years whose ticker has a column at all.
 
-    The pre-registration makes this a gate, not a diagnostic: below 90% overall the
-    study is reported inconclusive rather than published with a number.
+    NOT the gate. `build_panel.coverage` computes the gate number, and it is stricter in
+    two ways that both matter:
+
+      * it counts a member-year only if the series actually SPANS the formation year, so
+        a name that listed or was acquired mid-year does not count as priced for a year
+        it cannot be ranked on;
+      * it attributes every absence -- quota refusal, no history at source, or
+        unexplained -- because an API limit and a delisting are different facts and
+        collapsing them lets a quota wall read as a property of the market.
+
+    This function can therefore report a higher number than the gate does, and only the
+    gate number may be quoted against the pre-registration's 90% bar. Kept because a
+    quick "is there a column for this name" check is still useful while debugging a
+    fetch; never cite it as coverage.
     """
     rows = []
     have = set(prices.columns)
