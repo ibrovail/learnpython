@@ -104,19 +104,26 @@ def api_key() -> str:
     return key
 
 
+# The benchmark is not an index member, so it is not in the membership file and would
+# never be fetched by a sweep over members alone. Without it there is no study at all,
+# so it goes first in the sweep rather than wherever the shuffle would drop it.
+BENCHMARK = "SPY"
+
+
 def universe() -> list[str]:
     m = {int(k): set(v) for k, v in
          json.loads((CACHE / "membership.json").read_text()).items()}
     u: set[str] = set()
     for y in range(FIRST_FORMATION, LAST_FORMATION + 1):
         u |= m.get(y, set())
+    u.add(BENCHMARK)
     return sorted(u)
 
 
 def sweep_order(tickers: list[str]) -> list[str]:
-    order = list(tickers)
+    order = [t for t in tickers if t != BENCHMARK]
     random.Random(SWEEP_SEED).shuffle(order)
-    return order
+    return ([BENCHMARK] if BENCHMARK in tickers else []) + order
 
 
 def tiingo_symbol(ticker: str) -> str:
@@ -186,16 +193,27 @@ def main() -> int:
           flush=True)
 
     gate, got, attempted = RateGate(), 0, 0
-    for i, t in enumerate(todo, 1):
+    # A worklist, not a for-loop over `todo`: a name interrupted by a 429 is pushed back
+    # on and re-swept, and `todo + retry` evaluated once in a for-statement would have
+    # silently dropped every one of them.
+    work = collections.deque(todo)
+    total, i = len(todo), 0
+    while work:
+        t = work.popleft()
+        i += 1
         try:
             df = fetch_one(t, key, gate)
         except HourlyLimit:
-            # The gate underestimated the window (earlier requests in this hour came from
-            # outside this process). Wait a full window out rather than burning 429s.
-            print(f"  [{i}/{len(todo)}] hourly limit hit at {t}; sleeping 61 min",
-                  flush=True)
-            time.sleep(61 * 60)
+            # The gate underestimated the window: requests made earlier in this hour, by
+            # an earlier run or another process, are invisible to it. Probe every ten
+            # minutes rather than sleeping a full hour -- the allowance frees on a rolling
+            # window, and a flat 61-minute sleep can idle through most of a free one.
+            print(f"  [{i}/{total}] hourly allowance spent at {t}; "
+                  f"retrying in 10 min", flush=True)
+            time.sleep(10 * 60)
             gate = RateGate()
+            work.appendleft(t)     # not dropped: re-swept once the window frees
+            i -= 1
             continue
         except QuotaExceeded:
             blocked.add(t)
@@ -203,7 +221,7 @@ def main() -> int:
             attempted += 1
             continue
         except RuntimeError as e:
-            print(f"  [{i}/{len(todo)}] {e}", flush=True)
+            print(f"  [{i}/{total}] {e}", flush=True)
             continue
         attempted += 1
         if df is None or df.empty:
@@ -213,7 +231,7 @@ def main() -> int:
             df.to_csv(PRICES / f"{t}.csv")
             got += 1
         if i % 10 == 0:
-            print(f"  [{i}/{len(todo)}] fetched={got} no-history={len(known_missing)} "
+            print(f"  [{i}/{total}] fetched={got} no-history={len(known_missing)} "
                   f"quota-blocked={len(blocked)}", flush=True)
 
     print(f"\nDONE. files={len(list(PRICES.glob('*.csv')))} "
