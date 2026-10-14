@@ -8,17 +8,36 @@ Raw output: `research/output/coverage.csv`, `research/output/ticker_map_applied.
 ## Headline
 
 **The price panel cannot be built from the sources reachable here, and Study 01 is
-reported INCONCLUSIVE.** Coverage of expected member-years is **0.5%** as measured, against
-a pre-registered bar of 90%.
+reported INCONCLUSIVE.** Coverage of expected member-years is **1.0%** as measured,
+against a pre-registered bar of 90%.
 
-That 0.5% is a *floor* from a sweep still rate-limited at 50 requests an hour, and it is
-not the reason for the verdict. **The reason is structural and does not depend on how
-long the sweep runs:** the source permits 500 unique symbols per calendar month, the
-universe is 754, and the month's allowance was already spent before this session began.
-754 cannot be fetched from a 500-symbol allowance, so no amount of patience inside this
-month reaches 90%. The measured figure is reported because the methodology rules require
-coverage to be measured and committed rather than asserted — not because the verdict
-turns on it.
+That 1.0% is a floor from a sweep still limited to 50 requests an hour, and the verdict
+does not rest on it. Three separate facts each block the study on their own:
+
+1. **The allowance is smaller than the universe.** The source permits 500 unique symbols
+   per calendar month; the study needs 754. No amount of patience inside one month closes
+   that gap.
+2. **The allowance was already spent** before this session began — the first probe
+   succeeded and the next was refused.
+3. **The benchmark itself is refused.** SPY comes back blocked. Without an S&P 500
+   total-return series there is nothing to measure a strategy against, so this alone ends
+   the study even if every company symbol were available.
+
+**How much is still reachable, measured properly.** The sweep runs in a fixed-seed random
+order precisely so that a partial run is a fair sample of the universe rather than a slice
+of the alphabet. The first full hour's allowance gave a clean sample:
+
+| | |
+|---|---|
+| Symbols attempted | 49 |
+| Served | 3 |
+| Refused on the monthly cap | 46 |
+| Share of universe still reachable | **6.1%** (exact 95% interval 1.3%–16.9%) |
+| Implied reachable symbols, of 750 | **10 to 126** |
+| Needed to clear the gate | **679** |
+
+The upper end of that interval is a fifth of what the gate requires. This is not a
+close call, and running the sweep for another fourteen hours would not make it one.
 
 This is not a result about the strategy. It is a result about the data, and the
 pre-registration is explicit about which one this is:
@@ -199,6 +218,13 @@ session succeeded and the next was refused, so the counter stood at its limit wi
 request. Symbols already looked up earlier in the month still serve and cost nothing,
 which is why a handful of names are present.
 
+**The benchmark is refused too, and that blocks the study on its own.** SPY is sorted
+first in the sweep precisely because nothing else matters without it, and it comes back
+refused. Even if every one of the 754 company symbols were somehow available, there would
+be no S&P 500 total-return series to measure them against, and a strategy curve with
+nothing beside it is not a result. The Stage 2 runner now stops on this explicitly rather
+than quietly reporting a strategy return alone.
+
 **The 200-with-an-object is the dangerous part**, and it is worth recording why. The
 obvious handling — treat an unparseable response as "no history" — would have recorded an
 API limit as a fact about the market. The universe would have quietly shrunk to whatever
@@ -221,22 +247,21 @@ limiting, not a blocked host.
 ## Coverage, measured
 
 The sweep is incomplete and still running; this is the state at the time of commit, and
-the committed CSV is `research/output/coverage.csv`.
+the committed CSV is `research/output/coverage.csv`, which carries the per-year detail.
 
-| Formation year | Members | Priced, full year | Coverage |
+| Formation years | Members per year | Priced, full year | Coverage |
 |---|---|---|---|
-| 2011 | 506 | 3 | 0.6% |
-| 2012 | 505 | 3 | 0.6% |
-| 2013 | 503 | 3 | 0.6% |
-| 2014 | 504 | 3 | 0.6% |
-| 2015 | 507 | 3 | 0.6% |
-| 2016 | 508 | 3 | 0.6% |
-| 2017 | 507 | 3 | 0.6% |
-| 2018–2024 | 504–506 | 2 | 0.4% |
-| **Overall** | **7 076** | **35** | **0.5%** |
+| 2011–2024 | 503–508 | 4 to 6 | 0.8%–1.2% |
+| **Overall** | **7 076 member-years** | **68** | **1.0%** |
 
-Four symbols were recoverable: AA, AAPL, AEP and AET — names already looked up earlier in
-the month, which cost nothing against the allowance. Everything else is refused.
+Seven symbols were recoverable at the time of writing: AA, AAPL, AEP, AET, GGP, K and
+NOC. These are names already looked up earlier in the month, which cost nothing against
+the allowance. Everything else is refused.
+
+One of them is worth noting: **GGP** (General Growth Properties) delisted in 2018 and
+Tiingo still serves it. The source is the right one — it does retain the dead companies
+that Yahoo forgets. The obstacle here is the price of the key, not the quality of the
+data behind it.
 
 Two points about how this table is built, both of which exist to stop a number being
 flattered:
@@ -282,13 +307,19 @@ roughly p < 0.0005 to carry the same meaning.
 
 The study is not dead; it is waiting on one input. In rough order of cost:
 
-1. **Wait for the monthly allowance to reset.** The 500-unique-symbol counter is monthly.
-   Two clean months of 500 symbols each would cover 754, if the fetcher's resume log is
-   preserved between them — note that `research/data.nosync/` is gitignored, so a fresh
-   container starts from zero. That is the cheapest path and the slowest.
-2. **An upgraded Tiingo key**, added as an environment secret under the same variable
-   name `TIINGO_API_KEY`. A new session picks it up and `python3 -I
-   research/fetch_prices_tiingo.py` completes in one run. Nothing else changes.
+1. **An upgraded Tiingo key — the recommended path.** Added as an environment secret
+   under the same variable name, `TIINGO_API_KEY`. A new session picks it up and
+   `python3 -I research/fetch_prices_tiingo.py` completes in one run of roughly fifteen
+   minutes rather than never. Nothing else changes. Roughly one month's subscription
+   buys the whole panel, after which it should be **committed to the repository** so it
+   never has to be bought again.
+2. **Wait for the monthly allowance to reset.** The 500-unique-symbol counter is monthly,
+   so two clean months — 500 symbols, then the remaining 254 — would cover the universe
+   for nothing. The catch is persistence: `research/data.nosync/` is gitignored and the
+   container is wiped between sessions, so month two would start from zero and re-spend
+   its allowance on symbols month one already had. This path only works if the first
+   month's CSVs are committed. It is free and slow, and it is the right choice only if
+   the subscription is not worth it.
 3. **Any source that retains delisted names** and allows 754 symbols. The panel builder
    takes per-ticker CSVs with `date,adjclose,low,close`; only `fetch_*.py` would change.
 
