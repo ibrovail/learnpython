@@ -66,11 +66,36 @@ class RunResult:
         return sum(y.substitutions for y in self.years)
 
 
-def _calendar_return(prices: pd.DataFrame, ticker: str, year: int) -> float:
-    """Total return over a calendar year. NaN if either end is missing."""
+# A formation-year return is only comparable with other formation-year returns if it
+# covers the same year. A name that listed, spun off or was acquired mid-year has a stub,
+# and ranking a stub against full years is the error the thread audit records against
+# Sandisk in 2025 (+566% through October, scored as if it were a year). The slack is in
+# SESSIONS of the panel's own calendar, so holidays and short weeks do not reject a name
+# that really did trade all year.
+FORMATION_SLACK_SESSIONS = 5
+
+
+def _spans_year(prices: pd.DataFrame, window: pd.Series, year: int) -> bool:
+    sessions = prices.index[prices.index.year == year]
+    if len(sessions) == 0:
+        return False
+    k = min(FORMATION_SLACK_SESSIONS, len(sessions))
+    return window.index[0] <= sessions[k - 1] and window.index[-1] >= sessions[-k]
+
+
+def _calendar_return(prices: pd.DataFrame, ticker: str, year: int,
+                     require_full_year: bool = True) -> float:
+    """Total return over a calendar year. NaN if either end is missing.
+
+    NaN too when `require_full_year` and the series does not span the year: per the
+    pre-registration, a company added mid-year "has no full prior-year return and must
+    be excluded from that formation year, not scored on a stub".
+    """
     col = prices[ticker].dropna()
     window = col[col.index.year == year]
     if len(window) < 2:
+        return float("nan")
+    if require_full_year and not _spans_year(prices, window, year):
         return float("nan")
     first, last = window.iloc[0], window.iloc[-1]
     if not np.isfinite(first) or first <= 0 or not np.isfinite(last):

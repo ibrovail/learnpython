@@ -132,6 +132,35 @@ def main() -> int:
           p, sum(comb(30, i) for i in range(19, 31)) / 2**30)
     check("19/30 is not significant at 5%", p > 0.05, True)
 
+    print("\n7. Partial formation years are not ranked against full ones")
+    # EEE triples in the half-year it exists -- the single largest "return" in the panel.
+    # Ranking it would repeat the audited Sandisk error, so it must be invisible to the
+    # formation ranking while remaining perfectly tradable as a HOLDING.
+    stub_days = pd.bdate_range("2021-07-01", "2021-12-31")
+    stub = pd.Series(np.linspace(100, 300, len(stub_days)), index=stub_days)
+    full_2022 = pd.Series(
+        np.linspace(100, 110, len(pd.bdate_range("2022-01-01", "2022-12-31"))),
+        index=pd.bdate_range("2022-01-01", "2022-12-31"))
+    prices_stub = prices.join(pd.concat([stub, full_2022]).rename("EEE"), how="outer")
+    members = {y: {"AAA", "BBB", "CCC", "DDD", "EEE"} for y in (2020, 2021, 2022)}
+
+    check("a mid-year listing has no formation return",
+          np.isnan(W._calendar_return(prices_stub, "EEE", 2021)), True)
+    check("...though its stub return is +200% if asked for one",
+          round(W._calendar_return(prices_stub, "EEE", 2021,
+                                   require_full_year=False), 6), 2.0)
+    r = W.run(prices_stub, members, n=1, start_year=2022, end_year=2022)
+    check("so 2022 picks DDD (+100% over a FULL 2021), not EEE", r.years[0].picks, ["DDD"])
+
+    check("a full-year name is unaffected",
+          round(W._calendar_return(prices_stub, "AAA", 2021), 6), -0.5)
+    # Acquired mid-year: present from January, gone in June. Also not rankable.
+    gone_days = pd.bdate_range("2021-01-01", "2021-06-30")
+    gone = pd.Series(np.linspace(100, 500, len(gone_days)), index=gone_days)
+    prices_gone = prices.join(gone.rename("GGG"), how="outer")
+    check("a mid-year acquisition has no formation return either",
+          np.isnan(W._calendar_return(prices_gone, "GGG", 2021)), True)
+
     print(f"\n{'ALL PASS' if not FAILED else f'{len(FAILED)} FAILED: {FAILED}'}")
     return 1 if FAILED else 0
 
