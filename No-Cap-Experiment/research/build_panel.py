@@ -74,6 +74,11 @@ def build(membership: dict[int, set[str]]) -> tuple[pd.DataFrame, pd.DataFrame, 
             continue
         resolved_to.setdefault(key, []).append(ticker)
         close_cols[ticker] = df["adjclose"].astype(float)
+        # The "low" column holds Tiingo's adjLow, NOT the raw low, and that matters: the
+        # stop compares a low against an entry price taken from the adjusted close, and
+        # mixing a raw low with an adjusted close puts the two on different scales. For
+        # AAPL in 2010 the raw close is 214.01 against an adjusted 6.40 -- a 33x error
+        # that would fire every stop on the first day. Do not "fix" this to df["close"].
         low_cols[ticker] = df["low"].astype(float) if "low" in df else df["adjclose"].astype(float)
 
     close = pd.DataFrame(close_cols).sort_index()

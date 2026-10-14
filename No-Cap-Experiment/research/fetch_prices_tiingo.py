@@ -47,6 +47,9 @@ from pathlib import Path
 import pandas as pd
 import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import ticker_map as tm  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent
 CACHE = ROOT / "data.nosync"
 PRICES = CACHE / "prices_tiingo"
@@ -111,12 +114,22 @@ BENCHMARK = "SPY"
 
 
 def universe() -> list[str]:
+    """The SYMBOLS to fetch: membership tickers put through the rename map, deduplicated.
+
+    Fetching the membership ticker verbatim wastes the scarcest thing here. FB, PCLN,
+    TSO, UTX, CBS, VIAC, SYMC, NLOK, CTL, ANTM, FISV, ABC, PKI, HFC, WLTW, BBT and COG
+    are all old names whose history the panel reads from the current ticker instead, so
+    a sweep over raw membership spends requests on files that are never opened -- against
+    an allowance of fifty an hour.
+    """
     m = {int(k): set(v) for k, v in
          json.loads((CACHE / "membership.json").read_text()).items()}
     u: set[str] = set()
     for y in range(FIRST_FORMATION, LAST_FORMATION + 1):
-        u |= m.get(y, set())
+        u |= {tm.resolve(t) for t in m.get(y, set())}
     u.add(BENCHMARK)
+    # RTN's sentinel target is deliberately unfetchable; see ticker_map.
+    u.discard("RTXRTN")
     return sorted(u)
 
 
