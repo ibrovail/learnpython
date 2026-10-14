@@ -1,12 +1,20 @@
 """Stage 1b (preferred source) — daily prices from Tiingo, including delisted tickers.
 
-Yahoo was measured and rejected for this study. Of the 755 tickers that were ever S&P 500
-members in the study window, roughly a third return no history at all -- overwhelmingly the
-acquired and bankrupt names (ABMD, ACE, AET, AGN, ALTR, ALXN, ANDV, APC, ATVI, BBBY ...).
-That is the survivorship bias the study exists to avoid, and it biases in the flattering
-direction: a prior-year winner that later collapsed and delisted vanishes from the panel
-instead of recording its loss. Yahoo also serves broken history for some LIVE members --
-AVB, a current constituent, returns only 2026-07-17 onward.
+Yahoo was measured and rejected for this study, and the measurement is worse than the
+first estimate of "roughly a third missing". 396 of the 755 ever-members return no
+history at all -- 52% of the universe -- and the panel reaches only 53.7% of expected
+member-years against a 90% gate (research/output/coverage_yahoo.csv).
+
+The SHAPE is the finding, not the level. Coverage rises monotonically with recency:
+46.1% for formation year 2011, 51.4% for 2016, 56.5% for 2020, 61.5% for 2024. That is
+the survivorship signature. The further back the year, the more of its members have since
+been acquired or gone bankrupt and vanished from the source, so the misses are
+overwhelmingly the acquired and bankrupt names (ABMD, ACE, AET, AGN, ALTR, ALXN, ANDV,
+APC, ATVI, BBBY ...) -- exactly the picks a momentum strategy would have been punished by.
+A backtest on this panel is flattered in proportion to how far back it looks.
+
+Yahoo also serves broken history for some LIVE members: AVB and ANSS are current
+constituents and both come back unusable.
 
 Tiingo retains delisted tickers, which is why the predecessor experiment used it.
 

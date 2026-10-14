@@ -125,16 +125,54 @@ reports results both with and without the list; until the hand check is done, on
 
 ## Why the panel could not be built
 
-### Yahoo stays rejected, on measurement
+### Yahoo stays rejected, and it is now measured rather than asserted
 
-Of the 755 tickers that were ever members in the window, roughly a third return no
-history at all — overwhelmingly the acquired and bankrupt names. That is the survivorship
-bias the study exists to avoid, and it biases in the **flattering** direction: a
-prior-year winner that later collapsed and delisted vanishes from the panel instead of
-recording its loss. Yahoo also serves broken history for some *live* members.
+Raw output: `research/output/coverage_yahoo.csv`, `research/output/missing_yahoo.txt`.
 
-Yahoo's ~67% coverage would fail this gate regardless. The gate protects the study from
-both sources, which is the point of having one.
+**396 of the 755 ever-members return no history at all — 52% of the universe.** The panel
+reaches **53.7% of expected member-years**, against a 90% gate. An earlier note in this
+project estimated "roughly a third missing"; that was optimistic, and the measurement
+replaces it.
+
+**The shape is the finding, not the level.** Coverage rises steadily the closer the year
+is to today:
+
+| Formation year | Coverage |
+|---|---|
+| 2011 | 46.1% |
+| 2016 | 51.4% |
+| 2020 | 56.5% |
+| 2024 | 61.5% |
+
+That gradient is the survivorship signature, in one picture. The further back a year is,
+the more of its members have since been acquired or gone bankrupt and dropped out of the
+source. So the missing names are the acquired and the dead — ABMD, ACE, AET, AGN, ALTR,
+ALXN, ANDV, APC, ATVI, BBBY — which are **exactly the picks that would have punished a
+momentum strategy**. A backtest on this panel is flattered in proportion to how far back
+it looks, which is the worst possible property for a study whose whole question is
+whether an edge survives out of its favourable window.
+
+Yahoo also serves broken history for some *live* members: AVB and ANSS are current
+constituents and both come back unusable.
+
+Yahoo fails this gate on its own, twice over. That is the gate doing its job rather than
+a judgement call about sources.
+
+One caveat that cuts the safe way: 53.7% is the **loose** measure — it asks only whether
+a file exists for the ticker. The gate figure applies the ticker map and requires the
+series to cover the whole formation year, so Yahoo's true gate number is *lower* than
+53.7%, not higher. Three coverage figures now exist in this repository, and each says in
+its own docstring which one it is:
+
+| Where | What it counts | Use |
+|---|---|---|
+| `coverage.py` | a file exists for the ticker | comparing one source against another |
+| `data.py.coverage_report` | a column exists in the panel | quick check while debugging a fetch |
+| `build_panel.coverage` | the series spans the formation year, after the ticker map | **the gate** |
+
+Combining the two sources does not rescue it either. Yahoo's gap *is* the delisted and
+acquired names, and those are precisely what Tiingo would have supplied — and Tiingo is
+the capped one. The union is Yahoo's 53.7% plus a handful.
 
 ### Tiingo's free tier, measured today
 

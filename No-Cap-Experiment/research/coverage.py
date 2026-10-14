@@ -7,6 +7,18 @@ Member-years, not tickers, is the right unit. A name that was a member for two y
 matters less than one that was a member for fourteen, so a ticker-level miss rate
 overstates the damage. Saying what a figure is *per* is a standing rule here.
 
+THIS IS THE PANEL-COMPARISON MEASURE, AND IT IS AN UPPER BOUND. It asks only whether a
+file exists for the ticker. `build_panel.coverage` computes the number the gate is
+actually read against, and it is stricter in two ways: it requires the series to SPAN the
+formation year, so a name that listed or was acquired mid-year does not count toward a
+year it cannot be ranked on; and it runs after the ticker reuse/rename map, so a ticker
+held by two different companies is not credited for years that belong to the other one.
+
+The gate figure is therefore LOWER than the figure here, never higher. Use this one to
+compare two sources against each other -- that is what it was written for, and the
+comparison is sound because both panels are measured the same way. Do not quote it
+against the pre-registration's 90% bar.
+
 Run against either panel:
     python3 -I research/coverage.py yahoo
     python3 -I research/coverage.py tiingo
