@@ -33,9 +33,16 @@ downloaded data.
 ## Current state
 
 - **Rules:** written, v1, 2026-10-12.
-- **Study 01** (winner rotation): pre-registered; engine written and passing 22 synthetic
-  self-tests; **Stage 1 blocked** — this environment's network policy denies the membership
-  and price hosts.
+- **Study 01** (winner rotation): pre-registered; Stage 1a (membership) and Stage 1b
+  (ticker map, exclusion list, panel builder, coverage) done; 83 synthetic self-tests
+  passing with no network. **Reported INCONCLUSIVE on the coverage gate** — Tiingo's free
+  tier allows 500 unique symbols a month against a universe of 754, so the price panel
+  cannot be built. Network egress is open; the limit is the vendor's, not the container's.
+  Unblocking it needs an upgraded `TIINGO_API_KEY` in the environment's secrets, or a new
+  calendar month. See `Experiment Details/Study 01 — Stage 1b findings.md`.
+  **Outstanding for the owner: the §6 hand check** (Israeli affiliation, and the
+  never-auto-cleared industries) — `research/exclusions.py` encodes only the
+  industry-screenable part and flags itself incomplete.
 - **Ledger:** not yet started. Needed before the first deposit.
 - **Not yet decided:** broker, and whether the satellite sleeve's picks come from US or
   Canadian listings (FX cost versus universe quality).

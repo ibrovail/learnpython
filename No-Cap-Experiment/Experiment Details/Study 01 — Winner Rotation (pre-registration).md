@@ -146,9 +146,16 @@ this document is labelled POST HOC in stage 3.
 - [x] Stage 1a — membership reconstructed and quality-tested. **See
       `Study 01 — Stage 1 findings.md`: the 1997–2011 train period cannot be built and the
       span is amended to 2012–2025.** That amendment was made before any return was computed.
-- [ ] Stage 1b — ticker reuse/rename map, then prices with delisted coverage
-- [ ] Stage 2
-- [ ] Stage 3
+- [x] Stage 1b — ticker reuse/rename map, partial-formation-year guard, §6 exclusion list,
+      panel builder and coverage report, all built and tested. **See
+      `Study 01 — Stage 1b findings.md`: the price panel fails the §5 coverage gate, and
+      the study is reported INCONCLUSIVE.** No return was computed.
+- [ ] Stage 2 — **blocked by the coverage gate.** `research/run_study.py` reads the
+      committed coverage report and refuses to write results below 90%.
+- [ ] Stage 3 — not written. §6 requires the verdict be written against committed raw
+      output, and there is none.
 
 The engine is written and unit-tested against synthetic prices with known answers
-(`research/test_engine.py`), so only the data acquisition is outstanding.
+(`research/test_engine.py`, `test_ticker_map.py`, `test_run_study.py` — 83 checks, no
+network), so only the data acquisition is outstanding. Nothing in §1–§7 above has been
+changed by Stage 1b; the decision rules remain unapplied, not revised.
