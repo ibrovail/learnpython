@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.DS_Store
+
+# Price and membership caches: large, rebuildable from the scripts in research/.
+research/data.nosync/
+
+# Transient run logs. Study OUTPUT is committed -- see below.
+research/output/*_log.txt

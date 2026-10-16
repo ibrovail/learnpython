@@ -1,0 +1,7 @@
+# Core analysis. Pinned loosely; the engine uses only stable pandas/numpy APIs.
+pandas>=2.2
+numpy>=1.26
+
+# Data acquisition (research/data.py) — needs network egress to the price and
+# index-membership hosts, which this environment currently denies.
+requests>=2.31
